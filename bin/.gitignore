@@ -1,0 +1,14 @@
+/.classpath
+/.project
+/.settings/
+/Entity.class
+/EntityID.class
+/Handler.class
+/KeyInput.class
+/Main.class
+/MouseInput.class
+/Player.class
+/Ship.class
+/SpaceID.class
+/UI.class
+/Window.class
