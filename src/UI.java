@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 
 public class UI {
 	private Entity healthBar;
@@ -16,5 +19,14 @@ public class UI {
 	public static void checkClick(int x, int y) {
 		
 	}
+	
+	public void displayPlayerStats(Player player,Graphics g){
+		
+		Font courierBold10 = new Font("Courier", Font.BOLD, 10);
+		g.setColor(Color.red);
+		g.setFont(courierBold10);
+		g.drawString("Money: "+Integer.toString(player.getMoney()), 120, 120);
+		g.drawString("Race: "+player.getRaceID().toString(), 120, 130);
+	}	
 
 }

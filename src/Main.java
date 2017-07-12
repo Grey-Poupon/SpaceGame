@@ -1,6 +1,8 @@
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -18,6 +20,7 @@ public class Main  extends Canvas implements Runnable{
 	public static final int HEIGHT = 900;
 	public Ship ship; 
 	public UI ui;
+	public Player player;
 	
 	public Main(){
 		r = new Random();
@@ -25,13 +28,13 @@ public class Main  extends Canvas implements Runnable{
 		this.addMouseListener(new MouseInput());
 		this.addMouseMotionListener(new MouseInput());
 		handler = new Handler();
-		window = new Window(WIDTH+18,HEIGHT+45,"Space",this);
 		ship = new Ship(100,100,"rocket.jpg",true,EntityID.ship,50);
 		ui = new UI();
+		player = new Player(100,RaceID.bugBitch);
 		
+		window = new Window(WIDTH+18,HEIGHT+45,"Space",this);
 		
-	}
-	
+		}
 
 	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
@@ -44,6 +47,8 @@ public class Main  extends Canvas implements Runnable{
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		handler.render(g);
+		ui.displayPlayerStats(player, g);
+		window.update();
 		
 		g.dispose();
 		bs.show();
@@ -98,6 +103,7 @@ public class Main  extends Canvas implements Runnable{
 	public void tick() {
 	
 		handler.tick(ui);
+		;
 	}
 	
 	
