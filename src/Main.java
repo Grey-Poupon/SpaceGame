@@ -103,7 +103,7 @@ public class Main  extends Canvas implements Runnable{
 	public void tick() {
 	
 		handler.tick(ui);
-		;
+		
 	}
 	
 	
