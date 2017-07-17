@@ -2,6 +2,7 @@ package com.project;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -61,7 +62,7 @@ public class Entity {
 	}
 	public void setImg(String path) {
 		try {
-			this.img = ImageIO.read(Entity.class.getResource(path));
+			this.img = ImageIO.read(new FileInputStream(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		};

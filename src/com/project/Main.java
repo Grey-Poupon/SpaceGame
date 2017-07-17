@@ -1,9 +1,7 @@
 package com.project;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -19,7 +17,7 @@ public class Main  extends Canvas implements Runnable{
 	Window window;
 	public static final int WIDTH = 1200;
 	public static final int HEIGHT = 900;
-	public Ship ship; 
+	public Ship playerShip; 
 	public UI ui;
 	public Player player;
 	
@@ -29,7 +27,6 @@ public class Main  extends Canvas implements Runnable{
 		this.addMouseListener(new MouseInput());
 		this.addMouseMotionListener(new MouseInput());
 		handler = new Handler();
-		ship = new Ship(100,100,"rocket.jpg",true,EntityID.ship,50);
 		ui = new UI();
 		player = new Player(100,RaceID.bugBitch);
 		
@@ -37,7 +34,7 @@ public class Main  extends Canvas implements Runnable{
 		
 		}
 
-	private void render(){
+	protected void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
 			this.createBufferStrategy(2);
@@ -110,7 +107,7 @@ public class Main  extends Canvas implements Runnable{
 	
 	public static void main(String[] args){
 		
-		new Main();
+		new BattleScreen();
 	}
 	
 }

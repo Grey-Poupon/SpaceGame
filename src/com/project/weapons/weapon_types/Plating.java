@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.project.DamageType;
-import com.project.weapons.Buffing;
+import com.project.weapons.Buffer;
 import com.project.weapons.Weapon;
 
 public class Plating extends Weapon {
 
-	private Buffing buffing;
+	private Buffer buffing;
 	
-	public Plating(int cooldownDuration,double modifier) {
+	public Plating(int cooldownDuration,List<Double> modifiers) {
 		super(cooldownDuration);
 		List<DamageType> damageTypes = new ArrayList<DamageType>();
 		damageTypes.add(DamageType.Blunt);
 		damageTypes.add(DamageType.Piercing);
-		buffing = new Buffing(modifier,damageTypes);
+		buffing = new Buffer(modifiers,damageTypes);
+		this.isBuffer = true;
+	}
+
+	@Override
+	public Buffer getBuff() {
+		return buffing;
 	}
 
 }

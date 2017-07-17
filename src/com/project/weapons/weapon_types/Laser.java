@@ -1,5 +1,6 @@
 package com.project.weapons.weapon_types;
 
+import com.project.DamageType;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 
@@ -7,11 +8,12 @@ public class Laser extends Weapon {
 	Destructive destruct;
 	public Laser(int cooldownDuration, int rateOfFire,int damagePerShot,int accuracy) {
 		super(cooldownDuration);
-		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy);
+		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,DamageType.Laser);
+		this.isDestructive = true;
 	}
 
 	@Override
-	public int[] fire(){
+	public Object[] fire(){
 		
 		resetCooldown();
 		return destruct.fire();	

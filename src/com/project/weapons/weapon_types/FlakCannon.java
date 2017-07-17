@@ -1,18 +1,20 @@
 package com.project.weapons.weapon_types;
 
+import com.project.DamageType;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 
 public class FlakCannon extends Weapon {
 	public FlakCannon(int cooldownDuration, int rateOfFire,int damagePerShot,int accuracy) {
 		super(cooldownDuration);
-		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy);
+		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,DamageType.Blunt);
+		this.isDestructive = true;
 	}
 
 	Destructive destruct;
 	
 	@Override
-	public int[] fire(){
+	public Object[] fire(){
 		
 		resetCooldown();
 		return destruct.fire();	

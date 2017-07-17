@@ -8,8 +8,8 @@ public class UI {
 	private Entity distanceBar;
 	private static Entity mousePointer;
 	public UI(){
-		healthBar = new Entity(0,0,"healthbar.png",true,EntityID.UI);
-		mousePointer= new Entity(0,0, "mousepointer.png",true, EntityID.UI);
+		//healthBar = new Entity(0,0,"res/healthbar.png",true,EntityID.UI);
+		mousePointer= new Entity(0,0, "res/mousepointer.png",true, EntityID.UI);
 	}
 	public static void updateMouse(int x, int y){
 		mousePointer.setxCoordinate(x);
@@ -23,9 +23,9 @@ public class UI {
 	
 	public void displayPlayerStats(Player player,Graphics g){
 		
-		Font courierBold10 = new Font("Courier", Font.BOLD, 10);
+		Font courierBold20 = new Font("Courier", Font.BOLD, 20);
 		g.setColor(Color.red);
-		g.setFont(courierBold10);
+		g.setFont(courierBold20);
 		g.drawString("Money: "+Integer.toString(player.getMoney()), 120, 120);
 		g.drawString("Race: "+player.getRaceID().toString(), 120, 130);
 	}	
