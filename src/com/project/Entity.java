@@ -25,14 +25,15 @@ public class Entity {
 	public void render(Graphics g)
 	{
 		if(visible){
-			
 				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*scale),Math.round(img.getHeight()*scale), observer);
 
 			
 		}
 	};
 	
-
+	public void changeImage(String newPath){
+		this.setImg(newPath);
+	}
 
 	protected float scale = 1;
 	private EntityID ID;

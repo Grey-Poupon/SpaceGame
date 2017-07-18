@@ -27,7 +27,7 @@ public class Main  extends Canvas implements Runnable{
 		this.addMouseListener(new MouseInput());
 		this.addMouseMotionListener(new MouseInput());
 		handler = new Handler();
-		ui = new UI();
+		//ui = new UI();
 		player = new Player(100,RaceID.bugBitch);
 		
 		window = new Window(WIDTH+18,HEIGHT+45,"Space",this);
@@ -45,7 +45,6 @@ public class Main  extends Canvas implements Runnable{
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		handler.render(g);
-		ui.displayPlayerStats(player, g);
 		window.update();
 		
 		g.dispose();
@@ -90,7 +89,7 @@ public class Main  extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer >1000){
 				timer +=1000;
-				System.out.println("FPS: "+frames);
+				//System.out.println("FPS: "+frames);
 				
 				frames = 0;
 				
@@ -106,7 +105,6 @@ public class Main  extends Canvas implements Runnable{
 	
 	
 	public static void main(String[] args){
-		
 		new BattleScreen();
 	}
 	

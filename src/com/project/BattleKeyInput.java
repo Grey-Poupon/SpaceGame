@@ -7,7 +7,10 @@ public class BattleKeyInput extends KeyInput {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		sharedControlsPressed(key);
-		if (key == KeyEvent.VK_Q){}
+		if (key == KeyEvent.VK_Q){
+			BattleUI.changeTootlipSelection("q");
+			System.out.println("1");
+		}
 		if (key == KeyEvent.VK_W){}
 		if (key == KeyEvent.VK_E){}
 		if (key == KeyEvent.VK_R){}

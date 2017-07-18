@@ -7,23 +7,17 @@ import com.project.weapons.Weapon;
 
 public class BattleScreen extends Main{
 	private Ship enemyShip;
-	private Entity overlay;
 	private String selectedRoom;
-	
+
 	public BattleScreen(){
 		playerShip = new Ship(-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
 		enemyShip = new Ship(WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
-		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
+		ui = new BattleUI();
 	}
 	
 	public void selectRoom(String room){
 		selectedRoom = room;
 	}
-	
-	
-	
-	
-	
 	
 	
 	
