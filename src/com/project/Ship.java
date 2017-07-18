@@ -9,6 +9,8 @@ import com.project.weapons.Weapon;
 public class Ship {
 	private Entity entity;
 	private int health;
+	private int maxHealth;
+	private int currHealth;
 	private Weapon[] frontWeapons = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[] backWeapons = new Weapon[4];
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
@@ -16,7 +18,7 @@ public class Ship {
 
 	public Ship(int x,int y, String path, boolean visible, EntityID id, int health){
 		entity = new Entity(x, y, path, visible, EntityID.ship);
-		this.health = health;
+		this.currHealth = this.maxHealth = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -24,7 +26,7 @@ public class Ship {
 	}
 	public Ship(int x,int y, String path, boolean visible, EntityID id, int health,float scale){
 		entity = new Entity(x, y, path, visible,scale, EntityID.ship);
-		this.health = health;
+		this.currHealth = this.maxHealth = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -34,8 +36,14 @@ public class Ship {
 	public int getHealth() {
 		return health;
 	}
+	public int getMaxHealth(){
+		return maxHealth;
+	}
+	public int getCurrHealth(){
+		return currHealth;
+	}
 	public void takeDamage(int damage, DamageType type){
-		this.health-=damage*damageTakenModifier.get(type);
+		this.currHealth-=damage*damageTakenModifier.get(type);
 	}
 
 	public Double getDamageTakenModifier(DamageType dt) {
