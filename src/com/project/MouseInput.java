@@ -56,7 +56,7 @@ public class MouseInput implements MouseListener,MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		
+		UI.updateMouse((int)arg0.getX(), (int)arg0.getY());
 	}
 
 	@Override
