@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class UI {
 	private Entity healthBar;
 	private Entity distanceBar;
-	private static Entity mousePointer = new Entity(0,0, "res/mousepointer.png",true, EntityID.UI);
+	private static Entity mousePointer = new Entity(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
 	public UI(){
 		//healthBar = new Entity(0,0,"res/healthbar.png",true,EntityID.UI);
 	}

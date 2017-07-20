@@ -29,7 +29,7 @@ public class MouseInput implements MouseListener,MouseMotionListener {
 	public void mouseClicked(MouseEvent arg0) {
 		setpointClicked(arg0.getX(), arg0.getY());
 		UI.checkClick(arg0.getX(), arg0.getY());
-		System.out.println(Integer.toString(arg0.getX())+" "+Integer.toString(arg0.getY()));
+		//System.out.println(Integer.toString(arg0.getX())+" "+Integer.toString(arg0.getY()));
 	}
 
 	@Override

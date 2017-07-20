@@ -13,11 +13,14 @@ public class BattleUI extends UI{
 	private static Entity tooltipSeperator = new Entity(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static Weapon[] weapons = new Weapon[4];
 	private static Text[] texts = new Text[4];
+	private static String tooltipMenuSelection;
+	
 	public BattleUI (Weapon[] weapons){
 		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
 		updateWeapons(weapons);
 	}
 	public static void changeTootlipSelection(String room){
+		tooltipMenuSelection = room;
 		if(room.equals("q")){
 			tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
 			for(int i=0;i<weapons.length;i++){
@@ -34,6 +37,11 @@ public class BattleUI extends UI{
 	}
 	public void updateWeapons(Weapon[] weapons){
 		this.weapons = weapons;
+	}
+	
+	@Override
+	public static void checkClick(int x, int y) {
+		
 	}
 
 }

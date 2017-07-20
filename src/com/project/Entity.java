@@ -38,8 +38,47 @@ public class Entity {
 		this.setVisible(visible);
 		
 	}
+	
 
-
+	public Entity(int x, int y , String path, boolean visible, EntityID ID){		// constructor for mob
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.ID = ID;
+		setImg(path);
+		Handler.addLowPriorityEntity(this);
+		}
+	
+	public Entity(int x, int y , boolean visible, EntityID ID){		// constructor for mob
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.ID = ID;
+		Handler.addLowPriorityEntity(this);
+		}
+	public Entity(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.scale = scale;
+		this.ID = ID;
+		setImg(path);
+		Handler.addLowPriorityEntity(this);
+		}
+	public Entity(int x, int y , String path, boolean visible, EntityID ID, String priority){		// constructor for mob
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.ID = ID;
+		setImg(path);
+		if(priority.equals("low")){
+			Handler.addLowPriorityEntity(this);
+			}
+		else{
+			Handler.addHighPriorityEntity(this);	
+			}
+		}
+	
 	
 	public void setxCoordinate(int xCoordinate) {
 		this.xCoordinate = xCoordinate;
@@ -66,32 +105,6 @@ public class Entity {
 			e.printStackTrace();
 		};
 	}
-
-	public Entity(int x, int y , String path, boolean visible, EntityID ID){		// constructor for mob
-		this.xCoordinate = x;
-		this.yCoordinate = y;
-		this.visible = visible;
-		this.ID = ID;
-		setImg(path);
-		Handler.addEntity(this);
-		}
-	
-	public Entity(int x, int y , boolean visible, EntityID ID){		// constructor for mob
-		this.xCoordinate = x;
-		this.yCoordinate = y;
-		this.visible = visible;
-		this.ID = ID;
-		Handler.addEntity(this);
-		}
-	public Entity(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
-		this.xCoordinate = x;
-		this.yCoordinate = y;
-		this.visible = visible;
-		this.scale = scale;
-		this.ID = ID;
-		setImg(path);
-		Handler.addEntity(this);
-		}
 	
 	public Object getID() {
 		// TODO Auto-generated method stub

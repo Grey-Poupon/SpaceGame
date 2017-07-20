@@ -25,8 +25,8 @@ public class Main  extends Canvas implements Runnable{
 	public Main(){
 		r = new Random();
 		//this.addKeyListener(keyIn);
-		this.addMouseListener(new MouseInput());
-		this.addMouseMotionListener(new MouseInput());
+		//this.addMouseListener(new MouseInput());
+		//this.addMouseMotionListener(new MouseInput());
 		handler = new Handler();
 		//ui = new UI();
 		player = new Player(100,RaceID.bugBitch);

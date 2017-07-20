@@ -21,6 +21,8 @@ public class BattleScreen extends Main{
 		ui = new BattleUI(playerShip.getFrontWeapons());
 		keyIn = new BattleKeyInput();
 		this.addKeyListener(keyIn);
+		this.addMouseListener(new BattleMouseInput());
+		this.addMouseMotionListener(new BattleMouseInput());
 		
 		
 		
