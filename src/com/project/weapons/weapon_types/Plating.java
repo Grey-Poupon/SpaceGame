@@ -11,8 +11,8 @@ public class Plating extends Weapon {
 
 	private Buffer buffing;
 	
-	public Plating(int cooldownDuration,List<Double> modifiers) {
-		super(cooldownDuration);
+	public Plating(int cooldownDuration,List<Double> modifiers, String name) {
+		super(cooldownDuration, name);
 		List<DamageType> damageTypes = new ArrayList<DamageType>();
 		damageTypes.add(DamageType.Blunt);
 		damageTypes.add(DamageType.Piercing);

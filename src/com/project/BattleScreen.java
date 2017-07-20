@@ -12,7 +12,9 @@ public class BattleScreen extends Main{
 	public BattleScreen(){
 		playerShip = new Ship(-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
 		enemyShip = new Ship(WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
-		ui = new BattleUI();
+		ui = new BattleUI(playerShip.getFrontWeapons());
+		keyIn = new BattleKeyInput();
+		this.addKeyListener(keyIn);
 	}
 	
 	public void selectRoom(String room){
@@ -22,7 +24,7 @@ public class BattleScreen extends Main{
 	
 	
 	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon){
-		Weapon weapon = isFrontWeapon ? primary.getFrontWeapons(position) : primary.getBackWeapons(position);// get the weapon to be fired
+		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired
 		
 		if(weapon.isBuffer()){ // if its a buffing weapon apply buff
 			

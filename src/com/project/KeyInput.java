@@ -19,7 +19,7 @@ public class KeyInput extends KeyAdapter {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		sharedControlsPressed(key);
-		if(key==KeyEvent.VK_W) {}
+		if(key==KeyEvent.VK_Q) {}
 		if(key==KeyEvent.VK_S){}
 		if(key==KeyEvent.VK_A){}
 		if(key==KeyEvent.VK_D){}			

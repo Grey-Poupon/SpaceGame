@@ -14,7 +14,11 @@ public class Entity {
 	protected int yCoordinate;
 	protected int xVel;//  speed of mob
 	protected int yVel;
-	
+	protected float scale = 1;
+	private EntityID ID;
+	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
+	private BufferedImage img; 
+	private boolean visible = true;
 	
 	
 	public void tick(){	
@@ -25,23 +29,17 @@ public class Entity {
 	public void render(Graphics g)
 	{
 		if(visible){
-				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*scale),Math.round(img.getHeight()*scale), observer);
-
-			
+				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*scale),Math.round(img.getHeight()*scale), observer);	
 		}
 	};
 	
-	public void changeImage(String newPath){
+	public void changeImage(String newPath, boolean visible){
 		this.setImg(newPath);
+		this.setVisible(visible);
+		
 	}
 
-	protected float scale = 1;
-	private EntityID ID;
-	
-	
-	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
-	private BufferedImage img; 
-	private boolean visible = true;
+
 	
 	public void setxCoordinate(int xCoordinate) {
 		this.xCoordinate = xCoordinate;

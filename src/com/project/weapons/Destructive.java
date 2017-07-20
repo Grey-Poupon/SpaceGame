@@ -9,6 +9,7 @@ public class Destructive {
 	private int rateOfFire;
 	private int damagePerShot;
 	private DamageType damageType;
+	private double accuracy;
 
 	public int getRateOfFire() {
 		return rateOfFire;
@@ -22,7 +23,6 @@ public class Destructive {
 		return accuracy;
 	}
 
-	private double accuracy;
 	
 	public Destructive(int rateOfFire, int damagePerShot, double accuracy, DamageType damageType){
 		this.rateOfFire=rateOfFire;

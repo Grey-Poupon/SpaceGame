@@ -6,10 +6,9 @@ import java.awt.Graphics;
 public class UI {
 	private Entity healthBar;
 	private Entity distanceBar;
-	private static Entity mousePointer;
+	private static Entity mousePointer = new Entity(0,0, "res/mousepointer.png",true, EntityID.UI);
 	public UI(){
 		//healthBar = new Entity(0,0,"res/healthbar.png",true,EntityID.UI);
-		mousePointer= new Entity(0,0, "res/mousepointer.png",true, EntityID.UI);
 	}
 	public static void updateMouse(int x, int y){
 		mousePointer.setxCoordinate(x);

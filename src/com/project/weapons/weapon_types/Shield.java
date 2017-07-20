@@ -14,8 +14,8 @@ public class Shield extends Weapon {
 	public Buffer getBuff() {
 		return buffing;
 	}
-	public Shield(int cooldownDuration,List<Double> modifiers) {
-		super(cooldownDuration);
+	public Shield(int cooldownDuration,List<Double> modifiers, String name) {
+		super(cooldownDuration, name);
 		List<DamageType> damageTypes = new ArrayList<DamageType>();
 		damageTypes.add(DamageType.Laser);
 		buffing = new Buffer(modifiers,damageTypes);

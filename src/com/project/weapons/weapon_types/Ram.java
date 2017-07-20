@@ -6,8 +6,8 @@ import com.project.weapons.Weapon;
 
 public class Ram extends Weapon {
 
-	public Ram(int cooldownDuration, int rateOfFire,int damagePerShot,int accuracy) {
-		super(cooldownDuration);
+	public Ram(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name) {
+		super(cooldownDuration, name);
 		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,DamageType.Blunt);
 		this.isDestructive = true;
 	}
@@ -23,5 +23,10 @@ public class Ram extends Weapon {
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
 		this.cooldownTurnsLeft = getCooldownDuration();
+	}
+	@Override
+	public String getWeaponInfo(){
+		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
+		return info;
 	}
 }

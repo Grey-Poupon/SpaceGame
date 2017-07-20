@@ -6,8 +6,8 @@ import com.project.weapons.Weapon;
 
 public class Bullet extends Weapon {
 
-	public Bullet(int cooldownDuration, int rateOfFire,int damagePerShot,int accuracy) {
-		super(cooldownDuration);
+	public Bullet(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name) {
+		super(cooldownDuration, name);
 		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,DamageType.Piercing);
 		this.isDestructive = true;
 	}
@@ -23,6 +23,11 @@ public class Bullet extends Weapon {
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
 		this.cooldownTurnsLeft = getCooldownDuration();
+	}
+	@Override
+	public String getWeaponInfo(){
+		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
+		return info;
 	}
 	
 

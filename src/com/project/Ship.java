@@ -5,11 +5,13 @@ import java.util.Map;
 import javax.swing.text.Position;
 
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.Laser;
 
 public class Ship {
 	private Entity entity;
 	private int health;
-	private Weapon[] frontWeapons = new Weapon[4]; // only allowed 4 front + 4 back weapons
+	// only allowed 4 front + 4 back weapons
+	private Weapon[] frontWeapons = new Weapon[4]; 
 	private Weapon[] backWeapons = new Weapon[4];
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
@@ -21,9 +23,29 @@ public class Ship {
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
 		}
+		Weapon defaultWeapon = new Laser(1, 3, 5, 0.8, "Laser Mark I");
+		for(int i=0;i<frontWeapons.length;i++){
+			setFrontWeapon(defaultWeapon, i);
+			setBackWeapon(defaultWeapon, i);
+		}
 	}
 	public Ship(int x,int y, String path, boolean visible, EntityID id, int health,float scale){
 		entity = new Entity(x, y, path, visible,scale, EntityID.ship);
+		this.health = health;
+		for(DamageType dmg : DamageType.values()){
+			damageTakenModifier.put(dmg, 1d);
+			damageDealtModifier.put(dmg, 1d);
+		}
+		Weapon defaultWeapon = new Laser(1, 3, 5, 0.8, "Laser Mark I");
+		for(int i=0;i<frontWeapons.length;i++){
+			setFrontWeapon(defaultWeapon, i);
+			setBackWeapon(defaultWeapon, i);
+		}
+	}
+	public Ship(int x,int y, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons){
+		entity = new Entity(x, y, path, visible,scale, EntityID.ship);
+		this.frontWeapons = frontWeapons;
+		this.backWeapons = backWeapons;
 		this.health = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -54,11 +76,11 @@ public class Ship {
 		damageDealtModifier.put(dt, Double.valueOf(mod));
 	}
 
-	public Weapon getFrontWeapons(int position) {
+	public Weapon getFrontWeapon(int position) {
 		return frontWeapons[position];
 	}
 
-	public Weapon getBackWeapons(int position) {
+	public Weapon getBackWeapon(int position) {
 		return backWeapons[position];
 	}
 
@@ -68,7 +90,12 @@ public class Ship {
 	public void setBackWeapon(Weapon weapon, int position) {
 		this.backWeapons[position] = weapon;
 	}
-	
+	public Weapon[] getFrontWeapons() {
+		return frontWeapons;
+	}
+	public Weapon[] getBackWeapons() {
+		return backWeapons;
+	}
 
 	
 

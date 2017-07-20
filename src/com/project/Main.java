@@ -20,10 +20,11 @@ public class Main  extends Canvas implements Runnable{
 	public Ship playerShip; 
 	public UI ui;
 	public Player player;
-	
+	protected KeyInput keyIn;
+
 	public Main(){
 		r = new Random();
-		this.addKeyListener(new KeyInput());
+		//this.addKeyListener(keyIn);
 		this.addMouseListener(new MouseInput());
 		this.addMouseMotionListener(new MouseInput());
 		handler = new Handler();
