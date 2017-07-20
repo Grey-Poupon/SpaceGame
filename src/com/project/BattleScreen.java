@@ -10,25 +10,33 @@ public class BattleScreen extends Main{
 	private Ship enemyShip;
 	private String selectedRoom;
 	private Entity overlay;
-	private Entity healthbar;
-	private ArrayList<Entity> healthContainer = new ArrayList<Entity>();
+	private Entity playerHealthbar;
+	private Entity enemyHealthbar;
+	private ArrayList<Entity> playerHealthContainer = new ArrayList<Entity>();
+	private ArrayList<Entity> enemyHealthContainer = new ArrayList<Entity>();
 	private int ticker;
+	
 	public BattleScreen(){
+		
 		playerShip = new Ship(-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
 		enemyShip = new Ship(WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
 		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
-		healthbar = new Entity(0,0,"res/healthbar.png",true, EntityID.UI);
-		ui = new BattleUI(playerShip.getFrontWeapons());
+		playerHealthbar = new Entity(0,0,"res/healthbar.png",true, EntityID.UI);
+		enemyHealthbar = new Entity(500,0,"res/healthbar.png",true, EntityID.UI);
+		ui = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
+		
 		keyIn = new BattleKeyInput();
-		this.addKeyListener(keyIn);
+		this.addKeyListener(keyIn);	
 		this.addMouseListener(new BattleMouseInput());
 		this.addMouseMotionListener(new BattleMouseInput());
 		
-		
-		
 		for(int i = 0;i<normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth());i++){
 			Entity healthseg = new Entity(14+i*7,11,"res/healthseg.png",true,EntityID.UI);
-			healthContainer.add(healthseg);
+			playerHealthContainer.add(healthseg);
+		}
+		for(int i = 0;i<normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth());i++){
+			Entity healthseg = new Entity(500+14+i*7,11,"res/healthseg.png",true,EntityID.UI);
+			enemyHealthContainer.add(healthseg);
 		}
 		ticker= 0;
 	}
@@ -40,19 +48,34 @@ public class BattleScreen extends Main{
 	}
 	
 	public void tick(){
-		for(int i = 0; i<healthContainer.size();i++){
+		for(int i = 0; i<playerHealthContainer.size();i++){
 			if(i>normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth())){
-				healthContainer.get(i).setVisible(false);
+				playerHealthContainer.get(i).setVisible(false);
+			}
+		}
+		for(int i = 0; i<enemyHealthContainer.size();i++){
+			if(i>normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth())){
+				enemyHealthContainer.get(i).setVisible(false);
 			}
 		}
 		
+		if(BattleUI.buttons[0]!=null){
+			for(int i = 0; i<BattleUI.buttons.length;i++){
+				if(BattleUI.buttons[i].isActivated()){
+					System.out.println("1");
+					UseWeapon(playerShip, enemyShip, i, true);
+					BattleUI.buttons[i].setActivated(false);
+				}
+			}
+		}
 		
 		//code to check the health bar
-		ticker++;
-		if(ticker>200){
-			playerShip.takeDamage(5, DamageType.Laser);
-			ticker = 0;
-		}
+		//ticker++;
+		//if(ticker>200){
+		//	playerShip.takeDamage(5, DamageType.Laser);
+		//	enemyShip.takeDamage(7, DamageType.Laser);
+		//	ticker = 0;
+		//}
 		
 	}
 
