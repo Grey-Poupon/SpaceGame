@@ -21,6 +21,7 @@ public class Ship {
 	public Ship(int x,int y, String path, boolean visible, EntityID id, int health){
 		entity = new Entity(x, y, path, visible, EntityID.ship);
 		this.currHealth = this.maxHealth = health;
+		
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
