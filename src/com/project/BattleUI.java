@@ -50,7 +50,7 @@ public class BattleUI extends UI{
 
 	public static void checkButtons(int x,int y){
 		for(int i =0; i<buttons.length;i++){
-			if(buttons[i].isInside(x, y)){
+			if(buttons[i]!=null&&buttons[i].isInside(x, y)){
 				buttons[i].activated();
 			}
 		}		
