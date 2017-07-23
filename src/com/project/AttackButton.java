@@ -2,16 +2,12 @@ package com.project;
 
 import com.project.weapons.Weapon;
 
-public class AttackButton extends Button {
+public class AttackButton   {
 	
 	private Weapon weapon;
 	private boolean activated;
-	public AttackButton(int x, int y, int width, int height, Weapon weapon) {
-		super(x, y, width, height);
-		this.weapon = weapon;
-		activated =false;
-	}
-	public static void pressed(Ship ship){
+
+	public void pressed(Ship ship){
 		ship.takeDamage(5, DamageType.Laser);
 	}
 	

@@ -15,7 +15,6 @@ public class BattleUI extends UI{
 	private static Text[] texts = new Text[4];
 	private static String tooltipMenuSelection;
 
-	public static AttackButton[] buttons = new AttackButton[4];
 	private BattleScreen bs;
 	private Ship pShip;
 	private Ship eShip;
@@ -24,36 +23,37 @@ public class BattleUI extends UI{
 
 		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
 		updateWeapons(weapons);
+		this.bs = bs;
 	}
-	public static void changeTootlipSelection(String room){
-		tooltipMenuSelection = room;
-		
-		if(room.equals("q")){
+	public void changeTootlipSelection(String room){
+		if (tooltipMenuSelection==null || !tooltipMenuSelection.equals(room)){ // only do stuff if the selcetion has changed
+			tooltipMenuSelection = room;
 			
-			tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
-			for(int i=0;i<weapons.length;i++){
-				Weapon currentWeapon = weapons[i];
-				texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.PLAIN, 40,Color.BLACK);
-				buttons[i] = new AttackButton(605,585+i*85,500,85,currentWeapon);
+			if(room.equals("q")){// weapons selected
+				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
+				
+				clearButtons();
+				List<Button> newButtons = new ArrayList<Button>();
+				for(int i=0;i<weapons.length;i++){
+					Weapon currentWeapon = weapons[i];
+					texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.PLAIN, 40,Color.BLACK);
+					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.battleWeapons[i],bs));
+				}
+				addButtons(newButtons);
 			}
-		}
-		else{
-			tooltipSeperator.setVisible(false);
-			for(int i =0;i<texts.length;i++){
-				texts[i].setVisible(false);
+			else{
+				tooltipSeperator.setVisible(false);
+				for(int i =0;i<texts.length;i++){
+					texts[i].setVisible(false);
+				}
 			}
+			
 		}
 	}
 	public void updateWeapons(Weapon[] weapons){
 		this.weapons = weapons;
 	}
 
-	public static void checkButtons(int x,int y){
-		for(int i =0; i<buttons.length;i++){
-			if(buttons[i]!=null&&buttons[i].isInside(x, y)){
-				buttons[i].activated();
-			}
-		}		
-	}
+
 
 }

@@ -10,6 +10,12 @@ public class MouseInput implements MouseListener,MouseMotionListener {
 
 	public static Point mousePosition = new Point(0,0);
 	public static Point pointClicked = new Point(0,0);
+	protected UI ui;
+	
+	public MouseInput(UI ui){
+		this.ui = ui;
+	}
+	
 	
 	public Point getMousePosition() {
 		return mousePosition;
@@ -28,7 +34,7 @@ public class MouseInput implements MouseListener,MouseMotionListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		setpointClicked(arg0.getX(), arg0.getY());
-		UI.checkClick(arg0.getX(), arg0.getY());
+		ui.checkClick(arg0.getX(), arg0.getY());
 		//System.out.println(Integer.toString(arg0.getX())+" "+Integer.toString(arg0.getY()));
 	}
 
@@ -57,13 +63,13 @@ public class MouseInput implements MouseListener,MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		UI.updateMouse((int)arg0.getX(), (int)arg0.getY());
+		ui.updateMouse((int)arg0.getX(), (int)arg0.getY());
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		setMousePosition(arg0.getX(), arg0.getY());
-		UI.updateMouse((int)arg0.getX(), (int)arg0.getY());
+		ui.updateMouse((int)arg0.getX(), (int)arg0.getY());
 	}
 
 }

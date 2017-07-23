@@ -3,10 +3,12 @@ package com.project;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.project.weapons.Weapon;
 
-public class BattleScreen extends Main{
+public class BattleScreen extends Main implements Observer{
 	private Ship enemyShip;
 	private String selectedRoom;
 	private Entity overlay;
@@ -18,23 +20,26 @@ public class BattleScreen extends Main{
 	
 	public BattleScreen(){
 		
-		playerShip = new Ship(-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
-		enemyShip = new Ship(WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
-		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
-		playerHealthbar = new Entity(0,0,"res/healthbar.png",true, EntityID.UI);
-		enemyHealthbar = new Entity(500,0,"res/healthbar.png",true, EntityID.UI);
-		ui = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
+		playerShip			 = new Ship    (-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
+		enemyShip 			 = new Ship    (WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
+		overlay 			 = new Entity  (0,0,"res/Drawn UI.png",true,EntityID.UI);
+		playerHealthbar 	 = new Entity  (0,0,"res/healthbar.png",true, EntityID.UI);
+		enemyHealthbar 		 = new Entity  (500,0,"res/healthbar.png",true, EntityID.UI);
+		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
+		keyIn				 = new BattleKeyInput((BattleUI) ui);
+		mouseIn				 = new BattleMouseInput(ui);
 		
-		keyIn = new BattleKeyInput();
 		this.addKeyListener(keyIn);	
-		this.addMouseListener(new BattleMouseInput());
-		this.addMouseMotionListener(new BattleMouseInput());
+		this.addMouseListener(mouseIn);
+		this.addMouseMotionListener(mouseIn);
 		
 		for(int i = 0;i<normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth());i++){
+			
 			Entity healthseg = new Entity(14+i*7,11,"res/healthseg.png",true,EntityID.UI);
 			playerHealthContainer.add(healthseg);
 		}
 		for(int i = 0;i<normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth());i++){
+			
 			Entity healthseg = new Entity(500+14+i*7,11,"res/healthseg.png",true,EntityID.UI);
 			enemyHealthContainer.add(healthseg);
 		}
@@ -56,16 +61,6 @@ public class BattleScreen extends Main{
 		for(int i = 0; i<enemyHealthContainer.size();i++){
 			if(i>normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth())){
 				enemyHealthContainer.get(i).setVisible(false);
-			}
-		}
-		
-		if(BattleUI.buttons[0]!=null){
-			for(int i = 0; i<BattleUI.buttons.length;i++){
-				if(BattleUI.buttons[i].isActivated()){
-					System.out.println("1");
-					UseWeapon(playerShip, enemyShip, i, true);
-					BattleUI.buttons[i].setActivated(false);
-				}
 			}
 		}
 		
@@ -108,5 +103,31 @@ public class BattleScreen extends Main{
 				secondary.takeDamage((int)damageDealt[1],(DamageType)damageDealt[2]);
 			}
 		}
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {// this gets notified by the click function inside button
+		if(arg0 instanceof Button){
+			if(arg1 == ButtonID.BattleWeaponsMenuSelection1){
+				UseWeapon(playerShip,enemyShip,0,true);
+				System.out.println("Fire Weapon 1!");
+			}
+			if(arg1 == ButtonID.BattleWeaponsMenuSelection2){
+				UseWeapon(playerShip,enemyShip,1,true);
+				System.out.println("Fire Weapon 2!");
+
+			}
+			if(arg1 == ButtonID.BattleWeaponsMenuSelection3){
+				UseWeapon(playerShip,enemyShip,2,true);
+				System.out.println("Fire Weapon 3!");
+
+			}
+			if(arg1 == ButtonID.BattleWeaponsMenuSelection4){
+				UseWeapon(playerShip,enemyShip,3,true);
+				System.out.println("Fire Weapon 4!");
+
+			}
+		}
+		
 	}
 }
