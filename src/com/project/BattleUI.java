@@ -48,7 +48,7 @@ public class BattleUI extends UI{
 			}
 			else if(room.equals("w")) {
 				for(int i = 0;i<4;i++) {
-					texts[i] = new Text("Engine Choice "+i,true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.BLACK);
+					texts[i] = new Text("Engine Choice "+i,true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.WHITE);
 					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.BattleEngineChoice,bs));
 
 				}
