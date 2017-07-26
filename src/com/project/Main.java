@@ -40,7 +40,7 @@ public class Main  extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(Color.CYAN);
+		g.setColor(Color.BLACK);
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		handler.render(g);
