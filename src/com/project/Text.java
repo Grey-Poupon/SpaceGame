@@ -3,6 +3,8 @@ package com.project;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
@@ -35,12 +37,18 @@ public class Text {
 	}
 	public void render(Graphics g)
 	{
-		g.setColor(colour);
-		g.setFont(font);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR);
+		g2d.setColor(colour);
+		g2d.setFont(font);
 		if(visible){
-		g.drawString(text, xCoordinate, yCoordinate);
+			g2d.drawString(text, xCoordinate, yCoordinate);
 		}
 	};
+	public static void delete(Text t) {
+		Handler.texts.remove(t);
+		t = null;
+	}
 	public void setFont(Font font) {
 		this.font = font;
 	}
