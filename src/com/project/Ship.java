@@ -10,7 +10,6 @@ import com.project.weapons.weapon_types.Laser;
 public class Ship {
 	private Entity entity;
 	private int health;
-
 	private int maxHealth;
 	private int currHealth;
 	private Weapon[] frontWeapons = new Weapon[4]; // only allowed 4 front + 4 back weapons
