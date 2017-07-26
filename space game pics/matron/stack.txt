@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<image w="200" h="200" version="0.0.3" xres="95.986" yres="95.986">
+  <stack name="root">
+    <layer name="main ship top" opacity="1.00" src="data/layer8.png" visibility="visible" x="28" y="69" composite-op="svg:src-over" />
+    <layer name="little ship top" opacity="1.00" src="data/layer7.png" visibility="visible" x="75" y="53" composite-op="svg:src-over" />
+    <layer name="big ship gun" opacity="1.00" src="data/layer6.png" visibility="visible" x="162" y="92" composite-op="svg:src-over" />
+    <layer name="little ship gun" opacity="1.00" src="data/layer5.png" visibility="visible" x="152" y="60" composite-op="svg:src-over" />
+    <layer name="ship bottom" opacity="1.00" src="data/layer4.png" visibility="visible" x="41" y="46" composite-op="svg:src-over" />
+    <layer name="back gun upper" opacity="1.00" src="data/layer3.png" visibility="visible" x="38" y="59" composite-op="svg:src-over" />
+    <layer name="back gun lower" opacity="1.00" src="data/layer2.png" visibility="visible" x="43" y="68" composite-op="svg:src-over" />
+    <layer name="flame" opacity="1.00" src="data/layer1.png" visibility="visible" x="9" y="80" composite-op="svg:src-over" />
+    <layer name="Background" opacity="1.00" src="data/layer0.png" visibility="hidden" x="4" y="45" composite-op="svg:src-over" />
+  </stack>
+</image>
