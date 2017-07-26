@@ -23,6 +23,7 @@ public class Main  extends Canvas implements Runnable{
 	protected MouseInput mouseIn;
 	protected KeyInput keyIn;
 
+	
 	public Main(){
 		r = new Random();
 		handler = new Handler();
@@ -103,6 +104,7 @@ public class Main  extends Canvas implements Runnable{
 	
 	
 	public static void main(String[] args){
+		new ResourceLoader();
 		new BattleScreen();
 	}
 	
