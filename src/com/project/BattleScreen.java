@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 import com.project.weapons.Weapon;
 
 public class BattleScreen extends Main implements Observer{
 	private Ship enemyShip;
+
 	private String selectedRoom;
 	private Entity overlay;
 	private Entity playerHealthbar;
@@ -23,14 +25,19 @@ public class BattleScreen extends Main implements Observer{
 	private int playersEngineChoice;
 	private int enemyWeaponChoice;
 	private int enemyEngineChoice;
-
+	private Random rand;
 	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
 		
-		playerShip			 = new Ship    (-150,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
-		enemyShip 			 = new Ship    (WIDTH-200,200,"res/octoBitchShip.png",true,EntityID.ship,50,2);
+		rand = new Random();
+//		for(int i=0; i<30;i++) {
+//			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true);
+//		}
+//		
+		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
+		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		overlay 			 = new Entity  (0,0,"res/Drawn UI.png",true,EntityID.UI);
 		playerHealthbar 	 = new Entity  (0,0,"res/healthbar.png",true, EntityID.UI);
 		enemyHealthbar 		 = new Entity  (500,0,"res/healthbar.png",true, EntityID.UI);
@@ -81,6 +88,7 @@ public class BattleScreen extends Main implements Observer{
 	}
 	public void tick(){
 		super.tick();
+
 		if(!isPlayersTurn) {
 			if(currentPhase == BattlePhases.Weapons) {
 				enemyWeaponChoice=0;
@@ -110,7 +118,14 @@ public class BattleScreen extends Main implements Observer{
 			if(i>normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth())){
 				enemyHealthContainer.get(i).setVisible(false);
 			}
-		}	
+		}
+		try {
+			playerShip.tickLayers();
+		}catch(Exception e) {e.printStackTrace();}
+		try {
+			enemyShip.tickLayers();
+
+		}catch(Exception e) {}
 	}
 
 	private int normaliseHealthBar(int maxHealth, int currHealth){

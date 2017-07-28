@@ -12,9 +12,12 @@ public class Entity {
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
+	protected float zCoordinate;
 	protected int xVel;//  speed of mob
 	protected int yVel;
-	protected float scale = 1;
+	protected float xScale = 1;
+	protected float yScale = 1;
+	protected float defScale =1;
 	private EntityID ID;
 	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private BufferedImage img; 
@@ -29,7 +32,7 @@ public class Entity {
 	public void render(Graphics g)
 	{
 		if(visible){
-				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*scale),Math.round(img.getHeight()*scale), observer);	
+				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*xScale),Math.round(img.getHeight()*yScale), observer);	
 		}
 	};
 	
@@ -60,7 +63,9 @@ public class Entity {
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
-		this.scale = scale;
+		this.xScale = scale;
+		this.yScale = scale;
+		this.defScale = scale;
 		this.ID = ID;
 		setImg(path);
 		Handler.addLowPriorityEntity(this);
@@ -89,6 +94,26 @@ public class Entity {
 	public void setyCoordinate(int yCoordinate) {
 		this.yCoordinate = yCoordinate;
 	}
+	public void setZ(float z) {
+		this.zCoordinate = z;
+	}
+	public float getZ() {
+		return zCoordinate;
+	}
+	public void setXVel(int xVel) {
+		this.xVel =xVel;
+	}
+	public int getXvel() {
+		return xVel;
+	}
+	public void setYVel(int yVel) {
+		this.yVel =yVel;
+	}
+	public int getYvel() {
+		return xVel;
+	}
+	
+	
 	public ImageObserver getObserver() {					// getters and setters for all variables
 		return observer;
 	}
@@ -122,11 +147,20 @@ public class Entity {
 	public void setEntityID(EntityID mobID) {
 		this.ID = mobID;
 	}
-	public void setScale(float scale){
-		this.scale = scale;
+	public void setXScale(float scale){
+		this.xScale = scale;
 	}
-	public float getScale(){
-		return this.scale;
+	public float getXScale(){
+		return this.xScale;
+	}
+	public void setYScale(float scale){
+		this.yScale = scale;
+	}
+	public float getYScale(){
+		return this.yScale;
+	}
+	public float getDefScale() {
+		return defScale;
 	}
 
 }
