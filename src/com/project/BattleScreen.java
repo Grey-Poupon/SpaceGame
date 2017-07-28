@@ -34,6 +34,7 @@ public class BattleScreen extends Main implements Observer{
 		overlay 			 = new Entity  (0,0,"res/Drawn UI.png",true,EntityID.UI);
 		playerHealthbar 	 = new Entity  (0,0,"res/healthbar.png",true, EntityID.UI);
 		enemyHealthbar 		 = new Entity  (500,0,"res/healthbar.png",true, EntityID.UI);
+		Animation anim       = new Animation("res/spritesheetTest.png", 80, 80, 2, 5, 1, 200, 200);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput((BattleUI) ui);
 		mouseIn				 = new BattleMouseInput(ui);
@@ -79,6 +80,7 @@ public class BattleScreen extends Main implements Observer{
 
 	}
 	public void tick(){
+		super.tick();
 		if(!isPlayersTurn) {
 			if(currentPhase == BattlePhases.Weapons) {
 				enemyWeaponChoice=0;
