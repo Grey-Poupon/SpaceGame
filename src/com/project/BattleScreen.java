@@ -32,10 +32,10 @@ public class BattleScreen extends Main implements Observer{
 	public BattleScreen(){
 		
 		rand = new Random();
-//		for(int i=0; i<30;i++) {
-//			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true);
-//		}
-//		
+		for(int i=0; i<30;i++) {
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true);
+		}
+		
 		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		overlay 			 = new Entity  (0,0,"res/Drawn UI.png",true,EntityID.UI);
