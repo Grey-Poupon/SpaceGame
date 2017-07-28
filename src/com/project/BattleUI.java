@@ -42,13 +42,14 @@ public class BattleUI extends UI{
 				
 				for(int i=0;i<weapons.length;i++){
 					Weapon currentWeapon = weapons[i];
-					texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.BLACK);
+					texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-30+(79*(i+1)),"Sevensegies", Font.PLAIN, 50,Color.WHITE);
 					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.battleWeapons[i],bs));
 				}
 			}
 			else if(room.equals("w")) {
 				for(int i = 0;i<4;i++) {
-					texts[i] = new Text("Engine Choice "+i,true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.BLACK);
+					texts[i] = new Text("Engine Choice "+i,true,Main.WIDTH-591+10,Main.HEIGHT-309-30+(78*(i+1)),"Sevensegies", Font.PLAIN, 50,Color.WHITE);
+
 					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.BattleEngineChoice,bs));
 
 				}

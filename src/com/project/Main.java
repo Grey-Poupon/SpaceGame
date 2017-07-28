@@ -23,6 +23,7 @@ public class Main  extends Canvas implements Runnable{
 	protected MouseInput mouseIn;
 	protected KeyInput keyIn;
 
+	
 	public Main(){
 		r = new Random();
 		handler = new Handler();
@@ -39,7 +40,7 @@ public class Main  extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(Color.CYAN);
+		g.setColor(Color.BLACK);
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		handler.render(g);
@@ -87,7 +88,7 @@ public class Main  extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer >1000){
 				timer +=1000;
-				//System.out.println("FPS: "+frames);
+				System.out.println("FPS: "+frames);
 				
 				frames = 0;
 				
@@ -103,6 +104,7 @@ public class Main  extends Canvas implements Runnable{
 	
 	
 	public static void main(String[] args){
+		new ResourceLoader();
 		new BattleScreen();
 	}
 	
