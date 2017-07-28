@@ -25,21 +25,39 @@ public class BattleUI extends UI{
 		updateWeapons(weapons);
 		this.bs = bs;
 	}
+	private void clearText() {
+		for(int i = 0;i<texts.length;i++) {
+			Text.delete(texts[i]);
+		}
+	}
 	public void changeTootlipSelection(String room){
 		if (tooltipMenuSelection==null || !tooltipMenuSelection.equals(room)){ // only do stuff if the selcetion has changed
 			tooltipMenuSelection = room;
-			
+			clearButtons();
+			clearText();
+			List<Button> newButtons = new ArrayList<Button>();
+
 			if(room.equals("q")){// weapons selected
 				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
 				
-				clearButtons();
-				List<Button> newButtons = new ArrayList<Button>();
 				for(int i=0;i<weapons.length;i++){
 					Weapon currentWeapon = weapons[i];
-					texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.PLAIN, 40,Color.BLACK);
+					texts[i] = new Text(currentWeapon.getWeaponInfo(),true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.BLACK);
 					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.battleWeapons[i],bs));
 				}
-				addButtons(newButtons);
+			}
+			else if(room.equals("w")) {
+				for(int i = 0;i<4;i++) {
+					texts[i] = new Text("Engine Choice "+i,true,Main.WIDTH-591+10,Main.HEIGHT-309-40+(78*(i+1)),"Sevensegies", Font.BOLD, 40,Color.BLACK);
+					newButtons.add(new Button(Main.WIDTH-591,Main.HEIGHT-309+(78*(i)),591,75,ButtonID.BattleEngineChoice,bs));
+
+				}
+			}
+			else if(room.equals("e")) {
+				
+			}
+			else if(room.equals("")) {
+				
 			}
 			else{
 				tooltipSeperator.setVisible(false);
@@ -47,12 +65,14 @@ public class BattleUI extends UI{
 					texts[i].setVisible(false);
 				}
 			}
+			addButtons(newButtons);
 			
 		}
 	}
 	public void updateWeapons(Weapon[] weapons){
 		this.weapons = weapons;
 	}
+
 
 
 

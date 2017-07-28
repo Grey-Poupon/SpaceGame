@@ -16,7 +16,16 @@ public class BattleScreen extends Main implements Observer{
 	private Entity enemyHealthbar;
 	private ArrayList<Entity> playerHealthContainer = new ArrayList<Entity>();
 	private ArrayList<Entity> enemyHealthContainer = new ArrayList<Entity>();
-	private int ticker;
+	
+	private int currentPhasePointer = 0;
+	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
+	private int playersWeaponChoice;
+	private int playersEngineChoice;
+	private int enemyWeaponChoice;
+	private int enemyEngineChoice;
+
+	private boolean playerIsChaser = true;
+	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
 		
@@ -28,7 +37,6 @@ public class BattleScreen extends Main implements Observer{
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput((BattleUI) ui);
 		mouseIn				 = new BattleMouseInput(ui);
-		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -43,7 +51,6 @@ public class BattleScreen extends Main implements Observer{
 			Entity healthseg = new Entity(500+14+i*7,11,"res/healthseg.png",true,EntityID.UI);
 			enemyHealthContainer.add(healthseg);
 		}
-		ticker= 0;
 	}
 	
 	public void selectRoom(String room){
@@ -51,8 +58,47 @@ public class BattleScreen extends Main implements Observer{
 		selectedRoom = room;
 		
 	}
-	
+	private void nextTurn() {
+		
+		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { // if its the chasers turn
+			currentPhasePointer++;
+		}
+		if(currentPhasePointer >= BattlePhases.phases.length) {
+			currentPhasePointer -= BattlePhases.phases.length;
+			isPlayersTurn = !playerIsChaser;
+		}
+		currentPhase= BattlePhases.phases[currentPhasePointer];
+		isPlayersTurn = !isPlayersTurn;
+		
+		String phase = BattlePhases.Weapons == currentPhase ? "Weapon":"Engine";
+		if(currentPhase == BattlePhases.Final) {phase = "final";}
+		String turn = isPlayersTurn ? "Players" : "Enemys";
+		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
+		
+		
+
+	}
 	public void tick(){
+		if(!isPlayersTurn) {
+			if(currentPhase == BattlePhases.Weapons) {
+				enemyWeaponChoice=0;
+				System.out.println("Enemy Weapon Reveal");
+				nextTurn();
+			}
+			else {
+				enemyEngineChoice=0;
+				System.out.println("Enemy Engine Reveal");
+				nextTurn();
+			}
+		}
+		if(currentPhase == BattlePhases.Final) {
+			System.out.println("Weapons Firing");
+			UseWeapon(playerShip, enemyShip, playersWeaponChoice, true);
+			UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true);
+			nextTurn();
+
+		}
+	
 		for(int i = 0; i<playerHealthContainer.size();i++){
 			if(i>normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth())){
 				playerHealthContainer.get(i).setVisible(false);
@@ -62,16 +108,7 @@ public class BattleScreen extends Main implements Observer{
 			if(i>normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth())){
 				enemyHealthContainer.get(i).setVisible(false);
 			}
-		}
-		
-		//code to check the health bar
-		//ticker++;
-		//if(ticker>200){
-		//	playerShip.takeDamage(5, DamageType.Laser);
-		//	enemyShip.takeDamage(7, DamageType.Laser);
-		//	ticker = 0;
-		//}
-		
+		}	
 	}
 
 	private int normaliseHealthBar(int maxHealth, int currHealth){
@@ -109,22 +146,47 @@ public class BattleScreen extends Main implements Observer{
 	public void update(Observable arg0, Object arg1) {// this gets notified by the click function inside button
 		if(arg0 instanceof Button){
 			if(arg1 == ButtonID.BattleWeaponsMenuSelection1){
-				UseWeapon(playerShip,enemyShip,0,true);
-				System.out.println("Fire Weapon 1!");
+				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
+					playersWeaponChoice =0;
+					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
+					nextTurn();
+				}
+				//UseWeapon(playerShip,enemyShip,0,true);
 			}
 			if(arg1 == ButtonID.BattleWeaponsMenuSelection2){
-				UseWeapon(playerShip,enemyShip,1,true);
-				System.out.println("Fire Weapon 2!");
+				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
+					playersWeaponChoice = 1;
+					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
+					nextTurn();
+				}
+				//UseWeapon(playerShip,enemyShip,1,true);
 
 			}
 			if(arg1 == ButtonID.BattleWeaponsMenuSelection3){
-				UseWeapon(playerShip,enemyShip,2,true);
-				System.out.println("Fire Weapon 3!");
+				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
+					playersWeaponChoice = 2;
+					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
+					nextTurn();
+				}
+				//UseWeapon(playerShip,enemyShip,2,true);
 
 			}
 			if(arg1 == ButtonID.BattleWeaponsMenuSelection4){
-				UseWeapon(playerShip,enemyShip,3,true);
-				System.out.println("Fire Weapon 4!");
+				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
+					playersWeaponChoice = 3;
+					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
+					nextTurn();
+				}
+				//UseWeapon(playerShip,enemyShip,3,true);
+
+			}
+			if(arg1 == ButtonID.BattleEngineChoice){
+				if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+					playersEngineChoice = 0;
+					System.out.println("Player Engine choice made");
+					nextTurn();
+				}
+				//UseWeapon(playerShip,enemyShip,3,true);
 
 			}
 		}
