@@ -32,7 +32,7 @@ public class BattleScreen extends Main implements Observer{
 	public BattleScreen(){
 		
 		rand = new Random();
-		for(int i=0; i<30;i++) {
+		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true);
 		}
 		
