@@ -31,12 +31,13 @@ public class Handler {
 		for(int i =0; i<entitiesLowPriority.size();i++){
 			entitiesLowPriority.get(i).render(g);
 		}
-		for(int i =0; i<entitiesHighPriority.size();i++){
-			entitiesHighPriority.get(i).render(g);
-		}
 		for(int i =0; i<anims.size();i++){
 			anims.get(i).render(g);
 		}
+		for(int i =0; i<entitiesHighPriority.size();i++){
+			entitiesHighPriority.get(i).render(g);
+		}
+
 
 	}
 	
