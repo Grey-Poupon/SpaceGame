@@ -8,9 +8,8 @@ import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.Laser;
 
 public class Ship {
-	private Entity entity;
+	private LayeredImage lImage;
 	private int health;
-
 	private int maxHealth;
 	private int currHealth;
 	private Weapon[] frontWeapons = new Weapon[4]; // only allowed 4 front + 4 back weapons
@@ -18,8 +17,8 @@ public class Ship {
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
 
-	public Ship(int x,int y, String path, boolean visible, EntityID id, int health){
-		entity = new Entity(x, y, path, visible, EntityID.ship);
+	public Ship(int x,int y,float z, float zPerLayer,String path, boolean visible, EntityID id, int health){
+		lImage = new LayeredImage(x, y, path, zPerLayer, z);
 		this.currHealth = this.maxHealth = health;
 		
 		for(DamageType dmg : DamageType.values()){
@@ -32,8 +31,8 @@ public class Ship {
 			setBackWeapon(defaultWeapon, i);
 		}
 	}
-	public Ship(int x,int y, String path, boolean visible, EntityID id, int health,float scale){
-		entity = new Entity(x, y, path, visible,scale, EntityID.ship);
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale){
+		lImage = new LayeredImage(x, y, path, zPerLayer, z);
 		this.currHealth = this.maxHealth = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -45,8 +44,8 @@ public class Ship {
 			setBackWeapon(defaultWeapon, i);
 		}
 	}
-	public Ship(int x,int y, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons){
-		entity = new Entity(x, y, path, visible,scale, EntityID.ship);
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons){
+		lImage = new LayeredImage(x, y, path, zPerLayer, z);
 		this.frontWeapons = frontWeapons;
 		this.backWeapons = backWeapons;
 		this.health = health;
@@ -104,6 +103,12 @@ public class Ship {
 	}
 	public Weapon[] getBackWeapons() {
 		return backWeapons;
+	}
+	public LayeredImage getLayeredImage() {
+		return lImage;
+	}
+	public void tickLayers() {
+		lImage.tick();
 	}
 
 	
