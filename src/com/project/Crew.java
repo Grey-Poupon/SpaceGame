@@ -5,15 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import crew_types.Diseases.Disease;
+import com.project.crew_types.diseases.Disease;
 
 public class Crew {
-	private String gender;
-	private Random rand;
-	private ArrayList<Disease> diseases;
-	private Map<String,Byte> stats;
-	private Map<String,Float> statModifier;
-	private RaceID race;
+	protected String gender;
+	protected Random rand;
+	protected ArrayList<Disease> diseases;
+	protected Map<String,Byte> stats;
+	protected Map<String,Float> statModifier;
+	protected RaceID race;
+	protected  Map<RaceID,Float> raceRelations; 
+	
 	
 	public Crew(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
 			String gender, RaceID race) {

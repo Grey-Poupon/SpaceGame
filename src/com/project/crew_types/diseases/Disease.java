@@ -1,4 +1,4 @@
-package crew_types.Diseases;
+package com.project.crew_types.diseases;
 
 import java.util.HashMap;
 import java.util.Map;
