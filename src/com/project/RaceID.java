@@ -1,5 +1,5 @@
 package com.project;
 
 public enum RaceID {
-bugBitch(),octoBitch();
+bugBitch(),octoBitch(),moleBitch();
 }
