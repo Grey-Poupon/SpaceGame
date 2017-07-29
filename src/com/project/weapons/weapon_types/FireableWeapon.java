@@ -4,10 +4,11 @@ import com.project.DamageType;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 
-public class FlakCannon extends Weapon {
-	public FlakCannon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name) {
+public class FireableWeapon extends Weapon {
+
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt) {
 		super(cooldownDuration, name);
-		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,DamageType.Blunt);
+		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt);
 		this.isDestructive = true;
 	}
 
@@ -28,4 +29,6 @@ public class FlakCannon extends Weapon {
 		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
 		return info;
 	}
+	
+
 }

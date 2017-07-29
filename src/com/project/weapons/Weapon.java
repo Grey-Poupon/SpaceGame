@@ -7,7 +7,7 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	protected boolean isBuffer;
 	protected boolean isDestructive;
 	protected boolean isDebuffer;
-	
+	//protected Animation 
 	public boolean isBuffer() {// to check if the weapon buffs
 		return isBuffer;
 	}
