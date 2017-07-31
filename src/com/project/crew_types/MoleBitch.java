@@ -21,7 +21,7 @@ public class MoleBitch extends Crew {
 		
 	}
 	public MoleBitch() {
-		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.moleBitch);
+		super(getRandomWeightedStat(statVariance,(byte)35),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)5), getRandomWeightedStat(statVariance,(byte)40), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0,getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
 	}
 

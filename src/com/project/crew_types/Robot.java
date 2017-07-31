@@ -8,7 +8,7 @@ import com.project.RaceID;
 public class Robot extends Crew {
 
 	private static byte statVariance = 1;
-	
+	private byte generation;
 	
 	public Robot(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender) {
@@ -20,9 +20,31 @@ public class Robot extends Crew {
 		generateRaceTable();
 	}
 	public Robot() {
-		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30),  getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.robot);
-		generateRaceTable();
-	}
+		super();
+		this.setGender('?');
+		this.generation=getRandomGeneration();
+		if(this.getGeneration()==2) {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)15));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)40));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)40));			
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		else {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)10));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)45));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)20));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)20));			
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		this.setRaceID(RaceID.robot);
+		generateRaceTable();}
 
 	private void generateRaceTable() {
 		this.raceRelations = new HashMap<>();
@@ -35,4 +57,11 @@ public class Robot extends Crew {
 		this.raceRelations.put(RaceID.moleBitch,1.1f);
 	}
 
+	private byte getRandomGeneration() {
+		return (byte)(rand.nextInt(1)+2);
+	}
+	private byte getGeneration() {
+		return generation;
+	}
+	
 }

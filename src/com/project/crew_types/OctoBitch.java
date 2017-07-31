@@ -21,8 +21,8 @@ public class OctoBitch extends Crew{
 	}
 	public OctoBitch() {
 		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)15),
-				getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 
-				getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.octoBitch);
+				getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)20), 
+				getRandomWeightedStat(statVariance,(byte)25), 0, 0, getRandomWeightedStat(statVariance,(byte)50), getRandomGender(), RaceID.octoBitch);
 		generateRaceTable();
 	}
 	

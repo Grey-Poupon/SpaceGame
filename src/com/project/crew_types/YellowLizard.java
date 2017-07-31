@@ -19,7 +19,7 @@ public class YellowLizard extends Crew {
 		generateRaceTable();
 	}
 	public YellowLizard() {
-		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.yellowLizard);
+		super(getRandomWeightedStat(statVariance,(byte)20),getRandomWeightedStat(statVariance,(byte)50), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)25), 0, 0,getRandomGender(), RaceID.yellowLizard);
 		generateRaceTable();
 	}
 	

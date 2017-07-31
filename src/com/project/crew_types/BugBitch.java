@@ -19,7 +19,29 @@ public class BugBitch extends Crew {
 		generateRaceTable();
 	}
 	public BugBitch() {
-		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.bugBitch);
+		super();
+		this.setGender(getRandomGender());
+		if(this.getGender()=='m') {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)15));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)35));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)20));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)15));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)20));
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		else {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)40));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)35));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)20));			
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		this.setRaceID(RaceID.bugBitch);
 		generateRaceTable();
 	}
 	private void generateRaceTable() {

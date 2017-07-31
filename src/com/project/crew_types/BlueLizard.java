@@ -21,7 +21,29 @@ public class BlueLizard extends Crew {
 		generateRaceTable();
 	}
 	public BlueLizard() {
-		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.blueLizard);
+		super();
+		this.setGender(getRandomGender());
+		if(this.getGender()=='m') {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)45));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)35));
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		else {
+			stats.put("social", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("combat", getRandomWeightedStat(statVariance,(byte)25));
+			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)35));
+			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)30));
+			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)35));
+			stats.put("science", getRandomWeightedStat(statVariance,(byte)30));			
+			stats.put("stress", (byte)0);
+			stats.put("hunger", (byte)0);
+		}
+		this.setRaceID(RaceID.blueLizard);
 		generateRaceTable();
 	}
 	

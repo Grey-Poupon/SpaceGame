@@ -11,10 +11,10 @@ import com.project.crew_types.diseases.Disease;
 
 public class Crew implements Observer{
 	protected char gender;
-	protected static Random rand;
+	protected static Random rand= new Random();
 	private ArrayList<Disease> diseases;
-	private Map<String,Byte> stats;
-	private Map<String,Float> statModifier;
+	protected Map<String,Byte> stats;
+	protected Map<String,Float> statModifier;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
 	
@@ -41,6 +41,21 @@ public class Crew implements Observer{
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
 	}
+	
+	public Crew() {
+		stats = new HashMap<>();
+		statModifier = new HashMap<>();
+		statModifier.put("social",  0f);
+		statModifier.put("combat", 0f);
+		statModifier.put("gunner", 0f);
+		statModifier.put("diplomacy",0f);
+		statModifier.put("stress", 0f);
+		statModifier.put("hunger", 0f);
+		statModifier.put("teaching", 0f);
+		this.diseases = new ArrayList<Disease>();
+		
+	}
+	
 	
 	
 	
@@ -85,6 +100,10 @@ public class Crew implements Observer{
 		}
 		
 		return stat;
+	}
+	
+	public void setRaceID(RaceID id) {
+		this.race =id;
 	}
 	
 	protected static byte getRandomWeightedStat(float statVariance,byte mean) {
