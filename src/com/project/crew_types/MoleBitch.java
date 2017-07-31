@@ -8,8 +8,8 @@ import com.project.RaceID;
 
 public class MoleBitch extends Crew {
 
-	public MoleBitch(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
-			String gender) {
+	public MoleBitch(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
+			String gender, Random rand) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender,RaceID.moleBitch);
 		generateRaceTable();
 	}

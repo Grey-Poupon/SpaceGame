@@ -3,17 +3,20 @@ package com.project;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import com.project.crew_types.diseases.Disease;
 
-public class Crew {
+public class Crew implements Observer{
 	private String gender;
 	private Random rand;
 	private ArrayList<Disease> diseases;
 	private Map<String,Byte> stats;
 	private Map<String,Float> statModifier;
 	private RaceID race;
+	protected Map<RaceID,Float> raceRelations;
 	
 	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
 			String gender, RaceID race) {
@@ -72,6 +75,17 @@ public class Crew {
 		return (byte) (stats.get(string)*statModifier.get(string));
 	}
 	public void interactSocially(Crew crew) {
+		
+	}
+
+
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(arg == ButtonID.Crew) {
+			
+		}
 		
 	}
 	
