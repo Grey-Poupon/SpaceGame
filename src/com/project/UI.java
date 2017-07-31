@@ -17,8 +17,6 @@ public class UI {
 		mousePointer.setxCoordinate(x);
 		mousePointer.setyCoordinate(y);
 	}
-	
-	
 	public void checkClick(int x, int y) {
 		checkButtons(x, y);
 	}

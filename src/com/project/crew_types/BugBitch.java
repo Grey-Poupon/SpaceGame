@@ -1,4 +1,4 @@
-package crew_types;
+package com.project.crew_types;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ public class BugBitch extends Crew {
 
 	private Random rand;
 	
-	public BugBitch(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
+	public BugBitch(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
 			String gender) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender,RaceID.bugBitch);
 		

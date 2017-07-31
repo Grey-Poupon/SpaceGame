@@ -21,7 +21,6 @@ public class BattleUI extends UI{
 	
 	public BattleUI (Weapon[] weapons,BattleScreen bs, Ship pShip, Ship eShip){
 
-		overlay = new Entity(0,0,"res/Drawn UI.png",true,EntityID.UI);
 		updateWeapons(weapons);
 		this.bs = bs;
 	}

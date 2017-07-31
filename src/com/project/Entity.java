@@ -17,7 +17,6 @@ public class Entity {
 	protected int yVel;
 	protected float xScale = 1;
 	protected float yScale = 1;
-	protected float defScale =1;
 	private EntityID ID;
 	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private BufferedImage img; 
@@ -59,13 +58,22 @@ public class Entity {
 		this.ID = ID;
 		Handler.addLowPriorityEntity(this);
 		}
+	public Entity(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.xScale = xscale;
+		this.yScale = yscale;
+		this.ID = ID;
+		setImg(path);
+		Handler.addLowPriorityEntity(this);
+		}
 	public Entity(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
 		this.xScale = scale;
 		this.yScale = scale;
-		this.defScale = scale;
 		this.ID = ID;
 		setImg(path);
 		Handler.addLowPriorityEntity(this);
@@ -159,8 +167,6 @@ public class Entity {
 	public float getYScale(){
 		return this.yScale;
 	}
-	public float getDefScale() {
-		return defScale;
-	}
+
 
 }

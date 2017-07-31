@@ -7,8 +7,8 @@ public enum ButtonID {
 	BattleWeaponsMenuSelection2,
 	BattleWeaponsMenuSelection3,
 	BattleWeaponsMenuSelection4,
-	BattleEngineChoice;
-	
+	BattleEngineChoice,
+	Crew;
 	public static ButtonID[] battleWeapons = new ButtonID[]{
 			BattleWeaponsMenuSelection1,
 			BattleWeaponsMenuSelection2,

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import crew_types.Diseases.Disease;
+import com.project.crew_types.diseases.Disease;
 
 public class Crew {
 	private String gender;
@@ -15,18 +15,18 @@ public class Crew {
 	private Map<String,Float> statModifier;
 	private RaceID race;
 	
-	public Crew(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
+	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
 			String gender, RaceID race) {
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
-		stats.put("social", social);
-		stats.put("combat", combat);
-		stats.put("gunner", gunner);
-		stats.put("diplomacy", diplomacy);
-		stats.put("stress", stress);
-		stats.put("hunger", hunger);
-		stats.put("teaching", teaching);
+		stats.put("social", (byte)social);
+		stats.put("combat", (byte)combat);
+		stats.put("gunner", (byte)gunner);
+		stats.put("diplomacy", (byte)diplomacy);
+		stats.put("stress", (byte)stress);
+		stats.put("hunger", (byte)hunger);
+		stats.put("teaching", (byte)teaching);
 		statModifier = new HashMap<>();
 		statModifier.put("social",  0f);
 		statModifier.put("combat", 0f);
@@ -37,7 +37,10 @@ public class Crew {
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
 	}
-
+	
+	
+	
+	
 	public String getGender() {
 		return gender;
 	}
