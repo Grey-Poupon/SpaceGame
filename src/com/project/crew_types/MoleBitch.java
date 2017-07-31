@@ -7,10 +7,21 @@ import com.project.Crew;
 import com.project.RaceID;
 
 public class MoleBitch extends Crew {
+	
+	private static byte statVariance = 5;
 
-	public MoleBitch(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
-			String gender, Random rand) {
+	public MoleBitch(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+			char gender) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender,RaceID.moleBitch);
+		generateRaceTable();
+	}
+	public MoleBitch(boolean random) {
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.moleBitch);
+		generateRaceTable();
+		
+	}
+	public MoleBitch() {
+		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
 	}
 

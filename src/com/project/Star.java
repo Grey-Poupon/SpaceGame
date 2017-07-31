@@ -4,7 +4,6 @@ import java.util.Random;
 public class Star extends Entity{
 	
 	Random rand;
-	Norm norm;
 	public Star(int x, int y, String path, boolean visible) {
 		super(x, y, path, visible,EntityID.star);
 		rand = new Random();
