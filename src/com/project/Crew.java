@@ -38,6 +38,7 @@ public class Crew {
 		statModifier.put("hunger", 0f);
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
+		
 	}
 
 	public String getGender() {
