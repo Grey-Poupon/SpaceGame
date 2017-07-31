@@ -7,9 +7,9 @@ import com.project.RaceID;
 
 public class BlueLizard extends Crew {
 
-	public BlueLizard(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
-			String gender, RaceID race) {
-		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, race);
+	public BlueLizard(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+			String gender) {
+		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.blueLizard);
 		generateRaceTable();
 	}
 

@@ -3,32 +3,33 @@ package com.project;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import com.project.crew_types.diseases.Disease;
 
-public class Crew {
-	protected String gender;
-	protected Random rand;
-	protected ArrayList<Disease> diseases;
-	protected Map<String,Byte> stats;
-	protected Map<String,Float> statModifier;
-	protected RaceID race;
-	protected Map<RaceID,Float> raceRelations; 
+public class Crew implements Observer{
+	private String gender;
+	private Random rand;
+	private ArrayList<Disease> diseases;
+	private Map<String,Byte> stats;
+	private Map<String,Float> statModifier;
+	private RaceID race;
+	protected Map<RaceID,Float> raceRelations;
 	
-	
-	public Crew(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
+	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
 			String gender, RaceID race) {
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
-		stats.put("social", social);
-		stats.put("combat", combat);
-		stats.put("gunner", gunner);
-		stats.put("diplomacy", diplomacy);
-		stats.put("stress", stress);
-		stats.put("hunger", hunger);
-		stats.put("teaching", teaching);
+		stats.put("social", (byte)social);
+		stats.put("combat", (byte)combat);
+		stats.put("gunner", (byte)gunner);
+		stats.put("diplomacy", (byte)diplomacy);
+		stats.put("stress", (byte)stress);
+		stats.put("hunger", (byte)hunger);
+		stats.put("teaching", (byte)teaching);
 		statModifier = new HashMap<>();
 		statModifier.put("social",  0f);
 		statModifier.put("combat", 0f);
@@ -38,9 +39,11 @@ public class Crew {
 		statModifier.put("hunger", 0f);
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
-		
 	}
-
+	
+	
+	
+	
 	public String getGender() {
 		return gender;
 	}
@@ -72,6 +75,17 @@ public class Crew {
 		return (byte) (stats.get(string)*statModifier.get(string));
 	}
 	public void interactSocially(Crew crew) {
+		
+	}
+
+
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(arg == ButtonID.Crew) {
+			
+		}
 		
 	}
 	

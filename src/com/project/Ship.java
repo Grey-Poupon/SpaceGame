@@ -1,9 +1,12 @@
 package com.project;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.text.Position;
 
+import com.project.crew_types.BugBitch;
 import com.project.ship.Engine;
 import com.project.ship.Generator;
 import com.project.ship.Overclockable;
@@ -22,29 +25,15 @@ public class Ship {
 	
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
+	private List<Crew>     crew                = new ArrayList<Crew>();
+
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
 
 	
-	public Ship(int x,int y,float z, float zPerLayer,String path, boolean visible, EntityID id, int health){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z);
-		this.currHealth = this.maxHealth = health;
-		Weapon defaultWeapon = new FireableWeapon(1, 3, 5, 0.8, "Laser Mark I",DamageType.Laser);
-		
-		for(DamageType dmg : DamageType.values()){
-			damageTakenModifier.put(dmg, 1d);
-			damageDealtModifier.put(dmg, 1d);
-		}
-		for(int i=0;i<frontWeapons.length;i++){
-			setFrontWeapon(defaultWeapon, i);
-			setBackWeapon(defaultWeapon, i);
-		}
-		this.engine = new Engine("MAC-3", false, new Overclockable(80, 60, MathFunctions::basicEffiency));
-		this.generator = new Generator("JAN-2", false, new Overclockable(80, 90,MathFunctions::basicEffiency));
-		
-	}
+	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z);
+		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.currHealth = this.maxHealth = health;
 		Weapon defaultWeapon = new FireableWeapon(1, 3, 5, 0.8, "Laser Mark I",DamageType.Laser);
 
@@ -55,10 +44,11 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
+			crew.add(new BugBitch(50, 50, 50, 50, 50, 50, 50, "gender-queer"));
 		}
 	}
-	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z);
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
+		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.frontWeapons = frontWeapons;
 		this.backWeapons = backWeapons;
 		this.health = health;
@@ -68,6 +58,7 @@ public class Ship {
 		}
 		this.generator=generator;
 		this.engine=engine;
+		this.crew = crew;
 	}
 	public void useEngine(int amountOfFuel) {
 		double thrust = engine.getThrust(amountOfFuel);
@@ -80,7 +71,9 @@ public class Ship {
 		if(power<0) {System.out.println("your generator exploded, gg boyo");}//engine exploded
 		power = (int) power;
 	}
-	
+	public List<Crew> getCrew() {
+		return crew;
+	}
 	
 	public int getHealth() {
 		return health;

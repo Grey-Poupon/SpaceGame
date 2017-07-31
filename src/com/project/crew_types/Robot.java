@@ -7,9 +7,9 @@ import com.project.RaceID;
 
 public class Robot extends Crew {
 
-	public Robot(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,
-			String gender, RaceID race) {
-		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, race);
+	public Robot(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+			String gender) {
+		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.robot);
 		generateRaceTable();
 	}
 
