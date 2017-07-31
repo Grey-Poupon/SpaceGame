@@ -38,34 +38,34 @@ public class BattleScreen extends Main implements Observer{
 		
 		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
-		overlay 			 = new Entity  (0,0,"res/Drawn UI.png",true,EntityID.UI);
-		playerHealthbar 	 = new Entity  (0,0,"res/healthbar.png",true, EntityID.UI);
-		enemyHealthbar 		 = new Entity  (500,0,"res/healthbar.png",true, EntityID.UI);
+		overlay 			 = new Entity  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		Animation anim       = new Animation("res/spritesheetTest.png", 80, 80, 2, 5, 5, 200, 200,10,true,new Animation[]
 											{new Animation("res/spritesheetTest2.png", 80, 80, 2, 5, 5, 200, 200,10,false),
 											 new Animation("res/spritesheetTest3.png", 80, 80, 2, 5, 5, 200, 200,10,false)});
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput((BattleUI) ui);
 		mouseIn				 = new BattleMouseInput(ui);
+		playerHealthbar		 = new Entity  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		enemyHealthbar		 = new Entity  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		
+		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
 		
-		for(int i = 0;i<normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth());i++){
-			
-			Entity healthseg = new Entity(14+i*7,11,"res/healthseg.png",true,EntityID.UI);
-			playerHealthContainer.add(healthseg);
-		}
-		for(int i = 0;i<normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth());i++){
-			
-			Entity healthseg = new Entity(500+14+i*7,11,"res/healthseg.png",true,EntityID.UI);
-			enemyHealthContainer.add(healthseg);
-		}
+
 	}
 	
 	public void selectRoom(String room){
 		
 		selectedRoom = room;
+		
+	}
+	private void addCrewButtons(Ship player) {
+		List<Button> buttons = new ArrayList<Button>();
+		for(int i = 0;i<player.getCrew().size();i++) {
+			buttons.add(new Button(2, 125+(i*123), 120, 120, null, null));
+		}
 		
 	}
 	private void nextTurn() {
@@ -110,28 +110,19 @@ public class BattleScreen extends Main implements Observer{
 			nextTurn();
 
 		}
-	
-		for(int i = 0; i<playerHealthContainer.size();i++){
-			if(i>normaliseHealthBar(playerShip.getMaxHealth(),playerShip.getCurrHealth())){
-				playerHealthContainer.get(i).setVisible(false);
-			}
-		}
-		for(int i = 0; i<enemyHealthContainer.size();i++){
-			if(i>normaliseHealthBar(enemyShip.getMaxHealth(),enemyShip.getCurrHealth())){
-				enemyHealthContainer.get(i).setVisible(false);
-			}
-		}
-		try {
+		if(playerShip !=null && enemyShip != null) {
 			playerShip.tickLayers();
-		}catch(Exception e) {e.printStackTrace();}
-		try {
 			enemyShip.tickLayers();
-
-		}catch(Exception e) {}
-	}
-
-	private int normaliseHealthBar(int maxHealth, int currHealth){
-		return currHealth*50/maxHealth;
+		}
+		if(playerHealthbar != null && enemyHealthbar != null) {
+			float scale = (float)playerShip.getCurrHealth()/(float)playerShip.getMaxHealth();
+			if (scale < 0) {scale = 0;}
+			playerHealthbar.setXScale(scale);
+			scale = (float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth();
+			if (scale < 0) {scale = 0;}
+			enemyHealthbar.setXScale(scale);
+		}
+	
 	}
 	
 	

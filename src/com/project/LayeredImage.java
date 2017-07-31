@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class LayeredImage {
 	public int x;
 	public int y;
-	public double scale;
+	public float scale = 3.5f;
 	public double anglePhi;
 	public double angleTheta;
 	public static float cameraZ;
@@ -46,7 +46,25 @@ public class LayeredImage {
 		cameraX = 0;
 		cameraY = 0;
 	}
-	
+	public LayeredImage(int x,int y, String path,float z,float zPerLayer,float scale) {
+		this.path = path;
+		this.zPerLayer = zPerLayer;
+		this.x= x;
+		this.y =y;
+		this.z = z;
+		this.scale = scale;
+		tickerX =1;
+		tickerY =1;
+		tickerZ =1;
+		layers = new ArrayList<Entity>();
+		loadLayers();
+		largestWidth = getLargestWidth();
+		largestHeight = getLargestHeight();
+		cameraZ = -0.3f;
+		cameraX = 0;
+		cameraY = 0;
+		
+	}
 	public void tick() {
 		if(cameraZ>=1.5||cameraZ<=-1.25) {
 			tickerZ*=-1;
@@ -67,9 +85,9 @@ public class LayeredImage {
 	}
 	
 	private void setScaling(Entity e,int index) {
-		e.setXScale((float)(Math.cos(Math.atan2(cameraX, e.getZ()))*3.5*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ)))));
+		e.setXScale((float)(Math.cos(Math.atan2(cameraX, e.getZ()))*scale*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ)))));
 		e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] - (this.largestWidth*(e.getXScale()))/2.0f));
-		e.setYScale((float)(Math.cos(Math.atan2(cameraY, e.getZ()))*3.5*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ)))));	    
+		e.setYScale((float)(Math.cos(Math.atan2(cameraY, e.getZ()))*scale*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ)))));	    
 		e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] - (this.largestHeight*(e.getYScale()))/2.0f));	    
 
 	}

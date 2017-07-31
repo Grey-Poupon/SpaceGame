@@ -7,16 +7,13 @@ import com.project.DamageType;
 import com.project.weapons.Buffer;
 import com.project.weapons.Weapon;
 
-public class Plating extends Weapon {
+public class Armour extends Weapon {
 
 	private Buffer buffing;
 	
-	public Plating(int cooldownDuration,List<Double> modifiers, String name) {
+	public Armour(int cooldownDuration,List<Double> modifiers, String name,List<DamageType> dt) {
 		super(cooldownDuration, name);
-		List<DamageType> damageTypes = new ArrayList<DamageType>();
-		damageTypes.add(DamageType.Blunt);
-		damageTypes.add(DamageType.Piercing);
-		buffing = new Buffer(modifiers,damageTypes);
+		buffing = new Buffer(modifiers,dt);
 		this.isBuffer = true;
 	}
 
