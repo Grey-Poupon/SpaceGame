@@ -11,8 +11,8 @@ import java.util.Random;
 import com.project.crew_types.diseases.Disease;
 
 public class Crew implements Observer{
-	private String gender;
-	private Random rand;
+	protected char gender;
+	protected static Random rand;
 	private ArrayList<Disease> diseases;
 	private Map<String,Byte> stats;
 	private Map<String,Float> statModifier;
@@ -22,7 +22,7 @@ public class Crew implements Observer{
 	protected List<String> speechOptions = new ArrayList<String>();
 	
 	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
-			String gender, RaceID race) {
+			char gender, RaceID race) {
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
@@ -53,11 +53,11 @@ public class Crew implements Observer{
 	protected void moveRoom(String room) {
 		this.locationOnShip = room;
 	}
-	public String getGender() {
+	public char getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(char gender) {
 		this.gender = gender;
 	}
 
@@ -84,6 +84,35 @@ public class Crew implements Observer{
 		return (byte) (stats.get(string)*statModifier.get(string));
 	}
 	public void interactSocially(Crew crew) {
+		
+	}
+	protected static byte getRandomStat(float statVariance) {
+		byte stat = (byte)0;
+		while(((stat<0)) || ((stat>100))) {
+			stat = (byte) (30+rand.nextGaussian()*statVariance);
+		}
+		
+		return stat;
+	}
+	
+	protected static byte getRandomWeightedStat(float statVariance,byte mean) {
+		byte stat = (byte)0;
+		while(((stat<0)) || ((stat>100))) {
+			stat = (byte) (mean+rand.nextGaussian()*statVariance);
+		}
+		
+		return stat;
+	}
+	
+	protected static char getRandomGender() {
+		char gender = 't';
+		if(rand.nextBoolean()) {
+			gender = 'm';
+		}
+		else {
+			gender = 'f';
+		}
+		return gender;
 		
 	}
 

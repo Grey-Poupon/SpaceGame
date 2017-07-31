@@ -44,7 +44,7 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			crew.add(new BugBitch(50, 50, 50, 50, 50, 50, 50, "gender-queer"));
+			crew.add(new BugBitch(50, 50, 50, 50, 50, 50, 50, 'm'));
 		}
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){

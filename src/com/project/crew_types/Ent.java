@@ -6,10 +6,20 @@ import com.project.Crew;
 import com.project.RaceID;
 
 public class Ent extends Crew {
+	
+	private static byte statVariance =0;
 
 	public Ent(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
-			String gender) {
+			char gender) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.ent);
+		generateRaceTable();
+	}
+	public Ent(boolean random){
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), '?', RaceID.ent);
+		generateRaceTable();
+	}
+	public Ent() {
+		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.ent);
 		generateRaceTable();
 	}
 

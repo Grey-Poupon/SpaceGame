@@ -6,12 +6,23 @@ import com.project.Crew;
 import com.project.RaceID;
 
 public class YellowLizard extends Crew {
+	
+	private static byte statVariance = 3;
 
 	public YellowLizard(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
-			String gender) {
+			char gender) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.yellowLizard);
 		generateRaceTable();
 	}
+	public YellowLizard(boolean random) {
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), 'm', RaceID.yellowLizard);
+		generateRaceTable();
+	}
+	public YellowLizard() {
+		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.yellowLizard);
+		generateRaceTable();
+	}
+	
 
 	private void generateRaceTable() {
 		this.raceRelations = new HashMap<>();

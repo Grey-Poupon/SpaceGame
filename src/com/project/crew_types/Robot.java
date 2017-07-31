@@ -7,9 +7,20 @@ import com.project.RaceID;
 
 public class Robot extends Crew {
 
+	private static byte statVariance = 1;
+	
+	
 	public Robot(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
-			String gender) {
+			char gender) {
 		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.robot);
+		generateRaceTable();
+	}
+	public Robot(boolean random){
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), '?', RaceID.robot);
+		generateRaceTable();
+	}
+	public Robot() {
+		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.robot);
 		generateRaceTable();
 	}
 
