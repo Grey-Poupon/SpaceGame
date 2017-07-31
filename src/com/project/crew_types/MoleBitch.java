@@ -10,18 +10,18 @@ public class MoleBitch extends Crew {
 	
 	private static byte statVariance = 5;
 
-	public MoleBitch(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+	public MoleBitch(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender) {
-		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender,RaceID.moleBitch);
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.moleBitch);
 		generateRaceTable();
 	}
 	public MoleBitch(boolean random) {
-		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.moleBitch);
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
 		
 	}
 	public MoleBitch() {
-		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.moleBitch);
+		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30),getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
 	}
 

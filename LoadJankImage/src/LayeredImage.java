@@ -46,18 +46,7 @@ public class LayeredImage {
 	}
 	
 	public void tick() {
-		if(cameraZ>=1.5||cameraZ<=-1.25) {
-			tickerZ*=-1;
-		}
-		if(cameraX>=5||cameraX<=-5) {
-			tickerX*=-1;
-		}
-		if(cameraY>=15||cameraY<=-15) {
-			tickerY*=-1;
-		}
-		//cameraY+=0.03*tickerY;
-		//cameraX+=0.03*tickerX;
-		//cameraZ+=0.03*tickerZ;
+		
 		for(int i = 0; i<layers.size();i++) {
 			setScaling(layers.get(i),i);
 		}
@@ -69,9 +58,19 @@ public class LayeredImage {
 		double d1 =Math.atan2(cameraX, e.getZ());
 		double d = (Math.cos(d1)*3*(f));
 		e.setXScale((float)d);
-		e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] - (this.largestWidth*(e.getXScale()))/2.0f));
+		if(cameraX>0) {
+			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1]));
+		}
+		else {
+			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(3-(e.getXScale())))));
+		}
 		e.setYScale((float) Math.cos(Math.atan2(cameraY, e.getZ()))*3*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ))));	    
-		e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] - (this.largestHeight*(e.getYScale()))/2.0f));	    
+		if(cameraY>0) {
+			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1]));
+		}
+		else {
+			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(3-(e.getYScale())))));
+		}		
 
 	}
 		

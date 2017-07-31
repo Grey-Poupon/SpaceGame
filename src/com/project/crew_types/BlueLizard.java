@@ -11,17 +11,17 @@ public class BlueLizard extends Crew {
 	private static byte statVariance = 5;
 	
 	
-	public BlueLizard(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+	public BlueLizard(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender) {
-		super(social, combat, gunner, diplomacy, stress, hunger, teaching, gender, RaceID.blueLizard);
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.blueLizard);
 		generateRaceTable();
 	}
 	public BlueLizard(boolean random) {
-		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.blueLizard);
+		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.blueLizard);
 		generateRaceTable();
 	}
 	public BlueLizard() {
-		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.blueLizard);
+		super(getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomWeightedStat(statVariance,(byte)30), getRandomGender(), RaceID.blueLizard);
 		generateRaceTable();
 	}
 	
