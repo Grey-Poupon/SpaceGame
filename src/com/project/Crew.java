@@ -12,7 +12,7 @@ import com.project.crew_types.diseases.Disease;
 
 public class Crew implements Observer{
 	protected char gender;
-	protected static Random rand;
+	protected static Random rand = new Random();
 	private ArrayList<Disease> diseases;
 	private Map<String,Byte> stats;
 	private Map<String,Float> statModifier;
@@ -43,7 +43,7 @@ public class Crew implements Observer{
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
 		speechOptions.add("Talk");
-		
+		if(rand.nextBoolean()) {locationOnShip = "weapons";}
 	}
 	
 	

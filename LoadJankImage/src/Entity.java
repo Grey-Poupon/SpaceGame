@@ -1,3 +1,5 @@
+package LoadJankImage.src;
+
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

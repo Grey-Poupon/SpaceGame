@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.swing.text.Position;
 
+import com.project.crew_types.BlueLizard;
 import com.project.crew_types.BugBitch;
+import com.project.crew_types.Ent;
+import com.project.crew_types.Robot;
+import com.project.crew_types.YellowLizard;
 import com.project.ship.Engine;
 import com.project.ship.Generator;
 import com.project.ship.Overclockable;
@@ -44,8 +48,12 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			crew.add(new BugBitch(50, 50, 50, 50, 50, 50, 50, 'm'));
 		}
+			crew.add(new BlueLizard());
+			crew.add(new Ent());
+			crew.add(new Robot());
+			crew.add(new YellowLizard());
+
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);

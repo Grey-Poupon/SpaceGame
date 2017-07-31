@@ -1,3 +1,5 @@
+package LoadJankImage.src;
+
 import java.util.Random;
 
 public class Star extends Entity{

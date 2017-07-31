@@ -24,13 +24,14 @@ public class Animation {
 	private int yTile = 0 ;
 	private int xCoordinate;
 	private int yCoordinate;
+	private float scale = 1;
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
 	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private List<Animation> nextAnimations = new ArrayList<Animation>();
 	
 
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,int framesLeft,boolean firstAnimation) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation) {
 		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -39,14 +40,15 @@ public class Animation {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
-		this.framesLeft = framesLeft;
+		this.framesLeft = NoOfloops<0 ? -1 : NoOfloops*noHorizTiles*noVertTiles;
+		this.scale = scale;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
 			start();
 		}
 	}
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,int framesLeft,boolean firstAnimation,Animation[] anims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,Animation[] anims) {
 		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -55,8 +57,9 @@ public class Animation {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
-		this.framesLeft = framesLeft;
+		this.framesLeft = NoOfloops*noHorizTiles*noVertTiles;
 		this.nextAnimations = Arrays.asList(anims);
+		this.scale = scale;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
@@ -64,7 +67,7 @@ public class Animation {
 		}
 	}
 	
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,int framesLeft,boolean firstAnimation,List<Animation> anims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,List<Animation> anims) {
 		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -73,8 +76,9 @@ public class Animation {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
-		this.framesLeft = framesLeft;
+		this.framesLeft = NoOfloops*noHorizTiles*noVertTiles;
 		this.nextAnimations =  anims;
+		this.scale = scale;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
@@ -112,7 +116,7 @@ public class Animation {
 		setSprite();
 	}
 	public void render(Graphics g) {
-		g.drawImage(sprite, xCoordinate, yCoordinate,Math.round(sprite.getWidth()),Math.round(sprite.getHeight()),observer);
+		g.drawImage(sprite, xCoordinate, yCoordinate,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale),observer);
 	}
 	public static void delete(Animation anim) {
 		Handler.anims.remove(anim);
@@ -124,19 +128,21 @@ public class Animation {
 		if(tickCounter==ticksPerFrame) {
 			nextSprite();
 			tickCounter=0;
-			framesLeft--;
-			if (framesLeft < 1) {
-				if (nextAnimations.size()>1) {
-					Animation next = nextAnimations.get(0);
-					List<Animation> anns = nextAnimations.subList(1, nextAnimations.size());
-					next.addAnims(anns);
-				}
-				if(nextAnimations.size()>0) {
-					nextAnimations.get(0).start();
-				}
-				Animation.delete(this);
-			}
 			
+			if(framesLeft>0) { //  if its not an infiniteloop
+				framesLeft--;
+				if (framesLeft < 1) {
+					if (nextAnimations.size()>1) {
+						Animation next = nextAnimations.get(0);
+						List<Animation> anns = nextAnimations.subList(1, nextAnimations.size());
+						next.addAnims(anns);
+					}
+					if(nextAnimations.size()>0) {
+						nextAnimations.get(0).start();
+					}
+					Animation.delete(this);
+				}
+			}	
 		}
 	}
 }

@@ -40,9 +40,7 @@ public class BattleScreen extends Main implements Observer{
 		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		overlay 			 = new Entity  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
-		Animation anim       = new Animation("res/spritesheetTest.png", 80, 80, 2, 5, 5, 200, 200,10,true,new Animation[]
-											{new Animation("res/spritesheetTest2.png", 80, 80, 2, 5, 5, 200, 200,10,false),
-											 new Animation("res/spritesheetTest3.png", 80, 80, 2, 5, 5, 200, 200,10,false)});
+		Animation anim       = new Animation("res/blueFlameSpritesheet.png", 48, 26, 5, 2, 8, 670, 347,4.4f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(ui);
@@ -154,7 +152,7 @@ public class BattleScreen extends Main implements Observer{
 		if(arg0 instanceof Button){
 			
 			ButtonID ID = (ButtonID) Array.get(arg1, 0);
-			int index = (int)Array.get(arg1, 0);
+			int index = (int)Array.get(arg1, 1);
 			
 			if(ID == ButtonID.BattleWeaponsChoice){
 				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
