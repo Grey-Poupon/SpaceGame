@@ -14,7 +14,7 @@ public class Crew {
 	protected Map<String,Byte> stats;
 	protected Map<String,Float> statModifier;
 	protected RaceID race;
-	protected  Map<RaceID,Float> raceRelations; 
+	protected Map<RaceID,Float> raceRelations; 
 	
 	
 	public Crew(byte social, byte combat, byte gunner, byte diplomacy, byte stress, byte hunger, byte teaching,

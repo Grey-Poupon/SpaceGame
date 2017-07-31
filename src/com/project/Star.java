@@ -8,8 +8,7 @@ public class Star extends Entity{
 	public Star(int x, int y, String path, boolean visible) {
 		super(x, y, path, visible,EntityID.star);
 		rand = new Random();
-		norm = new Norm();
-		this.setXVel(-(norm.getNorm(10, 100)));
+		this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+10))));
 	}
 	
 	public void tick(){
