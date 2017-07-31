@@ -2,6 +2,7 @@ package com.project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +18,8 @@ public class Crew implements Observer{
 	private Map<String,Float> statModifier;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
+	protected String locationOnShip = "cockpit";
+	protected List<String> speechOptions = new ArrayList<String>();
 	
 	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
 			String gender, RaceID race) {
@@ -39,11 +42,17 @@ public class Crew implements Observer{
 		statModifier.put("hunger", 0f);
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
+		speechOptions.add("Talk");
+		
 	}
 	
 	
-	
-	
+	protected String getRoom() {
+		return locationOnShip;
+	}
+	protected void moveRoom(String room) {
+		this.locationOnShip = room;
+	}
 	public String getGender() {
 		return gender;
 	}
@@ -84,7 +93,7 @@ public class Crew implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg == ButtonID.Crew) {
-			
+			BattleUI.changeTootlipSelection(this);
 		}
 		
 	}

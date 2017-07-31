@@ -1,6 +1,7 @@
 package com.project;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -43,7 +44,7 @@ public class BattleScreen extends Main implements Observer{
 											{new Animation("res/spritesheetTest2.png", 80, 80, 2, 5, 5, 200, 200,10,false),
 											 new Animation("res/spritesheetTest3.png", 80, 80, 2, 5, 5, 200, 200,10,false)});
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
-		keyIn				 = new BattleKeyInput((BattleUI) ui);
+		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(ui);
 		playerHealthbar		 = new Entity  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		enemyHealthbar		 = new Entity  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
@@ -53,6 +54,7 @@ public class BattleScreen extends Main implements Observer{
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
 		
+		BattleUI.generateCrewButtons(playerShip.getCrew(), this);
 
 	}
 	
@@ -61,13 +63,7 @@ public class BattleScreen extends Main implements Observer{
 		selectedRoom = room;
 		
 	}
-	private void addCrewButtons(Ship player) {
-		List<Button> buttons = new ArrayList<Button>();
-		for(int i = 0;i<player.getCrew().size();i++) {
-			buttons.add(new Button(2, 125+(i*123), 120, 120, null, null));
-		}
-		
-	}
+
 	private void nextTurn() {
 		
 		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { // if its the chasers turn
@@ -154,50 +150,29 @@ public class BattleScreen extends Main implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {// this gets notified by the click function inside button
+
 		if(arg0 instanceof Button){
-			if(arg1 == ButtonID.BattleWeaponsMenuSelection1){
+			
+			ButtonID ID = (ButtonID) Array.get(arg1, 0);
+			int index = (int)Array.get(arg1, 0);
+			
+			if(ID == ButtonID.BattleWeaponsChoice){
 				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
-					playersWeaponChoice =0;
+					playersWeaponChoice = index;
 					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
 					nextTurn();
 				}
-				//UseWeapon(playerShip,enemyShip,0,true);
 			}
-			if(arg1 == ButtonID.BattleWeaponsMenuSelection2){
-				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
-					playersWeaponChoice = 1;
-					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
-					nextTurn();
-				}
-				//UseWeapon(playerShip,enemyShip,1,true);
-
-			}
-			if(arg1 == ButtonID.BattleWeaponsMenuSelection3){
-				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
-					playersWeaponChoice = 2;
-					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
-					nextTurn();
-				}
-				//UseWeapon(playerShip,enemyShip,2,true);
-
-			}
-			if(arg1 == ButtonID.BattleWeaponsMenuSelection4){
-				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
-					playersWeaponChoice = 3;
-					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
-					nextTurn();
-				}
-				//UseWeapon(playerShip,enemyShip,3,true);
-
-			}
-			if(arg1 == ButtonID.BattleEngineChoice){
+	
+			if(ID == ButtonID.BattleEngineChoice){
 				if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
-					playersEngineChoice = 0;
+					playersEngineChoice = index;
 					System.out.println("Player Engine choice made");
 					nextTurn();
 				}
-				//UseWeapon(playerShip,enemyShip,3,true);
-
+			}
+			if(ID == ButtonID.Crew){
+				BattleUI.changeTootlipSelection(playerShip.getCrew().get(index));
 			}
 		}
 		

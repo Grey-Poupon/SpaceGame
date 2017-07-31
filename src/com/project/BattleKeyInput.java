@@ -4,19 +4,20 @@ import java.awt.event.KeyEvent;
 
 
 public class BattleKeyInput extends KeyInput {
-	private BattleUI ui;
-	public BattleKeyInput(BattleUI ui) {
-		this.ui = ui;
+	private BattleScreen bs;
+	public BattleKeyInput(BattleScreen bs) {
+		this.bs = bs;
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		sharedControlsPressed(key);
-		if (key == KeyEvent.VK_Q){ui.changeTootlipSelection("q");}
-		if (key == KeyEvent.VK_W){ui.changeTootlipSelection("w");}
-		if (key == KeyEvent.VK_E){ui.changeTootlipSelection("e");}
-		if (key == KeyEvent.VK_R){ui.changeTootlipSelection("r");}
+		if (key == KeyEvent.VK_Q){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(0));}
+		if (key == KeyEvent.VK_W){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(1));}
+		if (key == KeyEvent.VK_E){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(2));}
+		if (key == KeyEvent.VK_R){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(3));}
+		if (key == KeyEvent.VK_T){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(4));}
 
 	}
 	@Override

@@ -9,7 +9,10 @@ public class UI {
 	private Entity healthBar;
 	private Entity distanceBar;
 	private static Entity mousePointer = new Entity(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
-	private List<Button> buttons = new ArrayList<Button>();
+	private static List<Button> tooltipButtons = new ArrayList<Button>();
+
+	private static List<Button> crewButtons = new ArrayList<Button>();
+
 	public UI(){
 		//healthBar = new Entity(0,0,"res/healthbar.png",true,EntityID.UI);
 	}
@@ -29,21 +32,30 @@ public class UI {
 		g.drawString("Money: "+Integer.toString(player.getMoney()), 120, 120);
 		g.drawString("Race: "+player.getRaceID().toString(), 120, 130);
 	}	
-	public void addButtons(List<Button> buttons){
-		this.buttons.addAll(buttons);
-	}
-	public void removeButtons(List<Button> buttons){
-		this.buttons.removeAll(buttons);
-	}
-	public void clearButtons(){
-		this.buttons.clear();
+
+	public static void clearTooltipButtons(){
+		tooltipButtons.clear();
 	}
 	public void checkButtons(int x,int y){
+		List<Button> buttons = crewButtons;
+		buttons.addAll(tooltipButtons);
 		for(int i =0; i<buttons.size();i++){
 			if(buttons.get(i)!=null && buttons.get(i).isInside(x, y)){
 				buttons.get(i).click();
 			}
 		}		
+	}
+	public static boolean addTooltipButton(Button button) {
+		return tooltipButtons.add(button);
+	}
+	public static boolean removeTooltipButton(Button button) {
+		return tooltipButtons.remove(button);
+	}
+	public static void addCrewButton(Button button) {
+		crewButtons.add(button);
+	}
+	public static boolean removeCrewButton(Button button) {
+		return tooltipButtons.remove(button);
 	}
 
 }
