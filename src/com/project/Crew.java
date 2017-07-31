@@ -14,14 +14,14 @@ public class Crew implements Observer{
 	protected char gender;
 	protected static Random rand = new Random();
 	private ArrayList<Disease> diseases;
-	private Map<String,Byte> stats;
-	private Map<String,Float> statModifier;
+	protected Map<String,Byte> stats;
+	protected Map<String,Float> statModifier;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
 	protected String locationOnShip = "cockpit";
 	protected List<String> speechOptions = new ArrayList<String>();
 	
-	public Crew(int social, int combat, int gunner, int diplomacy, int stress, int hunger, int teaching,
+	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender, RaceID race) {
 		this.gender = gender;
 		this.race = race;
@@ -29,10 +29,11 @@ public class Crew implements Observer{
 		stats.put("social", (byte)social);
 		stats.put("combat", (byte)combat);
 		stats.put("gunner", (byte)gunner);
-		stats.put("diplomacy", (byte)diplomacy);
+		stats.put("engineering", (byte)engineering);
 		stats.put("stress", (byte)stress);
 		stats.put("hunger", (byte)hunger);
-		stats.put("teaching", (byte)teaching);
+		stats.put("science", (byte)science);
+		stats.put("pilot", (byte)pilot);
 		statModifier = new HashMap<>();
 		statModifier.put("social",  0f);
 		statModifier.put("combat", 0f);
@@ -45,6 +46,21 @@ public class Crew implements Observer{
 		speechOptions.add("Talk");
 		if(rand.nextBoolean()) {locationOnShip = "weapons";}
 	}
+	
+	public Crew() {
+		stats = new HashMap<>();
+		statModifier = new HashMap<>();
+		statModifier.put("social",  0f);
+		statModifier.put("combat", 0f);
+		statModifier.put("gunner", 0f);
+		statModifier.put("diplomacy",0f);
+		statModifier.put("stress", 0f);
+		statModifier.put("hunger", 0f);
+		statModifier.put("teaching", 0f);
+		this.diseases = new ArrayList<Disease>();
+		
+	}
+	
 	
 	
 	protected String getRoom() {
@@ -93,6 +109,10 @@ public class Crew implements Observer{
 		}
 		
 		return stat;
+	}
+	
+	public void setRaceID(RaceID id) {
+		this.race =id;
 	}
 	
 	protected static byte getRandomWeightedStat(float statVariance,byte mean) {
