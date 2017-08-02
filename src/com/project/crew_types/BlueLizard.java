@@ -9,7 +9,8 @@ public class BlueLizard extends Crew {
 
 	
 	private static byte statVariance = 5;
-	
+	public static String[] names = {"Sandy","Sam","Jesse","Ste","Frank","Charlie"};
+	private static float raceRelationVariance = 0.2f;
 	
 	public BlueLizard(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender) {
@@ -17,8 +18,9 @@ public class BlueLizard extends Crew {
 		generateRaceTable();
 	}
 	public BlueLizard(boolean random) {
-		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.blueLizard);
+		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), 0, 0,  getRandomGender(), RaceID.blueLizard);
 		generateRaceTable();
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public BlueLizard() {
 		super();
@@ -45,6 +47,7 @@ public class BlueLizard extends Crew {
 		}
 		this.setRaceID(RaceID.blueLizard);
 		generateRaceTable();
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	
 
@@ -56,23 +59,23 @@ public class BlueLizard extends Crew {
 		this.raceRelations = new HashMap<>();
 		if(gender=='m'||rand.nextBoolean()) {
 			
-			this.raceRelations.put(RaceID.bugBitch, 0.3f);
-			this.raceRelations.put(RaceID.octoBitch, 1.8f);
-			this.raceRelations.put(RaceID.ent, 1f);
-			this.raceRelations.put(RaceID.blueLizard, 2f);
-			this.raceRelations.put(RaceID.yellowLizard, 0.1f);
-			this.raceRelations.put(RaceID.robot, 0.7f);
-			this.raceRelations.put(RaceID.moleBitch,1.1f);
+			this.raceRelations.put(RaceID.bugBitch, getRandomWeightedRaceRelation(raceRelationVariance,0.3f));
+			this.raceRelations.put(RaceID.octoBitch,getRandomWeightedRaceRelation(raceRelationVariance, 1.8f));
+			this.raceRelations.put(RaceID.ent,getRandomWeightedRaceRelation(raceRelationVariance, 1f));
+			this.raceRelations.put(RaceID.blueLizard,getRandomWeightedRaceRelation(raceRelationVariance, 2f));
+			this.raceRelations.put(RaceID.yellowLizard,getRandomWeightedRaceRelation(raceRelationVariance, 0.1f));
+			this.raceRelations.put(RaceID.robot,getRandomWeightedRaceRelation(raceRelationVariance, 0.7f));
+			this.raceRelations.put(RaceID.moleBitch,getRandomWeightedRaceRelation(raceRelationVariance,1.1f));
 		}
 		else {
 
-			this.raceRelations.put(RaceID.bugBitch, 0.2f);
-			this.raceRelations.put(RaceID.octoBitch, 0.5f);
-			this.raceRelations.put(RaceID.ent, 1f);
-			this.raceRelations.put(RaceID.blueLizard, 0.1f);
-			this.raceRelations.put(RaceID.yellowLizard, 0.5f);
-			this.raceRelations.put(RaceID.robot, 1.1f);
-			this.raceRelations.put(RaceID.moleBitch,1.7f);
+			this.raceRelations.put(RaceID.bugBitch, getRandomWeightedRaceRelation(raceRelationVariance,0.2f));
+			this.raceRelations.put(RaceID.octoBitch,getRandomWeightedRaceRelation(raceRelationVariance, 0.5f));
+			this.raceRelations.put(RaceID.ent,getRandomWeightedRaceRelation(raceRelationVariance, 1f));
+			this.raceRelations.put(RaceID.blueLizard,getRandomWeightedRaceRelation(raceRelationVariance, 0.1f));
+			this.raceRelations.put(RaceID.yellowLizard, getRandomWeightedRaceRelation(raceRelationVariance,0.5f));
+			this.raceRelations.put(RaceID.robot, getRandomWeightedRaceRelation(raceRelationVariance,1.1f));
+			this.raceRelations.put(RaceID.moleBitch,getRandomWeightedRaceRelation(raceRelationVariance,1.7f));
 		}
 		
 	}
