@@ -2,7 +2,6 @@ package com.project;
 
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,12 +13,11 @@ public class BattleScreen extends Main implements Observer{
 	private Ship enemyShip;
 
 	private String selectedRoom;
-	private Entity overlay;
-	private Entity playerHealthbar;
-	private Entity enemyHealthbar;
-	private ArrayList<Entity> playerHealthContainer = new ArrayList<Entity>();
-	private ArrayList<Entity> enemyHealthContainer = new ArrayList<Entity>();
-	
+	private ImageHandler overlay;
+	private ImageHandler playerHealthbar;
+	private ImageHandler enemyHealthbar;
+	private ImageHandler loadingScreen;
+
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
 	private int playersWeaponChoice;
@@ -31,42 +29,44 @@ public class BattleScreen extends Main implements Observer{
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
-		
+		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
+		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH,0,Main.HEIGHT);
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,10);
+		}
+		for(int i=0; i<40;i++) {
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,5);
 		}
 		
 		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
 		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
-		overlay 			 = new Entity  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
+		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		Animation anim       = new Animation("res/blueFlameSpritesheet.png", 48, 26, 5, 2, 8, 670, 347,4.4f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(ui);
-		playerHealthbar		 = new Entity  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
-		enemyHealthbar		 = new Entity  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		playerHealthbar		 = new ImageHandler  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		enemyHealthbar		 = new ImageHandler  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		
-		for(int i =0;i<playerShip.getCrew().size();i++) {
-			Crew crew = playerShip.getCrew().get(i);
-			System.out.println(crew.name+":"+crew.getRaceID().toString()+" "+crew.getGender());
-			for(int j = 0;j<crew.getStats().size();j++) {
-				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
-			}
-			System.out.println();
-		}
-		
+//		for(int i =0;i<playerShip.getCrew().size();i++) {
+//			Crew crew = playerShip.getCrew().get(i);
+//			System.out.println(crew.name+":"+crew.getRaceID().toString()+" "+crew.getGender());
+//			for(int j = 0;j<crew.getStats().size();j++) {
+//				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
+//			}
+//			System.out.println();
+//		}
+//		
 		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
 		
 		BattleUI.generateCrewButtons(playerShip.getCrew(), this);
-
 	}
 	
 	public void selectRoom(String room){
-		
 		selectedRoom = room;
 		
 	}
@@ -89,42 +89,48 @@ public class BattleScreen extends Main implements Observer{
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
 		
 		
-
 	}
 	public void tick(){
-		super.tick();
+		
+		if(!paused) {
+			super.tick();
 
-		if(!isPlayersTurn) {
-			if(currentPhase == BattlePhases.Weapons) {
-				enemyWeaponChoice=0;
-				System.out.println("Enemy Weapon Reveal");
-				nextTurn();
+			if(!isPlayersTurn) {
+				if(currentPhase == BattlePhases.Weapons) {
+					enemyWeaponChoice=0;
+					System.out.println("Enemy Weapon Reveal");
+					nextTurn();
+				}
+				else {
+					enemyEngineChoice=0;
+					System.out.println("Enemy Engine Reveal");
+					nextTurn();
+				}
 			}
-			else {
-				enemyEngineChoice=0;
-				System.out.println("Enemy Engine Reveal");
+			if(currentPhase == BattlePhases.Final) {
+				System.out.println("Weapons Firing");
+				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true);
+				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true);
 				nextTurn();
-			}
-		}
-		if(currentPhase == BattlePhases.Final) {
-			System.out.println("Weapons Firing");
-			UseWeapon(playerShip, enemyShip, playersWeaponChoice, true);
-			UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true);
-			nextTurn();
 
+			}
+			if(playerShip !=null && enemyShip != null) {
+				
+				loadingScreen.setVisible(false);
+				playerShip.tickLayers();
+				enemyShip.tickLayers();
+			}
+			if(playerHealthbar != null && enemyHealthbar != null) {
+				float scale = (float)playerShip.getCurrHealth()/(float)playerShip.getMaxHealth();
+				if (scale < 0) {scale = 0;}
+				playerHealthbar.setXScale(scale);
+				scale = (float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth();
+				if (scale < 0) {scale = 0;}
+				enemyHealthbar.setXScale(scale);
+			}
 		}
-		if(playerShip !=null && enemyShip != null) {
-			playerShip.tickLayers();
-			enemyShip.tickLayers();
-		}
-		if(playerHealthbar != null && enemyHealthbar != null) {
-			float scale = (float)playerShip.getCurrHealth()/(float)playerShip.getMaxHealth();
-			if (scale < 0) {scale = 0;}
-			playerHealthbar.setXScale(scale);
-			scale = (float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth();
-			if (scale < 0) {scale = 0;}
-			enemyHealthbar.setXScale(scale);
-		}
+		
+		
 	
 	}
 	

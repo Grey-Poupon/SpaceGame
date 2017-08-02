@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UI {
-	private Entity healthBar;
-	private Entity distanceBar;
-	private static Entity mousePointer = new Entity(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
+	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
 	private static List<Button> tooltipButtons = new ArrayList<Button>();
-
 	private static List<Button> crewButtons = new ArrayList<Button>();
 
 	public UI(){
-		//healthBar = new Entity(0,0,"res/healthbar.png",true,EntityID.UI);
 	}
 	public void updateMouse(int x, int y){
 		mousePointer.setxCoordinate(x);

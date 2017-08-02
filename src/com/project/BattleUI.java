@@ -10,8 +10,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 
 public class BattleUI extends UI{
-	private Entity overlay;
-	private static Entity tooltipSeperator = new Entity(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
+	private ImageHandler overlay;
+	private static ImageHandler tooltipSeperator = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static Weapon[] weapons = new Weapon[4];
 	private static List<Text> texts = new ArrayList<Text>();;
 	private static String tooltipMenuSelection;

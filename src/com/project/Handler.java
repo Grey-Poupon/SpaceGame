@@ -4,8 +4,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class Handler {
-	public static ArrayList<Entity> entitiesLowPriority = new ArrayList<Entity>();// tick last, render on bottom
-	public static ArrayList<Entity> entitiesHighPriority = new ArrayList<Entity>(); // tick first, render on top
+	public static ArrayList<ImageHandler> entitiesLowPriority = new ArrayList<ImageHandler>();// tick last, render on bottom
+	public static ArrayList<ImageHandler> entitiesHighPriority = new ArrayList<ImageHandler>(); // tick first, render on top
 	public static ArrayList<Animation> anims = new ArrayList<Animation>();
 	public static ArrayList<Text> texts = new ArrayList<Text>();
 
@@ -41,11 +41,11 @@ public class Handler {
 
 	}
 	
-	public static void addLowPriorityEntity(Entity entity) {
+	public static void addLowPriorityEntity(ImageHandler entity) {
 		entitiesLowPriority.add(entity);
 		
 	}
-	public static void addHighPriorityEntity(Entity entity) {
+	public static void addHighPriorityEntity(ImageHandler entity) {
 		entitiesHighPriority.add(entity);
 		
 	}

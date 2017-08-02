@@ -12,7 +12,7 @@ public class LayeredImage {
 	public static float cameraZ;
 	public static float cameraX;
 	public static float cameraY;
-	public ArrayList<Entity> layers;
+	public ArrayList<ImageHandler> layers;
 	public int noLayers;
 	public int tickerZ;
 	public int tickerX;
@@ -34,7 +34,7 @@ public class LayeredImage {
 		tickerX =1;
 		tickerY =1;
 		tickerZ =1;
-		layers = new ArrayList<Entity>();
+		layers = new ArrayList<ImageHandler>();
 		loadLayers();
 		largestWidth = getLargestWidth();
 		largestHeight = getLargestHeight();
@@ -52,7 +52,7 @@ public class LayeredImage {
 		tickerX =1;
 		tickerY =1;
 		tickerZ =1;
-		layers = new ArrayList<Entity>();
+		layers = new ArrayList<ImageHandler>();
 		loadLayers();
 		largestWidth = getLargestWidth();
 		largestHeight = getLargestHeight();
@@ -72,7 +72,7 @@ public class LayeredImage {
 			tickerY*=-1;
 		}
 		//cameraY+=0.03*tickerY;
-		//cameraX+=0.03*tickerX;
+		cameraX+=0.03*tickerX;
 		//cameraZ+=0.03*tickerZ;
 		for(int i = 0; i<layers.size();i++) {
 			setScaling(layers.get(i),i);
@@ -80,7 +80,7 @@ public class LayeredImage {
 		
 	}
 	
-	private void setScaling(Entity e,int index) {
+	private void setScaling(ImageHandler e,int index) {
 		float f = Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ));
 		double d1 =Math.atan2(cameraX, e.getZ());
 		double d = (Math.cos(d1)*scale*(f));
@@ -89,14 +89,14 @@ public class LayeredImage {
 			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1]));
 		}
 		else {
-			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(3-(e.getXScale())))));
+			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(scale-(e.getXScale())))));
 		}
 		e.setYScale((float) Math.cos(Math.atan2(cameraY, e.getZ()))*scale*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ))));	    
 		if(cameraY>0) {
 			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1]));
 		}
 		else {
-			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(3-(e.getYScale())))));
+			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(scale-(e.getYScale())))));
 		}	
 	}
 		
@@ -123,7 +123,7 @@ public class LayeredImage {
 		getLayerCoords();
 		setNoLayers();
 		for(int i =0; i<noLayers;i++) {
-			Entity layer = new Entity(x+layersX[layersX.length-i-1],y+layersY[layersY.length-i-1],this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
+			ImageHandler layer = new ImageHandler(x+layersX[layersX.length-i-1],y+layersY[layersY.length-i-1],this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
 			if(i==0) {layer.setVisible(false);}
 			layer.setZ((float)(this.z-i*zPerLayer));
 			layers.add(layer);
@@ -163,7 +163,7 @@ public class LayeredImage {
 	
 	
 	public void organiseLayers() {
-		ArrayList<Entity> sortedLayers = new ArrayList<Entity>();
+		ArrayList<ImageHandler> sortedLayers = new ArrayList<ImageHandler>();
 		int oriSize = layers.size();
 		int index = 0;
 		float biggestZ = 0;

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Entity {
+public class ImageHandler {
 	protected EntityID id;
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
@@ -42,7 +42,7 @@ public class Entity {
 	}
 	
 
-	public Entity(int x, int y , String path, boolean visible, EntityID ID){		// constructor for mob
+	public ImageHandler(int x, int y , String path, boolean visible, EntityID ID){		// constructor for mob
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
@@ -51,14 +51,14 @@ public class Entity {
 		Handler.addLowPriorityEntity(this);
 		}
 	
-	public Entity(int x, int y , boolean visible, EntityID ID){		// constructor for mob
+	public ImageHandler(int x, int y , boolean visible, EntityID ID){		// constructor for mob
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
 		this.ID = ID;
 		Handler.addLowPriorityEntity(this);
 		}
-	public Entity(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
+	public ImageHandler(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
@@ -68,7 +68,7 @@ public class Entity {
 		setImg(path);
 		Handler.addLowPriorityEntity(this);
 		}
-	public Entity(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
+	public ImageHandler(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;
@@ -78,7 +78,7 @@ public class Entity {
 		setImg(path);
 		Handler.addLowPriorityEntity(this);
 		}
-	public Entity(int x, int y , String path, boolean visible, EntityID ID, String priority){		// constructor for mob
+	public ImageHandler(int x, int y , String path, boolean visible, EntityID ID, String priority){		// constructor for mob
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.visible = visible;

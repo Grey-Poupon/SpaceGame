@@ -20,12 +20,14 @@ public class Window extends Canvas {
 		 frame.setPreferredSize(new Dimension(width,height));
 		//frame.setMaximumSize(new Dimension(width,height));
 		//frame.setMinimumSize(new Dimension(width,height));
-	//	frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+//		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+//		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setResizable(false);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.add(game);
+
 		frame.setVisible(true);
 		frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null"));
 		game.start();

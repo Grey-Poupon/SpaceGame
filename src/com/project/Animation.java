@@ -21,9 +21,13 @@ public class Animation {
 	private int framesLeft;
 	private int tickCounter = 0;
 	private int xTile = 0 ;
+	private int xEnd;
+	private int yEnd;
 	private int yTile = 0 ;
 	private int xCoordinate;
 	private int yCoordinate;
+	private int xVel=0;
+	private int yVel=0;
 	private float scale = 1;
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
@@ -125,6 +129,8 @@ public class Animation {
 	}
 	public void tick() {
 		tickCounter++;
+		xCoordinate+=xVel;
+		yCoordinate+=yVel;
 		if(tickCounter==ticksPerFrame) {
 			nextSprite();
 			tickCounter=0;

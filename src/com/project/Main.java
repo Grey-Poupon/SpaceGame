@@ -2,6 +2,7 @@ package com.project;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -15,22 +16,20 @@ public class Main  extends Canvas implements Runnable{
 	public Handler handler;
 	Random r;
 	Window window;
-	public static final int WIDTH = 1200;
-	public static final int HEIGHT = 900;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
 	public Player player;
 	public Ship playerShip; 
 	public UI ui;
 	protected MouseInput mouseIn;
 	protected KeyInput keyIn;
-
+	protected boolean paused=false;
 	
 	public Main(){
 		r = new Random();
 		handler = new Handler();
 		player = new Player(100,RaceID.bugBitch);
-		
-		window = new Window(WIDTH+18,HEIGHT+45,"Space",this);
-		
+		window = new Window(WIDTH,HEIGHT,"Space Game",this);
 		}
 
 	protected void render(){
@@ -40,14 +39,16 @@ public class Main  extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,WIDTH,HEIGHT);
-		
-		handler.render(g);
-		window.update();
-		
+		if(!paused) {
+			g.setColor(Color.BLACK);
+			g.fillRect(0,0,WIDTH,HEIGHT);
+			handler.render(g);
+			window.update();
+		}
+		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 		bs.show();
+
 	}
 
 	public synchronized void stop(){
@@ -63,7 +64,6 @@ public class Main  extends Canvas implements Runnable{
 		thread = new Thread(this);
 		thread.start();
 		running = true;
-		
 	}
 	public void run(){
 		this.requestFocus();
@@ -88,7 +88,7 @@ public class Main  extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer >1000){
 				timer +=1000;
-				//System.out.println("FPS: "+frames);
+//				System.out.println("FPS: "+frames);
 				
 				frames = 0;
 				
@@ -97,11 +97,8 @@ public class Main  extends Canvas implements Runnable{
 		stop();
 	}
 	public void tick() {
-	
 		handler.tick(ui);
-		
 	}
-	
 	
 	public static void main(String[] args){
 		new ResourceLoader();
