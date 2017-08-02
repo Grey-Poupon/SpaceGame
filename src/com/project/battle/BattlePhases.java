@@ -1,4 +1,4 @@
-package com.project;
+package com.project.battle;
 
 public enum BattlePhases {
 	Weapons,Engine,Final;

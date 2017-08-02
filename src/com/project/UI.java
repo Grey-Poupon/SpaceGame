@@ -5,20 +5,21 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.project.button.Button;
+
 public class UI {
+
 	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
+
 	private static List<Button> tooltipButtons = new ArrayList<Button>();
 	private static List<Button> crewButtons = new ArrayList<Button>();
 
 	public UI(){
 	}
-	public void updateMouse(int x, int y){
-		mousePointer.setxCoordinate(x);
-		mousePointer.setyCoordinate(y);
-	}
-	public void checkClick(int x, int y) {
-		checkButtons(x, y);
-	}
+
+
+
+	
 	
 	public void displayPlayerStats(Player player,Graphics g){
 		
@@ -31,15 +32,6 @@ public class UI {
 
 	public static void clearTooltipButtons(){
 		tooltipButtons.clear();
-	}
-	public void checkButtons(int x,int y){
-		List<Button> buttons = crewButtons;
-		buttons.addAll(tooltipButtons);
-		for(int i =0; i<buttons.size();i++){
-			if(buttons.get(i)!=null && buttons.get(i).isInside(x, y)){
-				buttons.get(i).click();
-			}
-		}		
 	}
 	public static boolean addTooltipButton(Button button) {
 		return tooltipButtons.add(button);

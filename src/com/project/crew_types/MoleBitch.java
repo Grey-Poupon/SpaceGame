@@ -14,18 +14,18 @@ public class MoleBitch extends Crew {
 			char gender) {
 		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.moleBitch);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public MoleBitch(boolean random) {
 		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 		
 	}
 	public MoleBitch() {
 		super(getRandomWeightedStat(statVariance,(byte)35),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)5), getRandomWeightedStat(statVariance,(byte)40), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0,getRandomGender(), RaceID.moleBitch);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 
 	private void generateRaceTable() {

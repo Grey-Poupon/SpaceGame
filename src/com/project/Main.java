@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
+import com.project.battle.BattleScreen;
+
 
 
 public class Main  extends Canvas implements Runnable{
@@ -23,7 +25,7 @@ public class Main  extends Canvas implements Runnable{
 	public UI ui;
 	protected MouseInput mouseIn;
 	protected KeyInput keyIn;
-	protected boolean paused=false;
+	private boolean paused=false;
 	
 	public Main(){
 		r = new Random();
@@ -39,7 +41,7 @@ public class Main  extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		if(!paused) {
+		if(!isPaused()) {
 			g.setColor(Color.BLACK);
 			g.fillRect(0,0,WIDTH,HEIGHT);
 			handler.render(g);
@@ -103,6 +105,14 @@ public class Main  extends Canvas implements Runnable{
 	public static void main(String[] args){
 		new ResourceLoader();
 		new BattleScreen();
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 	
 }

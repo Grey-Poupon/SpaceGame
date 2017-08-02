@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
@@ -17,12 +19,13 @@ public class Text {
 	private String text;
 	private Font font;
 	private Color colour;	
+	private Shape clip;
 	
-	public Text(String text,boolean visible,int x, int y,String name, int style, int size, Color colour){
+	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour){
 		this.xCoordinate=x;
 		this.yCoordinate=y;
 		this.text=text;
-		this.font = new Font(name, style, size);
+		this.font = new Font(fontName, style, size);
 		this.colour =colour;
 		Handler.texts.add(this);
 		
@@ -44,6 +47,7 @@ public class Text {
 		g2d.setColor(colour);
 		g2d.setFont(font);
 		if(visible){
+			if(clip!=null) {g2d.setClip(clip);}
 			g2d.drawString(text, xCoordinate, yCoordinate);
 		}
 	};
@@ -59,5 +63,15 @@ public class Text {
 	}
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+	public void move(int x , int y) {
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+	}
+	public void changeMask(int x , int y, int width, int height) {
+		this.clip = new Rectangle2D.Float(x, y, width, height);
+	}
+	public void removeMask() {
+		this.clip = null;		
 	}
 }

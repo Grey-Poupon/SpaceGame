@@ -20,7 +20,7 @@ public class BlueLizard extends Crew {
 	public BlueLizard(boolean random) {
 		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), 0, 0,  getRandomGender(), RaceID.blueLizard);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public BlueLizard() {
 		super();
@@ -47,7 +47,7 @@ public class BlueLizard extends Crew {
 		}
 		this.setRaceID(RaceID.blueLizard);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	
 

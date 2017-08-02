@@ -18,14 +18,14 @@ public class OctoBitch extends Crew{
 	public OctoBitch(boolean random) {
 		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.octoBitch);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public OctoBitch() {
 		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)15),
 				getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)20), 
 				getRandomWeightedStat(statVariance,(byte)25), 0, 0, getRandomWeightedStat(statVariance,(byte)50), getRandomGender(), RaceID.octoBitch);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	
 	private void generateRaceTable() {

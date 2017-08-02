@@ -1,4 +1,4 @@
-package com.project;
+package com.project.button;
 
 public enum ButtonID {
 

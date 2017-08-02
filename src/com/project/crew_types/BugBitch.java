@@ -42,7 +42,7 @@ public class BugBitch extends Crew {
 			stats.put("hunger", (byte)0);
 		}
 		this.setRaceID(RaceID.bugBitch);
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 		generateRaceTable();
 	}
 	private void generateRaceTable() {

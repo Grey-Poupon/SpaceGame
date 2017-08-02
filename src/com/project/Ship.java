@@ -1,8 +1,16 @@
 package com.project;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
+
+import javax.swing.text.Position;
+
+import com.project.button.Button;
+import com.project.button.ButtonID;
 
 import com.project.crew_types.BlueLizard;
 import com.project.crew_types.Ent;
@@ -74,6 +82,13 @@ public class Ship {
 		double power = generator.getPower(amountOfFuel);
 		if(power<0) {System.out.println("your generator exploded, gg boyo");}//engine exploded
 		power = (int) power;
+	}
+	public List<Button> getCrewButtons(Observer obs){
+		List<Button> buttons = new ArrayList<Button>();
+		for(int i = 0;i<crew.size();i++) {
+			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i, false, "shipmate "+i, "Sevensegies", Font.PLAIN, 40, Color.WHITE, obs));
+		}
+		return buttons;
 	}
 	public List<Crew> getCrew() {
 		return crew;

@@ -16,12 +16,12 @@ public class Robot extends Crew {
 			char gender) {
 		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,  RaceID.robot);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public Robot(boolean random){
 		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, '?', RaceID.robot);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public Robot() {
 		super();
@@ -49,7 +49,7 @@ public class Robot extends Crew {
 		}
 		this.setRaceID(RaceID.robot);
 		generateRaceTable();
-		this.name=names[rand.nextInt(names.length)];
+		this.setName(names[rand.nextInt(names.length)]);
 	}
 
 	private void generateRaceTable() {

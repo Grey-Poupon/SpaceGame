@@ -8,6 +8,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import com.project.battle.BattleUI;
+import com.project.button.ButtonID;
 import com.project.crew_types.*;
 import com.project.crew_types.diseases.Disease;
 
@@ -22,7 +24,7 @@ public class Crew implements Observer{
 	protected Map<RaceID,Float> raceRelations;
 	protected String locationOnShip = "cockpit";
 	protected List<String> speechOptions = new ArrayList<String>();
-	protected String name;
+	private String name;
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	
 	
@@ -59,8 +61,8 @@ public class Crew implements Observer{
 		statModifierInc.put("science", (byte)0);
 		statModifierInc.put("pilot", (byte)0);
 		this.diseases = new ArrayList<Disease>();
-		speechOptions.add("Talk");
-		if(rand.nextBoolean()) {locationOnShip = "weapons";}
+		getSpeechOptions().add("Talk");
+		if(rand.nextBoolean()) {setLocationOnShip("weapons");}
 	}
 	
 	public Crew() {
@@ -91,10 +93,10 @@ public class Crew implements Observer{
 	
 	
 	protected String getRoom() {
-		return locationOnShip;
+		return getLocationOnShip();
 	}
 	protected void moveRoom(String room) {
-		this.locationOnShip = room;
+		this.setLocationOnShip(room);
 	}
 	public char getGender() {
 		return gender;
@@ -219,6 +221,22 @@ public class Crew implements Observer{
 		}
 		
 	}
+
+	public String getLocationOnShip() {
+		return locationOnShip;
+	}
+
+	public void setLocationOnShip(String locationOnShip) {
+		this.locationOnShip = locationOnShip;
+	}
+
+	public List<String> getSpeechOptions() {
+		return speechOptions;
+	}
+
+	public void setSpeechOptions(List<String> speechOptions) {
+		this.speechOptions = speechOptions;
+	}
 	
 	public static Crew generateRandomCrew() {
 		Crew crew;
@@ -242,6 +260,14 @@ public class Crew implements Observer{
                     break;
        }
 		return crew;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	
