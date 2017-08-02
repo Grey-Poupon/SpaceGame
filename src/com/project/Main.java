@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
+import com.project.battle.BattleScreen;
+
 
 
 public class Main  extends Canvas implements Runnable{

@@ -8,6 +8,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import com.project.battle.BattleUI;
+import com.project.button.ButtonID;
 import com.project.crew_types.diseases.Disease;
 
 public class Crew implements Observer{
@@ -18,8 +20,8 @@ public class Crew implements Observer{
 	protected Map<String,Float> statModifier;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
-	protected String locationOnShip = "cockpit";
-	protected List<String> speechOptions = new ArrayList<String>();
+	private String locationOnShip = "cockpit";
+	private List<String> speechOptions = new ArrayList<String>();
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender, RaceID race) {
@@ -43,8 +45,8 @@ public class Crew implements Observer{
 		statModifier.put("hunger", 0f);
 		statModifier.put("teaching", 0f);
 		this.diseases = new ArrayList<Disease>();
-		speechOptions.add("Talk");
-		if(rand.nextBoolean()) {locationOnShip = "weapons";}
+		getSpeechOptions().add("Talk");
+		if(rand.nextBoolean()) {setLocationOnShip("weapons");}
 	}
 	
 	public Crew() {
@@ -64,10 +66,10 @@ public class Crew implements Observer{
 	
 	
 	protected String getRoom() {
-		return locationOnShip;
+		return getLocationOnShip();
 	}
 	protected void moveRoom(String room) {
-		this.locationOnShip = room;
+		this.setLocationOnShip(room);
 	}
 	public char getGender() {
 		return gender;
@@ -145,6 +147,22 @@ public class Crew implements Observer{
 			BattleUI.changeTootlipSelection(this);
 		}
 		
+	}
+
+	public String getLocationOnShip() {
+		return locationOnShip;
+	}
+
+	public void setLocationOnShip(String locationOnShip) {
+		this.locationOnShip = locationOnShip;
+	}
+
+	public List<String> getSpeechOptions() {
+		return speechOptions;
+	}
+
+	public void setSpeechOptions(List<String> speechOptions) {
+		this.speechOptions = speechOptions;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package com.project;
+package com.project.battle;
 
 
 import java.lang.reflect.Array;
@@ -8,17 +8,29 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import com.project.Animation;
+import com.project.DamageType;
+import com.project.Entity;
+import com.project.EntityID;
+import com.project.Main;
+import com.project.ScrollableList;
+import com.project.Ship;
+import com.project.Star;
+import com.project.button.Button;
+import com.project.button.ButtonID;
 import com.project.weapons.Weapon;
 
 public class BattleScreen extends Main implements Observer{
+
+	private static final long serialVersionUID = -6523236697457665386L;
+
 	private Ship enemyShip;
 
 	private String selectedRoom;
 	private Entity overlay;
 	private Entity playerHealthbar;
 	private Entity enemyHealthbar;
-	private ArrayList<Entity> playerHealthContainer = new ArrayList<Entity>();
-	private ArrayList<Entity> enemyHealthContainer = new ArrayList<Entity>();
+	private ScrollableList sl;
 	
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
@@ -40,10 +52,11 @@ public class BattleScreen extends Main implements Observer{
 		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
 		overlay 			 = new Entity  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
+		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 1, 125, 120, 612);
 		Animation anim       = new Animation("res/blueFlameSpritesheet.png", 48, 26, 5, 2, 8, 670, 347,4.4f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
-		mouseIn				 = new BattleMouseInput(ui);
+		mouseIn				 = new BattleMouseInput(handler,sl);
 		playerHealthbar		 = new Entity  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		enemyHealthbar		 = new Entity  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		
@@ -51,9 +64,8 @@ public class BattleScreen extends Main implements Observer{
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
+		this.addMouseWheelListener(mouseIn);
 		
-		BattleUI.generateCrewButtons(playerShip.getCrew(), this);
-
 	}
 	
 	public void selectRoom(String room){

@@ -1,6 +1,8 @@
-package com.project;
+package com.project.battle;
 
 import java.awt.event.KeyEvent;
+
+import com.project.KeyInput;
 
 
 public class BattleKeyInput extends KeyInput {
