@@ -1,5 +1,8 @@
 package com.project;
 import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.FileInputStream;
@@ -21,6 +24,7 @@ public class ImageHandler {
 	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private BufferedImage img; 
 	private boolean visible = true;
+	private Shape clip;
 	
 	
 	public void tick(){	
@@ -31,6 +35,7 @@ public class ImageHandler {
 	public void render(Graphics g)
 	{
 		if(visible){
+			if(clip != null) {g.setClip(clip);}
 				g.drawImage(img, xCoordinate, yCoordinate,Math.round(img.getWidth()*xScale),Math.round(img.getHeight()*yScale), observer);	
 		}
 	};
@@ -167,6 +172,11 @@ public class ImageHandler {
 	public float getYScale(){
 		return this.yScale;
 	}
-
+	public void changeMask(int x , int y, int width, int height) {
+		this.clip = new Rectangle2D.Float(x, y, width, height);
+	}
+	public void removeMask() {
+		this.clip = null;		
+	}
 
 }

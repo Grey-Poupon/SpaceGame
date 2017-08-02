@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.project.Handler;
+import com.project.ImageHandler;
 import com.project.Text;
 
 public class Button extends Observable{
@@ -15,6 +16,7 @@ public class Button extends Observable{
 	private Rectangle2D mask;
 	private Text text;
 	private ButtonID buttonID;
+	private ImageHandler img;
 	private boolean clickable;
 
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, Observer obs){
@@ -42,7 +44,37 @@ public class Button extends Observable{
 		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
 		Handler.addButton(this);
 	}
-	
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, Observer obs){
+		this.xCoordinate = x;
+		this.yCoordinate =y;
+		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.width = width;
+		this.height = height;
+		this.buttonID = buttonID;
+		this.index = index;
+		this.clickable = clickable;
+		this.addObserver(obs);
+		img.setxCoordinate(x);
+		img.setyCoordinate(y);
+		this.img = img;
+		Handler.addButton(this);
+	}
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour,ImageHandler img, Observer obs){
+		this.xCoordinate = x;
+		this.yCoordinate =y;
+		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.width = width;
+		this.height = height;
+		this.buttonID = buttonID;
+		this.index = index;
+		this.clickable = clickable;
+		this.addObserver(obs);
+		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
+		img.setxCoordinate(x);
+		img.setyCoordinate(y);
+		this.img = img;
+		Handler.addButton(this);
+	}
 	public boolean isInside(int x, int y) {
 		if(!clickable) {return false;}
 		if(mask.contains(x, y)) {
@@ -94,6 +126,8 @@ public class Button extends Observable{
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.mask = new Rectangle2D.Float(x,y,width,height);
+		img.setxCoordinate(x);
+		img.setyCoordinate(y);
 		if(text != null) {
 			text.move(x,y+height/2);
 		}
@@ -116,7 +150,14 @@ public class Button extends Observable{
 		if(this.text != null) {this.text.setVisible(clickable);}
 	}
 	public void setTextMask(int x,int y, int width, int height) {
-		this.text.changeMask(x, y, width, height);
+		if(this.text != null) {
+			this.text.changeMask(x, y, width, height);
+		}
+	}
+	public void setImgMask(int x,int y, int width, int height) {
+		if(this.img != null) {
+			this.img.changeMask(x, y, width, height);
+		}
 	}
 	public int getX() {
 		return xCoordinate;

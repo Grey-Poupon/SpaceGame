@@ -16,10 +16,6 @@ public class UI {
 
 	public UI(){
 	}
-
-
-
-	
 	
 	public void displayPlayerStats(Player player,Graphics g){
 		

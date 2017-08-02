@@ -86,7 +86,7 @@ public class Ship {
 	public List<Button> getCrewButtons(Observer obs){
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<crew.size();i++) {
-			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i, false, "shipmate "+i, "Sevensegies", Font.PLAIN, 40, Color.WHITE, obs));
+			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0, 0,"res/octiod_portrait.png", true, EntityID.crew), obs));
 		}
 		return buttons;
 	}

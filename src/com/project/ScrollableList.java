@@ -13,14 +13,18 @@ public class ScrollableList  {
 	 private int yCoordinate;
 	 private int width;
 	 private int height;
-	 private final int scrollAmplifier = 2;
+	 private final int scrollAmplifier = 20;
 	public ScrollableList(List<Button> buttons, int x, int y, int width, int height) {
 		this.buttons = buttons;
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.width = width;
 		this.height = height;
-		for(Button btn:buttons) {btn.setTextMask(x, y, width, height);btn.setClickable(false);BattleUI.addCrewButton(btn);}
+		for(Button btn:buttons) {
+			btn.setTextMask(x, y, width, height);
+			btn.setClickable(false);
+			BattleUI.addCrewButton(btn);
+			btn.setImgMask(x, y, width, height);}
 		placeButtons();
 	}
 	private void placeButtons() {
