@@ -4,16 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.text.Position;
-
 import com.project.crew_types.BlueLizard;
-import com.project.crew_types.BugBitch;
 import com.project.crew_types.Ent;
 import com.project.crew_types.Robot;
 import com.project.crew_types.YellowLizard;
 import com.project.ship.Engine;
 import com.project.ship.Generator;
-import com.project.ship.Overclockable;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 

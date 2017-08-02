@@ -16,8 +16,6 @@ public class BattleKeyInput extends KeyInput {
 		if (key == KeyEvent.VK_Q){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(0));}
 		if (key == KeyEvent.VK_W){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(1));}
 		if (key == KeyEvent.VK_E){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(2));}
-
-
 	}
 	@Override
 	public void keyReleased(KeyEvent e){

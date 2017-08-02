@@ -9,15 +9,19 @@ public class Robot extends Crew {
 
 	private static byte statVariance = 1;
 	private byte generation;
+	public static String[] names = {"Sandy","Sam","Jesse","Ste","Frank","Charlie"};
+	private static float raceRelationVariance = 0.2f;
 	
 	public Robot(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender) {
 		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,  RaceID.robot);
 		generateRaceTable();
+		this.name=names[rand.nextInt(names.length)];
 	}
 	public Robot(boolean random){
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), '?', RaceID.robot);
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, '?', RaceID.robot);
 		generateRaceTable();
+		this.name=names[rand.nextInt(names.length)];
 	}
 	public Robot() {
 		super();
@@ -44,17 +48,19 @@ public class Robot extends Crew {
 			stats.put("hunger", (byte)0);
 		}
 		this.setRaceID(RaceID.robot);
-		generateRaceTable();}
+		generateRaceTable();
+		this.name=names[rand.nextInt(names.length)];
+	}
 
 	private void generateRaceTable() {
 		this.raceRelations = new HashMap<>();
-		this.raceRelations.put(RaceID.bugBitch, 0.3f);
-		this.raceRelations.put(RaceID.octoBitch, 0.5f);
-		this.raceRelations.put(RaceID.ent, 1.5f);
-		this.raceRelations.put(RaceID.blueLizard, 0.7f);
-		this.raceRelations.put(RaceID.yellowLizard, 1.1f);
-		this.raceRelations.put(RaceID.robot, 2f);
-		this.raceRelations.put(RaceID.moleBitch,1.1f);
+		this.raceRelations.put(RaceID.bugBitch,getRandomWeightedRaceRelation(raceRelationVariance, 0.3f));
+		this.raceRelations.put(RaceID.octoBitch,getRandomWeightedRaceRelation(raceRelationVariance, 0.5f));
+		this.raceRelations.put(RaceID.ent, getRandomWeightedRaceRelation(raceRelationVariance,1.5f));
+		this.raceRelations.put(RaceID.blueLizard, getRandomWeightedRaceRelation(raceRelationVariance,0.7f));
+		this.raceRelations.put(RaceID.yellowLizard,getRandomWeightedRaceRelation(raceRelationVariance, 1.1f));
+		this.raceRelations.put(RaceID.robot, getRandomWeightedRaceRelation(raceRelationVariance,2f));
+		this.raceRelations.put(RaceID.moleBitch,getRandomWeightedRaceRelation(raceRelationVariance,1.1f));
 	}
 
 	private byte getRandomGeneration() {

@@ -34,11 +34,11 @@ public class BattleScreen extends Main implements Observer{
 		
 		rand = new Random();
 		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true);
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH,0,Main.HEIGHT);
 		}
 		
-		playerShip			 = new Ship    (0,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
-		enemyShip 			 = new Ship    (WIDTH-200,200,0.05f,16f,"res/Matron",true,EntityID.ship,50,3);
+		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
+		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
 		overlay 			 = new Entity  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		Animation anim       = new Animation("res/blueFlameSpritesheet.png", 48, 26, 5, 2, 8, 670, 347,4.4f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
@@ -46,6 +46,15 @@ public class BattleScreen extends Main implements Observer{
 		mouseIn				 = new BattleMouseInput(ui);
 		playerHealthbar		 = new Entity  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		enemyHealthbar		 = new Entity  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		
+		for(int i =0;i<playerShip.getCrew().size();i++) {
+			Crew crew = playerShip.getCrew().get(i);
+			System.out.println(crew.name+":"+crew.getRaceID().toString()+" "+crew.getGender());
+			for(int j = 0;j<crew.getStats().size();j++) {
+				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
+			}
+			System.out.println();
+		}
 		
 		
 		this.addKeyListener(keyIn);	
