@@ -1,5 +1,3 @@
-package LoadJankImage.src;
-
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -95,7 +93,7 @@ public class Main  extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer >1000){
 				timer +=1000;
-				System.out.println("FPS: "+frames);
+				//System.out.println("FPS: "+frames);
 				
 				frames = 0;
 				

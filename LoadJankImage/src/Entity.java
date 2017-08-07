@@ -1,5 +1,3 @@
-package LoadJankImage.src;
-
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -22,6 +20,7 @@ public class Entity {
 	private boolean visible = true;
 	protected float zCoordinate;
 	protected float oriZCoordinate;
+	protected BufferedImage oriImg;
 	
 	public void tick(){
 		xCoordinate+=xVel;
@@ -31,7 +30,7 @@ public class Entity {
 	public void render(Graphics g)
 	{
 		if(visible){
-				g.drawImage(img, (int)xCoordinate,(int) yCoordinate,Math.round(img.getWidth()*xScale),Math.round(img.getHeight()*yScale), observer);	
+				g.drawImage(img, Math.round(xCoordinate),Math.round(yCoordinate),Math.round(img.getWidth()*xScale),Math.round(img.getHeight()*yScale), observer);	
 		}
 	};
 	public void changeImage(String newPath, boolean visible){
@@ -104,12 +103,20 @@ public class Entity {
 	public void setObserver(ImageObserver observer) {
 		this.observer = observer;
 	}
+	
+	public void setImg(BufferedImage img) {
+		this.img = img;
+	}
 	public BufferedImage getImg() {
 		return img;
+	}
+	public BufferedImage getOriImg() {
+		return oriImg;
 	}
 	public void setImg(String path) {
 		try {
 			this.img = ImageIO.read(new FileInputStream("res/"+path));
+			this.oriImg =  ImageIO.read(new FileInputStream("res/"+path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		};

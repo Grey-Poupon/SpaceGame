@@ -1,5 +1,3 @@
-package LoadJankImage.src;
-
 
 
 import java.awt.Graphics;

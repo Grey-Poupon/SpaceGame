@@ -1,5 +1,3 @@
-package LoadJankImage.src;
-
 import java.util.ArrayList;
 
 public class Editable {
@@ -12,7 +10,7 @@ public class Editable {
 	
 	
 	public Editable() {
-		this.path = "Matron";
+		this.path = "matron";
 		this.zPerLayer = 0.05f;
 		this.z = 16f;
 		this.layerZ = new float[]{
