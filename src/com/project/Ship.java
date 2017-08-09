@@ -58,10 +58,10 @@ public class Ship {
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
 		}
-			crew.add(new BlueLizard());
-			crew.add(new Ent());
-			crew.add(new Robot());
-			crew.add(new YellowLizard());
+			crew.add(Crew.generateRandomCrew());
+			crew.add(Crew.generateRandomCrew());
+			crew.add(Crew.generateRandomCrew());
+			crew.add(Crew.generateRandomCrew());
 
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
@@ -91,7 +91,7 @@ public class Ship {
 	public List<Button> getCrewButtons(Observer obs){
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<crew.size();i++) {
-			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0, 0,"res/octiod_portrait.png", true, EntityID.crew), obs));
+			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,crew.get(i).getPortrait(), obs));
 		}
 		return buttons;
 	}
@@ -194,6 +194,15 @@ public class Ship {
 	public void setSpeed(int speed) {
 		this.speedChange = this.speed - speed;
 		this.speed = speed;
+	}
+	public int getDistanceToEnd() {
+		return distanceToEnd;
+	}
+	public void setDistanceToEnd(int distanceToEnd) {
+		this.distanceToEnd = distanceToEnd;
+	}
+	public int getSpeedChange() {
+		return speedChange;
 	}
 
 	

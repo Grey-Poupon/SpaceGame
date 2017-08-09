@@ -19,7 +19,7 @@ public class BugBitch extends Crew {
 		generateRaceTable();
 	}
 	public BugBitch() {
-		super();
+		super(RaceID.bugBitch);
 		this.setGender(getRandomGender());
 		if(this.getGender()=='m') {
 			stats.put("social", getRandomWeightedStat(statVariance,(byte)15));
@@ -41,7 +41,6 @@ public class BugBitch extends Crew {
 			stats.put("stress", (byte)0);
 			stats.put("hunger", (byte)0);
 		}
-		this.setRaceID(RaceID.bugBitch);
 		this.setName(names[rand.nextInt(names.length)]);
 		generateRaceTable();
 	}

@@ -181,14 +181,11 @@ public class BattleScreen extends Main implements Observer{
 	
 	}
 	private void renderDistance(Ship chaser, Ship chased) {
-		int chaserSpeedDif = chaser.getSpeed() -chaserShipSpeed; 
-		int chasedSpeedDif = chased.getSpeed() -chasedShipSpeed; 
 		Ship ship;
-		if(chaserSpeedDif>0 ^ chasedSpeedDif>0) {
-			ship = chaserSpeedDif>0 ? chaser :chased;
+		if(chaser.getSpeedChange()>0 ^ chased.getSpeedChange()>0) {
+			ship = chaser.getSpeedChange()>0 ? chaser :chased;
 		}
 		else {ship = chaser;}
-		if(ship)
 
 	}
 	

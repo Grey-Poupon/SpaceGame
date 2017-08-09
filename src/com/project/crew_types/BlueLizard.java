@@ -23,7 +23,7 @@ public class BlueLizard extends Crew {
 		this.setName(names[rand.nextInt(names.length)]);
 	}
 	public BlueLizard() {
-		super();
+		super(RaceID.blueLizard);
 		this.setGender(getRandomGender());
 		if(this.getGender()=='m') {
 			stats.put("social", getRandomWeightedStat(statVariance,(byte)45));
@@ -45,7 +45,7 @@ public class BlueLizard extends Crew {
 			stats.put("stress", (byte)0);
 			stats.put("hunger", (byte)0);
 		}
-		this.setRaceID(RaceID.blueLizard);
+
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
