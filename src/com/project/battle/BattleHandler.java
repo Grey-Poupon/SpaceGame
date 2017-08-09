@@ -1,7 +1,6 @@
 package com.project.battle;
 
 import com.project.Handler;
-import com.project.Ship;
 
 public class BattleHandler extends Handler {
 	private BattleScreen bs;

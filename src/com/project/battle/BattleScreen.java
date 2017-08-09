@@ -1,11 +1,7 @@
 package com.project.battle;
 
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferStrategy;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Observable;
@@ -61,15 +57,18 @@ public class BattleScreen extends Main implements Observer{
 		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
-		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,10);
-		}
-		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,5);
-		}
+		
 		
 		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
 		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
+		
+		for(int i=0; i<40;i++) {
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
+		}
+		for(int i=0; i<40;i++) {
+			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
+		}
+		
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 1, 125, 120, 612);

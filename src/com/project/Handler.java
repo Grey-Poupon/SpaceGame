@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.project.button.Button;
 
 public class Handler {
-
+	public static ArrayList<Handleable> stars = new ArrayList<Handleable>();
 	public static ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
 	public static ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
 	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
@@ -15,6 +15,10 @@ public class Handler {
 	
 
 	public void tick(UI ui){
+		
+		for(int i = 0; i<stars.size();i++) {
+			stars.get(i).tick();
+		}
 		for(int i =0; i<anims.size();i++){
 			anims.get(i).tick();
 		}
@@ -29,7 +33,10 @@ public class Handler {
 	
 	public void render(Graphics g){
 		
-	
+		for(int i = 0; i<stars.size();i++) {
+			stars.get(i).render(g);
+		}
+		
 		for(int i =0; i<entitiesLowPriority.size();i++){
 			entitiesLowPriority.get(i).render(g.create());
 		}
@@ -69,7 +76,9 @@ public class Handler {
 	}
 	public static void addHighPriorityEntity(Handleable entity) {
 		entitiesHighPriority.add(entity);
-		
+	}
+	public static void addStarEntity(Handleable entity) {
+		stars.add(entity);
 	}
 	public static void addButton(Button btn) {
 		buttons.add(btn);

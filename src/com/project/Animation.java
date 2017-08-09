@@ -3,16 +3,11 @@ package com.project;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 public class Animation implements Handleable {
-	private String path;
 	private int tileWidth;
 	private int tileHeight;
 	private int noVertTiles;
@@ -40,7 +35,7 @@ public class Animation implements Handleable {
 	
 
 	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation) {
-		this.path = path;
+
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;
@@ -61,7 +56,7 @@ public class Animation implements Handleable {
 		}
 	}
 	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,Animation[] anims) {
-		this.path = path;
+
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;
@@ -80,7 +75,6 @@ public class Animation implements Handleable {
 	}
 	
 	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,List<Animation> anims) {
-		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;

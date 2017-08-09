@@ -117,13 +117,6 @@ public class Crew implements Observer{
 		this.gender = gender;
 	}
 
-	public Random getRand() {
-		return rand;
-	}
-
-	public void setRand(Random rand) {
-		this.rand = rand;
-	}
 	
 	public void giveDisease(Disease disease){
 		disease.infect(this);

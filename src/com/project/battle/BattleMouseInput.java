@@ -6,7 +6,6 @@ import java.awt.event.MouseWheelEvent;
 import com.project.Handler;
 import com.project.MouseInput;
 import com.project.ScrollableList;
-import com.project.UI;
 
 public class BattleMouseInput extends MouseInput {
 	private ScrollableList sl;
