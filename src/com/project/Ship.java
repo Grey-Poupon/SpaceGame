@@ -53,11 +53,11 @@ public class Ship {
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
 		}
+		for(int i =0; i<10;i++) {
 			crew.add(Crew.generateRandomCrew());
-			crew.add(Crew.generateRandomCrew());
-			crew.add(Crew.generateRandomCrew());
-			crew.add(Crew.generateRandomCrew());
-
+		}
+			
+			
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
