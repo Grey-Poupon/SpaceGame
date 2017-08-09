@@ -6,12 +6,13 @@ import com.project.button.Button;
 
 public class Handler {
 
-	public static ArrayList<ImageHandler> entitiesLowPriority = new ArrayList<ImageHandler>();// tick last, render on bottom
-	public static ArrayList<ImageHandler> entitiesHighPriority = new ArrayList<ImageHandler>(); // tick first, render on top
+	public static ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
+	public static ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
 	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
 	public static ArrayList<Button> buttons = new ArrayList<Button>(); 
 	public static ArrayList<Animation> anims = new ArrayList<Animation>();
 	public static ArrayList<Text> texts = new ArrayList<Text>();
+	
 
 	public void tick(UI ui){
 		for(int i =0; i<anims.size();i++){
@@ -62,11 +63,11 @@ public class Handler {
 		mousePointer.setxCoordinate(x);
 		mousePointer.setyCoordinate(y);
 	}
-	public static void addLowPriorityEntity(ImageHandler entity) {
+	public static void addLowPriorityEntity(Handleable entity) {
 		entitiesLowPriority.add(entity);
 		
 	}
-	public static void addHighPriorityEntity(ImageHandler entity) {
+	public static void addHighPriorityEntity(Handleable entity) {
 		entitiesHighPriority.add(entity);
 		
 	}

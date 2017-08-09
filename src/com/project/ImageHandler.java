@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class ImageHandler {
+public class ImageHandler implements Handleable {
 	protected EntityID id;
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed

@@ -17,7 +17,7 @@ public class Main  extends Canvas implements Runnable{
 	boolean running;
 	public Handler handler;
 	Random r;
-	Window window;
+	protected Window window;
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public Player player;

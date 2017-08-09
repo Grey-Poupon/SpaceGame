@@ -1,8 +1,11 @@
 package com.project.battle;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferStrategy;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Observable;
@@ -12,6 +15,7 @@ import java.util.Random;
 import com.project.Animation;
 import com.project.Crew;
 import com.project.DamageType;
+import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.Handler;
 import com.project.ImageHandler;
@@ -36,13 +40,9 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler enemyHealthbar;
 	private ImageHandler loadingScreen;
 	
-	private final int xDistanceSystemLocation   = 486;
-	private final int yDistanceSystemLocation   = 26;
-	private final int  distanceSystemLineLength = 100;
-	private final int  distanceSystemDotSize    = 16;
-	private final int  escapeDistance           = 1000;
-	private int        shipDistance             = 500;
+
 	
+	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point playerShotLocation;
 	private Point enemyShotLocation;
@@ -70,7 +70,7 @@ public class BattleScreen extends Main implements Observer{
 		
 		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
 		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
-
+		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 1, 125, 120, 612);
 		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 8, 670, 347,1f,-1,true);
@@ -78,7 +78,7 @@ public class BattleScreen extends Main implements Observer{
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler,sl);
 		playerHealthbar		 = new ImageHandler  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
-		enemyHealthbar		 = new ImageHandler  (750,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		enemyHealthbar		 = new ImageHandler  (800,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		
 		for(int i =0;i<playerShip.getCrew().size();i++) {
 			Crew crew = playerShip.getCrew().get(i);
@@ -88,16 +88,6 @@ public class BattleScreen extends Main implements Observer{
 			}
 			System.out.println();
 		}
-		
-//		for(int i =0;i<playerShip.getCrew().size();i++) {
-//			Crew crew = playerShip.getCrew().get(i);
-//			System.out.println(crew.name+":"+crew.getRaceID().toString()+" "+crew.getGender());
-//			for(int j = 0;j<crew.getStats().size();j++) {
-//				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
-//			}
-//			System.out.println();
-//		}
-//		
 		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
@@ -131,6 +121,7 @@ public class BattleScreen extends Main implements Observer{
 		String phase = "";
 		if(currentPhase == BattlePhases.WeaponsButton) {phase = "Weapons Button";}
 		if(currentPhase == BattlePhases.WeaponsClick) {phase = "Weapons Click";}
+		if(currentPhase == BattlePhases.Engine) {phase = "Engine";}
 		if(currentPhase == BattlePhases.Final) {phase = "final";}
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
@@ -159,7 +150,9 @@ public class BattleScreen extends Main implements Observer{
 				}			}
 			if(currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
-				moveShips(playerShip,enemyShip);
+				playerShip.setSpeed(100);
+				enemyShip.setSpeed(200);
+				ds.calculateDistances(playerShip, enemyShip);
 				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true,playerShotLocation);
 				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true,enemyShotLocation);
 				nextTurn();
@@ -184,39 +177,8 @@ public class BattleScreen extends Main implements Observer{
 		
 	
 	}
-	private void calculateDistances(Ship chaser, Ship chased) {
-		Ship ship  = null;
-		Ship ship2 = null;
-		if(chaser.getSpeedChange()>0 ^ chased.getSpeedChange()>0) {
-			if(chaser.getSpeedChange()>0) {
-				ship  = chaser; 
-				ship2 = chased;
-			}
-		}
-		else {
-			ship  = chaser;
-			ship2 = chased;}
-		if(ship.getDistanceToEnd()==0 && ship.getSpeedChange()>0) {
-			int dist = -(ship.getSpeedChange()+ship2.getSpeedChange());
-			ship2.changeDistanceToEnd(-dist);
-			this.shipDistance-=-dist;
-		}
-		else {
-			int dist = ship.getSpeedChange()+ship2.getSpeedChange();
-			ship2.changeDistanceToEnd(dist);
-			this.shipDistance-=dist;
-		}
-		
 
-	}
-	private void drawDistanceSystem(Ship chaser,Ship chased,Graphics g) {
-		
-	}
 	
-	private void moveShips(Ship chaser, Ship chased) {
-		shipDistance += (chased.getSpeed() - chaser.getSpeed());
-		if(shipDistance < 0) {shipDistance = 0;}
-	}
 
 	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
 		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired

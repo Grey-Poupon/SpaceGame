@@ -8,15 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 
-import javax.swing.text.Position;
-
 import com.project.button.Button;
 import com.project.button.ButtonID;
 
-import com.project.crew_types.BlueLizard;
-import com.project.crew_types.Ent;
-import com.project.crew_types.Robot;
-import com.project.crew_types.YellowLizard;
+
 import com.project.ship.Engine;
 import com.project.ship.Generator;
 import com.project.ship.Room;
@@ -100,6 +95,7 @@ public class Ship {
 		int dmg =0;
 		if(isShipClicked(x, y)) {
 			Room room = getClosestRoom(x, y);
+			if(room==null) {return 0;}
 			int distanceToRoom = (int) (Math.pow(room.getLocation().getX(),2) + Math.pow(room.getLocation().getY(),2));
 			if (distanceToRoom < room.getDamagableRadius()) {
 				dmg  = (1/distanceToRoom) * room.getDamageMod();
@@ -198,7 +194,7 @@ public class Ship {
 	public int getDistanceToEnd() {
 		return distanceToEnd;
 	}
-	public void changeDistanceToEnd(int distanceToEnd) {
+	public void increaseDistanceToEnd(int distanceToEnd) {
 		this.distanceToEnd += distanceToEnd;
 	}
 	public int getSpeedChange() {

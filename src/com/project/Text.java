@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
-public class Text {
+public class Text implements Handleable{
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
@@ -73,5 +73,10 @@ public class Text {
 	}
 	public void removeMask() {
 		this.clip = null;		
+	}
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
 	}
 }

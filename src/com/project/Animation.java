@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-public class Animation {
+public class Animation implements Handleable {
 	private String path;
 	private int tileWidth;
 	private int tileHeight;

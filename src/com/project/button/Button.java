@@ -7,11 +7,12 @@ import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.project.Handleable;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Text;
 
-public class Button extends Observable{
+public class Button extends Observable  implements Handleable{
 	private int xCoordinate,yCoordinate,width,height,index;
 	private Rectangle2D mask;
 	private Text text;
@@ -181,6 +182,11 @@ public class Button extends Observable{
 		g.drawRect(xCoordinate, yCoordinate, width, height);
 		//g.setColor(Color.GREEN);
 		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		
+	}
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
 		
 	}
 	
