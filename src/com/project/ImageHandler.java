@@ -143,6 +143,9 @@ public class ImageHandler {
 			e.printStackTrace();
 		};
 	}
+	public void setImg(BufferedImage img) {
+		this.img = img;
+	}
 	
 	public Object getID() {
 		// TODO Auto-generated method stub

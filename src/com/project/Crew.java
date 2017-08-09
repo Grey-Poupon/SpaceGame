@@ -1,5 +1,7 @@
 package com.project;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +12,13 @@ import java.util.Random;
 
 import com.project.battle.BattleUI;
 import com.project.button.ButtonID;
-import com.project.crew_types.*;
+import com.project.crew_types.BlueLizard;
+import com.project.crew_types.BugBitch;
+import com.project.crew_types.Ent;
+import com.project.crew_types.MoleBitch;
+import com.project.crew_types.OctoBitch;
+import com.project.crew_types.Robot;
+import com.project.crew_types.YellowLizard;
 import com.project.crew_types.diseases.Disease;
 
 public class Crew implements Observer{
@@ -26,7 +34,7 @@ public class Crew implements Observer{
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
-	
+	protected ImageHandler portrait;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender, RaceID race) {
@@ -63,9 +71,11 @@ public class Crew implements Observer{
 		this.diseases = new ArrayList<Disease>();
 		getSpeechOptions().add("Talk");
 		if(rand.nextBoolean()) {setLocationOnShip("weapons");}
+		loadPortrait();
 	}
 	
-	public Crew() {
+	public Crew(RaceID race) {
+		this.race = race;
 		stats = new HashMap<>();
 		statModifier = new HashMap<>();
 		statModifier.put("social", 1f);
@@ -86,6 +96,7 @@ public class Crew implements Observer{
 		statModifierInc.put("science", (byte)0);
 		statModifierInc.put("pilot", (byte)0);
 		this.diseases = new ArrayList<Disease>();
+		loadPortrait();
 	}
 	
 	
@@ -269,6 +280,42 @@ public class Crew implements Observer{
 	public void setName(String name) {
 		this.name = name;
 	}
+	private void loadPortrait() {
+		if(this.race!=RaceID.robot){
+			this.portrait = new ImageHandler(0, 0,"res/race_portraits/"+this.race.toString()+".png", true, EntityID.crew);
+			randomisePortrait();
+		}
+	}
+	protected void loadPortrait(byte Gen) {
+		this.portrait = (new ImageHandler(0, 0,"res/race_portraits/gen_"+Byte.toString(Gen)+".png", true, EntityID.crew));
+		randomisePortrait();
+	}
+	public ImageHandler getPortrait() {
+		return portrait;
+	}
+	
+	private void randomisePortrait() {
+		BufferedImage img = this.portrait.getImg();
+		float shade  = (float)(rand.nextGaussian()*0.5 +1); 
+		for(int x =0;x< this.portrait.getImg().getWidth();x++) {
+			for(int y=0;y<this.portrait.getImg().getHeight();y++) {
+		
+				Color col = new Color(this.portrait.getImg().getRGB(x,y),true);
+				int r = (int) (col.getRed()*(shade));
+//				if(r>255)r=255;
+				int g = (int) (col.getGreen()*(shade));
+//				if(g>255)g=255;
+				int b = (int) (col.getBlue()*(shade));
+//				if(b>255)b=255;
+				int a = (int)(col.getAlpha());
+				int rgba = (a << 24) | (r << 16) | (g << 8) | b;
+				
+				img.setRGB(x,y,rgba);
+			}
+		}
+		this.portrait.setImg(img);
+	}	
+	
 	
 	
 	
