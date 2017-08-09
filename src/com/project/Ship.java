@@ -198,8 +198,8 @@ public class Ship {
 	public int getDistanceToEnd() {
 		return distanceToEnd;
 	}
-	public void setDistanceToEnd(int distanceToEnd) {
-		this.distanceToEnd = distanceToEnd;
+	public void changeDistanceToEnd(int distanceToEnd) {
+		this.distanceToEnd += distanceToEnd;
 	}
 	public int getSpeedChange() {
 		return speedChange;

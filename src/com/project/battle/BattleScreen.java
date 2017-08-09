@@ -1,6 +1,7 @@
 package com.project.battle;
 
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.lang.reflect.Array;
 import java.util.List;
@@ -35,9 +36,12 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler enemyHealthbar;
 	private ImageHandler loadingScreen;
 	
-	
-	private final int escapeDistance = 1000;
-	private int shipDistance=500;
+	private final int xDistanceSystemLocation   = 486;
+	private final int yDistanceSystemLocation   = 26;
+	private final int  distanceSystemLineLength = 100;
+	private final int  distanceSystemDotSize    = 16;
+	private final int  escapeDistance           = 1000;
+	private int        shipDistance             = 500;
 	
 	private ScrollableList sl;
 	private Point playerShotLocation;
@@ -180,13 +184,33 @@ public class BattleScreen extends Main implements Observer{
 		
 	
 	}
-	private void renderDistance(Ship chaser, Ship chased) {
-		Ship ship;
+	private void calculateDistances(Ship chaser, Ship chased) {
+		Ship ship  = null;
+		Ship ship2 = null;
 		if(chaser.getSpeedChange()>0 ^ chased.getSpeedChange()>0) {
-			ship = chaser.getSpeedChange()>0 ? chaser :chased;
+			if(chaser.getSpeedChange()>0) {
+				ship  = chaser; 
+				ship2 = chased;
+			}
 		}
-		else {ship = chaser;}
+		else {
+			ship  = chaser;
+			ship2 = chased;}
+		if(ship.getDistanceToEnd()==0 && ship.getSpeedChange()>0) {
+			int dist = -(ship.getSpeedChange()+ship2.getSpeedChange());
+			ship2.changeDistanceToEnd(-dist);
+			this.shipDistance-=-dist;
+		}
+		else {
+			int dist = ship.getSpeedChange()+ship2.getSpeedChange();
+			ship2.changeDistanceToEnd(dist);
+			this.shipDistance-=dist;
+		}
+		
 
+	}
+	private void drawDistanceSystem(Ship chaser,Ship chased,Graphics g) {
+		
 	}
 	
 	private void moveShips(Ship chaser, Ship chased) {
