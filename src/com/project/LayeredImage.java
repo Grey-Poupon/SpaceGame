@@ -153,14 +153,11 @@ public class LayeredImage {
 		    	layersX[i]=Integer.parseInt(split[2*i]);
 		    	layersY[i]=Integer.parseInt(split[1+(2*i)]);
 		    }
-
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 	
 	public void organiseLayers() {
 		ArrayList<ImageHandler> sortedLayers = new ArrayList<ImageHandler>();

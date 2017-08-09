@@ -179,4 +179,20 @@ public class ImageHandler {
 		this.clip = null;		
 	}
 
+	public int getxCoordinate() {
+		return xCoordinate;
+	}
+	public boolean isClicked(int x, int y) {
+		if(x>xCoordinate && x<xCoordinate+(img.getWidth()*xScale) && y>yCoordinate && y<yCoordinate+(img.getHeight()*yScale)) {
+			double X = ((x-xCoordinate)/xScale);
+			double Y = ((y-yCoordinate)/yScale);
+			int newX = (int)X;
+			int newY = (int)Y;
+			if( (img.getRGB(newX,newY)>>24) != 0x00 ) {
+			    return true;
+			}
+		}
+		return false;
+	}
+
 }

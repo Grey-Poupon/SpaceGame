@@ -10,7 +10,8 @@ public class Destructive {
 	private int damagePerShot;
 	private DamageType damageType;
 	private double accuracy;
-
+	private int weaponSwayMod;
+	
 	public int getRateOfFire() {
 		return rateOfFire;
 	}
@@ -24,22 +25,24 @@ public class Destructive {
 	}
 
 	
-	public Destructive(int rateOfFire, int damagePerShot, double accuracy, DamageType damageType){
+	public Destructive(int rateOfFire, int damagePerShot, double accuracy, DamageType damageType,int weaponSwayMod){
 		this.rateOfFire=rateOfFire;
 		this.damagePerShot =damagePerShot;
 		this.accuracy=accuracy;
 		this.damageType = damageType;
+		this.weaponSwayMod = weaponSwayMod;
 		
 	}
 	public Object[] fire(){
-		int shotsHit=0; // counter for shots that hit
+		double[] accuracy = new double[rateOfFire];
 		Random rand = new Random();
 		for(int i=0; i<getRateOfFire();i++){
-			if(rand.nextDouble()<=getAccuracy()){// if rand number is less than acc it's a hit
-				shotsHit++;
+			accuracy[i] = rand.nextDouble();
+			if(accuracy[i]<=getAccuracy()){// if rand number is less than acc it's a hit
+				accuracy[i]=0;
 			}
 		}
-		Object[] damageDealt = {shotsHit,getDamagePerShot(),damageType}; // to return, holds the shots hit and dmg per shot
+		Object[] damageDealt = {rateOfFire,accuracy,weaponSwayMod,getDamagePerShot(),damageType}; // to return, holds the shots hit and dmg per shot
 		return damageDealt;
 	}
 }

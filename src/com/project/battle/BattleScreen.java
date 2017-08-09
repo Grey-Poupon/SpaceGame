@@ -1,6 +1,7 @@
 package com.project.battle;
 
 
+import java.awt.Point;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Observable;
@@ -33,9 +34,14 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler playerHealthbar;
 	private ImageHandler enemyHealthbar;
 	private ImageHandler loadingScreen;
-
-	private ScrollableList sl;
 	
+	
+	private final int escapeDistance = 1000;
+	private int shipDistance=500;
+	
+	private ScrollableList sl;
+	private Point playerShotLocation;
+	private Point enemyShotLocation;
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
 	private int playersWeaponChoice;
@@ -47,6 +53,7 @@ public class BattleScreen extends Main implements Observer{
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
+		handler = new BattleHandler(this);
 		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
@@ -62,7 +69,7 @@ public class BattleScreen extends Main implements Observer{
 
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 1, 125, 120, 612);
-		Animation anim       = new Animation("res/blueFlameSpritesheet.png", 48, 26, 5, 2, 8, 670, 347,4.4f,-1,true);
+		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 8, 670, 347,1f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler,sl);
@@ -102,17 +109,24 @@ public class BattleScreen extends Main implements Observer{
 
 	private void nextTurn() {
 		
-		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { // if its the chasers turn
+		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { // if its the chasers turn // fyi chaser goes last
 			currentPhasePointer++;
 		}
 		if(currentPhasePointer >= BattlePhases.phases.length) {
 			currentPhasePointer -= BattlePhases.phases.length;
 			isPlayersTurn = !playerIsChaser;
 		}
+		if (currentPhase == BattlePhases.WeaponsButton) {
+			isPlayersTurn = !playerIsChaser;
+			if(!(playerIsChaser ^ playerIsChaser)) {
+				currentPhasePointer++;;
+			}
+		}
 		currentPhase= BattlePhases.phases[currentPhasePointer];
 		isPlayersTurn = !isPlayersTurn;
-		
-		String phase = BattlePhases.Weapons == currentPhase ? "Weapon":"Engine";
+		String phase = "";
+		if(currentPhase == BattlePhases.WeaponsButton) {phase = "Weapons Button";}
+		if(currentPhase == BattlePhases.WeaponsClick) {phase = "Weapons Click";}
 		if(currentPhase == BattlePhases.Final) {phase = "final";}
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
@@ -125,21 +139,25 @@ public class BattleScreen extends Main implements Observer{
 			super.tick();
 
 			if(!isPlayersTurn) {
-				if(currentPhase == BattlePhases.Weapons) {
+				if(currentPhase == BattlePhases.WeaponsButton) {
 					enemyWeaponChoice=0;
 					System.out.println("Enemy Weapon Reveal");
 					nextTurn();
 				}
-				else {
+				else if (currentPhase == BattlePhases.WeaponsClick){
+					enemyShotLocation = new Point(800,80);
+					nextTurn();
+				}
+				else if (currentPhase == BattlePhases.Engine){
 					enemyEngineChoice=0;
 					System.out.println("Enemy Engine Reveal");
 					nextTurn();
-				}
-			}
+				}			}
 			if(currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
-				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true);
-				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true);
+				moveShips(playerShip,enemyShip);
+				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true,playerShotLocation);
+				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true,enemyShotLocation);
 				nextTurn();
 
 			}
@@ -162,9 +180,24 @@ public class BattleScreen extends Main implements Observer{
 		
 	
 	}
+	private void renderDistance(Ship chaser, Ship chased) {
+		int chaserSpeedDif = chaser.getSpeed() -chaserShipSpeed; 
+		int chasedSpeedDif = chased.getSpeed() -chasedShipSpeed; 
+		Ship ship;
+		if(chaserSpeedDif>0 ^ chasedSpeedDif>0) {
+			ship = chaserSpeedDif>0 ? chaser :chased;
+		}
+		else {ship = chaser;}
+		if(ship)
+
+	}
 	
-	
-	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon){
+	private void moveShips(Ship chaser, Ship chased) {
+		shipDistance += (chased.getSpeed() - chaser.getSpeed());
+		if(shipDistance < 0) {shipDistance = 0;}
+	}
+
+	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
 		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired
 		
 		if(weapon.isBuffer()){ // if its a buffing weapon apply buff
@@ -184,9 +217,17 @@ public class BattleScreen extends Main implements Observer{
 		}
 		if(weapon.isDestructive()){// if its a destructive weapon fire it, apply damage
 			Object[] damageDealt = weapon.fire();
-			for(int i=0;i<(int)damageDealt[0];i++){
-				secondary.takeDamage((int)damageDealt[1],(DamageType)damageDealt[2]);
+			double[] accuracy = (double[]) damageDealt[1];
+			int newX,newY,extraDmg;
+			for(int i=0;i<(int)damageDealt[0];i++) {
+				if(accuracy[i]!=0) {
+					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/accuracy[i])):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
+					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/accuracy[i])):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
+					extraDmg = secondary.roomDamage(newX, newY);
+					secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
+				}
 			}
+			
 		}
 	}
 
@@ -199,7 +240,7 @@ public class BattleScreen extends Main implements Observer{
 			int index = (int)Array.get(arg1, 1);
 			
 			if(ID == ButtonID.BattleWeaponsChoice){
-				if(isPlayersTurn && currentPhase==BattlePhases.Weapons ) {
+				if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
 					playersWeaponChoice = index;
 					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
 					nextTurn();
@@ -218,5 +259,12 @@ public class BattleScreen extends Main implements Observer{
 			}
 		}
 		
+	}
+	
+	public void checkClick(int x, int y) {
+		if(enemyShip.isShipClicked(x, y) && currentPhase == BattlePhases.WeaponsClick) {
+			playerShotLocation = new Point(x,y);
+			nextTurn();
+		}
 	}
 }

@@ -134,7 +134,6 @@ public class Button extends Observable{
 	}
 	public void shift(int x , int y) {
 		move(xCoordinate+x,yCoordinate+y);
-		
 	}
 	public int getWidth() {
 		return width;
@@ -178,10 +177,10 @@ public class Button extends Observable{
 		return yCoordinate;
 	}
 	public void render(Graphics g) {
-		g.setColor(Color.RED);
+		g.setColor(Color.MAGENTA);
 		g.drawRect(xCoordinate, yCoordinate, width, height);
-		g.setColor(Color.GREEN);
-		g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		//g.setColor(Color.GREEN);
+		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
 		
 	}
 	

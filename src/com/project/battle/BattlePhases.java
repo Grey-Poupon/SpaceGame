@@ -1,7 +1,7 @@
 package com.project.battle;
 
 public enum BattlePhases {
-	Weapons,Engine,Final;
+	WeaponsButton,WeaponsClick,Engine,Final;
 	public static BattlePhases[] phases = new BattlePhases[] 
-			{Weapons,Engine,Final};
+			{WeaponsButton,WeaponsClick,Engine,Final};
 }

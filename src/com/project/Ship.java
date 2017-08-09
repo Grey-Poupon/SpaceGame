@@ -1,6 +1,7 @@
 package com.project;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.project.crew_types.Robot;
 import com.project.crew_types.YellowLizard;
 import com.project.ship.Engine;
 import com.project.ship.Generator;
+import com.project.ship.Room;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -27,10 +29,13 @@ public class Ship {
 	private int maxHealth;
 	private int currHealth;
 	private int speed = 0;
+	private int distanceToEnd = 250; // for distance system
+	private int speedChange;
 	private int power = 0;
+	
 	private Engine engine;
 	private Generator generator;
-	
+	private List<Room> damagableRooms = new ArrayList<Room>();;
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
 	private List<Crew>     crew                = new ArrayList<Crew>();
@@ -43,7 +48,7 @@ public class Ship {
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.currHealth = this.maxHealth = health;
-		Weapon defaultWeapon = new FireableWeapon(1, 3, 5, 0.8, "Laser Mark I",DamageType.Laser);
+		Weapon defaultWeapon = new FireableWeapon(1, 3, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
 
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -90,6 +95,40 @@ public class Ship {
 		}
 		return buttons;
 	}
+	
+	public int roomDamage(int x, int y) {
+		int dmg =0;
+		if(isShipClicked(x, y)) {
+			Room room = getClosestRoom(x, y);
+			int distanceToRoom = (int) (Math.pow(room.getLocation().getX(),2) + Math.pow(room.getLocation().getY(),2));
+			if (distanceToRoom < room.getDamagableRadius()) {
+				dmg  = (1/distanceToRoom) * room.getDamageMod();
+			}
+		}
+		return dmg;
+	}
+	private Room getClosestRoom(int x, int y) {
+		if(damagableRooms.size()<1) {return null;}
+		Room closestRoom = damagableRooms.get(0);
+		Point closest = closestRoom.getLocation();
+		for(Room r :damagableRooms) {
+			Point n=r.getLocation();
+			if(closest.x+closest.y>n.x+n.y && closest.x*closest.y > n.x*n.y) {
+				closest = n;
+				closestRoom=r;
+			}
+		}
+		return closestRoom;
+	}
+	public boolean isShipClicked(int x, int y) {
+		for(ImageHandler i : lImage.layers) {
+			if(i.isClicked(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public List<Crew> getCrew() {
 		return crew;
 	}
@@ -148,6 +187,13 @@ public class Ship {
 	}
 	public void tickLayers() {
 		lImage.tick();
+	}
+	public int getSpeed() {
+		return speed;
+	}
+	public void setSpeed(int speed) {
+		this.speedChange = this.speed - speed;
+		this.speed = speed;
 	}
 
 	

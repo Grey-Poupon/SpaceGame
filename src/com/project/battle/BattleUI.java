@@ -59,14 +59,14 @@ public class BattleUI extends UI{
 				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
 				renderTooltipCrewOptions(crew);
 				for(int i=speechOptionsSize;i<weapons.length+speechOptionsSize;i++){
-					generateTooltipButton(i, weapons[i-speechOptionsSize].getWeaponInfo());
+					generateTooltipButton(i, weapons[i-speechOptionsSize].getWeaponInfo(),ButtonID.BattleWeaponsChoice);
 				}
 			}
 			else if(tooltipMenuSelection.equals("cockpit")) {
 				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
 				renderTooltipCrewOptions(crew);
 				for(int i = speechOptionsSize;i<4+speechOptionsSize;i++) {
-					generateTooltipButton(i, "Engine Choice "+i);
+					generateTooltipButton(i, "Engine Choice "+i,ButtonID.BattleEngineChoice);
 
 				}
 			}
@@ -87,17 +87,17 @@ public class BattleUI extends UI{
 	public void updateWeapons(Weapon[] weapons){
 		this.weapons = weapons;
 	}
-	private static void generateTooltipButton(int i, String text) {
+	private static void generateTooltipButton(int i, String text,ButtonID id) {
 			Text text1 = new Text(text,true,xButtonOffset,yButtonOffset+(textSpacing*(i+1)),"Sevensegies", fontStyle, fontSize,fontColour);
 			if(i>=texts.size()) {texts.add(text1);}
 			else {texts.set(i, text1);}
-			addTooltipButton(new Button(xButtonOffset,yButtonOffset+(textSpacing*(i)),tooltipBoxWidth,tooltipBoxHeight,ButtonID.BattleEngineChoice,i,true,bs));
+			addTooltipButton(new Button(xButtonOffset,yButtonOffset+(textSpacing*(i)),tooltipBoxWidth,tooltipBoxHeight,id,i,true,bs));
 
 		}
 	
 	private static void renderTooltipCrewOptions(Crew crew) {
 		for(int i = 0;i<crew.getSpeechOptions().size();i++) {
-			generateTooltipButton(i, crew.getSpeechOptions().get(i));
+			generateTooltipButton(i, crew.getSpeechOptions().get(i),ButtonID.Crew);
 
 		}
 	}
