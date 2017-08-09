@@ -41,7 +41,7 @@ public class ImageHandler {
 	};
 	
 	public void changeImage(String newPath, boolean visible){
-		this.setImg(newPath);
+		setImg(newPath);
 		this.setVisible(visible);
 		
 	}
@@ -137,11 +137,7 @@ public class ImageHandler {
 		return img;
 	}
 	public void setImg(String path) {
-		try {
-			this.img = ImageIO.read(new FileInputStream(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		};
+		this.img =ResourceLoader.images.get(path.toLowerCase());
 	}
 	public void setImg(BufferedImage img) {
 		this.img = img;

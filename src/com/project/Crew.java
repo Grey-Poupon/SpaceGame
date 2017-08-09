@@ -295,19 +295,32 @@ public class Crew implements Observer{
 	}
 	
 	private void randomisePortrait() {
-		BufferedImage img = this.portrait.getImg();
-		float shade  = (float)(rand.nextGaussian()*0.5 +1); 
+		BufferedImage img = new BufferedImage(this.getPortrait().getImg().getWidth(),this.portrait.getImg().getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+//		float shade  = (float)(rand.nextGaussian()*0.2 +1);
+		float shader  = (float)(rand.nextGaussian()*0.5 +1);
+		float shadeg  = (float)(rand.nextGaussian()*0.5 +1);
+		float shadeb  = (float)(rand.nextGaussian()*0.5 +1);
 		for(int x =0;x< this.portrait.getImg().getWidth();x++) {
 			for(int y=0;y<this.portrait.getImg().getHeight();y++) {
-		
+				
 				Color col = new Color(this.portrait.getImg().getRGB(x,y),true);
-				int r = (int) (col.getRed()*(shade));
-//				if(r>255)r=255;
-				int g = (int) (col.getGreen()*(shade));
-//				if(g>255)g=255;
-				int b = (int) (col.getBlue()*(shade));
-//				if(b>255)b=255;
+//				int r = (int) (col.getRed()*(shade));
+////				if(r>255)r=255;
+//				int g = (int) (col.getGreen()*(shade));
+////				if(g>255)g=255;
+//				int b = (int) (col.getBlue()*(shade));
+////				if(b>255)b=255;
+//				int a = (int)(col.getAlpha());
+//				int rgba = (a << 24) | (r << 16) | (g << 8) | b;
 				int a = (int)(col.getAlpha());
+				if(a==0) {continue;}
+				int r = (int) (col.getRed()*(shader));
+//				if(r>255)r=255;
+				int g = (int) (col.getGreen()*(shadeg));
+//				if(g>255)g=255;
+				int b = (int) (col.getBlue()*(shadeb));
+//				if(b>255)b=255;
+				
 				int rgba = (a << 24) | (r << 16) | (g << 8) | b;
 				
 				img.setRGB(x,y,rgba);

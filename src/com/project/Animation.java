@@ -105,11 +105,7 @@ public class Animation {
 		this.nextAnimations = anims;
 	}
 	public void setSpritesheet(String path) {
-		try {
-			this.spritesheet = ImageIO.read(new FileInputStream(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		};
+		this.spritesheet = ResourceLoader.images.get(path);
 	}
 	public void setSprite() {
 		if(spritesheet!=null) {
