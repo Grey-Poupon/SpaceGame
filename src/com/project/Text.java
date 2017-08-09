@@ -7,14 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
 public class Text implements Handleable{
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
-	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
+	//private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private boolean visible = true;
 	private String text;
 	private Font font;

@@ -2,13 +2,8 @@ package com.project;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class ImageHandler implements Handleable {
 	protected EntityID id;
@@ -61,7 +56,8 @@ public class ImageHandler implements Handleable {
 		this.yCoordinate = y;
 		this.visible = visible;
 		this.ID = ID;
-		Handler.addLowPriorityEntity(this);
+		if(ID!=EntityID.star) {Handler.addLowPriorityEntity(this);}
+		else {Handler.addStarEntity(this);}
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;

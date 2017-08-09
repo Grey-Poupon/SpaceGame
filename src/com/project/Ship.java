@@ -23,7 +23,7 @@ public class Ship {
 	private int health;
 	private int maxHealth;
 	private int currHealth;
-	private int speed = 0;
+	private int speed = 200;
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;

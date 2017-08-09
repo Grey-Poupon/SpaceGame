@@ -12,19 +12,22 @@ public class Star extends ImageHandler{
 	private Color color;
 	private Rectangle2D clippingArea;
 	private static Random rand = new Random();
-	private int vel;
 	private int rad =5;
+	private Ship ship;
+	private int speedscale = 20;
 	
-	public Star(int x, int y, String path, boolean visible,int left,int right,int top, int bottom,int  vel) {
-		super(x, y,path,visible,EntityID.star);
+	public Star(int x, int y, String path, boolean visible,int left,int right,int top, int bottom,Ship ship) {
+		super(x, y,visible,EntityID.star);
 		this.boundaryLeft = left;
 		this.boundaryBottom = bottom;
-		this.vel = vel;
+		this.ship = ship;
+		this.xVel = ship.getSpeed()/speedscale;
 		this.boundaryRight = right;
 		this.boundaryTop = top;
 		this.color = Color.white;
+		this.ship = ship;
 		this.clippingArea = new Rectangle2D.Float(boundaryLeft,boundaryTop,boundaryRight-boundaryLeft,boundaryBottom-boundaryTop);
-		this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+vel))));
+		this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+this.xVel))));
 	}
 	
 	public void tick(){
@@ -32,7 +35,7 @@ public class Star extends ImageHandler{
 		if(this.xCoordinate+this.rad<boundaryLeft-20) {
 			this.setxCoordinate(boundaryRight);
 			this.setyCoordinate(boundaryTop+rand.nextInt(boundaryBottom-rad-boundaryTop));
-			this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+vel))));
+			this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+ship.getSpeed()/speedscale))));
 			if(rand.nextInt(100)==50) {
 				color=new Color(rand.nextFloat(),0,rand.nextFloat()/2f);
 				rad = rand.nextInt(15)+5;

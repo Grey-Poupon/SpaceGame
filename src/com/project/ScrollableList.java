@@ -1,8 +1,6 @@
 package com.project;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import com.project.battle.BattleUI;
 import com.project.button.Button;
