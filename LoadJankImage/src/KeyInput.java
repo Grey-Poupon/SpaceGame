@@ -1,4 +1,4 @@
-
+package LoadJankImage.src;
 
 
 import java.awt.event.KeyAdapter;
