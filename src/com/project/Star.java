@@ -13,10 +13,10 @@ public class Star extends ImageHandler{
 	private Rectangle2D clippingArea;
 	private static Random rand = new Random();
 	private int vel;
-	private int rad =0;
+	private int rad =5;
 	
 	public Star(int x, int y, String path, boolean visible,int left,int right,int top, int bottom,int  vel) {
-		super(x, y, path, visible,EntityID.star);
+		super(x, y,path,visible,EntityID.star);
 		this.boundaryLeft = left;
 		this.boundaryBottom = bottom;
 		this.vel = vel;
@@ -29,9 +29,9 @@ public class Star extends ImageHandler{
 	
 	public void tick(){
 		super.tick();
-		if(this.xCoordinate+this.getImg().getWidth()<boundaryLeft-20) {
+		if(this.xCoordinate+this.rad<boundaryLeft-20) {
 			this.setxCoordinate(boundaryRight);
-			this.setyCoordinate(boundaryTop+rand.nextInt(boundaryBottom-this.getImg().getHeight()-boundaryTop));
+			this.setyCoordinate(boundaryTop+rand.nextInt(boundaryBottom-rad-boundaryTop));
 			this.setXVel(-(int)(2*Math.abs((rand.nextGaussian()+vel))));
 			if(rand.nextInt(100)==50) {
 				color=new Color(rand.nextFloat(),0,rand.nextFloat()/2f);

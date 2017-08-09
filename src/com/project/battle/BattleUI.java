@@ -56,14 +56,14 @@ public class BattleUI extends UI{
 			int speechOptionsSize = crew.getSpeechOptions().size();
 			if(tooltipMenuSelection.equals("weapons")){// weapons selected
 				
-				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
+				tooltipSeperator.changeImage("res/TooltipSeparation_4Sections.png",true);
 				renderTooltipCrewOptions(crew);
 				for(int i=speechOptionsSize;i<weapons.length+speechOptionsSize;i++){
 					generateTooltipButton(i, weapons[i-speechOptionsSize].getWeaponInfo(),ButtonID.BattleWeaponsChoice);
 				}
 			}
 			else if(tooltipMenuSelection.equals("cockpit")) {
-				tooltipSeperator.changeImage("res/TooltipSepration_4Sections.png",true);
+				tooltipSeperator.changeImage("res/TooltipSeparation_4Sections.png",true);
 				renderTooltipCrewOptions(crew);
 				for(int i = speechOptionsSize;i<4+speechOptionsSize;i++) {
 					generateTooltipButton(i, "Engine Choice "+i,ButtonID.BattleEngineChoice);
