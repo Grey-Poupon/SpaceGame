@@ -1,5 +1,3 @@
-package LoadJankImage.src;
-
 
 
 
@@ -44,10 +42,11 @@ public class KeyInput extends KeyAdapter {
 		if(keys.contains('x')){LayeredImage.cameraZ-=0.1;}
 		if(keys.contains('.')){System.out.println(LayeredImage.cameraZ);}
 		if(keys.contains(',')){}			
-		if(keys.contains('a')){LayeredImage.cameraX-=0.5;}
-		if(keys.contains('d')){LayeredImage.cameraX+=0.5;}
-		if(keys.contains('w')){LayeredImage.cameraY-=0.5;}
-		if(keys.contains('s')){LayeredImage.cameraY+=0.5;}
+		if(keys.contains('a')){LayeredImage.cameraX-=0.3;}
+		if(keys.contains('d')){LayeredImage.cameraX+=0.3;}
+		if(keys.contains('w')){LayeredImage.cameraY-=0.3;}
+		if(keys.contains('s')){LayeredImage.cameraY+=0.3;}
+		if(keys.contains('p')){System.out.println(LayeredImage.cameraX);}
 	}
 	
 }

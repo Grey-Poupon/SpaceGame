@@ -1,11 +1,8 @@
-package LoadJankImage.src;
-
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class LayeredImage {
@@ -51,7 +48,9 @@ public class LayeredImage {
 		
 		for(int i = 0; i<layers.size();i++) {
 			setScaling(layers.get(i),i);
+			setLayersShading(layers.get(i));
 		}
+		
 		
 	}
 	
@@ -61,17 +60,19 @@ public class LayeredImage {
 		double d = (Math.cos(d1)*3*(f));
 		e.setXScale((float)d);
 		if(cameraX>0) {
-			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1]));
+			e.setxCoordinate((this.x+e.getXScale()*layersX[layersX.length-index-1]));
 		}
 		else {
-			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(3-(e.getXScale())))));
+			//e.setxCoordinate((this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(3-(e.getXScale())))));
+			e.setxCoordinate(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(3-(e.getXScale()))));
 		}
 		e.setYScale((float) Math.cos(Math.atan2(cameraY, e.getZ()))*3*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ))));	    
 		if(cameraY>0) {
-			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1]));
+			e.setyCoordinate((this.y+e.getYScale()*layersY[layersY.length-index-1]));
 		}
 		else {
-			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(3-(e.getYScale())))));
+			//e.setyCoordinate((this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(3-(e.getYScale())))));
+			e.setyCoordinate((this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(3-(e.getYScale())))));
 		}		
 
 	}
@@ -88,7 +89,7 @@ public class LayeredImage {
 	private int getLargestHeight() {
 		int largest = 0;
 		for(int i =0;i<layers.size();i++) {
-			if(layers.get(i).getImg().getWidth()>largest) {
+			if(layers.get(i).getImg().getHeight()>largest) {
 				largest  = layers.get(i).getImg().getHeight();
 			}
 		}
@@ -172,6 +173,27 @@ public class LayeredImage {
 	public void setNoLayers() {
 		this.noLayers=this.layersX.length;
 	}
-		
+	
+	public void setLayersShading(Entity e){
+		BufferedImage img = new BufferedImage(e.getImg().getWidth(), e.getImg().getHeight(), BufferedImage.TRANSLUCENT);
+			for(int x =0;x< e.getImg().getWidth();x++) {
+				for(int y=0;y<e.getImg().getHeight();y++) {
+//					float xheight = (e.xScale/3)*x/(e.getImg().getWidth());
+//					float yheight= (e.yScale/3)*y/(e.getImg().getHeight());
+//					
+					//float shade = yheight*xheight/(e.getImg().getWidth()*e.getImg().getHeight());
+//					float shade = xheight*yheight; 
+					float shade  = (cameraZ-editable.layerZ[0])/(cameraZ-e.getZ());
+					Color col = new Color(e.getOriImg().getRGB(x,y),true);
+					int r = (int) (col.getRed()*(shade));
+					int g = (int) (col.getGreen()*(shade));
+					int b = (int) (col.getBlue()*(shade));
+					int a = (int)(col.getAlpha());
+					int rgba = (a << 24) | (r << 16) | (g << 8) | b;
+					img.setRGB(x,y,rgba);
+					e.setImg(img);
+				}
+			}	
+	}	
 	
 }
