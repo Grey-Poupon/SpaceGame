@@ -6,9 +6,9 @@ import com.project.weapons.Weapon;
 
 public class FireableWeapon extends Weapon {
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt) {
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod) {
 		super(cooldownDuration, name);
-		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt);
+		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod);
 		this.isDestructive = true;
 	}
 

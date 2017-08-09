@@ -28,6 +28,10 @@ public class Animation {
 	private int yCoordinate;
 	private int xVel=0;
 	private int yVel=0;
+	int xStartGap;
+	int yStartGap;
+	int xGap;
+	int yGap;
 	private float scale = 1;
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
@@ -35,7 +39,7 @@ public class Animation {
 	private List<Animation> nextAnimations = new ArrayList<Animation>();
 	
 
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation) {
 		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -44,6 +48,10 @@ public class Animation {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
+		this.xStartGap = xStartGap;
+		this.yStartGap = yStartGp;
+		this.xGap = xGap;
+		this.yGap = yGap;
 		this.framesLeft = NoOfloops<0 ? -1 : NoOfloops*noHorizTiles*noVertTiles;
 		this.scale = scale;
 		setSpritesheet(path);
@@ -105,7 +113,7 @@ public class Animation {
 	}
 	public void setSprite() {
 		if(spritesheet!=null) {
-			sprite = spritesheet.getSubimage(xTile*tileWidth, yTile*tileHeight, tileWidth, tileHeight);
+			sprite = spritesheet.getSubimage(xStartGap+xTile*(tileWidth+xGap), yStartGap+yTile*(tileHeight+yGap), tileWidth, tileHeight);
 		}
 	}
 	public void nextSprite() {

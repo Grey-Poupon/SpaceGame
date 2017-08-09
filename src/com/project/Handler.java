@@ -2,8 +2,6 @@ package com.project;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.List;
-
 import com.project.button.Button;
 
 public class Handler {
@@ -30,24 +28,22 @@ public class Handler {
 	
 	public void render(Graphics g){
 		
-		
+	
 		for(int i =0; i<entitiesLowPriority.size();i++){
-			entitiesLowPriority.get(i).render(g);
+			entitiesLowPriority.get(i).render(g.create());
 		}
 		for(int i =0; i<anims.size();i++){
 			anims.get(i).render(g);
 		}
-		for(int i =0; i<texts.size();i++){
-			texts.get(i).render(g);
-		}
 		for(int i =0; i<buttons.size();i++){
 			buttons.get(i).render(g);
+		}
+		for(int i =0; i<texts.size();i++){
+			texts.get(i).render(g);
 		}
 		for(int i =0; i<entitiesHighPriority.size();i++){
 			entitiesHighPriority.get(i).render(g);
 		}
-
-
 	}
 	public void checkButtons(int x,int y){
 		for(int i =0; i<buttons.size();i++){
@@ -55,6 +51,9 @@ public class Handler {
 				buttons.get(i).click();
 			}
 		}		
+	}
+	public void checkShip(int x , int y) {
+		
 	}
 	public void checkClick(int x, int y) {
 		checkButtons(x, y);

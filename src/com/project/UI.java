@@ -9,7 +9,6 @@ import com.project.button.Button;
 
 public class UI {
 
-	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
 
 	private static List<Button> tooltipButtons = new ArrayList<Button>();
 	private static List<Button> crewButtons = new ArrayList<Button>();
