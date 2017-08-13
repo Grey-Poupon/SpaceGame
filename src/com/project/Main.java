@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Random;
 
 import com.project.battle.BattleScreen;
+import com.project.ship.Ship;
 
 
 

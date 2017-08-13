@@ -189,5 +189,9 @@ public class ImageHandler implements Handleable {
 		}
 		return false;
 	}
-
+	public static void delete(ImageHandler img){
+		Handler.stars.remove(img);
+		Handler.entitiesLowPriority.remove(img);
+		Handler.entitiesHighPriority.remove(img);
+	}
 }

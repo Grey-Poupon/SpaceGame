@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
+import com.project.ship.Ship;
+
 public class Star extends ImageHandler{
 	private int boundaryLeft;
 	private int boundaryRight;

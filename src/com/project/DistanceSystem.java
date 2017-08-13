@@ -3,6 +3,8 @@ package com.project;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import com.project.ship.Ship;
+
 public class DistanceSystem implements Handleable {
 	private static final int xLocation      = 490;
 	private static final int yLocation      = 26;
@@ -69,7 +71,7 @@ public class DistanceSystem implements Handleable {
 		chaserSpeed = chaser.getSpeed();
 		chasedSpeed = chased.getSpeed();
 		int totalTicks;
-		if(Math.abs(chasedXDest-chasedXCurrent)>Math.abs(chaserXDest-chasedXCurrent)) {
+		if(Math.abs(chasedXDest-chasedXCurrent)>Math.abs(chaserXDest-chaserXCurrent)) {
 			  totalTicks = Math.abs(chasedXDest - chasedXCurrent);
 		}
 		else {

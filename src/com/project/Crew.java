@@ -273,14 +273,14 @@ public class Crew implements Observer{
 	public void setName(String name) {
 		this.name = name;
 	}
-	private void loadPortrait() {
+	protected void loadPortrait() {
 		if(this.race!=RaceID.robot){
-			this.portrait = new ImageHandler(0, 0,"res/race_portraits/"+this.race.toString()+".png", true, EntityID.crew);
+			this.portrait = new ImageHandler(0, 60,"res/race_portraits/"+this.race.toString()+".png", true, EntityID.crew);
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
-		this.portrait = (new ImageHandler(0, 0,"res/race_portraits/gen_"+Byte.toString(Gen)+".png", true, EntityID.crew));
+		this.portrait = (new ImageHandler(0, 60,"res/race_portraits/gen_"+Byte.toString(Gen)+".png", true, EntityID.crew));
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {

@@ -37,8 +37,8 @@ public class Destructive {
 		double[] accuracy = new double[rateOfFire];
 		Random rand = new Random();
 		for(int i=0; i<getRateOfFire();i++){
-			accuracy[i] = rand.nextDouble();
-			if(accuracy[i]<=getAccuracy()){// if rand number is less than acc it's a hit
+			accuracy[i] = 1 ;
+			if(rand.nextDouble()<=getAccuracy()){// if rand number is less than acc it's a hit
 				accuracy[i]=0;
 			}
 		}

@@ -35,7 +35,7 @@ public class Button extends Observable  implements Handleable{
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, Observer obs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
-		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.mask = new Rectangle2D.Float(x, y+size, width, height);
 		this.width = width;
 		this.height = height;
 		this.buttonID = buttonID;
@@ -127,10 +127,12 @@ public class Button extends Observable  implements Handleable{
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		this.mask = new Rectangle2D.Float(x,y,width,height);
-		img.setxCoordinate(x);
-		img.setyCoordinate(y);
+		if(img != null){
+			img.setxCoordinate(x);
+			img.setyCoordinate(y);
+		}
 		if(text != null) {
-			text.move(x,y+height/2);
+			text.move(x,y+height);
 		}
 	}
 	public void shift(int x , int y) {
@@ -180,13 +182,20 @@ public class Button extends Observable  implements Handleable{
 	public void render(Graphics g) {
 		g.setColor(Color.MAGENTA);
 		g.drawRect(xCoordinate, yCoordinate, width, height);
-		//g.setColor(Color.GREEN);
-		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		g.setColor(Color.GREEN);
+		g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
 		
 	}
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
+		
+	}
+	public static void delete(Button b) {
+		Handler.buttons.remove(b);
+		Text.delete(b.text);
+		ImageHandler.delete(b.img);
+		
 		
 	}
 	

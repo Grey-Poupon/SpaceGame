@@ -1,4 +1,4 @@
-package com.project;
+package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 
+import com.project.Crew;
+import com.project.DamageType;
+import com.project.EntityID;
+import com.project.ImageHandler;
+import com.project.LayeredImage;
 import com.project.button.Button;
 import com.project.button.ButtonID;
-
-
-import com.project.ship.Engine;
-import com.project.ship.Generator;
-import com.project.ship.Room;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -40,10 +40,10 @@ public class Ship {
 
 	
 	
-	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale){
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.currHealth = this.maxHealth = health;
-		Weapon defaultWeapon = new FireableWeapon(1, 3, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
+		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
 
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -53,8 +53,10 @@ public class Ship {
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
 		}
-		for(int i =0; i<10;i++) {
-			crew.add(Crew.generateRandomCrew());
+		if(generateCrew){
+			for(int i =0; i<10;i++) {
+				crew.add(Crew.generateRandomCrew());
+			}
 		}
 			
 			

@@ -17,10 +17,10 @@ import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
 import com.project.ScrollableList;
-import com.project.Ship;
 import com.project.Star;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Ship;
 import com.project.weapons.Weapon;
 
 public class BattleScreen extends Main implements Observer{
@@ -59,8 +59,8 @@ public class BattleScreen extends Main implements Observer{
 		rand = new Random();
 		
 		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f);
+		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,true);
+		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,false);
 		
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
@@ -75,7 +75,7 @@ public class BattleScreen extends Main implements Observer{
 		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
-		mouseIn				 = new BattleMouseInput(handler,sl);
+		mouseIn				 = new BattleMouseInput(handler);
 		playerHealthbar		 = new ImageHandler  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		enemyHealthbar		 = new ImageHandler  (800,3,"res/healthseg.png",true,10,1,EntityID.UI);
 		
@@ -243,10 +243,12 @@ public class BattleScreen extends Main implements Observer{
 		
 	}
 	
-	public void checkClick(int x, int y) {
-		if(enemyShip.isShipClicked(x, y) && currentPhase == BattlePhases.WeaponsClick) {
+	public boolean checkClick(int x, int y) {
+		boolean clicked = enemyShip.isShipClicked(x, y);
+		if( clicked && currentPhase == BattlePhases.WeaponsClick) {
 			playerShotLocation = new Point(x,y);
 			nextTurn();
 		}
+		return clicked;
 	}
 }

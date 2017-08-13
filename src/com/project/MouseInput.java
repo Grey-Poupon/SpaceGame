@@ -13,7 +13,6 @@ public class MouseInput implements MouseListener,MouseMotionListener,MouseWheelL
 	public static Point mousePosition = new Point(0,0);
 	public static Point pointClicked = new Point(0,0);
 	protected Handler hans;
-	protected ScrollableList sl;
 	public MouseInput(Handler hans){
 		this.hans = hans;
 	}

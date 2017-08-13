@@ -53,18 +53,18 @@ public class Handler {
 			entitiesHighPriority.get(i).render(g);
 		}
 	}
-	public void checkButtons(int x,int y){
+	public boolean checkButtons(int x,int y){
 		for(int i =0; i<buttons.size();i++){
 			if(buttons.get(i)!=null && buttons.get(i).isInside(x, y)){
 				buttons.get(i).click();
+				return true;
 			}
-		}		
+		}	
+		return false;
 	}
-	public void checkShip(int x , int y) {
-		
-	}
-	public void checkClick(int x, int y) {
-		checkButtons(x, y);
+
+	public boolean checkClick(int x, int y) {
+		return checkButtons(x, y);
 	}
 	public void updateMouse(int x, int y){
 		mousePointer.setxCoordinate(x);

@@ -2,6 +2,7 @@ package com.project;
 
 import java.util.List;
 
+import com.project.battle.BattleMouseInput;
 import com.project.battle.BattleUI;
 import com.project.button.Button;
 
@@ -12,6 +13,7 @@ public class ScrollableList  {
 	 private int width;
 	 private int height;
 	 private final int scrollAmplifier = 20;
+	 
 	public ScrollableList(List<Button> buttons, int x, int y, int width, int height) {
 		this.buttons = buttons;
 		this.xCoordinate = x;
@@ -21,9 +23,10 @@ public class ScrollableList  {
 		for(Button btn:buttons) {
 			btn.setTextMask(x, y, width, height);
 			btn.setClickable(false);
-			BattleUI.addCrewButton(btn);
 			btn.setImgMask(x, y, width, height);}
 		placeButtons();
+		BattleMouseInput.addList(this);
+		
 	}
 	private void placeButtons() {
 		int bottom = yCoordinate;
@@ -65,6 +68,38 @@ public class ScrollableList  {
 			else {btn.setClickable(true);}
 		}
 	}
-
+	public static void delete(ScrollableList sl){
+		for(Button b: sl.buttons){
+			Button.delete(b);
+		}
+		BattleMouseInput.removeList(sl);
+		sl=null;
+		
+	}
+	 public void clear() {
+		 for(Button b: this.buttons){
+				Button.delete(b);
+			}
+		buttons.clear();
+	}
+	 public void swapButtons(List<Button> btns){
+		 for(Button b: this.buttons){
+				Button.delete(b);
+			}
+		 this.buttons = btns;
+		 placeButtons();
+	 }
+	public int getX() {
+		return xCoordinate;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public int getY() {
+		return yCoordinate;
+	}
+	public int getHeight() {
+		return height;
+	}
 
 }
