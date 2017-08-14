@@ -2,6 +2,7 @@ package com.project;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -26,7 +27,6 @@ public class Text implements Handleable{
 		this.font = new Font(fontName, style, size);
 		this.colour =colour;
 		Handler.texts.add(this);
-		
 	}
 	public Text(String text,boolean visible,int x, int y){
 		this.xCoordinate=x;
@@ -44,9 +44,10 @@ public class Text implements Handleable{
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setColor(colour);
 		g2d.setFont(font);
+		FontMetrics metrics = g2d.getFontMetrics();
 		if(visible){
 			if(clip!=null) {g2d.setClip(clip);}
-			g2d.drawString(text, xCoordinate, yCoordinate);
+			g2d.drawString(text, (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text))/2), yCoordinate);
 		}
 	};
 	public static void delete(Text t) {

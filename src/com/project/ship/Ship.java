@@ -27,7 +27,7 @@ public class Ship {
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
-	
+	private Sensor sensor;
 	private Engine engine;
 	private Generator generator;
 	private List<Room> damagableRooms = new ArrayList<Room>();;
@@ -45,7 +45,7 @@ public class Ship {
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.currHealth = this.maxHealth = health;
 		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
-
+		setSensors();
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -65,6 +65,7 @@ public class Ship {
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
+		setSensors();
 		this.frontWeapons = frontWeapons;
 		this.backWeapons = backWeapons;
 		this.health = health;
@@ -207,6 +208,15 @@ public class Ship {
 	public Slot getSlot(int position) {
 		return shipSlots.get(position);
 	}
+	
+	public void setSensors() {
+		sensor = new Sensor(0.8f);
+	}
+	
+	public Sensor getSensors() {
+		return sensor;
+	}
+	
 
 	
 

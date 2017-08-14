@@ -35,6 +35,10 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler overlay;
 	private ImageHandler playerHealthbar;
 	private ImageHandler enemyHealthbar;
+	private ImageHandler healthUncertaintyUB;
+	private ImageHandler healthUncertaintyLB;
+	private int healthbarUncertaintyDisplacement;
+	private int maxHealthbarUncertaintyDisplacement=50;
 	private ImageHandler loadingScreen;
 	
 
@@ -54,14 +58,15 @@ public class BattleScreen extends Main implements Observer{
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
+		
 		handler = new BattleHandler(this);
 		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		
 		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,true);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,false);
+		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
+		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
 		
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
@@ -79,6 +84,10 @@ public class BattleScreen extends Main implements Observer{
 		mouseIn				 = new BattleMouseInput(handler);
 		playerHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI);
+		healthUncertaintyUB  = new ImageHandler  (enemyHealthbar.getImg().getWidth(),2,"res/healthuncertainty.png",true,-1,1,EntityID.UI);
+		healthUncertaintyLB  = new ImageHandler  (enemyHealthbar.getImg().getWidth(),2,"res/healthuncertainty.png",true,1,1,EntityID.UI);
+		healthbarUncertaintyDisplacement = rand.nextInt((int)((1-playerShip.getSensors().getHealthEfficiency())*maxHealthbarUncertaintyDisplacement));
+		//healthbarUncertaintyDisplacement = rand.nextInt((int)((1-playerShip.getSensors().getHealthEfficiency())*maxHealthbarUncertaintyDisplacement));
 		
 		for(int i =0;i<playerShip.getCrew().size();i++) {
 			Crew crew = playerShip.getCrew().get(i);
@@ -171,6 +180,9 @@ public class BattleScreen extends Main implements Observer{
 				scale = ((float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth())*1.2f;
 				if (scale < 0) {scale = 0;}
 				enemyHealthbar.setXScale(scale);
+				
+				healthUncertaintyUB.setxCoordinate((int)(enemyHealthbar.getxCoordinate()+enemyHealthbar.getImg().getWidth()*enemyHealthbar.getXScale()+playerShip.getSensors().getHealthEfficiency()+healthbarUncertaintyDisplacement+healthUncertaintyUB.getImg().getWidth()));
+				healthUncertaintyLB.setxCoordinate((int)(enemyHealthbar.getxCoordinate()+enemyHealthbar.getImg().getWidth()*enemyHealthbar.getXScale()+playerShip.getSensors().getHealthEfficiency()-(maxHealthbarUncertaintyDisplacement*(1-playerShip.getSensors().getHealthEfficiency())-healthbarUncertaintyDisplacement)-healthUncertaintyLB.getImg().getWidth()));
 			}
 		}
 		

@@ -1,6 +1,7 @@
 package com.project;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
@@ -19,8 +20,9 @@ public class Main  extends Canvas implements Runnable{
 	public Handler handler;
 	Random r;
 	protected Window window;
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
+
+	public static final int WIDTH=  1280;
+	public static final int HEIGHT= 720;
 	public Player player;
 	public Ship playerShip; 
 	public UI ui;
@@ -29,10 +31,13 @@ public class Main  extends Canvas implements Runnable{
 	private boolean paused=false;
 	
 	public Main(){
+		window = new Window(WIDTH,HEIGHT,"Space Game",this);
+		
+		
 		r = new Random();
 		handler = new Handler();
 		player = new Player(100,RaceID.bugBitch);
-		window = new Window(WIDTH,HEIGHT,"Space Game",this);
+		
 		}
 
 	protected void render(){
