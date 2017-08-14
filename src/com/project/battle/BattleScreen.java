@@ -2,6 +2,7 @@ package com.project.battle;
 
 
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Observable;
@@ -71,13 +72,13 @@ public class BattleScreen extends Main implements Observer{
 		
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
-		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 1, 125, 120, 612);
+		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true);
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
-		playerHealthbar		 = new ImageHandler  (0,3,"res/healthseg.png",true,10,1,EntityID.UI);
-		enemyHealthbar		 = new ImageHandler  (800,3,"res/healthseg.png",true,10,1,EntityID.UI);
+		playerHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
+		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		
 		for(int i =0;i<playerShip.getCrew().size();i++) {
 			Crew crew = playerShip.getCrew().get(i);
@@ -164,10 +165,10 @@ public class BattleScreen extends Main implements Observer{
 				enemyShip.tickLayers();
 			}
 			if(playerHealthbar != null && enemyHealthbar != null) {
-				float scale = (float)playerShip.getCurrHealth()/(float)playerShip.getMaxHealth();
+				float scale = ((float)playerShip.getCurrHealth()/(float)playerShip.getMaxHealth())*1.2f;
 				if (scale < 0) {scale = 0;}
 				playerHealthbar.setXScale(scale);
-				scale = (float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth();
+				scale = ((float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth())*1.2f;
 				if (scale < 0) {scale = 0;}
 				enemyHealthbar.setXScale(scale);
 			}
@@ -211,6 +212,10 @@ public class BattleScreen extends Main implements Observer{
 			}
 			
 		}
+		
+		if(primary == playerShip && playerIsChaser) {
+			Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10, primary.getSlot(position).getX(), primary.getSlot(position).getY(), 1,639-primary.getSlot(position).getX(),0,2,0, true);
+		}
 	}
 
 	@Override
@@ -219,28 +224,36 @@ public class BattleScreen extends Main implements Observer{
 		if(arg0 instanceof Button){
 			
 			ButtonID ID = (ButtonID) Array.get(arg1, 0);
-			int index = (int)Array.get(arg1, 1);
+			int index   = (int)Array.get(arg1, 1);
+			int button  = (int)Array.get(arg1, 2);
+			if(button == MouseEvent.BUTTON1) {
+				
+				if(ID == ButtonID.BattleWeaponsChoice){
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
+						playersWeaponChoice = index;
+						System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
+						nextTurn();
+					}
+				}
+		
+				if(ID == ButtonID.BattleEngineChoice){
+					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+						playersEngineChoice = index;
+						System.out.println("Player Engine choice made");
+						nextTurn();
+					}
+				}
+				if(ID == ButtonID.Crew){
+					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),"room");
+				}
+			}
 			
-			if(ID == ButtonID.BattleWeaponsChoice){
-				if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
-					playersWeaponChoice = index;
-					System.out.println("Player is about to use weapon"+playersWeaponChoice+"!");
-					nextTurn();
+			if(button == MouseEvent.BUTTON3) {
+				if(ID == ButtonID.Crew) {
+					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),"stats");
 				}
-			}
-	
-			if(ID == ButtonID.BattleEngineChoice){
-				if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
-					playersEngineChoice = index;
-					System.out.println("Player Engine choice made");
-					nextTurn();
-				}
-			}
-			if(ID == ButtonID.Crew){
-				BattleUI.changeTootlipSelection(playerShip.getCrew().get(index));
 			}
 		}
-		
 	}
 	
 	public boolean checkClick(int x, int y) {

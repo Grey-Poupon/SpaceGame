@@ -24,9 +24,9 @@ public class BattleUI extends UI{
 	private static ImageHandler tooltipSeperator = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static Weapon[] weapons = new Weapon[4];
 	private static String tooltipMenuSelection; 
-	private static final int	tooltipButtonWidth  = 596;
+	private static final int	tooltipButtonWidth  = 524;
 	private static final int 	tooltipButtonHeight = 40;
-	private static final int    xListOffset 		= Main.WIDTH  - (tooltipButtonWidth    + 40); 
+	private static final int    xListOffset 		= 104; 
 	private static final int    yListOffset			= Main.HEIGHT - (tooltipButtonHeight*5 + 10);
 	private static final int    tooltipBoxWidth 	= tooltipButtonWidth;
 	private static final int    tooltipBoxHeight 	= tooltipButtonHeight*5;
@@ -44,9 +44,10 @@ public class BattleUI extends UI{
 		bs = battleScreen;
 	}
 
-	public static void changeTootlipSelection(Crew crew){
-		if ((tooltipMenuSelection==null || !tooltipMenuSelection.equals(crew.getLocationOnShip())) && crew != null ){ // only do stuff if the selcetion has changed
-			tooltipMenuSelection = crew.getLocationOnShip();
+	public static void changeTootlipSelection(Crew crew, String option){
+		boolean clickable = true;
+		
+			tooltipMenuSelection = option == "room" ? crew.getLocationOnShip() : option;
 			List<Button> tooltipButtons = new ArrayList<Button>();
 			for(int i = 0;i<crew.getSpeechOptions().size(); i++){
 				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, true, crew.getSpeechOptions().get(i), fontName, fontStyle, fontSize, fontColour, bs));
@@ -65,14 +66,17 @@ public class BattleUI extends UI{
 			else if(tooltipMenuSelection.equals("teleporter")) {
 				
 			}
-			else if(tooltipMenuSelection.equals("")) {
-				
+			else if(tooltipMenuSelection.equals("stats")) {
+				for(int i = 0;i<crew.getStats().size();i++) {
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(Crew.statNames[i])), fontName, fontStyle, fontSize, fontColour, bs));
+				}
+				clickable = false;
 			}
 			if(tooltipList != null){ScrollableList.delete(tooltipList);}
-			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth, tooltipBoxHeight);
+			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			
 			
-		}
+		
 	}
 	public static void updateWeapons(Weapon[] weapons1){
 		weapons = weapons1;

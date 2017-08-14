@@ -15,16 +15,16 @@ public class BattleKeyInput extends KeyInput {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		sharedControlsPressed(key);
-		if (key == KeyEvent.VK_Q){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(0));}
-		if (key == KeyEvent.VK_W){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(1));}
-		if (key == KeyEvent.VK_E){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(2));}
-		if (key == KeyEvent.VK_R){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(3));}
-		if (key == KeyEvent.VK_T){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(4));}
-		if (key == KeyEvent.VK_Y){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(5));}
-		if (key == KeyEvent.VK_U){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(6));}
-		if (key == KeyEvent.VK_I){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(7));}
-		if (key == KeyEvent.VK_O){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(8));}
-		if (key == KeyEvent.VK_P){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(9));}
+		if (key == KeyEvent.VK_Q){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(0),"room");}
+		if (key == KeyEvent.VK_W){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(1),"room");}
+		if (key == KeyEvent.VK_E){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(2),"room");}
+		if (key == KeyEvent.VK_R){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(3),"room");}
+		if (key == KeyEvent.VK_T){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(4),"room");}
+		if (key == KeyEvent.VK_Y){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(5),"room");}
+		if (key == KeyEvent.VK_U){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(6),"room");}
+		if (key == KeyEvent.VK_I){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(7),"room");}
+		if (key == KeyEvent.VK_O){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(8),"room");}
+		if (key == KeyEvent.VK_P){BattleUI.changeTootlipSelection(bs.playerShip.getCrew().get(9),"room");}
 
 		//if (key == KeyEvent.VK_P){bs.setPaused(!bs.isPaused());}
 	}

@@ -221,7 +221,7 @@ public class Crew implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg == ButtonID.Crew) {
-			BattleUI.changeTootlipSelection(this);
+			BattleUI.changeTootlipSelection(this,"room");
 		}
 		
 	}

@@ -37,5 +37,9 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	public String getName() {
 		return name;
 	}
+	public String getSprite() {
+		// TODO Auto-generated method stub
+		return "res/missile_spritesheet.png";
+	}
 	
 }

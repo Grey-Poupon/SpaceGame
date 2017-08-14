@@ -33,6 +33,7 @@ public class Ship {
 	private List<Room> damagableRooms = new ArrayList<Room>();;
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
+	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
@@ -52,6 +53,7 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
+			shipSlots.add(new Slot(150,400+80*i));
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -201,6 +203,9 @@ public class Ship {
 	}
 	public int getSpeedChange() {
 		return speedChange;
+	}
+	public Slot getSlot(int position) {
+		return shipSlots.get(position);
 	}
 
 	

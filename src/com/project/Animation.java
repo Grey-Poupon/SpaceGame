@@ -23,6 +23,8 @@ public class Animation implements Handleable {
 	private int yCoordinate;
 	private int xVel=0;
 	private int yVel=0;
+	private int xPixelsToMove =-1;
+	private int yPixlesToMove =-1;
 	int xStartGap;
 	int yStartGap;
 	int xGap;
@@ -49,6 +51,31 @@ public class Animation implements Handleable {
 		this.yGap = yGap;
 		this.framesLeft = NoOfloops<0 ? -1 : NoOfloops*noHorizTiles*noVertTiles;
 		this.scale = scale;
+		setSpritesheet(path);
+		setSprite();
+		if(firstAnimation) {
+			start();
+		}
+	}
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int xPixelsToMove,int yPixelsToMove,int xVel,int yVel,boolean firstAnimation) {
+
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+		this.noVertTiles = noVertTiles;
+		this.noHorizTiles = noHorizTiles;
+		this.ticksPerFrame = 60/frameRate;
+		this.xCoordinate = xCoordinate;
+		this.yCoordinate = yCoordinate;
+		this.xStartGap = xStartGap;
+		this.yStartGap = yStartGp;
+		this.xGap = xGap;
+		this.yGap = yGap;
+		this.framesLeft = -1;
+		this.scale = scale;
+		this.xPixelsToMove = xPixelsToMove;
+		this.yPixlesToMove = yPixelsToMove;
+		this.yVel = yVel;
+		this.xVel = xVel;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
@@ -146,7 +173,18 @@ public class Animation implements Handleable {
 					}
 					Animation.delete(this);
 				}
-			}	
+			}
+			if(xPixelsToMove + yPixlesToMove == 0 ) {Animation.delete(this);}
+			if(xVel > 0) {
+				this.xCoordinate += xVel;
+				xPixelsToMove -= xVel;
+				if(xPixelsToMove < 0) {xPixelsToMove =0;}
+			}
+			if(yVel > 0) {
+				this.yCoordinate += yVel;
+				yPixlesToMove-=yVel;
+			}
+			
 		}
 	}
 }

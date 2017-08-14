@@ -8,22 +8,41 @@ import com.project.button.Button;
 
 public class ScrollableList  {
 	 private List<Button> buttons;
+	 private boolean clickable;
 	 private int xCoordinate;
 	 private int yCoordinate;
 	 private int width;
 	 private int height;
 	 private final int scrollAmplifier = 20;
 	 
-	public ScrollableList(List<Button> buttons, int x, int y, int width, int height) {
+	public ScrollableList(List<Button> buttons, int x, int y, int listWidth, int listHeight, int buttonWidth, int buttonHeight,boolean clickable) {
 		this.buttons = buttons;
 		this.xCoordinate = x;
 		this.yCoordinate = y;
-		this.width = width;
-		this.height = height;
+		this.width = listWidth;
+		this.height = listHeight;
+		this.clickable = clickable;
 		for(Button btn:buttons) {
-			btn.setTextMask(x, y, width, height);
+			btn.setWidth(buttonWidth);
+			btn.setHeight(buttonHeight);
+			btn.setTextMask(x, y, listWidth, listHeight);
 			btn.setClickable(false);
-			btn.setImgMask(x, y, width, height);}
+			btn.setIsButton(clickable);
+			btn.setImgMask(x, y, listWidth, listHeight);}
+		placeButtons();
+		BattleMouseInput.addList(this);
+		
+	}
+	public ScrollableList(List<Button> buttons, int x, int y, int listWidth, int listHeight) {
+		this.buttons = buttons;
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.width = listWidth;
+		this.height = listHeight;
+		for(Button btn:buttons) {
+			btn.setTextMask(x, y, listWidth, listHeight);
+			btn.setClickable(false);
+			btn.setImgMask(x, y, listWidth, listHeight);}
 		placeButtons();
 		BattleMouseInput.addList(this);
 		
@@ -51,7 +70,7 @@ public class ScrollableList  {
 					btn.setClickable(false);
 				}
 				else {
-					btn.setClickable(true);
+					btn.setClickable(true);//t
 					btn.changeMask(btn.getX(),yCoordinate,width,btn.getHeight()-(yCoordinate-(btn.getY())));// mask 4 top cutoff
 				}
 			}
@@ -60,13 +79,14 @@ public class ScrollableList  {
 					btn.setClickable(false);
 				}
 				else {
-					btn.setClickable(true);
+					btn.setClickable(true);//t
 					btn.changeMask(btn.getX(),btn.getY(),width,(yCoordinate+height)-btn.getY());// mask 4 bottom cutoff
 
 				}
 			}
-			else {btn.setClickable(true);}
+			else {btn.setClickable(true);}//t
 		}
+		
 	}
 	public static void delete(ScrollableList sl){
 		for(Button b: sl.buttons){

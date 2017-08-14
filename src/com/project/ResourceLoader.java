@@ -23,6 +23,7 @@ public class ResourceLoader {
 		put(images,"res/TooltipSeparation_4Sections.png");
 		put(images,"res/octiod_lazer_1_Anim.png");
 		put(images,"res/mousepointer.png");
+		put(images,"res/missile_spritesheet.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
 				put(images,"res/race_portraits/"+race.toString()+".png");

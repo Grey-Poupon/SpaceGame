@@ -19,6 +19,7 @@ public class Button extends Observable  implements Handleable{
 	private ButtonID buttonID;
 	private ImageHandler img;
 	private boolean clickable;
+	private boolean isButton = true;
 
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, Observer obs){
 		this.xCoordinate = x;
@@ -83,10 +84,13 @@ public class Button extends Observable  implements Handleable{
 		}
 		return false;
 	}
-	public void click(){
-		setChanged();
-		Object[] pass = new Object[] {buttonID,index};
-		notifyObservers(pass);
+	public void click(int button){
+		if(isButton) {
+			setChanged();
+			Object[] pass = new Object[] {buttonID,index,button};
+			notifyObservers(pass);
+		}
+		
 	}
 	public void changeMask(int x , int y, int width, int height) {
 		width  = checkWidth(width);
@@ -137,6 +141,16 @@ public class Button extends Observable  implements Handleable{
 	}
 	public void shift(int x , int y) {
 		move(xCoordinate+x,yCoordinate+y);
+	}
+	public void setWidth(int w) {
+		if(w>0) {
+			this.width = w;
+		}
+	}
+	public void setHeight(int h) {
+		if(h>0) {
+			this.height = h;
+		}
 	}
 	public int getWidth() {
 		return width;
@@ -195,7 +209,9 @@ public class Button extends Observable  implements Handleable{
 		Handler.buttons.remove(b);
 		Text.delete(b.text);
 		ImageHandler.delete(b.img);
-		
+	}
+	public void setIsButton(boolean clickable) {
+		this.isButton  = clickable;
 		
 	}
 	

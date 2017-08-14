@@ -18,8 +18,8 @@ public class BattleHandler extends Handler {
 		return bs.checkClick(x,y);
 	}
 	@Override
-	public boolean checkClick(int x, int y) {
-		if(checkButtons(x, y)){ return true;}
+	public boolean checkClick(int x, int y, int button) {
+		if(checkButtons(x, y,button)){ return true;}
 		return checkShip(x,y);
 	}
 	

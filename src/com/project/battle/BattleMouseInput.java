@@ -19,8 +19,10 @@ public class BattleMouseInput extends MouseInput {
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		
 		setpointClicked(arg0.getX(), arg0.getY());
-		if(hans.checkClick(arg0.getX(), arg0.getY())){
+		if(hans.checkClick(arg0.getX(), arg0.getY(),arg0.getButton())){
+			
 			int index = checkLists(arg0.getX(), arg0.getY());
 			if(index>-1 && selectedList!= index){selectedList = index;}
 		}
