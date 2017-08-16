@@ -1,7 +1,6 @@
 package com.project;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class LayeredImage {
@@ -134,7 +133,7 @@ public class LayeredImage {
 	}
 	
 	public void getLayerCoords() {
-		try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/"+this.path+"/info.txt"), "UTF-8"))) {
+		try(BufferedReader br = new BufferedReader(new FileReader(this.path+"/info.txt"))) {
 		    StringBuilder sb = new StringBuilder();
 		    String line = br.readLine();
 

@@ -3,7 +3,9 @@ package com.project.battle;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,14 +37,11 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler overlay;
 	private ImageHandler playerHealthbar;
 	private ImageHandler enemyHealthbar;
-	private ImageHandler healthUncertaintyUB;
-	private ImageHandler healthUncertaintyLB;
-	private int healthbarUncertaintyDisplacement;
-	private int maxHealthbarUncertaintyDisplacement=50;
 	private ImageHandler loadingScreen;
 	
 
-	
+	private int projectileWaitCounter;
+	private int projectileWaitTurn = 1;
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point playerShotLocation;
@@ -58,15 +57,14 @@ public class BattleScreen extends Main implements Observer{
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	
 	public BattleScreen(){
-		
 		handler = new BattleHandler(this);
 		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		
 		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
+		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,true);
+		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,false);
 		
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
@@ -78,16 +76,12 @@ public class BattleScreen extends Main implements Observer{
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
-		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true);
+		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,Collections.emptyList());
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		playerHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI);
-		healthUncertaintyUB  = new ImageHandler  (enemyHealthbar.getImg().getWidth(),2,"res/healthuncertainty.png",true,-1,1,EntityID.UI);
-		healthUncertaintyLB  = new ImageHandler  (enemyHealthbar.getImg().getWidth(),2,"res/healthuncertainty.png",true,1,1,EntityID.UI);
-		healthbarUncertaintyDisplacement = rand.nextInt((int)((1-playerShip.getSensors().getHealthEfficiency())*maxHealthbarUncertaintyDisplacement));
-		//healthbarUncertaintyDisplacement = rand.nextInt((int)((1-playerShip.getSensors().getHealthEfficiency())*maxHealthbarUncertaintyDisplacement));
 		
 		for(int i =0;i<playerShip.getCrew().size();i++) {
 			Crew crew = playerShip.getCrew().get(i);
@@ -137,6 +131,7 @@ public class BattleScreen extends Main implements Observer{
 		
 		
 	}
+	@Override
 	public void tick(){
 		
 		if(!isPaused()) {
@@ -164,8 +159,22 @@ public class BattleScreen extends Main implements Observer{
 				ds.calculateDistances(playerShip, enemyShip);
 				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true,playerShotLocation);
 				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true,enemyShotLocation);
-				nextTurn();
-
+				currentPhase = BattlePhases.Wait;
+			}
+			if(currentPhase == BattlePhases.Wait) {
+				if(projectileWaitCounter==0) {
+				projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
+				}
+				projectileWaitCounter--;
+				if(projectileWaitCounter == 0) {
+					projectileWaitTurn++;
+					projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
+					if(projectileWaitTurn > 3) {
+						projectileWaitTurn = 1;
+						currentPhase = BattlePhases.Final;
+						nextTurn();
+					}
+				}
 			}
 			if(playerShip !=null && enemyShip != null) {
 				
@@ -180,9 +189,6 @@ public class BattleScreen extends Main implements Observer{
 				scale = ((float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth())*1.2f;
 				if (scale < 0) {scale = 0;}
 				enemyHealthbar.setXScale(scale);
-				
-				healthUncertaintyUB.setxCoordinate((int)(enemyHealthbar.getxCoordinate()+enemyHealthbar.getImg().getWidth()*enemyHealthbar.getXScale()+playerShip.getSensors().getHealthEfficiency()+healthbarUncertaintyDisplacement+healthUncertaintyUB.getImg().getWidth()));
-				healthUncertaintyLB.setxCoordinate((int)(enemyHealthbar.getxCoordinate()+enemyHealthbar.getImg().getWidth()*enemyHealthbar.getXScale()+playerShip.getSensors().getHealthEfficiency()-(maxHealthbarUncertaintyDisplacement*(1-playerShip.getSensors().getHealthEfficiency())-healthbarUncertaintyDisplacement)-healthUncertaintyLB.getImg().getWidth()));
 			}
 		}
 		
@@ -224,12 +230,41 @@ public class BattleScreen extends Main implements Observer{
 			}
 			
 		}
-		
-		if(primary == playerShip && playerIsChaser) {
-			Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10, primary.getSlot(position).getX(), primary.getSlot(position).getY(), 1,639-primary.getSlot(position).getX(),0,2,0, true);
-		}
 	}
+	private int weaponFireAnimation(int stage,Ship primary, int position) {
+		int ticksToWait = 0;
+		if(stage == 1) {
+			Animation projectile = primary.getFrontWeapon(0).getAnimation(0);
+			int yVel = projectile.getYVel();
+			int xVel = projectile.getXVel();;
+			int xPixelsToMove = projectile.getXPixelsToMove();
+			int yPixelsToMove = projectile.getYPixelsToMove();
+			
+			// tickToWait = max number of ticks needed;
+			if(xVel == 0 && yVel > 0) {ticksToWait = Math.abs(yPixelsToMove/yVel);}
+			if(yVel == 0 && xVel > 0) {ticksToWait = Math.abs(xPixelsToMove/xVel);}
+			else {ticksToWait = Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel);}
+			
+			projectile.start();
+		}
+		if(stage == 2) {
+			ticksToWait = ds.getShipDistanceCurrent()/4;
+		}
+		if(stage == 3) {
+			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
+			projectile.start();
+			int yVel = projectile.getYVel();
+			int xVel = projectile.getXVel();;
+			int xPixelsToMove = projectile.getXPixelsToMove();
+			int yPixelsToMove = projectile.getYPixelsToMove();
+			// tickToWait = max number of ticks needed;
+			if(xVel == 0 && yVel > 0) {ticksToWait = Math.abs(yPixelsToMove/yVel);}
+			if(yVel == 0 && xVel > 0) {ticksToWait = Math.abs(xPixelsToMove/xVel);}
+			else {ticksToWait = Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel);}
+		}
+		return ticksToWait;
 
+	}
 	@Override
 	public void update(Observable arg0, Object arg1) {// this gets notified by the click function inside button
 
