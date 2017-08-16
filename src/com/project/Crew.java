@@ -30,7 +30,7 @@ public class Crew implements Observer{
 	protected Map<String, Byte> statModifierInc;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
-	protected String locationOnShip = "cockpit";
+	protected TooltipSelectionID locationOnShip = TooltipSelectionID.Cockpit;
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
@@ -70,7 +70,7 @@ public class Crew implements Observer{
 		statModifierInc.put("pilot", (byte)0);
 		this.diseases = new ArrayList<Disease>();
 		getSpeechOptions().add("Talk");
-		if(rand.nextBoolean()) {setLocationOnShip("weapons");}
+		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		loadPortrait();
 	}
 	
@@ -104,10 +104,10 @@ public class Crew implements Observer{
 	
 	
 	
-	protected String getRoom() {
+	protected TooltipSelectionID getRoom() {
 		return getLocationOnShip();
 	}
-	protected void moveRoom(String room) {
+	protected void moveRoom(TooltipSelectionID room) {
 		this.setLocationOnShip(room);
 	}
 	public char getGender() {
@@ -222,16 +222,16 @@ public class Crew implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg == ButtonID.Crew) {
-			BattleUI.changeTootlipSelection(this,"room");
+			BattleUI.changeTootlipSelection(this,TooltipSelectionID.Room);
 		}
 		
 	}
 
-	public String getLocationOnShip() {
+	public TooltipSelectionID getLocationOnShip() {
 		return locationOnShip;
 	}
 
-	public void setLocationOnShip(String locationOnShip) {
+	public void setLocationOnShip(TooltipSelectionID locationOnShip) {
 		this.locationOnShip = locationOnShip;
 	}
 
