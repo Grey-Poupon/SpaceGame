@@ -29,6 +29,7 @@ public class Ship {
 	private int power = 0;
 	private Sensor sensor;
 	private Engine engine;
+	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> damagableRooms = new ArrayList<Room>();;
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
@@ -46,6 +47,7 @@ public class Ship {
 		this.currHealth = this.maxHealth = health;
 		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
 		setSensors();
+		generateFlavourText();
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -63,9 +65,14 @@ public class Ship {
 			
 			
 	}
+	private void generateFlavourText() {
+		flavourTexts.add("THIS IS A TEST");
+		
+	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		setSensors();
+		generateFlavourText();
 		this.frontWeapons = frontWeapons;
 		this.backWeapons = backWeapons;
 		this.health = health;
@@ -216,7 +223,9 @@ public class Ship {
 	public Sensor getSensors() {
 		return sensor;
 	}
-	
+	public ArrayList<String> getFlavourTexts(){
+		return flavourTexts;
+	}
 
 	
 

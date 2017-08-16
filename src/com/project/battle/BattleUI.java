@@ -42,6 +42,13 @@ public class BattleUI extends UI{
 	public BattleUI (Weapon[] weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
 		updateWeapons(weapons);
 		bs = battleScreen;
+		this.eShip = eShip;
+		
+		List<Button> flavourTexts = new ArrayList<Button>();
+		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
+			flavourTexts.add(new Button(0,0,tooltipButtonWidth,tooltipButtonHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs));
+		}
+		ScrollableList flavourTextList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipButtonWidth,tooltipButtonHeight);
 	}
 
 	public static void changeTootlipSelection(Crew crew, String option){

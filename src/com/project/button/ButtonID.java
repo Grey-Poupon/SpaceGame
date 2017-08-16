@@ -5,6 +5,8 @@ public enum ButtonID {
 	
 	BattleWeaponsChoice,
 	BattleEngineChoice,
-	Crew;
+	Crew,
+	EnemyShip;
+	
 
 }
