@@ -27,6 +27,7 @@ import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main implements Observer{
 
@@ -42,8 +43,13 @@ public class BattleScreen extends Main implements Observer{
 	private ImageHandler loadingScreen;
 	
 
-	private int projectileWaitCounter;
-	private int projectileWaitTurn = 1;
+	private List<Integer> projectileWaitCounters = new ArrayList<Integer>();
+	private List<Integer> projectileWaitTurns    = new ArrayList<Integer>();
+	private List<Integer> enemyDamageToBeTaken   = new ArrayList<Integer>();
+	private List<DamageType> enemyDamageTypeToBeTaken   = new ArrayList<DamageType>();
+
+
+	
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point playerShotLocation;
@@ -160,21 +166,21 @@ public class BattleScreen extends Main implements Observer{
 				ds.calculateDistances(playerShip, enemyShip);
 				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true,playerShotLocation);
 				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true,enemyShotLocation);
-				currentPhase = BattlePhases.Wait;
 			}
 			if(currentPhase == BattlePhases.Wait) {
-				if(projectileWaitCounter==0) {
-				projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
-				}
-				projectileWaitCounter--;
-				if(projectileWaitCounter == 0) {
-					projectileWaitTurn++;
-					projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
-					if(projectileWaitTurn > 3) {
-						projectileWaitTurn = 1;
-						currentPhase = BattlePhases.Final;
-						nextTurn();
+				for(int i = 0 ;i<projectileWaitCounters.size();i++) {
+					
+					int projectileWaitCounter = projectileWaitCounters.get(i);
+					int projectileWaitTurn = projectileWaitTurns.get(i);
+					projectileWaitCounter--;
+					if(projectileWaitCounter <= 0) {
+						projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
+						projectileWaitTurn++;
+				
 					}
+					
+					projectileWaitCounters.set(i, projectileWaitCounter);
+					projectileWaitTurns.set(i, projectileWaitTurn);
 				}
 			}
 			if(playerShip !=null && enemyShip != null) {
@@ -226,16 +232,32 @@ public class BattleScreen extends Main implements Observer{
 					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/accuracy[i])):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
 					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/accuracy[i])):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
 					extraDmg = secondary.roomDamage(newX, newY);
-					secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
+					if(primary == playerShip) {
+						enemyDamageToBeTaken.add(extraDmg+(int)damageDealt[3]);
+						enemyDamageTypeToBeTaken.add((DamageType)damageDealt[4]);
+						projectileWaitTurns.add(-i +1);
+						projectileWaitCounters.add(0);
+						System.out.println("HIT");
+
+					}
+					else {
+						secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
+					}
+					
 				}
 			}
+			currentPhase = BattlePhases.Wait;
 			
 		}
 	}
 	private int weaponFireAnimation(int stage,Ship primary, int position) {
 		int ticksToWait = 0;
+		if(stage < 1) {
+			FireableWeapon weapon = (FireableWeapon) primary.getFrontWeapon(position);
+			return (int)(60*weapon.getReloadTime());
+		}
 		if(stage == 1) {
-			Animation projectile = primary.getFrontWeapon(0).getAnimation(0);
+			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
 			int yVel = projectile.getYVel();
 			int xVel = projectile.getXVel();;
 			int xPixelsToMove = projectile.getXPixelsToMove();
@@ -249,6 +271,8 @@ public class BattleScreen extends Main implements Observer{
 			projectile.start();
 		}
 		if(stage == 2) {
+			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
+			Animation.delete(projectile);
 			ticksToWait = ds.getShipDistanceCurrent()/4;
 		}
 		if(stage == 3) {

@@ -73,7 +73,7 @@ public class Animation implements Handleable {
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;
 		this.noHorizTiles = noHorizTiles;
-		this.ticksPerFrame = 60/frameRate;
+		this.ticksPerFrame =60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
 		this.align = align;
@@ -88,7 +88,7 @@ public class Animation implements Handleable {
 		this.yVel = yVel;
 		this.xVel = xVel;
 		this.mask = mask;
-		this.moving = true;
+		if(xVel!=0 || yVel!=0) {this.moving = true;}
 		this.followingAnims = followingAnims;
 		setSpritesheet(path);
 		setSprite();
@@ -200,8 +200,12 @@ public class Animation implements Handleable {
 		return xPixelsToMove;
 	}
 	public Animation copy() {
-		if(moving) {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, xPixelsToMove,yPixelsToMove,xVel,yVel, mask, false,align, followingAnims);}
-		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),       false,align, followingAnims);}      
+		List<Animation> anims = new ArrayList<Animation>();
+		for(Animation anim: followingAnims) {
+			anims.add(anim.copy());
+		}
+		if(moving) {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, xPixelsToMove,yPixelsToMove,xVel,yVel, mask, false,align, anims);}
+		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),       false,align, anims);}      
 		
 	}
 }

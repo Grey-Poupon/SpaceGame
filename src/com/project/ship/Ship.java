@@ -65,14 +65,14 @@ public class Ship {
 		x1 = 540;
 		xPixelsToMove = 640;		
 		
-		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.emptyList());
+		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 10,1,1,5,1, false,AdjustmentID.MidUp,Collections.emptyList());
 		List<Animation> followingAnims = new ArrayList<Animation>();
 		followingAnims.add(explosion);
 		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,x1 , y1, 1,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
 		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
 		weaponFiringAnimations.add(projectile);
 		weaponFiringAnimations.add(projectile2);
-		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser, 10, weaponFiringAnimations);
+		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 1, "Laser Mark I",DamageType.Laser, 10, 1.5f, weaponFiringAnimations);
 
 
 		for(DamageType dmg : DamageType.values()){
@@ -91,7 +91,7 @@ public class Ship {
 		}	
 	}
 	private void generateFlavourText() {
-		flavourTexts.add("THIS IS A TEST, TOo seee whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
+		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
