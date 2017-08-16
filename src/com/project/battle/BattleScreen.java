@@ -64,8 +64,8 @@ public class BattleScreen extends Main implements Observer{
 		rand = new Random();
 		
 		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,true);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/Matron",true,EntityID.ship,50,3.5f,false);
+		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
+		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
 		
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
