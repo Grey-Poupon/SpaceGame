@@ -21,7 +21,7 @@ public class BattleHandler extends Handler {
 	public void updateMouse(int x,int y) {
 		super.updateMouse(x, y);
 		if(checkShip(x,y)) {
-			BufferedImage img = new BufferedImage
+			//BufferedImage img = new BufferedImage
 			
 			
 			

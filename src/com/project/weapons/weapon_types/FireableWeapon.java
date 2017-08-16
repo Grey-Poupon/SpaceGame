@@ -9,10 +9,12 @@ import com.project.weapons.Weapon;
 
 public class FireableWeapon extends Weapon {
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,List<Animation> anims) {
+	private float reloadTime;
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,float reloadTime,List<Animation> anims) {
 		super(cooldownDuration, name,anims);
 		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod);
 		this.isDestructive = true;
+		this.reloadTime = reloadTime;
 	}
 
 	
@@ -34,6 +36,10 @@ public class FireableWeapon extends Weapon {
 		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
 		return info;
 	}
+	public float getReloadTime() {
+
+		return reloadTime;
+}
 	public double getAccuracy() {
 		return destruct.getAccuracy();
 	}
