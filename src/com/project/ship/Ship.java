@@ -89,12 +89,10 @@ public class Ship {
 			for(int i =0; i<10;i++) {
 				crew.add(Crew.generateRandomCrew());
 			}
-		}
-			
-			
+		}	
 	}
 	private void generateFlavourText() {
-		flavourTexts.add("THIS IS A TEST");
+		flavourTexts.add("THIS IS A TEST, TOo seee whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){

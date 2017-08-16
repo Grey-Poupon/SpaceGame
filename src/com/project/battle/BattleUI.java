@@ -46,9 +46,9 @@ public class BattleUI extends UI{
 		
 		List<Button> flavourTexts = new ArrayList<Button>();
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
-			flavourTexts.add(new Button(0,0,tooltipButtonWidth,tooltipButtonHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs));
+			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
 		}
-		ScrollableList flavourTextList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipButtonWidth,tooltipButtonHeight);
+		ScrollableList flavourTextList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
 	}
 
 	public static void changeTootlipSelection(Crew crew, String option){
@@ -57,17 +57,17 @@ public class BattleUI extends UI{
 			tooltipMenuSelection = option == "room" ? crew.getLocationOnShip() : option;
 			List<Button> tooltipButtons = new ArrayList<Button>();
 			for(int i = 0;i<crew.getSpeechOptions().size(); i++){
-				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, true, crew.getSpeechOptions().get(i), fontName, fontStyle, fontSize, fontColour, bs));
+				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, true, crew.getSpeechOptions().get(i), fontName, fontStyle, fontSize, fontColour, bs,true));
 			}
 			
 			if(tooltipMenuSelection.equals("weapons")){// weapons selected
 				for(int i = 0;i<weapons.length;i++){
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, weapons[i].getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs));
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, weapons[i].getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
 				}		
 			}
 			else if(tooltipMenuSelection.equals("cockpit")) {
 				for(int i = 0; i < 4;i++){
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineChoice, i, true, "Engine Choice "+i, fontName, fontStyle, fontSize, fontColour, bs));
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineChoice, i, true, "Engine Choice "+i, fontName, fontStyle, fontSize, fontColour, bs,true));
 				}
 			}
 			else if(tooltipMenuSelection.equals("teleporter")) {
@@ -75,7 +75,7 @@ public class BattleUI extends UI{
 			}
 			else if(tooltipMenuSelection.equals("stats")) {
 				for(int i = 0;i<crew.getStats().size();i++) {
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(Crew.statNames[i])), fontName, fontStyle, fontSize, fontColour, bs));
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(Crew.statNames[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
 				}
 				clickable = false;
 			}
