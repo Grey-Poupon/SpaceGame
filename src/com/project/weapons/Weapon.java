@@ -51,4 +51,5 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 		return firingAnimations.get(i).copy();
 	}
 	
+	
 }

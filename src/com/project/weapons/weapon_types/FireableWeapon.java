@@ -34,6 +34,8 @@ public class FireableWeapon extends Weapon {
 		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
 		return info;
 	}
-	
+	public double getAccuracy() {
+		return destruct.getAccuracy();
+	}
 
 }

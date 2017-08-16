@@ -24,6 +24,7 @@ import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main implements Observer{
 
@@ -217,12 +218,13 @@ public class BattleScreen extends Main implements Observer{
 		}
 		if(weapon.isDestructive()){// if its a destructive weapon fire it, apply damage
 			Object[] damageDealt = weapon.fire();
+			FireableWeapon fireWeapon = (FireableWeapon) weapon;
 			double[] accuracy = (double[]) damageDealt[1];
 			int newX,newY,extraDmg;
 			for(int i=0;i<(int)damageDealt[0];i++) {
 				if(accuracy[i]!=0) {
-					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/accuracy[i])):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
-					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/accuracy[i])):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
+					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
+					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
 					extraDmg = secondary.roomDamage(newX, newY);
 					secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
 				}
