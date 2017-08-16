@@ -53,7 +53,7 @@ public class BattleScreen extends Main implements Observer{
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point playerShotLocation;
-	private Point enemyShotLocation;
+	private Point enemyShotLocation = new Point(100,200);
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
 	private int playersWeaponChoice;
@@ -168,7 +168,7 @@ public class BattleScreen extends Main implements Observer{
 				enemyShip.setSpeed(200);
 				ds.calculateDistances(playerShip, enemyShip);
 				UseWeapon(playerShip, enemyShip, playersWeaponChoice, true,playerShotLocation);
-				UseWeapon(enemyShip, playerShip, enemyWeaponChoice, true,enemyShotLocation);
+				UseWeapon(enemyShip, playerShip, enemyWeaponChoice,   true,enemyShotLocation);
 			}
 			if(currentPhase == BattlePhases.Wait) {
 				for(int i = 0 ;i<projectileWaitCounters.size();i++) {
@@ -177,10 +177,22 @@ public class BattleScreen extends Main implements Observer{
 					int projectileWaitTurn = projectileWaitTurns.get(i);
 					projectileWaitCounter--;
 					if(projectileWaitCounter <= 0) {
+						if(projectileWaitTurn == 4) {
+							enemyShip.takeDamage(enemyDamageToBeTaken.get(i), enemyDamageTypeToBeTaken.get(i));
+							if(i==projectileWaitCounters.size()-1) {
+								projectileWaitCounters.clear();
+								projectileWaitTurns.clear();
+								currentPhase= BattlePhases.Final;
+								nextTurn();
+								break;
+							}
+						}
 						projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, playerShip, playersWeaponChoice);
 						projectileWaitTurn++;
-				
+						
 					}
+					
+					
 					
 					projectileWaitCounters.set(i, projectileWaitCounter);
 					projectileWaitTurns.set(i, projectileWaitTurn);
@@ -255,7 +267,7 @@ public class BattleScreen extends Main implements Observer{
 			
 		}
 	}
-	private int weaponFireAnimation(int stage,Ship primary, int position) {
+	private int weaponFireAnimation(int stage,Ship primary, int position ) {
 		int ticksToWait = 0;
 		if(stage < 1) {
 			FireableWeapon weapon = (FireableWeapon) primary.getFrontWeapon(position);
