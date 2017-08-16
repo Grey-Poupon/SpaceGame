@@ -96,6 +96,7 @@ public class Crew implements Observer{
 		statModifierInc.put("science", (byte)0);
 		statModifierInc.put("pilot", (byte)0);
 		this.diseases = new ArrayList<Disease>();
+		getSpeechOptions().add("Talk");
 		loadPortrait();
 	}
 	
@@ -275,12 +276,12 @@ public class Crew implements Observer{
 	}
 	protected void loadPortrait() {
 		if(this.race!=RaceID.robot){
-			this.portrait = new ImageHandler(0, 60,"res/race_portraits/"+this.race.toString()+".png", true, EntityID.crew);
+			this.portrait = new ImageHandler(0, 60,"res/race_portraits/"+this.race.toString()+".png", true,2,2, EntityID.crew);
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
-		this.portrait = (new ImageHandler(0, 60,"res/race_portraits/gen_"+Byte.toString(Gen)+".png", true, EntityID.crew));
+		this.portrait = (new ImageHandler(0, 60,"res/race_portraits/gen_"+Byte.toString(Gen)+".png", true,2,2, EntityID.crew));
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {

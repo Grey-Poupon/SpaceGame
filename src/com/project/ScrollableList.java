@@ -63,30 +63,31 @@ public class ScrollableList  {
 	}
 	public void scroll(int y) {
 		y*=scrollAmplifier;
-		for (Button btn:buttons) {
-			btn.shift(0, y);
-			if(btn.getY()<yCoordinate) {
-				if(btn.getY()+btn.getHeight()<yCoordinate) {
-					btn.setClickable(false);
+		if(!((buttons.get(0).getY()>=this.getY()&&y>0)||(buttons.get(buttons.size()-1).getY()+buttons.get(buttons.size()-1).getHeight()<=this.getY()+this.getHeight()&&y<0))){
+			for (Button btn:buttons) {
+				btn.shift(0, y);
+				if(btn.getY()<yCoordinate) {
+					if(btn.getY()+btn.getHeight()<yCoordinate) {
+						btn.setClickable(false);
+					}
+					else {
+						btn.setClickable(true);//t
+						btn.changeMask(btn.getX(),yCoordinate,width,btn.getHeight()-(yCoordinate-(btn.getY())));// mask 4 top cutoff
+					}
 				}
-				else {
-					btn.setClickable(true);//t
-					btn.changeMask(btn.getX(),yCoordinate,width,btn.getHeight()-(yCoordinate-(btn.getY())));// mask 4 top cutoff
+				else if(btn.getY()+btn.getHeight()>yCoordinate+height) {
+					if(btn.getY()>yCoordinate+height) {
+						btn.setClickable(false);
+					}
+					else {
+						btn.setClickable(true);//t
+						btn.changeMask(btn.getX(),btn.getY(),width,(yCoordinate+height)-btn.getY());// mask 4 bottom cutoff
+	
+					}
 				}
+				else {btn.setClickable(true);}//t
 			}
-			else if(btn.getY()+btn.getHeight()>yCoordinate+height) {
-				if(btn.getY()>yCoordinate+height) {
-					btn.setClickable(false);
-				}
-				else {
-					btn.setClickable(true);//t
-					btn.changeMask(btn.getX(),btn.getY(),width,(yCoordinate+height)-btn.getY());// mask 4 bottom cutoff
-
-				}
-			}
-			else {btn.setClickable(true);}//t
 		}
-		
 	}
 	public static void delete(ScrollableList sl){
 		for(Button b: sl.buttons){

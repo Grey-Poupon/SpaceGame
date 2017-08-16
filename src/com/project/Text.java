@@ -2,6 +2,7 @@ package com.project;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -18,6 +19,9 @@ public class Text implements Handleable{
 	private Font font;
 	private Color colour;	
 	private Shape clip;
+	private int justOnce = 0;
+	private boolean leftAlign=false;
+	
 	
 	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour){
 		this.xCoordinate=x;
@@ -26,7 +30,6 @@ public class Text implements Handleable{
 		this.font = new Font(fontName, style, size);
 		this.colour =colour;
 		Handler.texts.add(this);
-		
 	}
 	public Text(String text,boolean visible,int x, int y){
 		this.xCoordinate=x;
@@ -44,9 +47,47 @@ public class Text implements Handleable{
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setColor(colour);
 		g2d.setFont(font);
+		FontMetrics metrics = g2d.getFontMetrics();
 		if(visible){
 			if(clip!=null) {g2d.setClip(clip);}
-			g2d.drawString(text, xCoordinate, yCoordinate);
+			if(justOnce == 0) {
+				if(metrics.stringWidth(text)>=clip.getBounds().getWidth()) {
+					String newText = "";
+					String lines = "";
+					String words = "";
+					for(int i=0;i<text.length();i++) {
+						words += text.charAt(i);
+						if(text.charAt(i)==' ') {
+							if(metrics.stringWidth(lines+words)>=clip.getBounds().getWidth()) {
+								lines +="\n";
+								newText +=lines;
+								lines=words;
+							}
+							else {
+								lines+=words;
+							}
+							words = "";
+						}
+						
+						
+						
+					}
+					newText+=lines;
+					if(metrics.stringWidth(newText+words)>=clip.getBounds().getWidth()) {
+						newText+="\n"+words;
+					}else {newText+=words;}
+					
+					text = newText;
+					System.out.println(text);
+					justOnce +=1;
+					leftAlign =true;
+				}
+		
+			}
+				for(int i= 0 ; i<text.split("\n").length;i++) {
+					if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i+1)*metrics.getHeight());}
+					else{g2d.drawString(text.split("\n")[i], (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text.split("\n")[i]))/2), yCoordinate+(i)*metrics.getHeight());}
+				}
 		}
 	};
 	public static void delete(Text t) {

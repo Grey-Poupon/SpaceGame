@@ -20,6 +20,7 @@ public class Button extends Observable  implements Handleable{
 	private ImageHandler img;
 	private boolean clickable;
 	private boolean isButton = true;
+	private boolean textBottomAligned = true;
 
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, Observer obs){
 		this.xCoordinate = x;
@@ -33,10 +34,11 @@ public class Button extends Observable  implements Handleable{
 		this.addObserver(obs);
 		Handler.addButton(this);
 	}
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, Observer obs){
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, Observer obs,boolean bottomAlign){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
 		this.mask = new Rectangle2D.Float(x, y+size, width, height);
+		this.textBottomAligned = bottomAlign;
 		this.width = width;
 		this.height = height;
 		this.buttonID = buttonID;
@@ -136,7 +138,8 @@ public class Button extends Observable  implements Handleable{
 			img.setyCoordinate(y);
 		}
 		if(text != null) {
-			text.move(x,y+height);
+			if(textBottomAligned) {text.move(x,y+height);}
+			else {text.move(x,y);}
 		}
 	}
 	public void shift(int x , int y) {

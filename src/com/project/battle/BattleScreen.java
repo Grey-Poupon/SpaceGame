@@ -3,7 +3,6 @@ package com.project.battle;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
