@@ -33,7 +33,7 @@ public class BattleScreen extends Main implements Observer{
 
 	private static final long serialVersionUID = -6523236697457665386L;
 
-	private Ship enemyShip;
+	public Ship enemyShip;
 
 	private String selectedRoom;
 
@@ -340,5 +340,8 @@ public class BattleScreen extends Main implements Observer{
 			nextTurn();
 		}
 		return clicked;
+	}
+	public int  getLayerClicked(int x, int y) {
+		return enemyShip.getLayerClicked(x, y);
 	}
 }

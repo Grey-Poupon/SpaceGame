@@ -164,6 +164,15 @@ public class Ship {
 		}
 		return false;
 	}
+	public int getLayerClicked(int x, int y) {
+		for(int i = 0; i<lImage.layers.size();i++) {
+			if(lImage.layers.get(i).isClicked(x, y)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	
 	public List<Crew> getCrew() {
 		return crew;
