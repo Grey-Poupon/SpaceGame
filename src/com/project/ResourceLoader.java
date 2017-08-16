@@ -22,13 +22,12 @@ public class ResourceLoader {
 		put(images,"res/healthseg.png");
 		put(images,"res/TooltipSeparation_4Sections.png");
 		put(images,"res/octiod_lazer_1_Anim.png");
-		put(images,"res/mousePointer.png");
+		put(images,"res/mousepointer.png");
 		put(images,"res/missile_spritesheet.png");
-		put(images,"res/healthuncertainty.png");
-		put(images,"res/appicon.png");
+		put(images,"res/explosion_spritesheet.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
-				put(images,"res/race_portraits/"+race.toString().toLowerCase()+".png");
+				put(images,"res/race_portraits/"+race.toString()+".png");
 			}
 		}
 		put(images,"res/race_portraits/gen_2.png");
@@ -40,7 +39,7 @@ public class ResourceLoader {
 		try {
 		     GraphicsEnvironment ge = 
 		         GraphicsEnvironment.getLocalGraphicsEnvironment();
-		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/Sevensegies-Regular.ttf")));
+		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("res/Sevensegies-Regular.ttf")));
 		} catch (IOException|FontFormatException e) {
 		     e.printStackTrace();
 		}
@@ -49,7 +48,7 @@ public class ResourceLoader {
 	public BufferedImage loadImage(String path) {
 		BufferedImage img =null;
 		try {
-			img = ImageIO.read(getClass().getResource("/"+path));
+			img = ImageIO.read(new FileInputStream(path));
 		} 
 		catch (IOException e){
 			e.printStackTrace();

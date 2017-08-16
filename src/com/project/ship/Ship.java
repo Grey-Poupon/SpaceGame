@@ -2,19 +2,23 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 
 import com.project.Crew;
-import com.project.DamageType;
 import com.project.EntityID;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+
+import com.project.Animation;
+import com.project.DamageType;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -27,7 +31,7 @@ public class Ship {
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
-	private Sensor sensor;
+	
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
@@ -36,7 +40,7 @@ public class Ship {
 	private Weapon[]       backWeapons 		   = new Weapon[4];
 	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
-
+	private Sensor sensor;
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
 
@@ -45,9 +49,33 @@ public class Ship {
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
 		this.currHealth = this.maxHealth = health;
-		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser,20);
+
+		
 		setSensors();
 		generateFlavourText();
+		shipSlots.add(new Slot(150,400));
+		int yVel = 0;
+		int xVel = 10;
+		int x1 = getSlot(0).getX();
+		int y1 = getSlot(0).getY();
+		int xPixelsToMove = 639 - x1;
+		int yPixelsToMove = 0;
+		List<Animation> anim = new ArrayList<Animation>();
+		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,x1 , y1, 1f,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(104,54,535,456), false,anim);
+		
+		x1 = 540;
+		xPixelsToMove = 640;		
+		
+		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 8,1,1,5,1, false,anim);
+		List<Animation> followingAnims = new ArrayList<Animation>();
+		followingAnims.add(explosion);
+		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,x1 , y1, 1,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(640,54,640,456), false,followingAnims);
+		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
+		weaponFiringAnimations.add(projectile);
+		weaponFiringAnimations.add(projectile2);
+		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 0.8, "Laser Mark I",DamageType.Laser, 10, weaponFiringAnimations);
+
+
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -71,8 +99,10 @@ public class Ship {
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
+
 		setSensors();
 		generateFlavourText();
+
 		this.frontWeapons = frontWeapons;
 		this.backWeapons = backWeapons;
 		this.health = health;
@@ -215,6 +245,7 @@ public class Ship {
 	public Slot getSlot(int position) {
 		return shipSlots.get(position);
 	}
+
 	
 	public void setSensors() {
 		sensor = new Sensor(0.8f);
@@ -226,6 +257,7 @@ public class Ship {
 	public ArrayList<String> getFlavourTexts(){
 		return flavourTexts;
 	}
+
 
 	
 

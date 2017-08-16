@@ -1,6 +1,7 @@
 package com.project;
 
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ public class Animation implements Handleable {
 	private int xVel=0;
 	private int yVel=0;
 	private int xPixelsToMove =-1;
-	private int yPixlesToMove =-1;
+	private int yPixelsToMove =-1;
+	private String path;
+	private boolean moving = false;
+	private Rectangle2D mask;
 	int xStartGap;
 	int yStartGap;
 	int xGap;
@@ -33,11 +37,12 @@ public class Animation implements Handleable {
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
 	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
-	private List<Animation> nextAnimations = new ArrayList<Animation>();
+	private List<Animation> followingAnims = new ArrayList<Animation>();
 	
+	//16 stationary
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,List<Animation> followingAnims) {
 
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation) {
-
+		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;
@@ -51,14 +56,17 @@ public class Animation implements Handleable {
 		this.yGap = yGap;
 		this.framesLeft = NoOfloops<0 ? -1 : NoOfloops*noHorizTiles*noVertTiles;
 		this.scale = scale;
+		this.followingAnims = followingAnims;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
 			start();
 		}
 	}
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int xPixelsToMove,int yPixelsToMove,int xVel,int yVel,boolean firstAnimation) {
+	//20 moving
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int xPixelsToMove,int yPixelsToMove,int xVel,int yVel,Rectangle2D mask,boolean firstAnimation,List<Animation> followingAnims) {
 
+		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.noVertTiles = noVertTiles;
@@ -73,27 +81,12 @@ public class Animation implements Handleable {
 		this.framesLeft = -1;
 		this.scale = scale;
 		this.xPixelsToMove = xPixelsToMove;
-		this.yPixlesToMove = yPixelsToMove;
+		this.yPixelsToMove = yPixelsToMove;
 		this.yVel = yVel;
 		this.xVel = xVel;
-		setSpritesheet(path);
-		setSprite();
-		if(firstAnimation) {
-			start();
-		}
-	}
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,Animation[] anims) {
-
-		this.tileWidth = tileWidth;
-		this.tileHeight = tileHeight;
-		this.noVertTiles = noVertTiles;
-		this.noHorizTiles = noHorizTiles;
-		this.ticksPerFrame = 60/frameRate;
-		this.xCoordinate = xCoordinate;
-		this.yCoordinate = yCoordinate;
-		this.framesLeft = NoOfloops*noHorizTiles*noVertTiles;
-		this.nextAnimations = Arrays.asList(anims);
-		this.scale = scale;
+		this.mask = mask;
+		this.moving = true;
+		this.followingAnims = followingAnims;
 		setSpritesheet(path);
 		setSprite();
 		if(firstAnimation) {
@@ -101,29 +94,12 @@ public class Animation implements Handleable {
 		}
 	}
 	
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,List<Animation> anims) {
-		this.tileWidth = tileWidth;
-		this.tileHeight = tileHeight;
-		this.noVertTiles = noVertTiles;
-		this.noHorizTiles = noHorizTiles;
-		this.ticksPerFrame = 60/frameRate;
-		this.xCoordinate = xCoordinate;
-		this.yCoordinate = yCoordinate;
-		this.framesLeft = NoOfloops*noHorizTiles*noVertTiles;
-		this.nextAnimations =  anims;
-		this.scale = scale;
-		setSpritesheet(path);
-		setSprite();
-		if(firstAnimation) {
-			start();
-		}
-	}
 
 	public void start() {
 		Handler.addAnimation(this);
 	}
 	public void addAnims(List<Animation> anims) {
-		this.nextAnimations = anims;
+		this.followingAnims = anims;
 	}
 	public void setSpritesheet(String path) {
 		this.spritesheet = ResourceLoader.images.get(path);
@@ -144,7 +120,9 @@ public class Animation implements Handleable {
 		}
 		setSprite();
 	}
-	public void render(Graphics g) {
+	public void render(Graphics g2) {
+		Graphics g = g2.create();
+		if(mask!=null) {g.setClip(mask);}
 		g.drawImage(sprite, xCoordinate, yCoordinate,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale),observer);
 	}
 	public static void delete(Animation anim) {
@@ -154,37 +132,71 @@ public class Animation implements Handleable {
 	}
 	public void tick() {
 		tickCounter++;
-		xCoordinate+=xVel;
-		yCoordinate+=yVel;
+		
 		if(tickCounter==ticksPerFrame) {
 			nextSprite();
 			tickCounter=0;
 			
-			if(framesLeft>0) { //  if its not an infiniteloop
-				framesLeft--;
-				if (framesLeft < 1) {
-					if (nextAnimations.size()>1) {
-						Animation next = nextAnimations.get(0);
-						List<Animation> anns = nextAnimations.subList(1, nextAnimations.size());
-						next.addAnims(anns);
-					}
-					if(nextAnimations.size()>0) {
-						nextAnimations.get(0).start();
+			if(moving) {
+				xCoordinate   += xVel;
+				xPixelsToMove -= xVel;
+				yCoordinate   += yVel;
+				yPixelsToMove -= yVel;
+
+				if(xPixelsToMove < 1 && yPixelsToMove < 1 ) {
+					if(followingAnims.size()>0) {
+						followingAnims.get(0).setX(xCoordinate);
+						followingAnims.get(0).sety(yCoordinate);
+						followingAnims.get(0).start();
 					}
 					Animation.delete(this);
 				}
 			}
-			if(xPixelsToMove + yPixlesToMove == 0 ) {Animation.delete(this);}
-			if(xVel > 0) {
-				this.xCoordinate += xVel;
-				xPixelsToMove -= xVel;
-				if(xPixelsToMove < 0) {xPixelsToMove =0;}
-			}
-			if(yVel > 0) {
-				this.yCoordinate += yVel;
-				yPixlesToMove-=yVel;
-			}
 			
+			else
+			{
+				if(framesLeft>0) { //  if its not an infiniteloop
+					framesLeft--;
+					if (framesLeft < 1) {
+						if (followingAnims.size()>1) {
+							Animation next = followingAnims.get(0);
+							List<Animation> anns = followingAnims.subList(1, followingAnims.size());
+							next.addAnims(anns);
+						}
+						if(followingAnims.size()>0) {
+							followingAnims.get(0).start();
+						}
+						Animation.delete(this);
+					}
+				}
+			}
 		}
+	}
+	private void sety(int yCoordinate2) {
+		this.yCoordinate =yCoordinate2;
+		
+	}
+	private void setX(int xCoordinate2) {
+		this.xCoordinate = xCoordinate2;
+	}
+	public int getYVel() {
+		
+		return yVel;
+	}
+	public int getXVel() {
+		return xVel;
+	}
+	public int getYPixelsToMove() {
+		// TODO Auto-generated method stub
+		return yPixelsToMove;
+	}
+	public int getXPixelsToMove() {
+		// TODO Auto-generated method stub
+		return xPixelsToMove;
+	}
+	public Animation copy() {
+		if(moving) {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, xPixelsToMove,yPixelsToMove,xVel,yVel, mask, false, followingAnims);}
+		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),       false, followingAnims);}      
+		
 	}
 }

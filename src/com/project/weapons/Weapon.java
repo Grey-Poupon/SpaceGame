@@ -1,5 +1,10 @@
 package com.project.weapons;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.Animation;
+
 public abstract class Weapon { // Holds the shared functionality between all weapons
 	private int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
@@ -7,7 +12,7 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	protected boolean isBuffer;
 	protected boolean isDestructive;
 	protected boolean isDebuffer;
-	//protected Animation 
+	protected List<Animation> firingAnimations = new ArrayList<Animation>(); 
 	public boolean isBuffer() {// to check if the weapon buffs
 		return isBuffer;
 	}
@@ -17,7 +22,8 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	public boolean isDebuffer(){ // to check if the weapon debuffs
 		return isDebuffer;
 	}
-	public Weapon(int cooldownDuration, String name){
+	public Weapon(int cooldownDuration, String name,List<Animation> anims){
+		this.firingAnimations = anims;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		}
@@ -40,6 +46,9 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	public String getSprite() {
 		// TODO Auto-generated method stub
 		return "res/missile_spritesheet.png";
+	}
+	public Animation getAnimation(int i) {
+		return firingAnimations.get(i).copy();
 	}
 	
 }
