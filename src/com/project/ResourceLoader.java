@@ -27,6 +27,7 @@ public class ResourceLoader {
 		put(images,"res/healthuncertainty.png");
 		put(images,"res/appicon.png");
 		put(images,"res/explosion_spritesheet.png");
+		put(images,"res/attackMousePointer.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
 				put(images,"res/race_portraits/"+race.toString().toLowerCase()+".png");

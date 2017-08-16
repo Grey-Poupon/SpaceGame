@@ -96,6 +96,7 @@ public class Crew implements Observer{
 		statModifierInc.put("science", (byte)0);
 		statModifierInc.put("pilot", (byte)0);
 		this.diseases = new ArrayList<Disease>();
+		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		getSpeechOptions().add("Talk");
 		loadPortrait();
 	}

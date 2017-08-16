@@ -256,6 +256,9 @@ public class Ship {
 	}
 
 
+	public void destruct() {
+		lImage.destruct();
+	}
 	
 
 }
