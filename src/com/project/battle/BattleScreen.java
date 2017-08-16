@@ -12,6 +12,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import com.project.AdjustmentID;
 import com.project.Animation;
 import com.project.Crew;
 import com.project.DamageType;
@@ -22,6 +23,7 @@ import com.project.ImageHandler;
 import com.project.Main;
 import com.project.ScrollableList;
 import com.project.Star;
+import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
@@ -73,11 +75,10 @@ public class BattleScreen extends Main implements Observer{
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
 		}
-		List<Animation> anims = new ArrayList<Animation>();
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
-		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,anims);
+		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.emptyList());
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
@@ -292,13 +293,13 @@ public class BattleScreen extends Main implements Observer{
 					}
 				}
 				if(ID == ButtonID.Crew){
-					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),"room");
+					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),TooltipSelectionID.Room);
 				}
 			}
 			
 			if(button == MouseEvent.BUTTON3) {
 				if(ID == ButtonID.Crew) {
-					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),"stats");
+					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),TooltipSelectionID.Stats);
 				}
 			}
 		}

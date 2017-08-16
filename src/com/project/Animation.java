@@ -29,6 +29,7 @@ public class Animation implements Handleable {
 	private String path;
 	private boolean moving = false;
 	private Rectangle2D mask;
+	private AdjustmentID align;
 	int xStartGap;
 	int yStartGap;
 	int xGap;
@@ -40,7 +41,7 @@ public class Animation implements Handleable {
 	private List<Animation> followingAnims = new ArrayList<Animation>();
 	
 	//16 stationary
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,List<Animation> followingAnims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int NoOfloops,boolean firstAnimation,AdjustmentID align,List<Animation> followingAnims) {
 
 		this.path = path;
 		this.tileWidth = tileWidth;
@@ -50,6 +51,7 @@ public class Animation implements Handleable {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
+		this.align = align;
 		this.xStartGap = xStartGap;
 		this.yStartGap = yStartGp;
 		this.xGap = xGap;
@@ -64,7 +66,7 @@ public class Animation implements Handleable {
 		}
 	}
 	//20 moving
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int xPixelsToMove,int yPixelsToMove,int xVel,int yVel,Rectangle2D mask,boolean firstAnimation,List<Animation> followingAnims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, int xCoordinate, int yCoordinate,float scale,int xPixelsToMove,int yPixelsToMove,int xVel,int yVel,Rectangle2D mask,boolean firstAnimation,AdjustmentID align,List<Animation> followingAnims) {
 
 		this.path = path;
 		this.tileWidth = tileWidth;
@@ -74,6 +76,7 @@ public class Animation implements Handleable {
 		this.ticksPerFrame = 60/frameRate;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
+		this.align = align;
 		this.xStartGap = xStartGap;
 		this.yStartGap = yStartGp;
 		this.xGap = xGap;
@@ -123,7 +126,10 @@ public class Animation implements Handleable {
 	public void render(Graphics g2) {
 		Graphics g = g2.create();
 		if(mask!=null) {g.setClip(mask);}
-		g.drawImage(sprite, xCoordinate, yCoordinate,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale),observer);
+		int xAdjustment =(int) (AdjustmentID.getXAdjustment(align)*tileWidth*scale);
+		int yAdjustment =(int) (AdjustmentID.getYAdjustment(align)*tileHeight*scale);
+
+		g.drawImage(sprite, xCoordinate+xAdjustment, yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale),observer);
 	}
 	public static void delete(Animation anim) {
 		Handler.anims.remove(anim);
@@ -132,17 +138,16 @@ public class Animation implements Handleable {
 	}
 	public void tick() {
 		tickCounter++;
-		
+		if(moving) {
+			xCoordinate   += xVel;
+			xPixelsToMove -= xVel;
+			yCoordinate   += yVel;
+			yPixelsToMove -= yVel;
+		}
 		if(tickCounter==ticksPerFrame) {
 			nextSprite();
 			tickCounter=0;
-			
 			if(moving) {
-				xCoordinate   += xVel;
-				xPixelsToMove -= xVel;
-				yCoordinate   += yVel;
-				yPixelsToMove -= yVel;
-
 				if(xPixelsToMove < 1 && yPixelsToMove < 1 ) {
 					if(followingAnims.size()>0) {
 						followingAnims.get(0).setX(xCoordinate);
@@ -152,7 +157,6 @@ public class Animation implements Handleable {
 					Animation.delete(this);
 				}
 			}
-			
 			else
 			{
 				if(framesLeft>0) { //  if its not an infiniteloop
@@ -171,6 +175,7 @@ public class Animation implements Handleable {
 				}
 			}
 		}
+		
 	}
 	private void sety(int yCoordinate2) {
 		this.yCoordinate =yCoordinate2;
@@ -195,8 +200,8 @@ public class Animation implements Handleable {
 		return xPixelsToMove;
 	}
 	public Animation copy() {
-		if(moving) {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, xPixelsToMove,yPixelsToMove,xVel,yVel, mask, false, followingAnims);}
-		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),       false, followingAnims);}      
+		if(moving) {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, xPixelsToMove,yPixelsToMove,xVel,yVel, mask, false,align, followingAnims);}
+		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),       false,align, followingAnims);}      
 		
 	}
 }
