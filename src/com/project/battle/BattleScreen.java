@@ -13,7 +13,6 @@ import java.util.Random;
 
 import com.project.AdjustmentID;
 import com.project.Animation;
-import com.project.Crew;
 import com.project.DamageType;
 import com.project.DistanceSystem;
 import com.project.EntityID;
@@ -22,6 +21,7 @@ import com.project.ImageHandler;
 import com.project.Main;
 import com.project.ScrollableList;
 import com.project.Star;
+import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
@@ -63,6 +63,7 @@ public class BattleScreen extends Main implements Observer{
 	private Random rand;
 	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
+	private Text phase;
 	
 	public BattleScreen(){
 		handler = new BattleHandler(this);
@@ -74,6 +75,8 @@ public class BattleScreen extends Main implements Observer{
 		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
 		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
 		
+		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
+		
 		for(int i=0; i<40;i++) {
 			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
 		}
@@ -83,21 +86,21 @@ public class BattleScreen extends Main implements Observer{
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
-		Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.emptyList());
+		//Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		playerHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		
-		for(int i =0;i<playerShip.getCrew().size();i++) {
-			Crew crew = playerShip.getCrew().get(i);
-			System.out.println(crew.getName()+":"+crew.getRaceID().toString()+" "+crew.getGender());
-			for(int j = 0;j<crew.getStats().size();j++) {
-				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
-			}
-			System.out.println();
-		}
+//		for(int i =0;i<playerShip.getCrew().size();i++) {
+//			Crew crew = playerShip.getCrew().get(i);
+//			System.out.println(crew.getName()+":"+crew.getRaceID().toString()+" "+crew.getGender());
+//			for(int j = 0;j<crew.getStats().size();j++) {
+//				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
+//			}
+//			System.out.println();
+//		}
 		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
@@ -184,7 +187,7 @@ public class BattleScreen extends Main implements Observer{
 				}
 			}
 			if(playerShip !=null && enemyShip != null) {
-				
+				phase.setText("Current Phase: "+currentPhase.toString());
 				loadingScreen.setVisible(false);
 				playerShip.tickLayers();
 				enemyShip.tickLayers();
@@ -194,7 +197,10 @@ public class BattleScreen extends Main implements Observer{
 				if (scale < 0) {scale = 0;}
 				playerHealthbar.setXScale(scale);
 				scale = ((float)enemyShip.getCurrHealth()/(float)enemyShip.getMaxHealth())*1.2f;
-				if (scale < 0) {scale = 0;}
+				if (scale < 0) {
+					scale = 0;
+					enemyShip.destruct();
+					}
 				enemyHealthbar.setXScale(scale);
 			}
 		}
@@ -202,8 +208,6 @@ public class BattleScreen extends Main implements Observer{
 		
 	
 	}
-
-	
 
 	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
 		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired
@@ -225,12 +229,13 @@ public class BattleScreen extends Main implements Observer{
 		}
 		if(weapon.isDestructive()){// if its a destructive weapon fire it, apply damage
 			Object[] damageDealt = weapon.fire();
+			FireableWeapon fireWeapon = (FireableWeapon) weapon;
 			double[] accuracy = (double[]) damageDealt[1];
 			int newX,newY,extraDmg;
 			for(int i=0;i<(int)damageDealt[0];i++) {
 				if(accuracy[i]!=0) {
-					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/accuracy[i])):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
-					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/accuracy[i])):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
+					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
+					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
 					extraDmg = secondary.roomDamage(newX, newY);
 					if(primary == playerShip) {
 						enemyDamageToBeTaken.add(extraDmg+(int)damageDealt[3]);

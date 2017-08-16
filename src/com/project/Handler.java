@@ -8,7 +8,7 @@ public class Handler {
 	public static ArrayList<Handleable> stars = new ArrayList<Handleable>();
 	public static ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
 	public static ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
-	private static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
+	protected static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousepointer.png",true, EntityID.UI,"high");
 	public static ArrayList<Button> buttons = new ArrayList<Button>(); 
 	public static ArrayList<Animation> anims = new ArrayList<Animation>();
 	public static ArrayList<Text> texts = new ArrayList<Text>();

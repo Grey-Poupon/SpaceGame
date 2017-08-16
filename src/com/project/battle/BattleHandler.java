@@ -1,10 +1,6 @@
 package com.project.battle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.project.Handler;
-import com.project.button.Button;
 
 public class BattleHandler extends Handler {
 	private BattleScreen bs;
@@ -21,6 +17,14 @@ public class BattleHandler extends Handler {
 	public boolean checkClick(int x, int y, int button) {
 		if(checkButtons(x, y,button)){ return true;}
 		return checkShip(x,y);
+	}
+	public void updateMouse(int x,int y) {
+		super.updateMouse(x, y);
+		if(checkShip(x,y)) {
+			mousePointer.setImg("res/attackMousePointer.png");
+		}
+		else {mousePointer.setImg("res/mousePointer.png");}
+		
 	}
 	
 }

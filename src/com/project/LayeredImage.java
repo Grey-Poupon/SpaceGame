@@ -1,8 +1,8 @@
 package com.project;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LayeredImage {
 	public int x;
@@ -25,6 +25,8 @@ public class LayeredImage {
 	public String path;
 	private float zPerLayer;
 	private float z;
+	private Random rand = new Random();
+	private boolean destroyed = false;
 	
 	public LayeredImage(int x,int y, String path,float z,float zPerLayer) {
 		this.path = path;
@@ -75,10 +77,25 @@ public class LayeredImage {
 		//cameraY+=0.03*tickerY;
 		cameraX+=0.03*tickerX;
 		//cameraZ+=0.03*tickerZ;
-		for(int i = 0; i<layers.size();i++) {
-			setScaling(layers.get(i),i);
+		if(!destroyed) {
+			for(int i = 0; i<layers.size();i++) {
+				setScaling(layers.get(i),i);
+			}
 		}
 		
+	}
+	
+	public void destruct() {
+		if(!destroyed) {
+		for(int i = 0; i<layers.size();i++) {
+			if(rand.nextBoolean()) {layers.get(i).setXVel((rand.nextInt(2)+1));}
+			else {layers.get(i).setXVel(-1*(rand.nextInt(2)+1));}
+			
+			if(rand.nextBoolean()) {layers.get(i).setYVel((rand.nextInt(2)+1));}
+			else {layers.get(i).setYVel((-1*(rand.nextInt(2)+1)));}
+		}
+		destroyed= true;
+		}
 	}
 	
 	private void setScaling(ImageHandler e,int index) {

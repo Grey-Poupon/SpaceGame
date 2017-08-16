@@ -60,12 +60,13 @@ public class Ship {
 		int y1 = getSlot(0).getY();
 		int xPixelsToMove = 639 - x1;
 		int yPixelsToMove = 0;
-		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,5,x1 , y1, 1f,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.emptyList());
+		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,5,x1 , y1, 1f,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
 		
 		x1 = 540;
 		xPixelsToMove = 640;		
 		
-		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 10,1,1,5,1, false,AdjustmentID.MidUp,Collections.emptyList());
+
+		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.<Animation>emptyList());
 		List<Animation> followingAnims = new ArrayList<Animation>();
 		followingAnims.add(explosion);
 		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,x1 , y1, 1,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
@@ -256,6 +257,9 @@ public class Ship {
 	}
 
 
+	public void destruct() {
+		lImage.destruct();
+	}
 	
 
 }

@@ -36,7 +36,7 @@ public class Text implements Handleable{
 		this.yCoordinate=y;
 		this.text=text;	
 		this.font = new Font("Sevensegies", Font.PLAIN, 36);
-		this.colour = Color.BLACK;
+		this.colour = Color.WHITE;
 		Handler.texts.add(this);
 	}
 	public void render(Graphics g)
@@ -49,45 +49,46 @@ public class Text implements Handleable{
 		g2d.setFont(font);
 		FontMetrics metrics = g2d.getFontMetrics();
 		if(visible){
-			if(clip!=null) {g2d.setClip(clip);}
-			if(justOnce == 0) {
-				if(metrics.stringWidth(text)>=clip.getBounds().getWidth()) {
-					String newText = "";
-					String lines = "";
-					String words = "";
-					for(int i=0;i<text.length();i++) {
-						words += text.charAt(i);
-						if(text.charAt(i)==' ') {
-							if(metrics.stringWidth(lines+words)>=clip.getBounds().getWidth()) {
-								lines +="\n";
-								newText +=lines;
-								lines=words;
+			if(clip!=null) {
+				g2d.setClip(clip);
+				if(justOnce == 0) {
+					if(metrics.stringWidth(text)>=clip.getBounds().getWidth()) {
+						String newText = "";
+						String lines = "";
+						String words = "";
+						for(int i=0;i<text.length();i++) {
+							words += text.charAt(i);
+							if(text.charAt(i)==' ') {
+								if(metrics.stringWidth(lines+words)>=clip.getBounds().getWidth()) {
+									lines +="\n";
+									newText +=lines;
+									lines=words;
+								}
+								else {
+									lines+=words;
+								}
+								words = "";
 							}
-							else {
-								lines+=words;
-							}
-							words = "";
+							
+							
+							
 						}
-						
-						
-						
+						newText+=lines;
+						if(metrics.stringWidth(newText+words)>=clip.getBounds().getWidth()) {
+							newText+="\n"+words;
+						}else {newText+=words;}
+						text = newText;
+						justOnce +=1;
+						leftAlign =true;
 					}
-					newText+=lines;
-					if(metrics.stringWidth(newText+words)>=clip.getBounds().getWidth()) {
-						newText+="\n"+words;
-					}else {newText+=words;}
-					
-					text = newText;
-					System.out.println(text);
-					justOnce +=1;
-					leftAlign =true;
+			
 				}
-		
-			}
-				for(int i= 0 ; i<text.split("\n").length;i++) {
-					if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i+1)*metrics.getHeight());}
-					else{g2d.drawString(text.split("\n")[i], (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text.split("\n")[i]))/2), yCoordinate+(i)*metrics.getHeight());}
-				}
+					for(int i= 0 ; i<text.split("\n").length;i++) {
+						if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i+1)*metrics.getHeight());}
+						else{g2d.drawString(text.split("\n")[i], (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text.split("\n")[i]))/2), yCoordinate+(i)*metrics.getHeight());}
+					}
+			}else {g2d.drawString(text, xCoordinate, yCoordinate);}
+			
 		}
 	};
 	public static void delete(Text t) {
@@ -115,7 +116,8 @@ public class Text implements Handleable{
 	}
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
-		
+	}
+	public void setText(String text) {
+		this.text = text;
 	}
 }

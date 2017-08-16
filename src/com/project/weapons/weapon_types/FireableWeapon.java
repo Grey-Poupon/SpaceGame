@@ -39,6 +39,9 @@ public class FireableWeapon extends Weapon {
 	public float getReloadTime() {
 
 		return reloadTime;
+}
+	public double getAccuracy() {
+		return destruct.getAccuracy();
 	}
 
 }
