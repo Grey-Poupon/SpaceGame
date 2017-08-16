@@ -1,16 +1,21 @@
 package com.project.weapons.weapon_types;
 
+import java.util.List;
+
+import com.project.Animation;
 import com.project.DamageType;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 
 public class FireableWeapon extends Weapon {
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod) {
-		super(cooldownDuration, name);
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,List<Animation> anims) {
+		super(cooldownDuration, name,anims);
 		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod);
 		this.isDestructive = true;
 	}
+
+	
 
 	Destructive destruct;
 	

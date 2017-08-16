@@ -109,4 +109,7 @@ public class DistanceSystem implements Handleable {
 
 		}
 	}
+	public int getShipDistanceCurrent() {
+		return shipDistanceCurrent;
+	}
 }
