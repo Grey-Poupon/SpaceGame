@@ -73,7 +73,7 @@ public class Ship {
 		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
 		weaponFiringAnimations.add(projectile);
 		weaponFiringAnimations.add(projectile2);
-		Weapon defaultWeapon = new FireableWeapon(1, 5, 5, 1, "Laser Mark I",DamageType.Laser, 10, 1.5f, weaponFiringAnimations);
+		Weapon defaultWeapon = new FireableWeapon(1, 2, 3, 1, "Laser Mark I",DamageType.Laser, 10, 1.5f, weaponFiringAnimations);
 
 
 		for(DamageType dmg : DamageType.values()){
