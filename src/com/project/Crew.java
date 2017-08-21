@@ -282,7 +282,7 @@ public class Crew implements Observer{
 		}
 	}
 	protected void loadPortrait(byte Gen) {
-		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen_"+Byte.toString(Gen)+".png", true,2,2, EntityID.crew));
+		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,2,2, EntityID.crew));
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {
