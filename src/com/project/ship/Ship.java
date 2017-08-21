@@ -54,27 +54,22 @@ public class Ship {
 		setSensors();
 		generateFlavourText();
 		shipSlots.add(new Slot(150,400));
-		int yVel = 0;
 		int xVel = 5;
-		int x1 = getSlot(0).getX();
-		int y1 = getSlot(0).getY();
-		int xPixelsToMove = 639 - x1;
-		int yPixelsToMove = 0;
-		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,5,x1 , y1, 1f,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
-		
-		x1 = 540;
-		xPixelsToMove = 640;		
-		
-
+		int xStart = getSlot(0).getX();
+		int yStart = getSlot(0).getY();
+		int xEnd = 639 + xStart;
+		int yEnd = yStart + 0;
+		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,5,1 , xStart, xEnd ,yStart,yEnd,xVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
+		xStart = 540;
+		xEnd = xStart + 640;		
 		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.<Animation>emptyList());
 		List<Animation> followingAnims = new ArrayList<Animation>();
 		followingAnims.add(explosion);
-		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,x1 , y1, 1,xPixelsToMove ,yPixelsToMove,xVel,yVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
+		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,1,xStart,xEnd,yStart,yEnd,xVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
 		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
 		weaponFiringAnimations.add(projectile);
 		weaponFiringAnimations.add(projectile2);
-		Weapon defaultWeapon = new FireableWeapon(1, 2, 3, 1, "Laser Mark I",DamageType.Laser, 10, 1.5f, weaponFiringAnimations);
-
+		Weapon defaultWeapon = new FireableWeapon(1, 2, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, weaponFiringAnimations);
 
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);

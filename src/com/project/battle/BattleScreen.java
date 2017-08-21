@@ -252,7 +252,6 @@ public class BattleScreen extends Main {
 						projectileWaitTurns.add(-i +1);
 						projectileWaitCounters.add(0);
 						System.out.println("HIT");
-
 					}
 					else {
 						secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
@@ -272,15 +271,19 @@ public class BattleScreen extends Main {
 		}
 		if(stage == 1) {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
-			int yVel = projectile.getYVel();
-			int xVel = projectile.getXVel();;
-			int xPixelsToMove = projectile.getXPixelsToMove();
-			int yPixelsToMove = projectile.getYPixelsToMove();
+			
+			projectile.setYStart(primary.getSlot(0).getY());
+			projectile.setYEnd((int) (playerShotLocation.getY()));
+			
+			float yVel = projectile.getYVel();
+			float xVel = projectile.getXVel();
+			float xPixelsToMove = projectile.getXPixelsToMove();
+			float yPixelsToMove = projectile.getYPixelsToMove();
 			
 			// tickToWait = max number of ticks needed;
-			if(xVel == 0 && yVel > 0) {ticksToWait = Math.abs(yPixelsToMove/yVel);}
-			if(yVel == 0 && xVel > 0) {ticksToWait = Math.abs(xPixelsToMove/xVel);}
-			else {ticksToWait = Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel);}
+			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
+			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
+			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
 			
 			projectile.start();
 		}
@@ -291,15 +294,20 @@ public class BattleScreen extends Main {
 		}
 		if(stage == 3) {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
+			projectile.setXEnd((int) playerShotLocation.getX());
+			projectile.setYEnd((int) (playerShotLocation.getY()));
+
+			float yVel = projectile.getYVel();
+			float xVel = projectile.getXVel();
+			float xPixelsToMove = projectile.getXPixelsToMove();
+			float yPixelsToMove = projectile.getYPixelsToMove();
+			//tickToWait = max number of ticks needed;
+			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
+			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
+			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
+			
 			projectile.start();
-			int yVel = projectile.getYVel();
-			int xVel = projectile.getXVel();;
-			int xPixelsToMove = projectile.getXPixelsToMove();
-			int yPixelsToMove = projectile.getYPixelsToMove();
-			// tickToWait = max number of ticks needed;
-			if(xVel == 0 && yVel > 0) {ticksToWait = Math.abs(yPixelsToMove/yVel);}
-			if(yVel == 0 && xVel > 0) {ticksToWait = Math.abs(xPixelsToMove/xVel);}
-			else {ticksToWait = Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel);}
+
 		}
 		return ticksToWait;
 
@@ -339,13 +347,18 @@ public class BattleScreen extends Main {
 		
 	}
 	
-	public boolean checkClick(int x, int y) {
-		boolean clicked = enemyShip.isShipClicked(x, y);
-		if( clicked && currentPhase == BattlePhases.WeaponsClick) {
+	public boolean checkShipClick(int x, int y) {
+		return enemyShip.isShipClicked(x, y);
+	}
+
+	public boolean clickShip(int x, int y) {
+		if(currentPhase == BattlePhases.WeaponsClick) {
 			playerShotLocation = new Point(x,y);
 			nextTurn();
+			return true;
 		}
-		return clicked;
+		return false;
+		
 	}
 	public int  getLayerClicked(int x, int y) {
 		return enemyShip.getLayerClicked(x, y);
