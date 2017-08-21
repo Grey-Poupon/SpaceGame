@@ -45,7 +45,7 @@ public abstract class Weapon { // Holds the shared functionality between all wea
 	}
 	public String getSprite() {
 		// TODO Auto-generated method stub
-		return "res/missile_spritesheet.png";
+		return "res/missileSpritesheet.png";
 	}
 	public Animation getAnimation(int i) {
 		return firingAnimations.get(i).copy();

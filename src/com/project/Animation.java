@@ -221,7 +221,7 @@ public class Animation implements Handleable {
 		
 	}
 	public void setYEnd(int y) {
-		this.yPixelsToMove = Math.abs(yEnd-yStart);
+		this.yPixelsToMove = Math.abs(y-yStart);
 		
 		if(y != yEnd || yVel == 0) {
 			if(xVel == 0) {
@@ -236,7 +236,7 @@ public class Animation implements Handleable {
 
 	}
 	public void setYStart(int y) {
-		this.yPixelsToMove = Math.abs(yEnd-yStart);
+		this.yPixelsToMove = Math.abs(yEnd-y);
 		
 		if(y != yStart || yVel == 0) {
 			if(xVel == 0) {
@@ -247,12 +247,13 @@ public class Animation implements Handleable {
 			}
 		}
 		this.yStart = y;
+		this.yCoordinate = y;
 
 		
 		
 	}
 	public void setXEnd(int x) {
-		this.xPixelsToMove = Math.abs(xEnd-xStart);
+		this.xPixelsToMove = Math.abs(x-xStart);
 
 		if(x != xEnd || xVel == 0) {
 			if(yVel == 0) {
@@ -267,7 +268,7 @@ public class Animation implements Handleable {
 
 	}
 	public void setXStart(int x) {
-		this.xPixelsToMove = Math.abs(xEnd-xStart);
+		this.xPixelsToMove = Math.abs(xEnd-x);
 
 		if(x != xStart || xVel == 0) {
 			if(yVel == 0) {
@@ -278,8 +279,15 @@ public class Animation implements Handleable {
 			}
 		}
 		this.xStart = x;
+		this.xCoordinate = x;
 
 		
 		
+	}
+	public int getTileWidth() {
+		return sprite.getTileWidth();
+	}
+	public int getTileHeight() {
+		return sprite.getTileHeight();
 	}
 }

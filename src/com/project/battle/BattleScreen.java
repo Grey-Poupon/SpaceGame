@@ -69,7 +69,7 @@ public class BattleScreen extends Main {
 	
 	public BattleScreen(){
 		handler = new BattleHandler(this);
-		loadingScreen 		 = new ImageHandler(0,0,"res/loadingscreen.png",true,1,1,EntityID.UI);
+		loadingScreen 		 = new ImageHandler(0,0,"res/loadingScreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		
@@ -84,9 +84,9 @@ public class BattleScreen extends Main {
 			Star stare = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
 		}
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
-		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
+		overlay 			 = new ImageHandler  (0,0,"res/DrawnUI2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
-		//Animation anim       = new Animation("res/octiod_lazer_1_Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
+		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
@@ -271,9 +271,22 @@ public class BattleScreen extends Main {
 		}
 		if(stage == 1) {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
+			// change length and direction of animation based of player click
 			
-			projectile.setYStart(primary.getSlot(0).getY());
-			projectile.setYEnd((int) (playerShotLocation.getY()));
+			// setup variables, slot position,click postion
+			int slotY = primary.getSlot(0).getY();
+			int slotX = primary.getSlot(0).getX();
+			double shotY = playerShotLocation.getY();
+			double shotX = playerShotLocation.getX();
+			
+			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
+			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
+			
+			// setup projectile mapping
+			projectile.setXStart(slotX);
+			projectile.setXEnd(xEnd);
+			projectile.setYStart(slotY);
+			projectile.setYEnd(yEnd);
 			
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();
@@ -289,18 +302,34 @@ public class BattleScreen extends Main {
 		}
 		if(stage == 2) {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
+			// Delete projectile and wait a time proportional to the distance between ships
 			Animation.delete(projectile);
 			ticksToWait = ds.getShipDistanceCurrent()/4;
 		}
 		if(stage == 3) {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
-			projectile.setXEnd((int) playerShotLocation.getX());
-			projectile.setYEnd((int) (playerShotLocation.getY()));
+			// change length and direction of animation based of player click
+			
+			// setup variables, slot position,click postion
+			int slotY = primary.getSlot(0).getY();
+			int slotX = primary.getSlot(0).getX();
+			double shotY = playerShotLocation.getY();
+			double shotX = playerShotLocation.getX();
+			
+			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
+			int xStart = (int)(slotX/2 + shotX/2);   // 				^^
+			
+			// setup projectile mapping
+			projectile.setXStart(xStart);
+			projectile.setXEnd((int)shotX - projectile.getTileWidth()/2);
+			projectile.setYStart(yStart);
+			projectile.setYEnd((int)shotY -projectile.getTileHeight()/2);
 
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();
 			float xPixelsToMove = projectile.getXPixelsToMove();
 			float yPixelsToMove = projectile.getYPixelsToMove();
+			
 			//tickToWait = max number of ticks needed;
 			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
 			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
