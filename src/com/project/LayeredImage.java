@@ -10,8 +10,8 @@ import java.util.Random;
 import com.project.ship.Slot;
 
 public class LayeredImage {
-	public int x;
-	public int y;
+	private int x;
+	private int y;
 	public float scale = 3.5f;
 	public double anglePhi;
 	public double angleTheta;
@@ -278,6 +278,12 @@ public class LayeredImage {
 	}
 	public ArrayList<Slot> getSlots() {
 		return slots;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public void setY(int y) {
+		this.y = y;
 	}
 	public void setSlots(ArrayList<Slot> slots) {
 		this.slots = slots;

@@ -143,11 +143,15 @@ public class ImageHandler implements Handleable {
 		return img;
 	}
 	public void setImg(String path) {
-		this.img =ResourceLoader.images.get(path.toLowerCase());
-		 ColorModel cm = img.getColorModel();
-		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-		 WritableRaster raster = img.copyData(null);
-		 this.oriImg= new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+		this.img =ResourceLoader.images.get(path);
+		
+		ColorModel cm = img.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 
+		WritableRaster raster = img.copyData(null);
+		this.oriImg= new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		 
 	}
 	public void setImg(BufferedImage img) {
 		this.img = img;

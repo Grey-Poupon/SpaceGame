@@ -1,5 +1,6 @@
 package com.project.ship;
 
+
 import com.project.Slottable;
 
 public class Slot {
