@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.project.Animation;
+import com.project.Slottable;
 
-public abstract class Weapon { // Holds the shared functionality between all weapons
+public abstract class Weapon implements Slottable{ // Holds the shared functionality between all weapons
 	private int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
 	protected String name;

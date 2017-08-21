@@ -48,15 +48,15 @@ public class Ship {
 	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
+		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
-
+		shipSlots= lImage.getSlots();
 		
 		setSensors();
 		generateFlavourText();
-		shipSlots.add(new Slot(150,400));
 		
 		Weapon defaultWeapon = ResourceLoader.shipWeapons.get("default");
+
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -64,7 +64,7 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			shipSlots.add(new Slot(150,400+80*i));
+			shipSlots.add(new Slot(150,400+80*i,40,40));
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -72,13 +72,14 @@ public class Ship {
 			}
 		}	
 	}
+
 	private void generateFlavourText() {
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
-
+		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
+		shipSlots= lImage.getSlots();
 		setSensors();
 		generateFlavourText();
 

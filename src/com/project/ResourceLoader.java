@@ -115,9 +115,10 @@ public class ResourceLoader {
 				put(images,"res/racePortraits/"+race.toString()+".png");
 			}
 		}
+
 		put(images,"res/racePortraits/gen2.png");
 		put(images,"res/racePortraits/gen3.png");
-		for(int i =0; i<9;i++) {
+		for(int i =0; i<8;i++) {
 			put(images,"res/matron/data/layer"+Integer.toString(i)+".png");
 		}
 	}

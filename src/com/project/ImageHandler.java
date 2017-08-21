@@ -3,7 +3,9 @@ import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
+import java.awt.image.WritableRaster;
 
 public class ImageHandler implements Handleable {
 	protected EntityID id;
@@ -20,8 +22,16 @@ public class ImageHandler implements Handleable {
 	private BufferedImage img; 
 	private boolean visible = true;
 	private Shape clip;
+	protected BufferedImage oriImg;
 	
-	
+	public BufferedImage getOriImg() {
+		return oriImg;
+	}
+
+	public void setOriImg(BufferedImage oriImg) {
+		this.oriImg = oriImg;
+	}
+
 	public void tick(){	
 		xCoordinate+=xVel;
 		yCoordinate+=yVel;
@@ -133,7 +143,15 @@ public class ImageHandler implements Handleable {
 		return img;
 	}
 	public void setImg(String path) {
+
 		this.img =ResourceLoader.images.get(path);
+		
+		ColorModel cm = img.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 
+		WritableRaster raster = img.copyData(null);
+		this.oriImg= new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		 
 	}
 	public void setImg(BufferedImage img) {
 		this.img = img;

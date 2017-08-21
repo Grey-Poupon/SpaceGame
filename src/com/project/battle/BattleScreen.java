@@ -83,6 +83,7 @@ public class BattleScreen extends Main {
 		playerShip.setY(150);
 		enemyShip.setX(WIDTH-430);
 		enemyShip.setY(110);
+
 		
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		
@@ -203,7 +204,9 @@ public class BattleScreen extends Main {
 				}
 			}
 			if(playerShip !=null && enemyShip != null) {
-			//	phase.setText("Current Phase: "+currentPhase.toString());
+				if(currentPhase!=null&&phase!=null) {
+					phase.setText("Current Phase: "+currentPhase.toString());
+				}
 				loadingScreen.setVisible(false);
 				playerShip.tickLayers();
 				enemyShip.tickLayers();
