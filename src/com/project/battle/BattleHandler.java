@@ -1,11 +1,6 @@
 package com.project.battle;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
 import com.project.Handler;
-import com.project.ImageHandler;
-import com.project.ResourceLoader;
 
 public class BattleHandler extends Handler {
 	private BattleScreen bs;
@@ -51,8 +46,7 @@ public class BattleHandler extends Handler {
 //				}
 //			}
 //			
-			
-			mousePointer.setImg("attackMousePointer.png");
+			mousePointer.setImg("res/attackMousePointer.png");
 			
 			
 			

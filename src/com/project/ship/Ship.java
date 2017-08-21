@@ -8,17 +8,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Observer;
 
+import com.project.AdjustmentID;
+import com.project.Animation;
 import com.project.Crew;
+import com.project.DamageType;
 import com.project.EntityID;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
+import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
-import com.project.AdjustmentID;
-import com.project.Animation;
-import com.project.DamageType;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -112,6 +112,8 @@ public class Ship {
 		this.engine=engine;
 		this.crew = crew;
 	}
+	
+	
 	public void useEngine(int amountOfFuel) {
 		double thrust = engine.getThrust(amountOfFuel);
 		if(thrust<0) {System.out.println("your engine exploded, gg boyo");}//engine exploded
@@ -123,10 +125,10 @@ public class Ship {
 		if(power<0) {System.out.println("your generator exploded, gg boyo");}//engine exploded
 		power = (int) power;
 	}
-	public List<Button> getCrewButtons(Observer obs){
+	public List<Button> getCrewButtons(BattleScreen bs){
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<crew.size();i++) {
-			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,crew.get(i).getPortrait(), obs));
+			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,crew.get(i).getPortrait(), bs));
 		}
 		return buttons;
 	}

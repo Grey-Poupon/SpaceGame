@@ -5,20 +5,21 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
-import com.project.AdjustmentID;
 import com.project.Animation;
 import com.project.DamageType;
 import com.project.DistanceSystem;
 import com.project.EntityID;
+import com.project.Graph;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
+import com.project.MathFunctions;
+import com.project.MouseInput;
 import com.project.ScrollableList;
 import com.project.Star;
 import com.project.Text;
@@ -29,7 +30,7 @@ import com.project.ship.Ship;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
-public class BattleScreen extends Main implements Observer{
+public class BattleScreen extends Main {
 
 	private static final long serialVersionUID = -6523236697457665386L;
 
@@ -64,6 +65,7 @@ public class BattleScreen extends Main implements Observer{
 	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
+	private Button graphButton;
 	
 	public BattleScreen(){
 		handler = new BattleHandler(this);
@@ -78,10 +80,8 @@ public class BattleScreen extends Main implements Observer{
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		
 		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
-		}
-		for(int i=0; i<40;i++) {
-			Star star = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
+			Star starp = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
+			Star stare = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
 		}
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/Drawn UI 2.png",true,EntityID.UI);
@@ -91,7 +91,10 @@ public class BattleScreen extends Main implements Observer{
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		playerHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
-		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI);
+		enemyHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI); 
+		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
+		graphButton.setDraggable(true);
+		
 		
 //		for(int i =0;i<playerShip.getCrew().size();i++) {
 //			Crew crew = playerShip.getCrew().get(i);
@@ -108,14 +111,10 @@ public class BattleScreen extends Main implements Observer{
 		this.addMouseWheelListener(mouseIn);
 		
 	}
-	
 	public void selectRoom(String room){
-		selectedRoom = room;
-		
+		selectedRoom = room;		
 	}
-
 	private void nextTurn() {
-		
 		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { // if its the chasers turn // fyi chaser goes last
 			currentPhasePointer++;
 		}
@@ -139,9 +138,7 @@ public class BattleScreen extends Main implements Observer{
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
 		
-		
 	}
-	@Override
 	public void tick(){
 		
 		if(!isPaused()) {
@@ -308,13 +305,7 @@ public class BattleScreen extends Main implements Observer{
 
 	}
 	@Override
-	public void update(Observable arg0, Object arg1) {// this gets notified by the click function inside button
-
-		if(arg0 instanceof Button){
-			
-			ButtonID ID = (ButtonID) Array.get(arg1, 0);
-			int index   = (int)Array.get(arg1, 1);
-			int button  = (int)Array.get(arg1, 2);
+	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {
 				
 				if(ID == ButtonID.BattleWeaponsChoice){
@@ -335,6 +326,9 @@ public class BattleScreen extends Main implements Observer{
 				if(ID == ButtonID.Crew){
 					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),TooltipSelectionID.Room);
 				}
+				if(ID == ButtonID.Graph){
+					graphButton.getGraph().setPoint(MouseInput.mousePosition);
+				}
 			}
 			
 			if(button == MouseEvent.BUTTON3) {
@@ -342,7 +336,7 @@ public class BattleScreen extends Main implements Observer{
 					BattleUI.changeTootlipSelection(playerShip.getCrew().get(index),TooltipSelectionID.Stats);
 				}
 			}
-		}
+		
 	}
 	
 	public boolean checkClick(int x, int y) {
@@ -356,4 +350,5 @@ public class BattleScreen extends Main implements Observer{
 	public int  getLayerClicked(int x, int y) {
 		return enemyShip.getLayerClicked(x, y);
 	}
+
 }
