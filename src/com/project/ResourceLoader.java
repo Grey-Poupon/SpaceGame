@@ -35,7 +35,7 @@ public class ResourceLoader {
 		}
 		put(images,"res/race_portraits/gen_2.png");
 		put(images,"res/race_portraits/gen_3.png");
-		for(int i =0; i<9;i++) {
+		for(int i =0; i<8;i++) {
 			put(images,"res/matron/data/layer"+Integer.toString(i)+".png");
 		}
 		

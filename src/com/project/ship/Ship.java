@@ -47,13 +47,13 @@ public class Ship {
 	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
+		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
-
+		shipSlots= lImage.getSlots();
 		
 		setSensors();
 		generateFlavourText();
-		shipSlots.add(new Slot(150,400));
+		shipSlots.add(new Slot(150,400,40,40));
 		int xVel = 5;
 		int xStart = getSlot(0).getX();
 		int yStart = getSlot(0).getY();
@@ -78,7 +78,7 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			shipSlots.add(new Slot(150,400+80*i));
+			shipSlots.add(new Slot(150,400+80*i,40,40));
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -91,8 +91,8 @@ public class Ship {
 		
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
-		lImage = new LayeredImage(x, y, path, zPerLayer, z,scale);
-
+		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
+		shipSlots= lImage.getSlots();
 		setSensors();
 		generateFlavourText();
 

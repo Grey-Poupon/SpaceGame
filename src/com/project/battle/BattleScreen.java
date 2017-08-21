@@ -74,8 +74,8 @@ public class BattleScreen extends Main {
 		rand = new Random();
 		
 		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
+		playerShip			 = new Ship    (-200,150,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true);
+		enemyShip 			 = new Ship    (WIDTH-430,110,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false);
 		
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		
@@ -196,7 +196,9 @@ public class BattleScreen extends Main {
 				}
 			}
 			if(playerShip !=null && enemyShip != null) {
-				phase.setText("Current Phase: "+currentPhase.toString());
+				if(currentPhase!=null&&phase!=null) {
+					phase.setText("Current Phase: "+currentPhase.toString());
+				}
 				loadingScreen.setVisible(false);
 				playerShip.tickLayers();
 				enemyShip.tickLayers();

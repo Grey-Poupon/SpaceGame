@@ -1,8 +1,13 @@
 package com.project;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.project.ship.Slot;
 
 public class LayeredImage {
 	public int x;
@@ -18,8 +23,10 @@ public class LayeredImage {
 	public int tickerZ;
 	public int tickerX;
 	public int tickerY;
-	public int[] layersX;
-	public int[] layersY;
+	public ArrayList<Integer> layersX=new ArrayList<>();;
+	public ArrayList<Integer> layersY=new ArrayList<>();;
+	private ArrayList<Slot> slots= new ArrayList<>();
+	public String[] layerIsSlot;
 	public int largestWidth;
 	public int largestHeight;
 	public String path;
@@ -80,6 +87,9 @@ public class LayeredImage {
 		if(!destroyed) {
 			for(int i = 0; i<layers.size();i++) {
 				setScaling(layers.get(i),i);
+				if(layers.get(i).isVisible()) {
+					setLayersShading(layers.get(i));
+				}
 			}
 		}
 		
@@ -104,17 +114,17 @@ public class LayeredImage {
 		double d = (Math.cos(d1)*scale*(f));
 		e.setXScale((float)d);
 		if(cameraX>0) {
-			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1]));
+			e.setxCoordinate((int)(this.x+e.getXScale()*layersX.get(layersX.size()-index-1)));
 		}
 		else {
-			e.setxCoordinate((int)(this.x+e.getXScale()*layersX[layersX.length-index-1] + (this.largestWidth*(scale-(e.getXScale())))));
+			e.setxCoordinate((int)(this.x+e.getXScale()*layersX.get(layersX.size()-index-1) + (this.largestWidth*(scale-(e.getXScale())))));
 		}
 		e.setYScale((float) Math.cos(Math.atan2(cameraY, e.getZ()))*scale*(Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ))));	    
 		if(cameraY>0) {
-			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1]));
+			e.setyCoordinate((int)(this.y+e.getYScale()*layersY.get(layersY.size()-index-1)));
 		}
 		else {
-			e.setyCoordinate((int)(this.y+e.getYScale()*layersY[layersY.length-index-1] + (this.largestHeight*(scale-(e.getYScale())))));
+			e.setyCoordinate((int)(this.y+e.getYScale()*layersY.get(layersY.size()-index-1) + (this.largestHeight*(scale-(e.getYScale())))));
 		}	
 	}
 		
@@ -141,17 +151,39 @@ public class LayeredImage {
 		getLayerCoords();
 		setNoLayers();
 		for(int i =0; i<noLayers;i++) {
-			ImageHandler layer = new ImageHandler(x+layersX[layersX.length-i-1],y+layersY[layersY.length-i-1],this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
-			if(i==0) {layer.setVisible(false);}
-			layer.setZ((float)(this.z-i*zPerLayer));
-			layers.add(layer);
+			
+				ImageHandler layer = new ImageHandler(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
+				layer.setZ((float)(this.z-i*zPerLayer));
+				if(layerIsSlot[layersX.size()-i-1]!="!") {
+					layer.setVisible(false);
+					Slot slot=null;
+					if(layerIsSlot[layersX.size()-i-1].contains("s")) {
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'s');
+					}
+					if(layerIsSlot[layersX.size()-i-1].contains("m")) {
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'m');
+					}
+					if(layerIsSlot[layersX.size()-i-1].contains("l")) {
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'l');
+					}
+					slots.add(slot);
+					
+					
+					
+				}
+				layers.add(layer);
+			
+			
+			//if(i==0) {layer.setVisible(false);}
+			
 			
 		}
+		
 				
 	}
 	
 	public void getLayerCoords() {
-		try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/"+this.path+"/info.txt"), "UTF-8"))) {
+		try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/"+this.path+"/info.txt")))) {
 		    StringBuilder sb = new StringBuilder();
 		    String line = br.readLine();
 
@@ -164,14 +196,61 @@ public class LayeredImage {
 		    everything = everything.replaceAll("(\\r|\\n)", ",");
 		    everything = everything.replaceAll(",,", ",");
 		    everything=everything.substring(0, everything.length()-1);
+		    //System.out.println(everything);
 		    String[] split = everything.split(",");
-		    layersX = new int[split.length/2];
-		    layersY = new int[split.length/2];
-		    for(int i =0; i<split.length/2;i++) {
-		    	layersX[i]=Integer.parseInt(split[2*i]);
-		    	layersY[i]=Integer.parseInt(split[1+(2*i)]);
+		    ArrayList<String> splitList =  new ArrayList<String>();
+		    
+		    
+		    
+		    int counter= 0;
+		    int layerCounter = 0;
+		    layerIsSlot = new String[split.length/2];
+		    for(int i =0;i<split.length;i++) {
+		    	if(counter==2) {
+		    		counter =0;
+		    		layerCounter++;
+		    		layerIsSlot[layerCounter]="!";
+		    		
+		    	}
+		    	if(split[i].contains("m")||split[i].contains("s")||split[i].contains("l")) {
+		    		layerIsSlot[layerCounter]=split[i];
+		    	}
+		    	else {
+		    		counter++;
+		    		splitList.add(split[i]);
+		    		
+		    	}
 		    }
+		    
+		    for(int i = 0;i<layerIsSlot.length;i++) {
+		    	if(layerIsSlot[i]==null) {
+		    		layerIsSlot[i]="!";
+		    	}
+		    }
+//		    for(int i =0; i<layerIsSlot.length;i++) {
+//		    	System.out.println(layerIsSlot[i]);
+//		    }
+//		    
+//		    
+//		    
+//		    for(int i =0; i<split.length;i++) {
+//		    	System.out.println(split[i]);
+//		    }
+		    
+		    
+		    for(int i =0; i<splitList.size()/2;i++) {
+		    	layersX.add(Integer.parseInt(splitList.get(2*i)));
+		    	layersY.add(Integer.parseInt(splitList.get(1+(2*i))));
+		    }
+//		    for(int i =0;i<layersX.length;i++) {
+//		    	System.out.print(Integer.toString(layersX[i]));
+//		    	System.out.print(Integer.toString(layersY[i]));
+//		    }
 		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -195,6 +274,43 @@ public class LayeredImage {
 		layers = sortedLayers;
 	}
 	public void setNoLayers() {
-		this.noLayers=this.layersX.length;
+		this.noLayers=layersX.size();
 	}
+	public ArrayList<Slot> getSlots() {
+		return slots;
+	}
+	public void setSlots(ArrayList<Slot> slots) {
+		this.slots = slots;
+	}
+	
+	public void setLayersShading(ImageHandler e){
+		BufferedImage img = new BufferedImage(e.getImg().getWidth(), e.getImg().getHeight(), BufferedImage.TRANSLUCENT);
+		img  = e.getImg();
+			for(int x =0;x< e.getImg().getWidth();x++) {
+				for(int y=0;y<e.getImg().getHeight();y++) {
+
+					//this Line actually works
+					float shade  = ((e.getZ()/z)); 
+//					float shade  = (cameraZ-editable.layerZ[0])/(cameraZ-e.getZ()-(e.getImg().getWidth()-x)*cameraX/e.getImg().getWidth());
+//					float shade = (float) ((e.getZ()+10*((e.getxCoordinate()+x)/this.largestWidth)*Math.sqrt(9-(e.getXScale()*e.getXScale())))/(e.getImg().getWidth()+editable.layerZ[editable.layerZ.length-1]+5));
+//					shade = 1-shade*0.5f;
+					
+					Color col = new Color(e.getOriImg().getRGB(x,y),true);
+					int a = (int)(col.getAlpha());
+					if(a==0) {
+						continue;
+					}
+					int r = (int) (col.getRed()*(1-0.5*shade));
+					int g = (int) (col.getGreen()*(1-0.5*shade));
+					int b = (int) (col.getBlue()*(1-0.5*shade));
+					
+					int rgba = (a << 24) | (r << 16) | (g << 8) | b;
+					//if(shade<1) {img.setRGB(x,y,new Color(r,g,b,a).getRGB());}						
+					
+
+					img.setRGB(x,y,rgba);
+				}
+			}
+			e.setImg(img);
+	}	
 }

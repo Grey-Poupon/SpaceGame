@@ -36,7 +36,7 @@ public class Graph implements Handleable {
 		for(int i = 0;i<dataY.length;i++) {
 			dataX[i]=x+i*width/dataX.length;
 			dataY[i]= y+height-function.apply((double) i).intValue()*height/function.apply((double)dataY.length).intValue();
-			System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
+			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
 		this.text = new Text("",true,x,y);
 		//text.changeMask(x, y, width, height);
@@ -45,7 +45,7 @@ public class Graph implements Handleable {
 		this.width = width;
 		this.height = height;
 		Handler.addHighPriorityEntity(this);
-		System.out.println("ASDA");
+		//System.out.println("ASDA");
 	}
 	
 	public void render(Graphics g) {
