@@ -1,9 +1,5 @@
 package com.project.ship;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.project.Animation;
 
 public class Slot {
 	private int x;

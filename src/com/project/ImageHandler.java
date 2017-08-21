@@ -133,7 +133,7 @@ public class ImageHandler implements Handleable {
 		return img;
 	}
 	public void setImg(String path) {
-		this.img =ResourceLoader.images.get(path.toLowerCase());
+		this.img =ResourceLoader.images.get(path);
 	}
 	public void setImg(BufferedImage img) {
 		this.img = img;

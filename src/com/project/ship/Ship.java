@@ -16,6 +16,7 @@ import com.project.DamageType;
 import com.project.EntityID;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
+import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
@@ -55,24 +56,7 @@ public class Ship {
 		generateFlavourText();
 		shipSlots.add(new Slot(150,400));
 		
-		int xVel = 5;
-		int xStart = getSlot(0).getX();
-		int yStart = getSlot(0).getY();
-		int xEnd = 639 + xStart;
-		int yEnd = yStart + 0;
-		
-		Animation projectile = new Animation("res/missileSpritesheet.png", 87, 14, 2, 2,0,0,0,0,5,1 , xStart, xEnd ,yStart,yEnd,xVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
-		xStart = 540;
-		xEnd = xStart + 640;		
-		Animation explosion  = new Animation("res/explosionSpritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.<Animation>emptyList());
-		List<Animation> followingAnims = new ArrayList<Animation>();
-		followingAnims.add(explosion);
-		Animation projectile2= new Animation("res/missileSpritesheet.png", 87, 14, 2, 2,0,0,0,0,10,1,xStart,xEnd,yStart,yEnd,xVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
-		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
-		weaponFiringAnimations.add(projectile);
-		weaponFiringAnimations.add(projectile2);
-		Weapon defaultWeapon = new FireableWeapon(1, 2, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, weaponFiringAnimations);
-
+		Weapon defaultWeapon = ResourceLoader.shipWeapons.get("default");
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -176,7 +160,6 @@ public class Ship {
 	public List<Crew> getCrew() {
 		return crew;
 	}
-	
 	public int getHealth() {
 		return health;
 	}
@@ -189,31 +172,24 @@ public class Ship {
 	public void takeDamage(int damage, DamageType type){
 		this.currHealth-=damage*damageTakenModifier.get(type);
 	}
-
 	public Double getDamageTakenModifier(DamageType dt) {
 		return damageTakenModifier.get(dt);
 	}
-
 	public void setDamageTakenModifier(DamageType dt, Double double1) {
 		damageDealtModifier.put(dt, Double.valueOf(double1));
 	}
-
 	public Double getDamageDealtModifier(DamageType dt) {
 		return damageDealtModifier.get(dt);
 	}
-
 	public void setDamageDealtModifier(DamageType dt, int mod) {
 		damageDealtModifier.put(dt, Double.valueOf(mod));
 	}
-
 	public Weapon getFrontWeapon(int position) {
 		return frontWeapons[position];
 	}
-
 	public Weapon getBackWeapon(int position) {
 		return backWeapons[position];
 	}
-
 	public void setFrontWeapon(Weapon weapon, int position) {
 		this.frontWeapons[position] = weapon;
 	}
@@ -251,23 +227,22 @@ public class Ship {
 	public Slot getSlot(int position) {
 		return shipSlots.get(position);
 	}
-
-	
 	public void setSensors() {
 		sensor = new Sensor(0.8f);
 	}
-	
 	public Sensor getSensors() {
 		return sensor;
 	}
 	public ArrayList<String> getFlavourTexts(){
 		return flavourTexts;
 	}
-
-
 	public void destruct() {
 		lImage.destruct();
 	}
-	
-
+	public void setX(int x) {
+		lImage.setX(x);
+	}
+	public void setY(int y) {
+		lImage.setY(y);
+	}
 }

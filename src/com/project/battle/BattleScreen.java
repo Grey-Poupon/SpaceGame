@@ -3,6 +3,7 @@ package com.project.battle;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.project.ImageHandler;
 import com.project.Main;
 import com.project.MathFunctions;
 import com.project.MouseInput;
+import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.Star;
 import com.project.Text;
@@ -73,9 +75,14 @@ public class BattleScreen extends Main {
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		
-		
-		playerShip			 = new Ship    (-200,150,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true);
-		enemyShip 			 = new Ship    (WIDTH-430,110,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false);
+		// grab ships
+		playerShip = ResourceLoader.ships.get("defaultPlayer");
+		enemyShip  = ResourceLoader.ships.get("defaultEnemy");
+		// place ships
+		playerShip.setX(-200);
+		playerShip.setY(150);
+		enemyShip.setX(WIDTH-430);
+		enemyShip.setY(110);
 		
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		
@@ -84,7 +91,7 @@ public class BattleScreen extends Main {
 			Star stare = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
 		}
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
-		overlay 			 = new ImageHandler  (0,0,"res/DrawnUI2.png",true,EntityID.UI);
+		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(playerShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
 		ui 					 = new BattleUI(playerShip.getFrontWeapons(),this,playerShip,enemyShip);
@@ -196,7 +203,7 @@ public class BattleScreen extends Main {
 				}
 			}
 			if(playerShip !=null && enemyShip != null) {
-				phase.setText("Current Phase: "+currentPhase.toString());
+			//	phase.setText("Current Phase: "+currentPhase.toString());
 				loadingScreen.setVisible(false);
 				playerShip.tickLayers();
 				enemyShip.tickLayers();
@@ -287,6 +294,7 @@ public class BattleScreen extends Main {
 			projectile.setXEnd(xEnd);
 			projectile.setYStart(slotY);
 			projectile.setYEnd(yEnd);
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT/2)); 
 			
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();
@@ -324,7 +332,9 @@ public class BattleScreen extends Main {
 			projectile.setXEnd((int)shotX - projectile.getTileWidth()/2);
 			projectile.setYStart(yStart);
 			projectile.setYEnd((int)shotY -projectile.getTileHeight()/2);
+			projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, Main.HEIGHT/2,Main.WIDTH/2, Main.HEIGHT/2)); //x,y,width,height
 
+			
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();
 			float xPixelsToMove = projectile.getXPixelsToMove();

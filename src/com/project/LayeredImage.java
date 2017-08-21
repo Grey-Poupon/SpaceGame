@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class LayeredImage {
-	public int x;
-	public int y;
+	private int x;
+	private int y;
 	public float scale = 3.5f;
 	public double anglePhi;
 	public double angleTheta;
@@ -196,5 +196,11 @@ public class LayeredImage {
 	}
 	public void setNoLayers() {
 		this.noLayers=this.layersX.length;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public void setY(int y) {
+		this.y = y;
 	}
 }
