@@ -43,8 +43,8 @@ public class ResourceLoader {
 	}
 	
 	private void loadShip() {
-		ships.put("defaultPlayer", new Ship (-0,0,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,true));
-		ships.put("defaultEnemy" , new Ship (-0,0,0.05f,16f,"res/matron",true,EntityID.ship,50,3.5f,false));
+		ships.put("defaultPlayer", new Ship (-0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true));
+		ships.put("defaultEnemy" , new Ship (-0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false));
 	}
 
 	private void loadCrew() {
