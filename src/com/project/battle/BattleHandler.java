@@ -33,11 +33,8 @@ public class BattleHandler extends Handler {
 	public void updateMouse(int x,int y) {
 		super.updateMouse(x, y);
 
-		if(bs.checkShipClick(x, y)) {
-			
+		if(bs.checkShipClick(x, y)) {		
 			mousePointer.setImg("res/attackMousePointer.png");
-				
-
 		}
 		else {mousePointer.setImg("res/mousePointer.png");}
 		

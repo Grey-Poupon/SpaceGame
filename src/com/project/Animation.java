@@ -236,7 +236,7 @@ public class Animation implements Handleable {
 
 	}
 	public void setYStart(int y) {
-		this.yStart = y;
+		this.yPixelsToMove = Math.abs(yEnd-yStart);
 		
 		if(y != yStart || yVel == 0) {
 			if(xVel == 0) {
@@ -246,14 +246,14 @@ public class Animation implements Handleable {
 				yVel = (y-yStart*xVel)/(xPixelsToMove);
 			}
 		}
-		
-		this.yPixelsToMove = Math.abs(yEnd-yStart);
+		this.yStart = y;
+
 		
 		
 	}
 	public void setXEnd(int x) {
-		this.xEnd = x;
-		
+		this.xPixelsToMove = Math.abs(xEnd-xStart);
+
 		if(x != xEnd || xVel == 0) {
 			if(yVel == 0) {
 				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
@@ -263,13 +263,13 @@ public class Animation implements Handleable {
 			}
 		}
 		
-		this.xPixelsToMove = Math.abs(xEnd-xStart);
-		
+		this.xEnd = x;
+
 	}
 	public void setXStart(int x) {
-		this.xStart = x;
-		
-		if(x != xEnd || xVel == 0) {
+		this.xPixelsToMove = Math.abs(xEnd-xStart);
+
+		if(x != xStart || xVel == 0) {
 			if(yVel == 0) {
 				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
 			}
@@ -277,8 +277,8 @@ public class Animation implements Handleable {
 				xVel = (x-xStart*Math.abs(yVel))/(yPixelsToMove);
 			}
 		}
-		
-		this.xPixelsToMove = Math.abs(xEnd-xStart);
+		this.xStart = x;
+
 		
 		
 	}
