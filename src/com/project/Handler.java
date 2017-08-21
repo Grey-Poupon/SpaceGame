@@ -62,6 +62,15 @@ public class Handler {
 		}	
 		return false;
 	}
+	
+	public void checkDrag(int x, int y, int button) {
+		for(int i=0;i<buttons.size();i++) {
+			if(buttons.get(i).isDraggable()&&buttons.get(i)!=null && buttons.get(i).isInside(x, y)){
+				buttons.get(i).drag(x,y,button);
+			}
+		}
+		
+	}
 
 	public boolean checkClick(int x, int y, int button) {
 		return checkButtons(x, y,button);
@@ -91,6 +100,8 @@ public class Handler {
 		anims.add(anim);
 		
 	}
+
+	
 
 	
 }

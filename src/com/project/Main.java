@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Random;
 
 import com.project.battle.BattleScreen;
+import com.project.button.ButtonID;
 import com.project.ship.Ship;
 
 
@@ -115,5 +116,16 @@ public class Main  extends Canvas implements Runnable{
 	public void setPaused(boolean paused) {
 		this.paused = paused;
 	}
+
+	public void update(Object arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void update(ButtonID ID, int index, int button) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

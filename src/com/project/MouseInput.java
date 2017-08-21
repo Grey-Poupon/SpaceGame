@@ -65,12 +65,14 @@ public class MouseInput implements MouseListener,MouseMotionListener,MouseWheelL
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
+		hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		setMousePosition(arg0.getX(), arg0.getY());
 		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
+		
 	}
 
 

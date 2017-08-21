@@ -7,10 +7,12 @@ import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.project.Graph;
 import com.project.Handleable;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Text;
+import com.project.battle.BattleScreen;
 
 public class Button extends Observable  implements Handleable{
 	private int xCoordinate,yCoordinate,width,height,index;
@@ -21,8 +23,17 @@ public class Button extends Observable  implements Handleable{
 	private boolean clickable;
 	private boolean isButton = true;
 	private boolean textBottomAligned = true;
+	private Graph graph;
+	private boolean draggable=false;
+	private BattleScreen bs;
 
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, Observer obs){
+	public Graph getGraph() {
+		return graph;
+	}
+	public void setGraph(Graph graph) {
+		this.graph = graph;
+	}
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
 		this.mask = new Rectangle2D.Float(x, y, width, height);
@@ -31,10 +42,10 @@ public class Button extends Observable  implements Handleable{
 		this.buttonID = buttonID;
 		this.index = index;
 		this.clickable = clickable;
-		this.addObserver(obs);
+		this.bs = bs;
 		Handler.addButton(this);
 	}
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, Observer obs,boolean bottomAlign){
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, BattleScreen bs,boolean bottomAlign){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
 		this.mask = new Rectangle2D.Float(x, y+size, width, height);
@@ -44,11 +55,11 @@ public class Button extends Observable  implements Handleable{
 		this.buttonID = buttonID;
 		this.index = index;
 		this.clickable = clickable;
-		this.addObserver(obs);
+		this.bs = bs;
 		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
 		Handler.addButton(this);
 	}
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, Observer obs){
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
 		this.mask = new Rectangle2D.Float(x, y, width, height);
@@ -57,13 +68,13 @@ public class Button extends Observable  implements Handleable{
 		this.buttonID = buttonID;
 		this.index = index;
 		this.clickable = clickable;
-		this.addObserver(obs);
+		this.bs = bs;
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
 		Handler.addButton(this);
 	}
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour,ImageHandler img, Observer obs){
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour,ImageHandler img, BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
 		this.mask = new Rectangle2D.Float(x, y, width, height);
@@ -72,13 +83,28 @@ public class Button extends Observable  implements Handleable{
 		this.buttonID = buttonID;
 		this.index = index;
 		this.clickable = clickable;
-		this.addObserver(obs);
+		this.bs = bs;
 		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
 		Handler.addButton(this);
 	}
+	
+	public Button(int x,int y,int width,int height,ButtonID buttonID,boolean clickable,Graph graph, BattleScreen bs){
+		this.xCoordinate = x;
+		this.yCoordinate =y;
+		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.width = width;
+		this.height = height;
+		this.buttonID = buttonID;
+		this.clickable = clickable;
+		this.bs = bs;
+		this.graph = graph;
+		Handler.addButton(this);
+	}
+	
+	
 	public boolean isInside(int x, int y) {
 		if(!clickable) {return false;}
 		if(mask.contains(x, y)) {
@@ -89,8 +115,8 @@ public class Button extends Observable  implements Handleable{
 	public void click(int button){
 		if(isButton) {
 			setChanged();
-			Object[] pass = new Object[] {buttonID,index,button};
-			notifyObservers(pass);
+			
+			bs.update(buttonID,index,button);
 		}
 		
 	}
@@ -178,6 +204,11 @@ public class Button extends Observable  implements Handleable{
 			this.img.changeMask(x, y, width, height);
 		}
 	}
+	public void setGraphMask(int x,int y, int width, int height) {
+		if(this.graph != null) {
+			this.graph.setClip(x, y, width, height);
+		}
+	}
 	public int getX() {
 		return xCoordinate;
 	}
@@ -210,11 +241,25 @@ public class Button extends Observable  implements Handleable{
 	}
 	public static void delete(Button b) {
 		Handler.buttons.remove(b);
-		Text.delete(b.text);
-		ImageHandler.delete(b.img);
+		if(b.text!=null) {Text.delete(b.text);}
+		if(b.img!=null) {ImageHandler.delete(b.img);}
+		
 	}
 	public void setIsButton(boolean clickable) {
 		this.isButton  = clickable;
+		
+	}
+	public boolean isDraggable() {
+		return draggable;
+	}
+	public void setDraggable(boolean draggable) {
+		this.draggable = draggable;
+	}
+	public void drag(int x,int y,int button) {
+		if(graph!=null) {
+			graph.drag(x,y,button);
+		}
+		
 		
 	}
 	
