@@ -53,19 +53,19 @@ public class Ship {
 		
 		setSensors();
 		generateFlavourText();
-		shipSlots.add(new Slot(150,400,40,40));
 		int xVel = 5;
 		int xStart = getSlot(0).getX();
 		int yStart = getSlot(0).getY();
 		int xEnd = 639 + xStart;
 		int yEnd = yStart + 0;
-		Animation projectile = new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,5,1 , xStart, xEnd ,yStart,yEnd,xVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
+		
+		Animation projectile = new Animation("res/missileSpritesheet.png", 87, 14, 2, 2,0,0,0,0,5,1 , xStart, xEnd ,yStart,yEnd,xVel,new Rectangle2D.Double(104,54,535,456), false,AdjustmentID.None,Collections.<Animation>emptyList());
 		xStart = 540;
 		xEnd = xStart + 640;		
-		Animation explosion  = new Animation("res/explosion_spritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.<Animation>emptyList());
+		Animation explosion  = new Animation("res/explosionSpritesheet.png", 18, 20, 3, 3,0, 0, 0, 0, 5,1,1,5,1, false,AdjustmentID.MidUp,Collections.<Animation>emptyList());
 		List<Animation> followingAnims = new ArrayList<Animation>();
 		followingAnims.add(explosion);
-		Animation projectile2= new Animation("res/missile_spritesheet.png", 87, 14, 2, 2,0,0,0,0,10,1,xStart,xEnd,yStart,yEnd,xVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
+		Animation projectile2= new Animation("res/missileSpritesheet.png", 87, 14, 2, 2,0,0,0,0,10,1,xStart,xEnd,yStart,yEnd,xVel,new Rectangle2D.Double(640,54,640,456), false,AdjustmentID.None,followingAnims);
 		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
 		weaponFiringAnimations.add(projectile);
 		weaponFiringAnimations.add(projectile2);

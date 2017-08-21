@@ -12,30 +12,35 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
-public class ResourceLoader {
-	public static  Map<String,BufferedImage> images;
+import com.project.weapons.Weapon;
 
+public class ResourceLoader {
+	public static Map<String,BufferedImage> images;
+	public static Map<String,Weapon> shipWeapon; 
+	public static Map<String,Animation> animations;
+	public static Map<String,Crew> crew;
 	public ResourceLoader() {
 		images = new TreeMap<String,BufferedImage>(String.CASE_INSENSITIVE_ORDER);
-		put(images,"res/drawn ui 2.png");
-		put(images,"res/loadingscreen.png");
+		put(images,"res/drawnUi2.png");
+		put(images,"res/loadingScreen.png");
 		put(images,"res/healthseg.png");
-		put(images,"res/TooltipSeparation_4Sections.png");
-		put(images,"res/octiod_lazer_1_Anim.png");
+		put(images,"res/TooltipSeparation4Sections.png");
+		put(images,"res/octiodLazer1Anim.png");
 		put(images,"res/mousePointer.png");
-		put(images,"res/missile_spritesheet.png");
-		put(images,"res/healthuncertainty.png");
+		put(images,"res/missileSpritesheet.png");
+		put(images,"res/healthUncertainty.png");
 		put(images,"res/appicon.png");
-		put(images,"res/explosion_spritesheet.png");
+		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/attackMousePointer.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
-				put(images,"res/race_portraits/"+race.toString().toLowerCase()+".png");
+				put(images,"res/racePortraits/"+race.toString().toLowerCase()+".png");
 			}
 		}
-		put(images,"res/race_portraits/gen_2.png");
-		put(images,"res/race_portraits/gen_3.png");
-		for(int i =0; i<8;i++) {
+
+		put(images,"res/racePortraits/gen2.png");
+		put(images,"res/racePortraits/gen3.png");
+		for(int i =0; i<9;i++) {
 			put(images,"res/matron/data/layer"+Integer.toString(i)+".png");
 		}
 		

@@ -46,7 +46,7 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	}
 	public String getSprite() {
 		// TODO Auto-generated method stub
-		return "res/missile_spritesheet.png";
+		return "res/missileSpritesheet.png";
 	}
 	public Animation getAnimation(int i) {
 		return firingAnimations.get(i).copy();
