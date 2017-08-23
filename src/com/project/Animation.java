@@ -286,6 +286,7 @@ public class Animation implements Handleable {
 		if(x != xEnd || xVel == 0) {
 			if(yVel == 0) {
 				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
+				if(x<xStart) {xVel = -xVel;}
 			}
 			else {
 				xVel = (x-xStart*Math.abs(yVel))/(yPixelsToMove);
