@@ -318,6 +318,10 @@ public class Crew implements Observer{
 			}
 		}
 		this.portrait.setImg(img);
+	}
+	public static Random getRand() {
+		// TODO Auto-generated method stub
+		return rand;
 	}	
 	
 	
