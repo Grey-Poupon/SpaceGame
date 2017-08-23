@@ -29,7 +29,7 @@ public class Window extends Canvas {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.add(game);
-		frame.setIconImage(ResourceLoader.images.get("res/appIcon.png"));
+		frame.setIconImage(ResourceLoader.getImage("res/appIcon.png"));
 		frame.setVisible(true);
 		frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null"));
 		

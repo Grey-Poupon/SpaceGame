@@ -144,7 +144,7 @@ public class ImageHandler implements Handleable {
 	}
 	public void setImg(String path) {
 
-		this.img =ResourceLoader.images.get(path);
+		this.img =ResourceLoader.getImage(path);
 		
 		ColorModel cm = img.getColorModel();
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();

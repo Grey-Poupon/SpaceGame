@@ -55,7 +55,7 @@ public class Ship {
 		setSensors();
 		generateFlavourText();
 		
-		Weapon defaultWeapon = ResourceLoader.shipWeapons.get("default");
+		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -82,9 +82,11 @@ public class Ship {
 		shipSlots= lImage.getSlots();
 		setSensors();
 		generateFlavourText();
-
-		this.frontWeapons = frontWeapons;
-		this.backWeapons = backWeapons;
+		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
+		for(int i = 0; i < 4;i++) {
+			frontWeapons[i] = defaultWeapon;
+			backWeapons[i] = defaultWeapon;
+		}
 		this.health = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);

@@ -12,7 +12,7 @@ public class Armour extends Weapon {
 
 	private Buffer buffing;
 	
-	public Armour(int cooldownDuration,List<Animation> anims,List<Double> modifiers, String name,List<DamageType> dt) {
+	public Armour(int cooldownDuration,Animation[] anims,List<Double> modifiers, String name,List<DamageType> dt) {
 		super(cooldownDuration, name, anims);
 		buffing = new Buffer(modifiers,dt);
 		this.isBuffer = true;

@@ -23,7 +23,7 @@ public class Main  extends Canvas implements Runnable{
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public Player player;
-	public Ship playerShip; 
+	public Ship chaserShip; 
 	public UI ui;
 	protected MouseInput mouseIn;
 	protected KeyInput keyIn;

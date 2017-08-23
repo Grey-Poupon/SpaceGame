@@ -7,7 +7,7 @@ import com.project.weapons.Weapon;
 
 public class Flare extends Weapon {
 
-	public Flare(int cooldownDuration,List<Animation> anims, String name) {
+	public Flare(int cooldownDuration,Animation[] anims, String name) {
 		super(cooldownDuration, name,anims);
 		// TODO Auto-generated constructor stub
 	}

@@ -1,6 +1,7 @@
 package com.project.weapons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.project.Animation;
@@ -23,8 +24,8 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	public boolean isDebuffer(){ // to check if the weapon debuffs
 		return isDebuffer;
 	}
-	public Weapon(int cooldownDuration, String name,List<Animation> anims){
-		this.firingAnimations = anims;
+	public Weapon(int cooldownDuration, String name,Animation[] anims){
+		this.firingAnimations = Arrays.asList(anims);
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		}
