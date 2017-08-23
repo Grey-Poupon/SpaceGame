@@ -29,6 +29,7 @@ import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
+import com.project.weapons.Buffer;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -78,6 +79,8 @@ public class BattleScreen extends Main {
 		// grab ships
 		playerShip = ResourceLoader.ships.get("defaultPlayer");
 		enemyShip  = ResourceLoader.ships.get("defaultEnemy");
+		Handler.addLowPriorityEntity(playerShip);
+		Handler.addLowPriorityEntity(enemyShip);
 		// place ships
 		playerShip.setX(-200);
 		playerShip.setY(150);
@@ -90,6 +93,8 @@ public class BattleScreen extends Main {
 		for(int i=0; i<40;i++) {
 			Star starp = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,playerShip);
 			Star stare = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,enemyShip);
+			Handler.addLowPriorityEntity(starp);
+			Handler.addLowPriorityEntity(stare);
 		}
 		ds 					 = new DistanceSystem(500, playerShip.getDistanceToEnd(), enemyShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
@@ -103,6 +108,9 @@ public class BattleScreen extends Main {
 		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
 		graphButton.setDraggable(true);
 		
+		Handler.addLowPriorityEntity(overlay);
+		Handler.addLowPriorityEntity(playerHealthbar);
+		Handler.addLowPriorityEntity(enemyHealthbar);
 		
 //		for(int i =0;i<playerShip.getCrew().size();i++) {
 //			Crew crew = playerShip.getCrew().get(i);
@@ -269,9 +277,48 @@ public class BattleScreen extends Main {
 					
 				}
 			}
-			currentPhase = BattlePhases.Wait;
 			
 		}
+		
+			Object[] damageDealt = (Object[]) weapon.fire();
+			FireableWeapon fireWeapon = (FireableWeapon) weapon;
+			double[] accuracy = (double[]) damageDealt[1];
+			int newX,newY,extraDmg;
+			for(int i=0;i<(int)damageDealt[0];i++) {
+				if(accuracy[i]!=0) {
+					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
+					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
+					extraDmg = secondary.roomDamage(newX, newY);
+					if(primary == playerShip) {
+						enemyDamageToBeTaken.add(extraDmg+(int)damageDealt[3]);
+						enemyDamageTypeToBeTaken.add((DamageType)damageDealt[4]);
+						projectileWaitTurns.add(-i +1);
+						projectileWaitCounters.add(0);
+						System.out.println("HIT");
+					}
+					else {
+						secondary.takeDamage(extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4]);
+					}		
+				}
+			}
+//			//put in above for loop so to apply buff on each successful hit
+//			if(weapon.getEffects().size()>1) {
+//				if(weapon.isTargetSelf()) {
+//					for(int i = 0; i<weapon.getEffects().size();i++) {
+//						((Buffer) weapon.getEffects().get(i)).applyBuff(primary,shot.x,shot.y);
+//					}
+//				}else {
+//					for(int i = 0; i<weapon.getEffects().size();i++) {
+//						((Buffer) weapon.getEffects().get(i)).applyBuff(secondary,shot.x,shot.y);
+//					}
+//				}
+//			}
+			
+			
+			
+		
+		
+		currentPhase = BattlePhases.Wait;
 	}
 	private int weaponFireAnimation(int stage,Ship primary, int position ) {
 		int ticksToWait = 0;

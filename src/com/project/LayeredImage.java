@@ -91,6 +91,9 @@ public class LayeredImage {
 					setLayersShading(layers.get(i));
 				}
 			}
+			for(int i=0;i<slots.size();i++) {
+				getSlots().get(i).setX(x+getSlots().get(i).getRelX());
+			}
 		}
 		
 	}
@@ -158,13 +161,13 @@ public class LayeredImage {
 					layer.setVisible(false);
 					Slot slot=null;
 					if(layerIsSlot[layersX.size()-i-1].contains("s")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'s');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'s');
 					}
 					if(layerIsSlot[layersX.size()-i-1].contains("m")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'m');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'m');
 					}
 					if(layerIsSlot[layersX.size()-i-1].contains("l")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'l');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'l');
 					}
 					slots.add(slot);
 					

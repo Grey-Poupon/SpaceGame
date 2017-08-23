@@ -13,8 +13,8 @@ import com.project.Handler;
 
 public class Graph implements Handleable {
 	//THIS MAKES ME CRY
-	private int[] dataX = new int[256];
-	private int[] dataY = new int[256];
+	private float[] dataX = new float[256];
+	private float[] dataY = new float[256];
 	private int x;
 	private int y;
 	private int width;
@@ -53,7 +53,11 @@ public class Graph implements Handleable {
 		g2d.setColor(Color.white);
 		if(clip!=null) {g2d.setClip(clip);}
 		
-		g2d.drawPolyline(dataX, dataY, dataX.length);
+		for(int i =0;i<dataX.length-1;i++) {
+			g2d.drawLine((int)dataX[i], (int)dataY[i],(int) dataX[i+1],(int) dataY[i+1]);
+		}
+		
+		
 		g2d.drawLine(x, y+height, x+width, y+height);
 		g2d.drawLine(x, y, x, y+height);
 		g2d.setColor(Color.red);
