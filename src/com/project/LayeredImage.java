@@ -263,11 +263,7 @@ public class LayeredImage {
 					
 					
 				}
-				layers.add(layer);
-			
-			
-			//if(i==0) {layer.setVisible(false);}
-			
+				layers.add(layer);			
 			
 		}
 		

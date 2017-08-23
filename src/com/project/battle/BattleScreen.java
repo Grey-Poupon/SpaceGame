@@ -1,6 +1,4 @@
 package com.project.battle;
-
-
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -46,11 +44,7 @@ public class BattleScreen extends Main {
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
 	private ImageHandler loadingScreen;
-	
-	
 	private List<ProjectileInfo> projectileInfo = new ArrayList<ProjectileInfo>();
-
-	
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point chaserShotLocation;
@@ -72,24 +66,9 @@ public class BattleScreen extends Main {
 		loadingScreen 		 = new ImageHandler(0,0,"res/loadingScreen.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
-		
 		// grab ships
-
 		chaserShip = ResourceLoader.getShip("defaultPlayer");
 		chasedShip  = ResourceLoader.getShip("defaultEnemy");
-		Handler.addLowPriorityEntity(chaserShip);
-		Handler.addLowPriorityEntity(chasedShip);
-
-		
-		
-		// place ships
-		chaserShip.setX(-200);
-		chaserShip.setY(150);
-		chasedShip.setX(WIDTH-430);
-		chasedShip.setY(110);
-
-		
-		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		
 		for(int i=0; i<40;i++) {
 			Star starp = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,chaserShip);
@@ -97,6 +76,14 @@ public class BattleScreen extends Main {
 			Handler.addLowPriorityEntity(starp);
 			Handler.addLowPriorityEntity(stare);
 		}
+		Handler.addLowPriorityEntity(chaserShip);
+		Handler.addLowPriorityEntity(chasedShip);
+		// place ships
+		chaserShip.setX(-200);
+		chaserShip.setY(150);
+		chasedShip.setX(WIDTH-430);
+		chasedShip.setY(110);
+		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
@@ -108,11 +95,9 @@ public class BattleScreen extends Main {
 		chasedHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI); 
 		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
 		graphButton.setDraggable(true);
-		
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
-		Handler.addLowPriorityEntity(chasedHealthbar);
-		
+		Handler.addLowPriorityEntity(chasedHealthbar);		
 //		for(int i =0;i<playerShip.getCrew().size();i++) {
 //			Crew crew = playerShip.getCrew().get(i);
 //			System.out.println(crew.getName()+":"+crew.getRaceID().toString()+" "+crew.getGender());
@@ -126,14 +111,13 @@ public class BattleScreen extends Main {
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
 		this.addMouseWheelListener(mouseIn);
-		
 	}
 	public void selectRoom(String room){
-		selectedRoom = room;		
+		selectedRoom = room;
 	}
 	private void nextTurn() {
 		// if its the chased's turn, next phase
-		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final ) { 
+		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final) { 
 			currentPhasePointer++;
 		}
 		// loop phases if necessary
@@ -233,7 +217,7 @@ public class BattleScreen extends Main {
 				chaserShip.tickLayers();
 				chasedShip.tickLayers();
 			}
-			if(chaserHealthbar != null && chasedHealthbar != null) {
+			if(chaserHealthbar != null && chasedHealthbar != null){
 				float scale = ((float)chaserShip.getCurrHealth()/(float)chaserShip.getMaxHealth())*1.2f;
 				if (scale < 0) {scale = 0;}
 				chaserHealthbar.setXScale(scale);
@@ -245,9 +229,6 @@ public class BattleScreen extends Main {
 				chasedHealthbar.setXScale(scale);
 			}
 		}
-		
-		
-	
 	}
 
 	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
