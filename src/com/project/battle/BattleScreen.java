@@ -156,7 +156,7 @@ public class BattleScreen extends Main {
 					System.out.println("Enemy Weapon Reveal");
 				}
 				else if (currentPhase == BattlePhases.WeaponsClick){
-					chasedShotLocation = new Point(80,400);
+					chasedShotLocation = new Point(350,250);
 					System.out.println("Enemy Click (not revealed)");
 				}
 				else if (currentPhase == BattlePhases.Engine){
@@ -262,12 +262,12 @@ public class BattleScreen extends Main {
 					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
 					extraDmg = secondary.roomDamage(newX, newY);
 					if(primary == chaserShip) {
-						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],true));
-						System.out.println("Chaser Weapon Fire");
+						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],true));
+						//System.out.println("Chaser Weapon Fire");
 					}
 					else {
-						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
-						//System.out.println("Chased Weapon Fire");
+						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
+						System.out.println("Chased Weapon Fire");
 					}
 					
 				}
@@ -290,15 +290,17 @@ public class BattleScreen extends Main {
 			// setup variables, slot position,click position
 			int slotY = primary.getSlot(0).getY();
 			int slotX = primary.getSlot(0).getX();
-			//int slotY = 350;
-			//int slotX = 250;
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
+				slotY = 350;
+				slotX = 250;
 				shotY = chaserShotLocation.getY();
 				shotX = chaserShotLocation.getX();
 			}
 			else {
+				slotY = 1000;
+				slotX = 350;
 				shotY = chasedShotLocation.getY();
 				shotX = chasedShotLocation.getX();
 			}
