@@ -2,11 +2,8 @@ package com.project.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Random;
 
 import com.project.Animation;
@@ -112,9 +109,11 @@ public class BattleScreen extends Main {
 		this.addMouseMotionListener(mouseIn);
 		this.addMouseWheelListener(mouseIn);
 	}
+	
 	public void selectRoom(String room){
 		selectedRoom = room;
 	}
+	
 	private void nextTurn() {
 		// if its the chased's turn, next phase
 		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final) { 
@@ -138,7 +137,6 @@ public class BattleScreen extends Main {
 		if(currentPhase == BattlePhases.Final) {phase = "final";}
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
-		
 	}
 	public void tick(){
 		
@@ -184,8 +182,12 @@ public class BattleScreen extends Main {
 					// next animation group
 					if(projectileWaitCounter <= 0) {
 						// if final animation group,do damage
+						
 						if(projectileWaitTurn == 4) {
-							chasedShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
+							doDamage(i);
+							
+							
+							
 							// if Animations complete, next turn
 							if(i==projectileInfo.size()-1) {
 								projectileInfo.clear();
@@ -226,25 +228,43 @@ public class BattleScreen extends Main {
 		}
 	}
 
+	private void doDamage(int i) {
+		if(projectileInfo.get(i).getIsChaser()) {
+			if(projectileInfo.get(i).isTargetSelf()) {
+				chaserShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
+			}
+			else {
+				chasedShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
+			}
+		}else {
+			if(!projectileInfo.get(i).isTargetSelf()) {
+				chaserShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
+			}
+			else {
+				chasedShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
+			}
+		}
+	}
+
 	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
 		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired
 		
-		if(weapon.isBuffer()){ // if its a buffing weapon apply buff
-			
-			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
-			List<Double> modifiers = weapon.getBuff().getModifiers();
-			for(int i=0; i < dmgTypes.size();i++){
-				primary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
-			}
-		}
-		if(weapon.isDebuffer()){ // if its a debuffing weapon apply debuff
-			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
-			List<Double> modifiers = weapon.getBuff().getModifiers();
-			for(int i=0; i < dmgTypes.size();i++){
-				secondary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
-			}
-		}
-		if(weapon.isDestructive()){// if its a destructive weapon fire it, apply damage
+//		if(weapon.isBuffer()){ // If its a buffing weapon apply buff
+//			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
+//			List<Double> modifiers = weapon.getBuff().getModifiers();
+//			for(int i=0; i < dmgTypes.size();i++){
+//				primary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
+//			}
+//		}
+//		if(weapon.isDebuffer()){ // If its a debuffing weapon apply debuff
+//			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
+//			List<Double> modifiers = weapon.getBuff().getModifiers();
+//			for(int i=0; i < dmgTypes.size();i++){
+//				secondary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
+//			}
+//		}
+		
+		if(weapon.isDestructive()){// If its a destructive weapon fire it, apply damage
 			Object[] damageDealt = weapon.fire();
 			FireableWeapon fireWeapon = (FireableWeapon) weapon;
 			double[] accuracy = (double[]) damageDealt[1];
@@ -253,34 +273,35 @@ public class BattleScreen extends Main {
 				if(accuracy[i]!=0) {
 					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
 					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
-					extraDmg = secondary.roomDamage(newX, newY);
-					if(primary == chaserShip) {
-						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],true));
-						//System.out.println("Chaser Weapon Fire");
-					}
-					else {
-						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
-						System.out.println("Chased Weapon Fire");
-					}
-					
+					if(!weapon.isTargetSelf()) {
+						extraDmg = secondary.roomDamage(newX, newY);
+						if(weapon.getEffects().size()>1) {
+							if(weapon.isTargetSelf()) {
+								for(int j = 0; j<weapon.getEffects().size();j++) {
+									((Buffer) weapon.getEffects().get(j)).applyBuff(primary,shot.x,shot.y);
+								}
+							}else {
+								for(int j = 0; j<weapon.getEffects().size();j++) {
+									((Buffer) weapon.getEffects().get(j)).applyBuff(secondary,shot.x,shot.y);
+								}
+							}
+						}
+						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],primary==chaserShip,weapon.isTargetSelf()));
+						if(primary == chaserShip) {
+							
+							System.out.println("Chaser Weapon Fire");
+						}
+						else {
+							
+							System.out.println("Chased Weapon Fire");
+						}
+					}	
 				}
 			}
 			
 		}
 		
-//			//put in above for loop so to apply buff on each successful hit
-//			if(weapon.getEffects().size()>1) {
-//				if(weapon.isTargetSelf()) {
-//					for(int i = 0; i<weapon.getEffects().size();i++) {
-//						((Buffer) weapon.getEffects().get(i)).applyBuff(primary,shot.x,shot.y);
-//					}
-//				}else {
-//					for(int i = 0; i<weapon.getEffects().size();i++) {
-//						((Buffer) weapon.getEffects().get(i)).applyBuff(secondary,shot.x,shot.y);
-//					}
-//				}
-//			}
-			
+			//put in above for loop so to apply buff on each successful hit
 			currentPhase = BattlePhases.Wait;
 	}
 	

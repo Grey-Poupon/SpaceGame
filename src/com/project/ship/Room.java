@@ -42,5 +42,9 @@ public class Room {
 	public void setRoomLeader(Crew roomLeader) {
 		this.roomLeader = roomLeader;
 	}
+	public void UseRoom() {
+		
+	}
+	
 
 }

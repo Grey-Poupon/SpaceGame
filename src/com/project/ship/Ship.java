@@ -33,7 +33,7 @@ public class Ship implements Handleable{
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
-	private List<Room> damagableRooms = new ArrayList<Room>();;
+	private List<Room> Rooms = new ArrayList<Room>();;
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
 	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
@@ -130,10 +130,10 @@ public class Ship implements Handleable{
 		return dmg;
 	}
 	public Room getClosestRoom(int x, int y) {
-		if(damagableRooms.size()<1) {return null;}
-		Room closestRoom = damagableRooms.get(0);
+		if(Rooms.size()<1) {return null;}
+		Room closestRoom = Rooms.get(0);
 		Point closest = closestRoom.getLocation();
-		for(Room r :damagableRooms) {
+		for(Room r :Rooms) {
 			Point n=r.getLocation();
 			if(closest.x+closest.y>n.x+n.y && closest.x*closest.y > n.x*n.y) {
 				closest = n;
@@ -142,6 +142,48 @@ public class Ship implements Handleable{
 		}
 		return closestRoom;
 	}
+	public List<Room> getRooms() {
+		return Rooms;
+	}
+
+
+
+
+	public void setRooms(List<Room> rooms) {
+		Rooms = rooms;
+	}
+
+
+
+
+	public List<Slot> getShipSlots() {
+		return shipSlots;
+	}
+
+
+
+
+	public void setShipSlots(List<Slot> shipSlots) {
+		this.shipSlots = shipSlots;
+	}
+
+
+
+
+	public Sensor getSensor() {
+		return sensor;
+	}
+
+
+
+
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
+	}
+
+
+
+
 	public boolean isShipClicked(int x, int y) {
 		for(ImageHandler i : lImage.getLayers()) {
 			if(i.isClicked(x, y)) {
@@ -252,7 +294,6 @@ public class Ship implements Handleable{
 
 
 
-	@Override
 	public void render(Graphics g) {
 		for(int i =0;i<lImage.getNoLayers();i++) {
 			lImage.getLayers().get(i).render(g);
