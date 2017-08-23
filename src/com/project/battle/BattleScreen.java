@@ -152,7 +152,7 @@ public class BattleScreen extends Main {
 					System.out.println("Enemy Weapon Reveal");
 				}
 				else if (currentPhase == BattlePhases.WeaponsClick){
-					chasedShotLocation = new Point(80,400);
+					chasedShotLocation = new Point(350,250);
 					System.out.println("Enemy Click (not revealed)");
 				}
 				else if (currentPhase == BattlePhases.Engine){
@@ -255,12 +255,12 @@ public class BattleScreen extends Main {
 					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
 					extraDmg = secondary.roomDamage(newX, newY);
 					if(primary == chaserShip) {
-						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],true));
-						System.out.println("Chaser Weapon Fire");
+						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],true));
+						//System.out.println("Chaser Weapon Fire");
 					}
 					else {
-						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
-						//System.out.println("Chased Weapon Fire");
+						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
+						System.out.println("Chased Weapon Fire");
 					}
 					
 				}
@@ -299,17 +299,22 @@ public class BattleScreen extends Main {
 			// setup variables, slot position,click position
 			int slotY = primary.getSlot(0).getY();
 			int slotX = primary.getSlot(0).getX();
-			//int slotY = 350;
-			//int slotX = 250;
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
+				slotY = 350;
+				slotX = 250;
 				shotY = chaserShotLocation.getY();
 				shotX = chaserShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+
 			}
 			else {
+				slotY = 350;
+				slotX = 1000;
 				shotY = chasedShotLocation.getY();
 				shotX = chasedShotLocation.getX();
+				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
 			}
 			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
 			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
@@ -320,7 +325,8 @@ public class BattleScreen extends Main {
 			projectile.setXEnd(xEnd);
 			projectile.setYStart(slotY);
 			projectile.setYEnd(yEnd);
-			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
+
 			
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();			
@@ -363,12 +369,19 @@ public class BattleScreen extends Main {
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
+				slotY = 350;
+				slotX = 250;
 				shotY = chaserShotLocation.getY();
 				shotX = chaserShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+
 			}
 			else {
+				slotY = 350;
+				slotX = 1000;
 				shotY = chasedShotLocation.getY();
 				shotX = chasedShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
 			}
 			
 			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
@@ -381,7 +394,7 @@ public class BattleScreen extends Main {
 			projectile.setXEnd((int)shotX - tileWidth/2);
 			projectile.setYStart(yStart);
 			projectile.setYEnd((int)shotY - projectile.getTileHeight()/2);
-			projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT)); //x,y,width,height
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
 
 			
 			float yVel = projectile.getYVel();
