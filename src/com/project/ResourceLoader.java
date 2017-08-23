@@ -58,7 +58,7 @@ public class ResourceLoader {
 		weaponFiringAnimations.add(ResourceLoader.animations.get("missile"));
 		weaponFiringAnimations.add(ResourceLoader.animations.get("missileWithExplosion"));
 		weaponFiringAnimations.clear();
-		shipWeapons.put("default",new FireableWeapon(1, 3, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, new Animation[] {ResourceLoader.animations.get("missile"),ResourceLoader.animations.get("missileWithExplosion")},false,null));		
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, new Animation[] {ResourceLoader.animations.get("missile"),ResourceLoader.animations.get("missileWithExplosion")},false,null));		
 
 	}
 
