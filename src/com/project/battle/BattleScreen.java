@@ -156,7 +156,7 @@ public class BattleScreen extends Main {
 					System.out.println("Enemy Weapon Reveal");
 				}
 				else if (currentPhase == BattlePhases.WeaponsClick){
-					chasedShotLocation = new Point(800,80);
+					chasedShotLocation = new Point(80,400);
 					System.out.println("Enemy Click (not revealed)");
 				}
 				else if (currentPhase == BattlePhases.Engine){
@@ -199,7 +199,8 @@ public class BattleScreen extends Main {
 							}
 						}
 						// reset counter, next turn
-						projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, chaserShip, chaserWeaponChoice);
+						Ship ship = projectileInfo.get(i).getIsChaser() ? chaserShip : chasedShip;
+						projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, ship, chaserWeaponChoice);
 						projectileWaitTurn++;
 					}					
 					// update counters
@@ -265,8 +266,8 @@ public class BattleScreen extends Main {
 						System.out.println("Chaser Weapon Fire");
 					}
 					else {
-					//	projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
-					//	System.out.println("Chased Weapon Fire");
+						//projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],false));
+						//System.out.println("Chased Weapon Fire");
 					}
 					
 				}
@@ -286,9 +287,11 @@ public class BattleScreen extends Main {
 			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
 			// change length and direction of animation based of player click
 			
-			// setup variables, slot position,click postion
+			// setup variables, slot position,click position
 			int slotY = primary.getSlot(0).getY();
 			int slotX = primary.getSlot(0).getX();
+			//int slotY = 350;
+			//int slotX = 250;
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
@@ -301,16 +304,26 @@ public class BattleScreen extends Main {
 			}
 			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
 			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
-			
+			int tileWidth = projectile.getTileWidth();
+
 			// setup projectile mapping
 			projectile.setXStart(slotX);
 			projectile.setXEnd(xEnd);
 			projectile.setYStart(slotY);
 			projectile.setYEnd(yEnd);
-			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT/2)); 
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
 			
 			float yVel = projectile.getYVel();
-			float xVel = projectile.getXVel();
+			float xVel = projectile.getXVel();			
+
+			while(xEnd < Main.WIDTH/2 + tileWidth) {
+				xEnd+=xVel;
+				yEnd+=yVel;
+			}
+			projectile.setXEnd(xEnd);
+			projectile.setYEnd(yEnd);
+
+			
 			float xPixelsToMove = projectile.getXPixelsToMove();
 			float yPixelsToMove = projectile.getYPixelsToMove();
 			
@@ -336,7 +349,8 @@ public class BattleScreen extends Main {
 			// setup variables, slot position,click postion
 			int slotY = primary.getSlot(0).getY();
 			int slotX = primary.getSlot(0).getX();
-			
+			//int slotY = 350;
+			//int slotX = 250;
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
@@ -350,18 +364,28 @@ public class BattleScreen extends Main {
 			
 			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
 			int xStart = (int)(slotX/2 + shotX/2); // 				^^
+			int tileWidth = projectile.getTileWidth();
+			
 			
 			// setup projectile mapping
 			projectile.setXStart(xStart);
-			projectile.setXEnd((int)shotX - projectile.getTileWidth()/2);
+			projectile.setXEnd((int)shotX - tileWidth/2);
 			projectile.setYStart(yStart);
-			projectile.setYEnd((int)shotY -projectile.getTileHeight()/2);
-			//projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, Main.HEIGHT/2,Main.WIDTH/2, Main.HEIGHT/2)); //x,y,width,height
-			projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, Main.HEIGHT/2, Main.WIDTH/2, Main.HEIGHT/2)); 
+			projectile.setYEnd((int)shotY - projectile.getTileHeight()/2);
+			projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT)); //x,y,width,height
 
 			
 			float yVel = projectile.getYVel();
-			float xVel = projectile.getXVel();
+			float xVel = projectile.getXVel();	
+			
+			while(xStart > Main.WIDTH/2 - tileWidth) {
+				xStart-=xVel;
+				yStart-=yVel;
+			}
+			projectile.setXStart(xStart);
+			projectile.setYStart(yStart);
+
+			
 			float xPixelsToMove = projectile.getXPixelsToMove();
 			float yPixelsToMove = projectile.getYPixelsToMove();
 			

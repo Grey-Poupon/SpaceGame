@@ -270,7 +270,7 @@ public class Animation implements Handleable {
 				yVel = yVel == 0 ? DEFAULT_SPEED : yVel;
 			}
 			else {
-				yVel = (y-yStart*xVel)/(xPixelsToMove);
+				yVel = ((yEnd-y)*Math.abs(xVel))/(xPixelsToMove);
 			}
 		}
 		this.yStart = y;
@@ -302,7 +302,7 @@ public class Animation implements Handleable {
 				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
 			}
 			else {
-				xVel = (x-xStart*Math.abs(yVel))/(yPixelsToMove);
+				xVel = ((xEnd-x)*Math.abs(yVel))/(yPixelsToMove);
 			}
 		}
 		this.xStart = x;
