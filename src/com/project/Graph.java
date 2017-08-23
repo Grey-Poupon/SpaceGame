@@ -12,7 +12,7 @@ import com.project.Handleable;
 import com.project.Handler;
 
 public class Graph implements Handleable {
-
+	//THIS MAKES ME CRY
 	private int[] dataX = new int[256];
 	private int[] dataY = new int[256];
 	private int x;
