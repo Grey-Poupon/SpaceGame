@@ -260,6 +260,7 @@ public class Animation implements Handleable {
 			}
 		}
 		this.yEnd = y;
+		
 
 	}
 	public void setYStart(int y) {
@@ -292,7 +293,9 @@ public class Animation implements Handleable {
 		}
 		
 		this.xEnd = x;
-
+		if(xVel < 0 ) {
+			scale = -Math.abs(scale);
+		}
 	}
 	public void setXStart(int x) {
 		this.xPixelsToMove = Math.abs(xEnd-x);
@@ -307,7 +310,9 @@ public class Animation implements Handleable {
 		}
 		this.xStart = x;
 		this.xCoordinate = x;
-
+		if(xVel < 0 ) {
+			scale = -Math.abs(scale);
+		}
 		
 		
 	}

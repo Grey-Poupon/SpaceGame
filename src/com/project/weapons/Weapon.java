@@ -14,7 +14,28 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	protected boolean isBuffer;
 	protected boolean isDestructive;
 	protected boolean isDebuffer;
+	protected boolean targetSelf;
+	protected List<WeaponEffect> effects;	
 	protected List<Animation> firingAnimations = new ArrayList<Animation>(); 
+	
+	public List<WeaponEffect> getEffects() {
+		return effects;
+	}
+	public void setEffects(List<WeaponEffect> effects) {
+		this.effects = effects;
+	}
+	public List<Animation> getFiringAnimations() {
+		return firingAnimations;
+	}
+	public void setFiringAnimations(List<Animation> firingAnimations) {
+		this.firingAnimations = firingAnimations;
+	}
+	public boolean isTargetSelf() {
+		return targetSelf;
+	}
+	public void setTargetSelf(boolean targetSelf) {
+		this.targetSelf = targetSelf;
+	}
 	public boolean isBuffer() {// to check if the weapon buffs
 		return isBuffer;
 	}
@@ -24,11 +45,19 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	public boolean isDebuffer(){ // to check if the weapon debuffs
 		return isDebuffer;
 	}
-	public Weapon(int cooldownDuration, String name,Animation[] anims){
+
+	public Weapon(int cooldownDuration, String name,Animation[] anims,boolean targetSelf,WeaponEffect[] we){
 		this.firingAnimations = Arrays.asList(anims);
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
+		this.targetSelf = targetSelf;
+		if(we!=null) {
+			this.effects = Arrays.asList(we);
 		}
+		else {
+			this.effects = new ArrayList<>();
+		}
+	}
 	protected int getCooldownDuration() {
 		return cooldownDuration;
 	}
@@ -51,7 +80,5 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	}
 	public Animation getAnimation(int i) {
 		return firingAnimations.get(i).copy();
-	}
-	
-	
+	}	
 }

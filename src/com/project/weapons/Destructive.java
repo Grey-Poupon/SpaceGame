@@ -5,7 +5,7 @@ import java.util.Random;
 import com.project.DamageType;
 
 
-public class Destructive {
+public class Destructive implements WeaponEffect {
 	private int rateOfFire;
 	private int damagePerShot;
 	private DamageType damageType;

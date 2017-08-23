@@ -30,6 +30,7 @@ import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
+import com.project.weapons.Buffer;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
@@ -73,8 +74,14 @@ public class BattleScreen extends Main {
 		rand = new Random();
 		
 		// grab ships
+
 		chaserShip = ResourceLoader.getShip("defaultPlayer");
 		chasedShip  = ResourceLoader.getShip("defaultEnemy");
+		Handler.addLowPriorityEntity(chaserShip);
+		Handler.addLowPriorityEntity(chasedShip);
+
+		
+		
 		// place ships
 		chaserShip.setX(-200);
 		chaserShip.setY(150);
@@ -87,6 +94,8 @@ public class BattleScreen extends Main {
 		for(int i=0; i<40;i++) {
 			Star starp = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,0,Main.WIDTH/2,0,Main.HEIGHT,chaserShip);
 			Star stare = new Star(rand.nextInt(WIDTH),rand.nextInt(HEIGHT),"res/star.png",true,Main.WIDTH/2,Main.WIDTH,0,Main.HEIGHT,chasedShip);
+			Handler.addLowPriorityEntity(starp);
+			Handler.addLowPriorityEntity(stare);
 		}
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
@@ -100,6 +109,9 @@ public class BattleScreen extends Main {
 		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
 		graphButton.setDraggable(true);
 		
+		Handler.addLowPriorityEntity(overlay);
+		Handler.addLowPriorityEntity(chaserHealthbar);
+		Handler.addLowPriorityEntity(chasedHealthbar);
 		
 //		for(int i =0;i<playerShip.getCrew().size();i++) {
 //			Crew crew = playerShip.getCrew().get(i);
@@ -272,9 +284,25 @@ public class BattleScreen extends Main {
 					
 				}
 			}
+			
 		}
-		currentPhase = BattlePhases.Wait;
+		
+//			//put in above for loop so to apply buff on each successful hit
+//			if(weapon.getEffects().size()>1) {
+//				if(weapon.isTargetSelf()) {
+//					for(int i = 0; i<weapon.getEffects().size();i++) {
+//						((Buffer) weapon.getEffects().get(i)).applyBuff(primary,shot.x,shot.y);
+//					}
+//				}else {
+//					for(int i = 0; i<weapon.getEffects().size();i++) {
+//						((Buffer) weapon.getEffects().get(i)).applyBuff(secondary,shot.x,shot.y);
+//					}
+//				}
+//			}
+			
+			currentPhase = BattlePhases.Wait;
 	}
+	
 	private int weaponFireAnimation(int stage,Ship primary, int position ) {
 		int ticksToWait = 0;
 		// preFiredStage
@@ -297,12 +325,15 @@ public class BattleScreen extends Main {
 				slotX = 250;
 				shotY = chaserShotLocation.getY();
 				shotX = chaserShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+
 			}
 			else {
-				slotY = 1000;
-				slotX = 350;
+				slotY = 350;
+				slotX = 1000;
 				shotY = chasedShotLocation.getY();
 				shotX = chasedShotLocation.getX();
+				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
 			}
 			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
 			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
@@ -313,7 +344,8 @@ public class BattleScreen extends Main {
 			projectile.setXEnd(xEnd);
 			projectile.setYStart(slotY);
 			projectile.setYEnd(yEnd);
-			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
+
 			
 			float yVel = projectile.getYVel();
 			float xVel = projectile.getXVel();			
@@ -356,12 +388,19 @@ public class BattleScreen extends Main {
 			double shotY;
 			double shotX;
 			if(primary == chaserShip) {
+				slotY = 350;
+				slotX = 250;
 				shotY = chaserShotLocation.getY();
 				shotX = chaserShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+
 			}
 			else {
+				slotY = 350;
+				slotX = 1000;
 				shotY = chasedShotLocation.getY();
 				shotX = chasedShotLocation.getX();
+				//projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
 			}
 			
 			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
@@ -374,7 +413,7 @@ public class BattleScreen extends Main {
 			projectile.setXEnd((int)shotX - tileWidth/2);
 			projectile.setYStart(yStart);
 			projectile.setYEnd((int)shotY - projectile.getTileHeight()/2);
-			projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT)); //x,y,width,height
+			projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
 
 			
 			float yVel = projectile.getYVel();

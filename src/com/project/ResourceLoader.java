@@ -5,21 +5,21 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
 import com.project.ship.Ship;
+import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
+import com.project.weapons.WeaponEffect;
 import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ResourceLoader {
@@ -54,7 +54,12 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, new Animation[] {ResourceLoader.animations.get("missile"),ResourceLoader.animations.get("missileWithExplosion")}));		
+		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
+		weaponFiringAnimations.add(ResourceLoader.animations.get("missile"));
+		weaponFiringAnimations.add(ResourceLoader.animations.get("missileWithExplosion"));
+		weaponFiringAnimations.clear();
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, new Animation[] {ResourceLoader.animations.get("missile"),ResourceLoader.animations.get("missileWithExplosion")},false,null));		
+
 	}
 
 	private void loadAnimations() {

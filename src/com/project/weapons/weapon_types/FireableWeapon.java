@@ -6,26 +6,30 @@ import com.project.Animation;
 import com.project.DamageType;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
+import com.project.weapons.WeaponEffect;
 
 public class FireableWeapon extends Weapon {
 
 	private float reloadTime;
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,float reloadTime,Animation[] anims) {
-		super(cooldownDuration, name,anims);
-		this.destruct= new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod);
+
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,float reloadTime,Animation[] anims,boolean targetSelf,WeaponEffect[] we) {
+		super(cooldownDuration, name,anims,targetSelf,we);
+		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
+
+
+
 		this.isDestructive = true;
 		this.reloadTime = reloadTime;
 	}
 
 	
 
-	Destructive destruct;
 	
 	@Override
 	public Object[] fire(){
 		
 		resetCooldown();
-		return destruct.fire();	
+		return effects.get(effects.size()-1).fire();	
 	}
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
@@ -33,7 +37,7 @@ public class FireableWeapon extends Weapon {
 	}
 	@Override
 	public String getWeaponInfo(){
-		String info = this.name+" ( Dmg:"+destruct.getDamagePerShot()+" Acc:"+destruct.getAccuracy()+" RoF:"+destruct.getRateOfFire()+")";
+		String info = this.name+" ( Dmg:"+effects.get(effects.size()-1).getDamagePerShot()+" Acc:"+effects.get(effects.size()-1).getAccuracy()+" RoF:"+effects.get(effects.size()-1).getRateOfFire()+")";
 		return info;
 	}
 	public float getReloadTime() {
@@ -41,7 +45,7 @@ public class FireableWeapon extends Weapon {
 		return reloadTime;
 }
 	public double getAccuracy() {
-		return destruct.getAccuracy();
+		return effects.get(effects.size()-1).getAccuracy();
 	}
 
 }

@@ -13,6 +13,29 @@ public class ImageHandler implements Handleable {
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
 	protected float zCoordinate;
+	public float getzCoordinate() {
+		return zCoordinate;
+	}
+
+	public void setzCoordinate(float zCoordinate) {
+		this.zCoordinate = zCoordinate;
+	}
+
+	public float getxScale() {
+		return xScale;
+	}
+
+	public void setxScale(float xScale) {
+		this.xScale = xScale;
+	}
+
+	public float getyScale() {
+		return yScale;
+	}
+
+	public void setyScale(float yScale) {
+		this.yScale = yScale;
+	}
 	protected int xVel;//  speed of mob
 	protected int yVel;
 	protected float xScale = 1;
@@ -58,7 +81,7 @@ public class ImageHandler implements Handleable {
 		this.visible = visible;
 		this.ID = ID;
 		setImg(path);
-		Handler.addLowPriorityEntity(this);
+//		Handler.addLowPriorityEntity(this);
 		}
 	
 	public ImageHandler(int x, int y , boolean visible, EntityID ID){		// constructor for mob
@@ -66,8 +89,8 @@ public class ImageHandler implements Handleable {
 		this.yCoordinate = y;
 		this.visible = visible;
 		this.ID = ID;
-		if(ID!=EntityID.star) {Handler.addLowPriorityEntity(this);}
-		else {Handler.addStarEntity(this);}
+//		if(ID!=EntityID.star) {Handler.addLowPriorityEntity(this);}
+//		else {Handler.addStarEntity(this);}
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
@@ -77,7 +100,7 @@ public class ImageHandler implements Handleable {
 		this.yScale = yscale;
 		this.ID = ID;
 		setImg(path);
-		Handler.addLowPriorityEntity(this);
+//		Handler.addLowPriorityEntity(this);
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
@@ -87,7 +110,7 @@ public class ImageHandler implements Handleable {
 		this.yScale = scale;
 		this.ID = ID;
 		setImg(path);
-		Handler.addLowPriorityEntity(this);
+//		Handler.addLowPriorityEntity(this);
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, EntityID ID, String priority){		// constructor for mob
 		this.xCoordinate = x;
@@ -95,12 +118,12 @@ public class ImageHandler implements Handleable {
 		this.visible = visible;
 		this.ID = ID;
 		setImg(path);
-		if(priority.equals("low")){
-			Handler.addLowPriorityEntity(this);
-			}
-		else{
-			Handler.addHighPriorityEntity(this);	
-			}
+//		if(priority.equals("low")){
+//			Handler.addLowPriorityEntity(this);
+//			}
+//		else{
+//			Handler.addHighPriorityEntity(this);	
+//			}
 		}
 	
 	

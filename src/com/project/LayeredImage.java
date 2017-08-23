@@ -12,24 +12,109 @@ import com.project.ship.Slot;
 public class LayeredImage {
 	private int x;
 	private int y;
-	public float scale = 3.5f;
-	public double anglePhi;
-	public double angleTheta;
-	public static float cameraZ;
-	public static float cameraX;
-	public static float cameraY;
-	public ArrayList<ImageHandler> layers;
-	public int noLayers;
-	public int tickerZ;
-	public int tickerX;
-	public int tickerY;
-	public ArrayList<Integer> layersX=new ArrayList<>();;
-	public ArrayList<Integer> layersY=new ArrayList<>();;
+	private float scale = 3.5f;
+	private double anglePhi;
+	private double angleTheta;
+	private static float cameraZ;
+	private static float cameraX;
+	private static float cameraY;
+	private ArrayList<ImageHandler> layers;
+	private int noLayers;
+	private int tickerZ;
+	private int tickerX;
+	private int tickerY;
+	private ArrayList<Integer> layersX=new ArrayList<>();;
+	private ArrayList<Integer> layersY=new ArrayList<>();;
 	private ArrayList<Slot> slots= new ArrayList<>();
-	public String[] layerIsSlot;
-	public int largestWidth;
-	public int largestHeight;
-	public String path;
+	private String[] layerIsSlot;
+	private int largestWidth;
+	private int largestHeight;
+	private String path;
+	public float getScale() {
+		return scale;
+	}
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	public static float getCameraZ() {
+		return cameraZ;
+	}
+	public static void setCameraZ(float cameraZ) {
+		LayeredImage.cameraZ = cameraZ;
+	}
+	public static float getCameraX() {
+		return cameraX;
+	}
+	public static void setCameraX(float cameraX) {
+		LayeredImage.cameraX = cameraX;
+	}
+	public static float getCameraY() {
+		return cameraY;
+	}
+	public static void setCameraY(float cameraY) {
+		LayeredImage.cameraY = cameraY;
+	}
+	public ArrayList<ImageHandler> getLayers() {
+		return layers;
+	}
+	public void setLayers(ArrayList<ImageHandler> layers) {
+		this.layers = layers;
+	}
+	public int getNoLayers() {
+		return noLayers;
+	}
+	public void setNoLayers(int noLayers) {
+		this.noLayers = noLayers;
+	}
+	public ArrayList<Integer> getLayersX() {
+		return layersX;
+	}
+	public void setLayersX(ArrayList<Integer> layersX) {
+		this.layersX = layersX;
+	}
+	public ArrayList<Integer> getLayersY() {
+		return layersY;
+	}
+	public void setLayersY(ArrayList<Integer> layersY) {
+		this.layersY = layersY;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public float getzPerLayer() {
+		return zPerLayer;
+	}
+	public void setzPerLayer(float zPerLayer) {
+		this.zPerLayer = zPerLayer;
+	}
+	public float getZ() {
+		return z;
+	}
+	public void setZ(float z) {
+		this.z = z;
+	}
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	public void setDestroyed(boolean destroyed) {
+		this.destroyed = destroyed;
+	}
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setLargestWidth(int largestWidth) {
+		this.largestWidth = largestWidth;
+	}
+	public void setLargestHeight(int largestHeight) {
+		this.largestHeight = largestHeight;
+	}
+
 	private float zPerLayer;
 	private float z;
 	private Random rand = new Random();
@@ -90,6 +175,13 @@ public class LayeredImage {
 				if(layers.get(i).isVisible()) {
 					setLayersShading(layers.get(i));
 				}
+			}
+			for(int i=0;i<slots.size();i++) {
+				Slot s =slots.get(i);
+				s.setX(layers.get(s.getLayerIndex()).getxCoordinate());
+				s.setY(layers.get(s.getLayerIndex()).getyCoordinate());
+				s.setWidth((int) (layers.get(s.getLayerIndex()).getXScale()*layers.get(s.getLayerIndex()).getImg().getWidth()));
+				s.setHeight((int) (layers.get(s.getLayerIndex()).getYScale()*layers.get(s.getLayerIndex()).getImg().getHeight()));
 			}
 		}
 		
@@ -158,13 +250,13 @@ public class LayeredImage {
 					layer.setVisible(false);
 					Slot slot=null;
 					if(layerIsSlot[layersX.size()-i-1].contains("s")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'s');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'s',i);
 					}
 					if(layerIsSlot[layersX.size()-i-1].contains("m")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'m');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'m',i);
 					}
 					if(layerIsSlot[layersX.size()-i-1].contains("l")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),'l');
+						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'l',i);
 					}
 					slots.add(slot);
 					

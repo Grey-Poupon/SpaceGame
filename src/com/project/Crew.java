@@ -278,11 +278,13 @@ public class Crew implements Observer{
 	protected void loadPortrait() {
 		if(this.race!=RaceID.robot){
 			this.portrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,2,2, EntityID.crew);
+			Handler.addHighPriorityEntity(portrait);
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
 		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,2,2, EntityID.crew));
+		Handler.addHighPriorityEntity(portrait);
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {

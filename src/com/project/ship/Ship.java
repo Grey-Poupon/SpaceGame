@@ -1,19 +1,18 @@
 package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.project.AdjustmentID;
-import com.project.Animation;
 import com.project.Crew;
 import com.project.DamageType;
 import com.project.EntityID;
+import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
@@ -21,9 +20,8 @@ import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
-public class Ship {
+public class Ship implements Handleable{
 	private LayeredImage lImage;
 	private int health;
 	private int maxHealth;
@@ -32,7 +30,6 @@ public class Ship {
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
-	
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
@@ -64,7 +61,7 @@ public class Ship {
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			shipSlots.add(new Slot(150,400+80*i,40,40));
+//			shipSlots.add(new Slot(150,400+80*i,40,40));
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -72,6 +69,9 @@ public class Ship {
 			}
 		}	
 	}
+	
+	
+	
 
 	private void generateFlavourText() {
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
@@ -129,7 +129,7 @@ public class Ship {
 		}
 		return dmg;
 	}
-	private Room getClosestRoom(int x, int y) {
+	public Room getClosestRoom(int x, int y) {
 		if(damagableRooms.size()<1) {return null;}
 		Room closestRoom = damagableRooms.get(0);
 		Point closest = closestRoom.getLocation();
@@ -143,7 +143,7 @@ public class Ship {
 		return closestRoom;
 	}
 	public boolean isShipClicked(int x, int y) {
-		for(ImageHandler i : lImage.layers) {
+		for(ImageHandler i : lImage.getLayers()) {
 			if(i.isClicked(x, y)) {
 				return true;
 			}
@@ -151,8 +151,8 @@ public class Ship {
 		return false;
 	}
 	public int getLayerClicked(int x, int y) {
-		for(int i = 0; i<lImage.layers.size();i++) {
-			if(lImage.layers.get(i).isClicked(x, y)) {
+		for(int i = 0; i<lImage.getLayers().size();i++) {
+			if(lImage.getLayers().get(i).isClicked(x, y)) {
 				return i;
 			}
 		}
@@ -228,7 +228,7 @@ public class Ship {
 		return speedChange;
 	}
 	public Slot getSlot(int position) {
-		return shipSlots.get(position);
+		return lImage.getSlots().get(position);
 	}
 	public void setSensors() {
 		sensor = new Sensor(0.8f);
@@ -248,4 +248,57 @@ public class Ship {
 	public void setY(int y) {
 		lImage.setY(y);
 	}
+
+
+
+
+	@Override
+	public void render(Graphics g) {
+		for(int i =0;i<lImage.getNoLayers();i++) {
+			lImage.getLayers().get(i).render(g);
+		}
+//		Graphics2D g2d = (Graphics2D)g.create();
+//		for(int i=0;i<shipSlots.size();i++) {
+//			Slot s = shipSlots.get(i);
+//			System.out.print(s.getX());
+//			System.out.print(",");
+//			System.out.print(s.getY());
+//			System.out.println();
+//			g2d.setColor(Color.white);
+//			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+//		}
+	}
+
+
+
+
+	@Override
+	public void tick() {
+		lImage.tick();
+		for(int i = 0;i<shipSlots.size();i++) {
+			shipSlots.get(i).setX(lImage.getSlots().get(i).getX());
+			shipSlots.get(i).setY(lImage.getSlots().get(i).getY());
+			shipSlots.get(i).setWidth(lImage.getSlots().get(i).getWidth());
+			shipSlots.get(i).setHeight(lImage.getSlots().get(i).getHeight());
+		}
+	}
+
+
+
+
+	public int getPower() {
+		return power;
+	}
+
+
+
+
+	public void setPower(int power) {
+		this.power = power;
+	}
+
+
+
+
+	
 }
