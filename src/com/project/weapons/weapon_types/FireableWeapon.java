@@ -11,9 +11,13 @@ import com.project.weapons.WeaponEffect;
 public class FireableWeapon extends Weapon {
 
 	private float reloadTime;
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,float reloadTime,List<Animation> anims,boolean targetSelf,WeaponEffect[] we) {
+
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,double accuracy, String name, DamageType dt,int weaponSwayMod,float reloadTime,Animation[] anims,boolean targetSelf,WeaponEffect[] we) {
 		super(cooldownDuration, name,anims,targetSelf,we);
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
+
+
+
 		this.isDestructive = true;
 		this.reloadTime = reloadTime;
 	}

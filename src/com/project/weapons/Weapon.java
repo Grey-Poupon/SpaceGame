@@ -45,8 +45,9 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	public boolean isDebuffer(){ // to check if the weapon debuffs
 		return isDebuffer;
 	}
-	public Weapon(int cooldownDuration, String name,List<Animation> anims,boolean targetSelf,WeaponEffect[] we){
-		this.firingAnimations = anims;
+
+	public Weapon(int cooldownDuration, String name,Animation[] anims,boolean targetSelf,WeaponEffect[] we){
+		this.firingAnimations = Arrays.asList(anims);
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;

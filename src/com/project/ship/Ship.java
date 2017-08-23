@@ -2,6 +2,7 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class Ship implements Handleable{
 	private List<Room> damagableRooms = new ArrayList<Room>();;
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
-	//private List<Slot>	   shipSlots           = new ArrayList<Slot>();
+	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 	private Sensor sensor;
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
@@ -46,12 +47,12 @@ public class Ship implements Handleable{
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
-		//shipSlots= lImage.getSlots();
+		shipSlots= lImage.getSlots();
 		
 		setSensors();
 		generateFlavourText();
 		
-		Weapon defaultWeapon = ResourceLoader.shipWeapons.get("default");
+		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -60,7 +61,7 @@ public class Ship implements Handleable{
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-			//shipSlots.add(new Slot(150,400+80*i,40,40));
+//			shipSlots.add(new Slot(150,400+80*i,40,40));
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -78,12 +79,14 @@ public class Ship implements Handleable{
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		//shipSlots= lImage.getSlots();
+		shipSlots= lImage.getSlots();
 		setSensors();
 		generateFlavourText();
-
-		this.frontWeapons = frontWeapons;
-		this.backWeapons = backWeapons;
+		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
+		for(int i = 0; i < 4;i++) {
+			frontWeapons[i] = defaultWeapon;
+			backWeapons[i] = defaultWeapon;
+		}
 		this.health = health;
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
@@ -140,7 +143,7 @@ public class Ship implements Handleable{
 		return closestRoom;
 	}
 	public boolean isShipClicked(int x, int y) {
-		for(ImageHandler i : lImage.layers) {
+		for(ImageHandler i : lImage.getLayers()) {
 			if(i.isClicked(x, y)) {
 				return true;
 			}
@@ -148,8 +151,8 @@ public class Ship implements Handleable{
 		return false;
 	}
 	public int getLayerClicked(int x, int y) {
-		for(int i = 0; i<lImage.layers.size();i++) {
-			if(lImage.layers.get(i).isClicked(x, y)) {
+		for(int i = 0; i<lImage.getLayers().size();i++) {
+			if(lImage.getLayers().get(i).isClicked(x, y)) {
 				return i;
 			}
 		}
@@ -251,9 +254,19 @@ public class Ship implements Handleable{
 
 	@Override
 	public void render(Graphics g) {
-		for(int i =0;i<lImage.noLayers;i++) {
-			lImage.layers.get(i).render(g);
+		for(int i =0;i<lImage.getNoLayers();i++) {
+			lImage.getLayers().get(i).render(g);
 		}
+//		Graphics2D g2d = (Graphics2D)g.create();
+//		for(int i=0;i<shipSlots.size();i++) {
+//			Slot s = shipSlots.get(i);
+//			System.out.print(s.getX());
+//			System.out.print(",");
+//			System.out.print(s.getY());
+//			System.out.println();
+//			g2d.setColor(Color.white);
+//			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+//		}
 	}
 
 
@@ -262,6 +275,12 @@ public class Ship implements Handleable{
 	@Override
 	public void tick() {
 		lImage.tick();
+		for(int i = 0;i<shipSlots.size();i++) {
+			shipSlots.get(i).setX(lImage.getSlots().get(i).getX());
+			shipSlots.get(i).setY(lImage.getSlots().get(i).getY());
+			shipSlots.get(i).setWidth(lImage.getSlots().get(i).getWidth());
+			shipSlots.get(i).setHeight(lImage.getSlots().get(i).getHeight());
+		}
 	}
 
 

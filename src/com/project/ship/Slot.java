@@ -11,6 +11,7 @@ public class Slot {
 	private int width;
 	private int height;
 	private Slottable slotItem;
+	private int layerIndex;
 	
 	
 	public Slot(int x, int y,int relX,int relY,int width,int height) {
@@ -22,11 +23,12 @@ public class Slot {
 		this.setHeight(height);
 	}
 	
-	public Slot(int x, int y,int relX,int relY,char type) {
+	public Slot(int x, int y,int relX,int relY,char type,int index) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
 		this.relY = relY;
+		this.setLayerIndex(index);
 		if(type == 's') {
 			this.setWidth(20);
 			this.setHeight(20);			
@@ -91,6 +93,14 @@ public class Slot {
 
 	public void setRelY(int relY) {
 		this.relY = relY;
+	}
+
+	public int getLayerIndex() {
+		return layerIndex;
+	}
+
+	public void setLayerIndex(int layerIndex) {
+		this.layerIndex = layerIndex;
 	}
 
 }
