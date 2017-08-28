@@ -254,7 +254,7 @@ public class LayeredImage {
 			
 				ImageHandler layer = new ImageHandler(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
 				layer.setZ((float)(this.z-i*zPerLayer));
-				if(layerIsSlot[layersX.size()-i-1]!="!") {
+				if(!layerIsSlot[layersX.size()-i-1].contains("!")) {
 					layer.setVisible(false);
 					Slot slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),layer.getImg().getWidth(),i,layerIsSlot[layersX.size()-i-1].contains("f"));
 					if(slot.isFront()) {
@@ -325,10 +325,10 @@ public class LayeredImage {
 		    		layerIsSlot[i]="!";
 		    	}
 		    }
-//		    for(int i =0; i<layerIsSlot.length;i++) {
-//		    	System.out.println(layerIsSlot[i]);
-//		    }
-//		    
+		    for(int i =0; i<layerIsSlot.length;i++) {
+		    	System.out.println(layerIsSlot[i]);
+		    }
+		    
 //		    
 //		    
 //		    for(int i =0; i<split.length;i++) {

@@ -2,9 +2,9 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +36,7 @@ public class Ship implements Handleable{
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
-	private Weapon[]       frontWeapons		   = new Weapon[4];// only allowed 4 front + 4 back weapons
-	private Weapon[]       backWeapons 		   = new Weapon[4];
+
 	private List<Slot>	   shipBackSlots           = new ArrayList<Slot>();
 	private List<Slot>	   shipFrontSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
@@ -73,10 +72,13 @@ public class Ship implements Handleable{
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
 		}
-		for(int i=0;i<frontWeapons.length;i++){
-			setFrontWeapon(defaultWeapon, i);
-			setBackWeapon(defaultWeapon, i);
-//			`.add(new Slot(150,400+80*i,40,40));
+		for(int i=0;i<shipBackSlots.size();i++){
+			shipBackSlots.get(i).setSlotItem(defaultWeapon);
+
+		}
+		for(int i=0;i<shipFrontSlots.size();i++){
+			shipFrontSlots.get(i).setSlotItem(defaultWeapon);
+
 		}
 		generateRooms();
 		if(generateCrew){
@@ -92,7 +94,7 @@ public class Ship implements Handleable{
 	
 
 	private void generateRooms() {
-		rooms.add(new WeaponsRoom(frontWeapons,backWeapons,isChased, new Point(50,50)));
+		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),isChased, new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
 	}
 
@@ -103,26 +105,31 @@ public class Ship implements Handleable{
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
 	}
-	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
-		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		shipBackSlots= lImage.getBackSlots();
-		shipFrontSlots= lImage.getFrontSlots();
-		setSensors();
-		generateFlavourText();
-		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
-		for(int i = 0; i < 4;i++) {
-			frontWeapons[i] = defaultWeapon;
-			backWeapons[i] = defaultWeapon;
-		}
-		this.health = health;
-		for(DamageType dmg : DamageType.values()){
-			damageTakenModifier.put(dmg, 1d);
-			damageDealtModifier.put(dmg, 1d);
-		}
-		this.generator=generator;
-		this.engine=engine;
-		this.crew = crew;
-	}
+//	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
+//		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
+//		shipBackSlots= lImage.getBackSlots();
+//		shipFrontSlots= lImage.getFrontSlots();
+//		setSensors();
+//		generateFlavourText();
+//		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
+//		for(int i=0;i<shipBackSlots.size();i++){
+//			shipBackSlots.get(i).setSlotItem(defaultWeapon);
+//
+//		}
+//		for(int i=0;i<shipFrontSlots.size();i++){
+//			shipFrontSlots.get(i).setSlotItem(defaultWeapon);
+//
+//		}
+//		generateRooms();
+//		this.health = health;
+//		for(DamageType dmg : DamageType.values()){
+//			damageTakenModifier.put(dmg, 1d);
+//			damageDealtModifier.put(dmg, 1d);
+//		}
+//		this.generator=generator;
+//		this.engine=engine;
+//		this.crew = crew;
+//	}
 	
 	
 	public void useEngine(int amountOfFuel) {
@@ -252,24 +259,7 @@ public class Ship implements Handleable{
 	public void setDamageDealtModifier(DamageType dt, int mod) {
 		damageDealtModifier.put(dt, Double.valueOf(mod));
 	}
-	public Weapon getFrontWeapon(int position) {
-		return frontWeapons[position];
-	}
-	public Weapon getBackWeapon(int position) {
-		return backWeapons[position];
-	}
-	public void setFrontWeapon(Weapon weapon, int position) {
-		this.frontWeapons[position] = weapon;
-	}
-	public void setBackWeapon(Weapon weapon, int position) {
-		this.backWeapons[position] = weapon;
-	}
-	public Weapon[] getFrontWeapons() {
-		return frontWeapons;
-	}
-	public Weapon[] getBackWeapons() {
-		return backWeapons;
-	}
+	
 	public LayeredImage getLayeredImage() {
 		return lImage;
 	}
@@ -321,13 +311,29 @@ public class Ship implements Handleable{
 		for(int i =0;i<lImage.getNoLayers();i++) {
 			lImage.getLayers().get(i).render(g);
 		}
+		
+		for(int i=0;i<shipBackSlots.size();i++) {
+			shipBackSlots.get(i).getSlotItem().render(g);
+		}
+		
+		
+		
 //		Graphics2D g2d = (Graphics2D)g.create();
-//		for(int i=0;i<shipSlots.size();i++) {
-//			Slot s = shipSlots.get(i);
-//			System.out.print(s.getX());
-//			System.out.print(",");
-//			System.out.print(s.getY());
-//			System.out.println();
+//		for(int i=0;i<shipBackSlots.size();i++) {
+//			Slot s = shipBackSlots.get(i);
+////			System.out.print(s.getX());
+////			System.out.print(",");
+////			System.out.print(s.getY());
+////			System.out.println();
+//			g2d.setColor(Color.white);
+//			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+//		}
+//		for(int i=0;i<shipFrontSlots.size();i++) {
+//			Slot s = shipFrontSlots.get(i);
+////			System.out.print(s.getX());
+////			System.out.print(",");
+////			System.out.print(s.getY());
+////			System.out.println();
 //			g2d.setColor(Color.white);
 //			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 //		}
@@ -385,6 +391,36 @@ public class Ship implements Handleable{
 
 	public void setShipFrontSlots(List<Slot> shipFrontSlots) {
 		this.shipFrontSlots = shipFrontSlots;
+	}
+
+
+
+
+	public List<Weapon> getFrontWeapons() {
+		List<Weapon> weapons = new ArrayList<Weapon>();
+		for(int i = 0; i<shipFrontSlots.size();i++) {
+			if(shipFrontSlots.get(i).getSlotItem() instanceof Weapon) {
+				weapons.add((Weapon)shipFrontSlots.get(i).getSlotItem());
+				System.out.println("SSASD");
+			}
+		}
+		return weapons;
+	}
+	public List<Weapon> getBackWeapons() {
+		List<Weapon> weapons = new ArrayList<Weapon>();
+		for(int i = 0; i<shipBackSlots.size();i++) {
+			if(shipBackSlots.get(i).getSlotItem() instanceof Weapon) {
+				weapons.add((Weapon)shipBackSlots.get(i).getSlotItem());
+				System.out.println("SAD");
+			}
+		}
+		return weapons;
+	}
+
+
+	public Slot getFrontSlot(int position) {
+		return shipFrontSlots.get(position);
+		
 	}
 
 

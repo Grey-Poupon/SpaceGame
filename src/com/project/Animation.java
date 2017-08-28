@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Animation implements Handleable {
 	private static final int DEFAULT_SPEED = 5;
+	private boolean running;
 	private int tileWidth;
 	private int tileHeight;
 	private int noVertTiles;
@@ -29,6 +30,8 @@ public class Animation implements Handleable {
 	private float yStart,yEnd;
 	private String path;
 	private boolean moving = false;
+	private boolean pushed = false; //for projectiles
+	private boolean monitored = false; // ^^
 	private Rectangle2D mask;
 	private AdjustmentID align;
 	int xStartGap;
@@ -38,11 +41,10 @@ public class Animation implements Handleable {
 	private float scale = 1;
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
-	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
 	private List<Animation> followingAnims = new ArrayList<Animation>();
 	
 	//16 stationary
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, float xCoordinate, float yCoordinate,float scale,int NoOfloops,boolean firstAnimation,AdjustmentID align,Animation[] followingAnims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, float xCoordinate, float yCoordinate,float scale,int NoOfloops,boolean running,AdjustmentID align,Animation[] followingAnims) {
 
 		this.path = path;
 		this.tileWidth = tileWidth;
@@ -63,12 +65,12 @@ public class Animation implements Handleable {
 		if(followingAnims.length>0) {this.followingAnims = Arrays.asList(followingAnims);}
 		setSpritesheet(path);
 		setSprite();
-		if(firstAnimation) {
+		if(running) {
 			start();
 		}
 	}
 	// 22 moving
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate,float scale,float xStart,float xEnd, float yStart, float yEnd,float xVel,Rectangle2D mask,boolean firstAnimation,AdjustmentID align,Animation[] followingAnims) {
+	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate,float scale,float xStart,float xEnd, float yStart, float yEnd,float xVel,Rectangle2D mask,boolean running,AdjustmentID align,Animation[] followingAnims) {
 
 		this.path          = path;
 		this.tileWidth     = tileWidth;
@@ -106,11 +108,11 @@ public class Animation implements Handleable {
 		
 		setSpritesheet(path);
 		setSprite();
-		if(firstAnimation) {
+		if(running) {
 			start();
 		}
 	}
-	public Animation(Animation animation,Animation[] followingAnims) {
+	public Animation(Animation animation,Animation[] followingAnims,boolean running) {
 		this.path 		    = animation.path;
 		this.tileWidth 	    = animation.tileWidth;
 		this.tileHeight     = animation.tileHeight;
@@ -135,11 +137,13 @@ public class Animation implements Handleable {
 		this.xStart 	    = animation.xStart;
 		this.xEnd 		    = animation.xEnd;
 		this.moving         = animation.moving;
+		this.running        = running;
 		this.followingAnims.addAll(Arrays.asList(followingAnims));
 	}
 	
 
 	public void start() {
+		running = true;
 		Handler.addAnimation(this);
 	}
 	public void addAnims(List<Animation> anims) {
@@ -169,7 +173,7 @@ public class Animation implements Handleable {
 		if(mask!=null) {g.setClip(mask);}
 		int xAdjustment =(int) (AdjustmentID.getXAdjustment(align)*tileWidth*scale);
 		int yAdjustment =(int) (AdjustmentID.getYAdjustment(align)*tileHeight*scale);
-		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale),observer);
+		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale), null);
 
 	}
 	public static void delete(Animation anim) {
@@ -178,45 +182,48 @@ public class Animation implements Handleable {
 		
 	}
 	public void tick() {
-		tickCounter++;
-		if(moving) {
-			xCoordinate   += xVel;
-			xPixelsToMove -= Math.abs(xVel);
-			yCoordinate   += yVel;
-			yPixelsToMove -= Math.abs(yVel);
-		}
-		if(tickCounter==ticksPerFrame) {
-			nextSprite();
-			tickCounter=0;
+		if(running) {
+			tickCounter++;
 			if(moving) {
-				if(xPixelsToMove < 1 && yPixelsToMove < 1 ) {
-					if(followingAnims.size()>0 && followingAnims.get(0)!=null) {
-						followingAnims.get(0).setX(xCoordinate);
-						followingAnims.get(0).sety(yCoordinate);
-						followingAnims.get(0).start();
-					}
-					Animation.delete(this);
-				}
+				xCoordinate   += xVel;
+				xPixelsToMove -= Math.abs(xVel);
+				yCoordinate   += yVel;
+				yPixelsToMove -= Math.abs(yVel);
 			}
-			else
-			{
-				if(framesLeft>0) { //  if its not an infiniteloop
-					framesLeft--;
-					if (framesLeft < 1) {
-						if (followingAnims.size()>1) {
-							Animation next = followingAnims.get(0);
-							List<Animation> anns = followingAnims.subList(1, followingAnims.size());
-							next.addAnims(anns);
-						}
-						if(followingAnims.size()>0) {
+			if(tickCounter==ticksPerFrame) {
+				nextSprite();
+				tickCounter=0;
+				if(moving) {
+					if(xPixelsToMove < 1 && yPixelsToMove < 1 ) {
+						if(followingAnims.size()>0 && followingAnims.get(0)!=null) {
+							followingAnims.get(0).setX(xCoordinate);
+							followingAnims.get(0).sety(yCoordinate);
 							followingAnims.get(0).start();
 						}
-						Animation.delete(this);
+						if(monitored) {running = false;}
+						else {Animation.delete(this);}
+					}
+				}
+				else
+				{
+					if(framesLeft>0) { //  if its not an infiniteloop
+						framesLeft--;
+						if (framesLeft < 1) {
+							if (followingAnims.size()>1) {
+								Animation next = followingAnims.get(0);
+								List<Animation> anns = followingAnims.subList(1, followingAnims.size());
+								next.addAnims(anns);
+							}
+							if(followingAnims.size()>0) {
+								followingAnims.get(0).start();
+							}
+							if(monitored) {running = false;}
+							else {Animation.delete(this);}
+						}
 					}
 				}
 			}
 		}
-		
 	}
 	private void sety(float yCoordinate2) {
 		this.yCoordinate =yCoordinate2;
@@ -325,5 +332,29 @@ public class Animation implements Handleable {
 	}
 	public void setMask(Rectangle2D mask) {
 		this.mask = mask;
+	}
+	public boolean isRunning() {
+		return running;
+	}
+	public float getxCoordinate() {
+		return xCoordinate;
+	}
+	public float getyCoordinate() {
+		return yCoordinate;
+	}
+	public void pushBack(int pushBack) {
+		float ticks = Math.abs(pushBack/xVel);
+		float y = ticks*yVel;
+		float x = ticks*xVel;
+		yCoordinate -= y;
+		xCoordinate -= x;
+		this.pushed = true;
+		
+	}
+	public boolean isPushed() {
+		return pushed;
+	}
+	public void setMonitored(boolean b) {
+		this.monitored  = b;
 	}
 }

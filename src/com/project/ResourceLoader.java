@@ -44,8 +44,8 @@ public class ResourceLoader {
 	}
 	
 	private void loadShip() {
-		ships.put("defaultPlayer", new Ship (-0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true,false));
-		ships.put("defaultEnemy" , new Ship (-0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false,true));
+		ships.put("defaultPlayer", new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true, false));
+		ships.put("defaultEnemy" , new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false, true));
 	}
 
 	private void loadCrew() {
@@ -54,11 +54,7 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		List<Animation> weaponFiringAnimations = new ArrayList<Animation>();
-		weaponFiringAnimations.add(ResourceLoader.animations.get("missile"));
-		weaponFiringAnimations.add(ResourceLoader.animations.get("missileWithExplosion"));
-		weaponFiringAnimations.clear();
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1, "Laser Mark I",DamageType.Laser, 0, 1.5f, new Animation[] {ResourceLoader.animations.get("missile"),ResourceLoader.animations.get("missileWithExplosion")},false,null));		
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150));		
 
 	}
 
@@ -72,7 +68,7 @@ public class ResourceLoader {
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp,new Animation[0]));
 		
 		// combined
-		animations.put("missileWithExplosion",new Animation(animations.get("missile"), new Animation[] {animations.get("missileExplosion")}));
+		animations.put("missileWithExplosion",new Animation(animations.get("missile"), new Animation[] {animations.get("missileExplosion")},false));
 	}
 
 	public BufferedImage loadImage(String path) {

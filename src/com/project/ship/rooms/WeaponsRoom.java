@@ -29,13 +29,14 @@ public class WeaponsRoom extends Room {
 		super(location);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 	}
-	public WeaponsRoom(Weapon[] frontWeapons2,Weapon[] backWeapons2,boolean isChased,Point location) {
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,boolean isChased,Point location) {
 		super(location);
 		this.isChased = isChased;
-		this.frontWeapons=Arrays.asList(backWeapons2);
-		this.backWeapons = Arrays.asList(frontWeapons2);
-		weapons.addAll(Arrays.asList(backWeapons2));
-		weapons.addAll(Arrays.asList(frontWeapons2));
+		this.frontWeapons=frontWeapons;
+		this.backWeapons =backWeapons ;
+		weapons.addAll(backWeapons);
+		weapons.addAll(frontWeapons);
+		
 	}
 	
 	

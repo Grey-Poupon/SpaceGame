@@ -1,13 +1,8 @@
 package com.project.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import com.project.Animation;
-import com.project.DamageType;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.Graph;
@@ -16,7 +11,7 @@ import com.project.ImageHandler;
 import com.project.Main;
 import com.project.MathFunctions;
 import com.project.MouseInput;
-import com.project.ProjectileInfo;
+import com.project.ProjectileAnimation;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.Star;
@@ -25,9 +20,8 @@ import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
-import com.project.weapons.Buffer;
+import com.project.ship.Slot;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main {
 
@@ -41,7 +35,6 @@ public class BattleScreen extends Main {
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
 	private ImageHandler loadingScreen;
-	private List<ProjectileInfo> projectileInfo = new ArrayList<ProjectileInfo>();
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private Point chaserShotLocation;
@@ -85,7 +78,9 @@ public class BattleScreen extends Main {
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
+
 		ui 					 = new BattleUI(this,chaserShip,chasedShip);
+
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		chaserHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
@@ -166,45 +161,21 @@ public class BattleScreen extends Main {
 				chaserShip.setSpeed(100);
 				chasedShip.setSpeed(200);
 				ds.calculateDistances(chaserShip, chasedShip);
-				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, true,chasedShotLocation);
-				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, true,chaserShotLocation);
+				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice,chasedShotLocation);
+				UseWeapon(chaserShip, chasedShip, 2                 ,chaserShotLocation);
+				currentPhase = BattlePhases.Wait;
 			}
-			// wait for animations
+			
 			if(currentPhase == BattlePhases.Wait) {
-				for(int i = 0 ;i<projectileInfo.size();i++) {
-					// counter = ticks before next Animation turn
-					int projectileWaitCounter = projectileInfo.get(i).getWaitCounter();
-					// turn = which Animation set: Prefired,fired,inbetween ships, hitting ship
-					int projectileWaitTurn = projectileInfo.get(i).getTurn();
-					// tick counter
-					projectileWaitCounter--;
-
-					// next animation group
-					if(projectileWaitCounter <= 0) {
-						// if final animation group,do damage
-						
-						if(projectileWaitTurn == 4) {
-							doDamage(i);
-							
-	
-							// if Animations complete, next turn
-							if(i==projectileInfo.size()-1) {
-								projectileInfo.clear();
-								currentPhase = BattlePhases.Final;
-								nextTurn();
-								break;
-							}
-						}
-						// reset counter, next turn
-						Ship ship = projectileInfo.get(i).getIsChaser() ? chaserShip : chasedShip;
-						projectileWaitCounter = weaponFireAnimation(projectileWaitTurn, ship, chaserWeaponChoice);
-						projectileWaitTurn++;
-					}					
-					// update counters
-					projectileInfo.get(i).setWaitCounter(projectileWaitCounter);
-					projectileInfo.get(i).setTurn(projectileWaitTurn);
+				if(!ProjectileAnimation.areAnimationsRunning()) {
+					currentPhase = BattlePhases.Final;
+					nextTurn();
 				}
 			}
+			
+			
+			
+			
 			if(chaserShip !=null && chasedShip != null) {
 				if(currentPhase!=null&&phase!=null) {
 					phase.setText("Current Phase: "+currentPhase.toString());
@@ -227,224 +198,25 @@ public class BattleScreen extends Main {
 		}
 	}
 
-	private int weaponFireAnimation(int projectileWaitTurn, Ship ship, int chaserWeaponChoice2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	private void doDamage(int i) {
-		if(projectileInfo.get(i).getIsChaser()) {
-			if(projectileInfo.get(i).isTargetSelf()) {
-				chaserShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
-			}
-			else {
-				chasedShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
-			}
-		}else {
-			if(!projectileInfo.get(i).isTargetSelf()) {
-				chaserShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
-			}
-			else {
-				chasedShip.takeDamage(projectileInfo.get(i).getDamage(), projectileInfo.get(i).getDamageType());
-			}
+
+
+	public void UseWeapon(Ship primary, Ship secondary,int position,Point shot){
+		Weapon weapon = null;
+		Slot slot = null;
+		if(primary.isChased()) {
+			 slot = primary.getBackSlot(position);
+			 weapon = (Weapon) primary.getBackSlot(position).getSlotItem();
 		}
-	}
-
-	public void UseWeapon(Ship primary, Ship secondary,int position,boolean isFrontWeapon,Point shot){
-		Weapon weapon = isFrontWeapon ? primary.getFrontWeapon(position) : primary.getBackWeapon(position);// get the weapon to be fired
-		
-//		if(weapon.isBuffer()){ // If its a buffing weapon apply buff
-//			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
-//			List<Double> modifiers = weapon.getBuff().getModifiers();
-//			for(int i=0; i < dmgTypes.size();i++){
-//				primary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
-//			}
-//		}
-//		if(weapon.isDebuffer()){ // If its a debuffing weapon apply debuff
-//			List<DamageType> dmgTypes = weapon.getBuff().getDamageType();
-//			List<Double> modifiers = weapon.getBuff().getModifiers();
-//			for(int i=0; i < dmgTypes.size();i++){
-//				secondary.setDamageTakenModifier(dmgTypes.get(i),modifiers.get(i));
-//			}
-//		}
-		
-		if(weapon.isDestructive()){// If its a destructive weapon fire it, apply damage
-			Object[] damageDealt = weapon.fire();
-			FireableWeapon fireWeapon = (FireableWeapon) weapon;
-			double[] accuracy = (double[]) damageDealt[1];
-			int newX,newY,extraDmg;
-			for(int i=0;i<(int)damageDealt[0];i++) {
-				if(accuracy[i]!=0) {
-					newX = (int) (rand.nextBoolean() ? shot.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.x-((int)damageDealt[2]*(1/accuracy[i])));
-					newY = (int) (rand.nextBoolean() ? shot.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):shot.y-((int)damageDealt[2]*(1/accuracy[i])));
-					if(!weapon.isTargetSelf()) {
-						extraDmg = secondary.roomDamage(newX, newY);
-						if(weapon.getEffects().size()>1) {
-							if(weapon.isTargetSelf()) {
-								for(int j = 0; j<weapon.getEffects().size();j++) {
-									((Buffer) weapon.getEffects().get(j)).applyBuff(primary,shot.x,shot.y);
-								}
-							}else {
-								for(int j = 0; j<weapon.getEffects().size();j++) {
-									((Buffer) weapon.getEffects().get(j)).applyBuff(secondary,shot.x,shot.y);
-								}
-							}
-						}
-						projectileInfo.add(new ProjectileInfo(-i+1, 0, extraDmg+(int)damageDealt[3], (DamageType)damageDealt[4],primary==chaserShip,weapon.isTargetSelf()));
-						if(primary == chaserShip) {
-							
-							System.out.println("Chaser Weapon Fire");
-						}
-						else {
-							
-							System.out.println("Chased Weapon Fire");
-						}
-					}	
-
-				}
-			}
-			
+		else {
+			 slot = primary.getBackSlot(position);
+			 weapon = (Weapon) primary.getFrontSlot(position).getSlotItem();
 		}
 		
-			//put in above for loop so to apply buff on each successful hit
-			currentPhase = BattlePhases.Wait;
+		
+		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot,slot).start();
 	}
-	
-//	private int weaponFireAnimation(int stage,Ship primary, int position ) {
-//		int ticksToWait = 0;
-//		// preFiredStage
-//		if(stage < 1) {
-//			FireableWeapon weapon = (FireableWeapon) primary.getFrontWeapon(position);
-//			return (int)(500*weapon.getReloadTime()*(Math.abs(position)));
-//		}
-//		// Firing stage
-//		if(stage == 1) {
-//			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
-//			// change length and direction of animation based of player click
-//			
-//			// setup variables, slot position,click position
-//			int slotY = primary.getSlot(0).getY();
-//			int slotX = primary.getSlot(0).getX();
-//			double shotY;
-//			double shotX;
-//			if(primary == chaserShip) {
-//				slotY = primary.getSlot(3).getY();
-//				slotX = primary.getSlot(3).getX();
-//				shotY = chaserShotLocation.getY();
-//				shotX = chaserShotLocation.getX();
-//				projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
-//
-//			}
-//			else {
-//				slotY = primary.getSlot(1).getY();
-//				slotX = primary.getSlot(1).getX();
-//				shotY = chasedShotLocation.getY();
-//				shotX = chasedShotLocation.getX();
-//				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
-//
-//			}
-//			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
-//			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
-//			int tileWidth = projectile.getTileWidth();
-//
-//			// setup projectile mapping
-//			projectile.setXStart(slotX);
-//			projectile.setXEnd(xEnd);
-//			projectile.setYStart(slotY);
-//			projectile.setYEnd(yEnd);
-//
-//			
-//			float yVel = projectile.getYVel();
-//			float xVel = projectile.getXVel();			
-//
-////			while(xEnd < Main.WIDTH/2 + tileWidth) {
-////				xEnd+=xVel;
-////				yEnd+=yVel;
-////			}
-////			projectile.setXEnd(xEnd);
-////			projectile.setYEnd(yEnd);
-//
-//			
-//			float xPixelsToMove = projectile.getXPixelsToMove();
-//			float yPixelsToMove = projectile.getYPixelsToMove();
-//			
-//			// tickToWait = max number of ticks needed;
-//			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
-//			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
-//			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
-//			
-//			projectile.start();
-//		}
-//		// Inbetween stage
-//		if(stage == 2) {
-//			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
-//			// Delete projectile and wait a time proportional to the distance between ships
-//			Animation.delete(projectile);
-//			ticksToWait = ds.getShipDistanceCurrent()/4;
-//		}
-//		// Hitting stage
-//		if(stage == 3) {
-//			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
-//			// change length and direction of animation based of player click
-//			
-//			// setup variables, slot position,click postion
-//			int slotY = primary.getSlot(0).getY();
-//			int slotX = primary.getSlot(0).getX();
-//			//int slotY = 350;
-//			//int slotX = 250;
-//			double shotY;
-//			double shotX;
-//			int xEnd;
-//			int yEnd;
-//			if(primary == chaserShip) {
-//				slotY = primary.getSlot(3).getY();
-//				slotX = primary.getSlot(3).getX();
-//				shotY = chaserShotLocation.getY();
-//				shotX = chaserShotLocation.getX();
-//				yEnd  = (int)shotY - projectile.getTileHeight()/2;
-//				xEnd  = (int)shotX - projectile.getTileWidth()/2;
-//				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0, Main.WIDTH/2, Main.HEIGHT)); 
-//
-//			}
-//			else {
-//				slotY = primary.getSlot(1).getY();
-//				slotX = primary.getSlot(1).getX();
-//				shotY = chasedShotLocation.getY();
-//				shotX = chasedShotLocation.getX();
-//				yEnd  = (int)shotY + projectile.getTileHeight()/2;
-//				xEnd  = (int)shotX + projectile.getTileWidth()/2;
-//				projectile.setMask(new Rectangle2D.Double(0, 0,Main.WIDTH/2, Main.HEIGHT));
-//				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
-//				}
-//			
-//			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
-//			int xStart = (int)(slotX/2 + shotX/2); // 				^^
-//			int tileWidth = projectile.getTileWidth();
-//			
-//			
-//			// setup projectile mapping
-//			projectile.setXStart(xStart);
-//			projectile.setXEnd(xEnd);
-//			projectile.setYStart(yStart);
-//			projectile.setYEnd(yEnd);
-//
-//			float yVel = projectile.getYVel();
-//			float xVel = projectile.getXVel();	
-//			
-//			float xPixelsToMove = projectile.getXPixelsToMove();
-//			float yPixelsToMove = projectile.getYPixelsToMove();
-//			
-//			//tickToWait = max number of ticks needed;
-//			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
-//			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
-//			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
-//			
-//			projectile.start();
-//
-//		}
-//		return ticksToWait;
-//
-//	}
+
 	@Override
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {

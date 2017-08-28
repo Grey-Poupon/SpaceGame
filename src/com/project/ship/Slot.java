@@ -14,33 +14,16 @@ public class Slot {
 	private int layerIndex;
 	private boolean isFront;
 	
-	public Slot(int x, int y,int relX,int relY,int width,int height,boolean isFront) {
-		this.x = x;
-		this.y = y;
-		this.relX = relX;
-		this.relY = relY;
-		this.setWidth(width);
-		this.setHeight(height);
-	}
 	
-	public Slot(int x, int y,int relX,int relY,char type,int index,boolean isFront) {
+	public Slot(int x, int y,int relX,int relY,int size,int index,boolean isFront) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
 		this.relY = relY;
 		this.setLayerIndex(index);
-		if(type == 's') {
-			this.setWidth(20);
-			this.setHeight(20);			
-		}
-		if(type == 'm') {
-			this.setWidth(30);
-			this.setHeight(30);			
-		}
-		if(type == 'l') {
-			this.setWidth(40);
-			this.setHeight(40);			
-		}
+		this.height = size;
+		this.width = size;
+		this.isFront = isFront;
 		
 	}
 	
