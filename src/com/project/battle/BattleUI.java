@@ -37,7 +37,7 @@ public class BattleUI extends UI{
 	private static final Color  fontColour 			= Color.WHITE;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
-	public BattleUI (Weapon[] weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
+	public BattleUI (BattleScreen battleScreen, Ship pShip, Ship eShip){
 		bs = battleScreen;
 		List<Button> flavourTexts = new ArrayList<Button>();
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {

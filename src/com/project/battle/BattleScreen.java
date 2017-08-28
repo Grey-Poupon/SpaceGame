@@ -85,7 +85,7 @@ public class BattleScreen extends Main {
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		sl					 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
-		ui 					 = new BattleUI(chaserShip.getFrontWeapons(),this,chaserShip,chasedShip);
+		ui 					 = new BattleUI(this,chaserShip,chasedShip);
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		chaserHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
@@ -227,6 +227,11 @@ public class BattleScreen extends Main {
 		}
 	}
 
+	private int weaponFireAnimation(int projectileWaitTurn, Ship ship, int chaserWeaponChoice2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	private void doDamage(int i) {
 		if(projectileInfo.get(i).getIsChaser()) {
 			if(projectileInfo.get(i).isTargetSelf()) {
@@ -305,141 +310,141 @@ public class BattleScreen extends Main {
 			currentPhase = BattlePhases.Wait;
 	}
 	
-	private int weaponFireAnimation(int stage,Ship primary, int position ) {
-		int ticksToWait = 0;
-		// preFiredStage
-		if(stage < 1) {
-			FireableWeapon weapon = (FireableWeapon) primary.getFrontWeapon(position);
-			return (int)(500*weapon.getReloadTime()*(Math.abs(position)));
-		}
-		// Firing stage
-		if(stage == 1) {
-			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
-			// change length and direction of animation based of player click
-			
-			// setup variables, slot position,click position
-			int slotY = primary.getSlot(0).getY();
-			int slotX = primary.getSlot(0).getX();
-			double shotY;
-			double shotX;
-			if(primary == chaserShip) {
-				slotY = primary.getSlot(3).getY();
-				slotX = primary.getSlot(3).getX();
-				shotY = chaserShotLocation.getY();
-				shotX = chaserShotLocation.getX();
-				projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
-
-			}
-			else {
-				slotY = primary.getSlot(1).getY();
-				slotX = primary.getSlot(1).getX();
-				shotY = chasedShotLocation.getY();
-				shotX = chasedShotLocation.getX();
-				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
-
-			}
-			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
-			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
-			int tileWidth = projectile.getTileWidth();
-
-			// setup projectile mapping
-			projectile.setXStart(slotX);
-			projectile.setXEnd(xEnd);
-			projectile.setYStart(slotY);
-			projectile.setYEnd(yEnd);
-
-			
-			float yVel = projectile.getYVel();
-			float xVel = projectile.getXVel();			
-
-//			while(xEnd < Main.WIDTH/2 + tileWidth) {
-//				xEnd+=xVel;
-//				yEnd+=yVel;
+//	private int weaponFireAnimation(int stage,Ship primary, int position ) {
+//		int ticksToWait = 0;
+//		// preFiredStage
+//		if(stage < 1) {
+//			FireableWeapon weapon = (FireableWeapon) primary.getFrontWeapon(position);
+//			return (int)(500*weapon.getReloadTime()*(Math.abs(position)));
+//		}
+//		// Firing stage
+//		if(stage == 1) {
+//			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
+//			// change length and direction of animation based of player click
+//			
+//			// setup variables, slot position,click position
+//			int slotY = primary.getSlot(0).getY();
+//			int slotX = primary.getSlot(0).getX();
+//			double shotY;
+//			double shotX;
+//			if(primary == chaserShip) {
+//				slotY = primary.getSlot(3).getY();
+//				slotX = primary.getSlot(3).getX();
+//				shotY = chaserShotLocation.getY();
+//				shotX = chaserShotLocation.getX();
+//				projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH/2, Main.HEIGHT)); 
+//
 //			}
+//			else {
+//				slotY = primary.getSlot(1).getY();
+//				slotX = primary.getSlot(1).getX();
+//				shotY = chasedShotLocation.getY();
+//				shotX = chasedShotLocation.getX();
+//				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0,Main.WIDTH/2, Main.HEIGHT));
+//
+//			}
+//			int yEnd = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
+//			int xEnd = (int)(slotX/2 + shotX/2); // 				^^
+//			int tileWidth = projectile.getTileWidth();
+//
+//			// setup projectile mapping
+//			projectile.setXStart(slotX);
 //			projectile.setXEnd(xEnd);
+//			projectile.setYStart(slotY);
 //			projectile.setYEnd(yEnd);
-
-			
-			float xPixelsToMove = projectile.getXPixelsToMove();
-			float yPixelsToMove = projectile.getYPixelsToMove();
-			
-			// tickToWait = max number of ticks needed;
-			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
-			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
-			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
-			
-			projectile.start();
-		}
-		// Inbetween stage
-		if(stage == 2) {
-			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
-			// Delete projectile and wait a time proportional to the distance between ships
-			Animation.delete(projectile);
-			ticksToWait = ds.getShipDistanceCurrent()/4;
-		}
-		// Hitting stage
-		if(stage == 3) {
-			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
-			// change length and direction of animation based of player click
-			
-			// setup variables, slot position,click postion
-			int slotY = primary.getSlot(0).getY();
-			int slotX = primary.getSlot(0).getX();
-			//int slotY = 350;
-			//int slotX = 250;
-			double shotY;
-			double shotX;
-			int xEnd;
-			int yEnd;
-			if(primary == chaserShip) {
-				slotY = primary.getSlot(3).getY();
-				slotX = primary.getSlot(3).getX();
-				shotY = chaserShotLocation.getY();
-				shotX = chaserShotLocation.getX();
-				yEnd  = (int)shotY - projectile.getTileHeight()/2;
-				xEnd  = (int)shotX - projectile.getTileWidth()/2;
-				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0, Main.WIDTH/2, Main.HEIGHT)); 
-
-			}
-			else {
-				slotY = primary.getSlot(1).getY();
-				slotX = primary.getSlot(1).getX();
-				shotY = chasedShotLocation.getY();
-				shotX = chasedShotLocation.getX();
-				yEnd  = (int)shotY + projectile.getTileHeight()/2;
-				xEnd  = (int)shotX + projectile.getTileWidth()/2;
-				projectile.setMask(new Rectangle2D.Double(0, 0,Main.WIDTH/2, Main.HEIGHT));
-				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
-				}
-			
-			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
-			int xStart = (int)(slotX/2 + shotX/2); // 				^^
-			int tileWidth = projectile.getTileWidth();
-			
-			
-			// setup projectile mapping
-			projectile.setXStart(xStart);
-			projectile.setXEnd(xEnd);
-			projectile.setYStart(yStart);
-			projectile.setYEnd(yEnd);
-
-			float yVel = projectile.getYVel();
-			float xVel = projectile.getXVel();	
-			
-			float xPixelsToMove = projectile.getXPixelsToMove();
-			float yPixelsToMove = projectile.getYPixelsToMove();
-			
-			//tickToWait = max number of ticks needed;
-			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
-			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
-			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
-			
-			projectile.start();
-
-		}
-		return ticksToWait;
-
-	}
+//
+//			
+//			float yVel = projectile.getYVel();
+//			float xVel = projectile.getXVel();			
+//
+////			while(xEnd < Main.WIDTH/2 + tileWidth) {
+////				xEnd+=xVel;
+////				yEnd+=yVel;
+////			}
+////			projectile.setXEnd(xEnd);
+////			projectile.setYEnd(yEnd);
+//
+//			
+//			float xPixelsToMove = projectile.getXPixelsToMove();
+//			float yPixelsToMove = projectile.getYPixelsToMove();
+//			
+//			// tickToWait = max number of ticks needed;
+//			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
+//			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
+//			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
+//			
+//			projectile.start();
+//		}
+//		// Inbetween stage
+//		if(stage == 2) {
+//			Animation projectile = primary.getFrontWeapon(position).getAnimation(position);
+//			// Delete projectile and wait a time proportional to the distance between ships
+//			Animation.delete(projectile);
+//			ticksToWait = ds.getShipDistanceCurrent()/4;
+//		}
+//		// Hitting stage
+//		if(stage == 3) {
+//			Animation projectile = primary.getFrontWeapon(position).getAnimation(1);
+//			// change length and direction of animation based of player click
+//			
+//			// setup variables, slot position,click postion
+//			int slotY = primary.getSlot(0).getY();
+//			int slotX = primary.getSlot(0).getX();
+//			//int slotY = 350;
+//			//int slotX = 250;
+//			double shotY;
+//			double shotX;
+//			int xEnd;
+//			int yEnd;
+//			if(primary == chaserShip) {
+//				slotY = primary.getSlot(3).getY();
+//				slotX = primary.getSlot(3).getX();
+//				shotY = chaserShotLocation.getY();
+//				shotX = chaserShotLocation.getX();
+//				yEnd  = (int)shotY - projectile.getTileHeight()/2;
+//				xEnd  = (int)shotX - projectile.getTileWidth()/2;
+//				projectile.setMask(new Rectangle2D.Double(Main.WIDTH/2, 0, Main.WIDTH/2, Main.HEIGHT)); 
+//
+//			}
+//			else {
+//				slotY = primary.getSlot(1).getY();
+//				slotX = primary.getSlot(1).getX();
+//				shotY = chasedShotLocation.getY();
+//				shotX = chasedShotLocation.getX();
+//				yEnd  = (int)shotY + projectile.getTileHeight()/2;
+//				xEnd  = (int)shotX + projectile.getTileWidth()/2;
+//				projectile.setMask(new Rectangle2D.Double(0, 0,Main.WIDTH/2, Main.HEIGHT));
+//				//projectile.setMask(new Rectangle2D.Double(0, 0, Main.WIDTH, Main.HEIGHT)); 
+//				}
+//			
+//			int yStart = (int)(slotY/2 + shotY/2); // = slotY - (slotY-shotY)/2 = halfway between both
+//			int xStart = (int)(slotX/2 + shotX/2); // 				^^
+//			int tileWidth = projectile.getTileWidth();
+//			
+//			
+//			// setup projectile mapping
+//			projectile.setXStart(xStart);
+//			projectile.setXEnd(xEnd);
+//			projectile.setYStart(yStart);
+//			projectile.setYEnd(yEnd);
+//
+//			float yVel = projectile.getYVel();
+//			float xVel = projectile.getXVel();	
+//			
+//			float xPixelsToMove = projectile.getXPixelsToMove();
+//			float yPixelsToMove = projectile.getYPixelsToMove();
+//			
+//			//tickToWait = max number of ticks needed;
+//			if(xVel == 0 && yVel > 0) {ticksToWait = (int) Math.abs(yPixelsToMove/yVel);}
+//			if(yVel == 0 && xVel > 0) {ticksToWait = (int) Math.abs(xPixelsToMove/xVel);}
+//			else {ticksToWait = (int) (Math.abs(yPixelsToMove/yVel) > Math.abs(xPixelsToMove/xVel) ?  Math.abs(yPixelsToMove/yVel): Math.abs(xPixelsToMove/xVel));}
+//			
+//			projectile.start();
+//
+//		}
+//		return ticksToWait;
+//
+//	}
 	@Override
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {

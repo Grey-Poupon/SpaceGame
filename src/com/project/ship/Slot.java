@@ -12,9 +12,9 @@ public class Slot {
 	private int height;
 	private Slottable slotItem;
 	private int layerIndex;
+	private boolean isFront;
 	
-	
-	public Slot(int x, int y,int relX,int relY,int width,int height) {
+	public Slot(int x, int y,int relX,int relY,int width,int height,boolean isFront) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
@@ -23,7 +23,7 @@ public class Slot {
 		this.setHeight(height);
 	}
 	
-	public Slot(int x, int y,int relX,int relY,char type,int index) {
+	public Slot(int x, int y,int relX,int relY,char type,int index,boolean isFront) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
@@ -101,6 +101,14 @@ public class Slot {
 
 	public void setLayerIndex(int layerIndex) {
 		this.layerIndex = layerIndex;
+	}
+
+	public boolean isFront() {
+		return isFront;
+	}
+
+	public void setFront(boolean isFront) {
+		this.isFront = isFront;
 	}
 
 }

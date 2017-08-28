@@ -38,7 +38,8 @@ public class Ship implements Handleable{
 	private List<Room> rooms = new ArrayList<Room>();
 	private Weapon[]       frontWeapons		   = new Weapon[4];// only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
-	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
+	private List<Slot>	   shipBackSlots           = new ArrayList<Slot>();
+	private List<Slot>	   shipFrontSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 	private Sensor sensor;
 	private boolean isChased;
@@ -59,7 +60,8 @@ public class Ship implements Handleable{
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
-		shipSlots= lImage.getSlots();
+		shipBackSlots= lImage.getBackSlots();
+		shipFrontSlots= lImage.getFrontSlots();
 		this.isChased = isChased;
 		setSensors();
 		generateFlavourText();
@@ -74,7 +76,7 @@ public class Ship implements Handleable{
 		for(int i=0;i<frontWeapons.length;i++){
 			setFrontWeapon(defaultWeapon, i);
 			setBackWeapon(defaultWeapon, i);
-//			shipSlots.add(new Slot(150,400+80*i,40,40));
+//			`.add(new Slot(150,400+80*i,40,40));
 		}
 		generateRooms();
 		if(generateCrew){
@@ -103,7 +105,8 @@ public class Ship implements Handleable{
 	}
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		shipSlots= lImage.getSlots();
+		shipBackSlots= lImage.getBackSlots();
+		shipFrontSlots= lImage.getFrontSlots();
 		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
@@ -180,16 +183,12 @@ public class Ship implements Handleable{
 
 
 
-	public List<Slot> getShipSlots() {
-		return shipSlots;
-	}
+	
 
 
 
 
-	public void setShipSlots(List<Slot> shipSlots) {
-		this.shipSlots = shipSlots;
-	}
+	
 
 
 
@@ -293,8 +292,8 @@ public class Ship implements Handleable{
 	public int getSpeedChange() {
 		return speedChange;
 	}
-	public Slot getSlot(int position) {
-		return lImage.getSlots().get(position);
+	public Slot getBackSlot(int position) {
+		return lImage.getBackSlots().get(position);
 	}
 	public void setSensors() {
 		sensor = new Sensor(0.8f);
@@ -340,11 +339,17 @@ public class Ship implements Handleable{
 	@Override
 	public void tick() {
 		lImage.tick();
-		for(int i = 0;i<shipSlots.size();i++) {
-			shipSlots.get(i).setX(lImage.getSlots().get(i).getX());
-			shipSlots.get(i).setY(lImage.getSlots().get(i).getY());
-			shipSlots.get(i).setWidth(lImage.getSlots().get(i).getWidth());
-			shipSlots.get(i).setHeight(lImage.getSlots().get(i).getHeight());
+		for(int i = 0;i<shipBackSlots.size();i++) {
+			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());
+			shipBackSlots.get(i).setY(lImage.getBackSlots().get(i).getY());
+			shipBackSlots.get(i).setWidth(lImage.getBackSlots().get(i).getWidth());
+			shipBackSlots.get(i).setHeight(lImage.getBackSlots().get(i).getHeight());
+		}
+		for(int i = 0;i<shipFrontSlots.size();i++) {
+			shipFrontSlots.get(i).setX(lImage.getFrontSlots().get(i).getX());
+			shipFrontSlots.get(i).setY(lImage.getFrontSlots().get(i).getY());
+			shipFrontSlots.get(i).setWidth(lImage.getFrontSlots().get(i).getWidth());
+			shipFrontSlots.get(i).setHeight(lImage.getFrontSlots().get(i).getHeight());
 		}
 	}
 
@@ -360,6 +365,26 @@ public class Ship implements Handleable{
 
 	public void setPower(int power) {
 		this.power = power;
+	}
+
+
+	public List<Slot> getShipBackSlots() {
+		return shipBackSlots;
+	}
+
+
+	public void setShipBackSlots(List<Slot> shipBackSlots) {
+		this.shipBackSlots = shipBackSlots;
+	}
+
+
+	public List<Slot> getShipFrontSlots() {
+		return shipFrontSlots;
+	}
+
+
+	public void setShipFrontSlots(List<Slot> shipFrontSlots) {
+		this.shipFrontSlots = shipFrontSlots;
 	}
 
 

@@ -25,7 +25,8 @@ public class LayeredImage {
 	private int tickerY;
 	private ArrayList<Integer> layersX=new ArrayList<>();;
 	private ArrayList<Integer> layersY=new ArrayList<>();;
-	private ArrayList<Slot> slots= new ArrayList<>();
+	private ArrayList<Slot> backSlots= new ArrayList<>();
+	private ArrayList<Slot> frontSlots= new ArrayList<>();
 	private String[] layerIsSlot;
 	private int largestWidth;
 	private int largestHeight;
@@ -176,8 +177,15 @@ public class LayeredImage {
 					setLayersShading(layers.get(i));
 				}
 			}
-			for(int i=0;i<slots.size();i++) {
-				Slot s =slots.get(i);
+			for(int i=0;i<backSlots.size();i++) {
+				Slot s =backSlots.get(i);
+				s.setX(layers.get(s.getLayerIndex()).getxCoordinate());
+				s.setY(layers.get(s.getLayerIndex()).getyCoordinate());
+				s.setWidth((int) (layers.get(s.getLayerIndex()).getXScale()*layers.get(s.getLayerIndex()).getImg().getWidth()));
+				s.setHeight((int) (layers.get(s.getLayerIndex()).getYScale()*layers.get(s.getLayerIndex()).getImg().getHeight()));
+			}
+			for(int i=0;i<frontSlots.size();i++) {
+				Slot s =frontSlots.get(i);
 				s.setX(layers.get(s.getLayerIndex()).getxCoordinate());
 				s.setY(layers.get(s.getLayerIndex()).getyCoordinate());
 				s.setWidth((int) (layers.get(s.getLayerIndex()).getXScale()*layers.get(s.getLayerIndex()).getImg().getWidth()));
@@ -248,17 +256,14 @@ public class LayeredImage {
 				layer.setZ((float)(this.z-i*zPerLayer));
 				if(layerIsSlot[layersX.size()-i-1]!="!") {
 					layer.setVisible(false);
-					Slot slot=null;
-					if(layerIsSlot[layersX.size()-i-1].contains("s")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'s',i);
+					Slot slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),layer.getImg().getWidth(),i,layerIsSlot[layersX.size()-i-1].contains("f"));
+					if(slot.isFront()) {
+						frontSlots.add(slot);
 					}
-					if(layerIsSlot[layersX.size()-i-1].contains("m")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'m',i);
+					else {
+						backSlots.add(slot);
 					}
-					if(layerIsSlot[layersX.size()-i-1].contains("l")) {
-						 slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),'l',i);
-					}
-					slots.add(slot);
+					
 					
 					
 					
@@ -266,8 +271,13 @@ public class LayeredImage {
 				layers.add(layer);			
 			
 		}
+		organiseSlots();
 		
 				
+	}
+	
+	private void organiseSlots() {
+		
 	}
 	
 	public void getLayerCoords() {
@@ -300,7 +310,7 @@ public class LayeredImage {
 		    		layerIsSlot[layerCounter]="!";
 		    		
 		    	}
-		    	if(split[i].contains("m")||split[i].contains("s")||split[i].contains("l")) {
+		    	if(split[i].contains("f")||split[i].contains("b")) {
 		    		layerIsSlot[layerCounter]=split[i];
 		    	}
 		    	else {
@@ -364,8 +374,8 @@ public class LayeredImage {
 	public void setNoLayers() {
 		this.noLayers=layersX.size();
 	}
-	public ArrayList<Slot> getSlots() {
-		return slots;
+	public ArrayList<Slot> getBackSlots() {
+		return backSlots;
 	}
 	public void setX(int x) {
 		this.x = x;
@@ -373,10 +383,16 @@ public class LayeredImage {
 	public void setY(int y) {
 		this.y = y;
 	}
-	public void setSlots(ArrayList<Slot> slots) {
-		this.slots = slots;
+	public void setBackSlots(ArrayList<Slot> slots) {
+		this.backSlots = slots;
 	}
 	
+	public ArrayList<Slot> getFrontSlots() {
+		return frontSlots;
+	}
+	public void setFrontSlots(ArrayList<Slot> frontSlots) {
+		this.frontSlots = frontSlots;
+	}
 	public void setLayersShading(ImageHandler e){
 		BufferedImage img = new BufferedImage(e.getImg().getWidth(), e.getImg().getHeight(), BufferedImage.TRANSLUCENT);
 		img  = e.getImg();
