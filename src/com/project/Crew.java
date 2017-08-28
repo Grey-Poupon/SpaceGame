@@ -20,6 +20,7 @@ import com.project.crew_types.OctoBitch;
 import com.project.crew_types.Robot;
 import com.project.crew_types.YellowLizard;
 import com.project.crew_types.diseases.Disease;
+import com.project.ship.Room;
 
 public class Crew implements Observer{
 	protected char gender;
@@ -33,6 +34,16 @@ public class Crew implements Observer{
 	protected TooltipSelectionID locationOnShip = TooltipSelectionID.Cockpit;
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
+	protected Room room;
+	
+	public void setRoomIn(Room room) {
+		this.room = room;
+	}
+	public Room getRoomIn() {
+		return room;
+	}
+	
+
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
 	
@@ -101,13 +112,6 @@ public class Crew implements Observer{
 		loadPortrait();
 	}
 	
-	
-	
-	
-	
-	protected TooltipSelectionID getRoom() {
-		return getLocationOnShip();
-	}
 	protected void moveRoom(TooltipSelectionID room) {
 		this.setLocationOnShip(room);
 	}
@@ -314,6 +318,10 @@ public class Crew implements Observer{
 			}
 		}
 		this.portrait.setImg(img);
+	}
+	public static Random getRand() {
+		// TODO Auto-generated method stub
+		return rand;
 	}	
 	
 	

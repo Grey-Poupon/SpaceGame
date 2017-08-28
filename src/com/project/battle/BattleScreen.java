@@ -2,11 +2,8 @@ package com.project.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Random;
 
 import com.project.Animation;
@@ -113,9 +110,11 @@ public class BattleScreen extends Main {
 		this.addMouseMotionListener(mouseIn);
 		this.addMouseWheelListener(mouseIn);
 	}
+	
 	public void selectRoom(String room){
 		selectedRoom = room;
 	}
+	
 	private void nextTurn() {
 		// if its the chased's turn, next phase
 		if(isPlayersTurn ^ playerIsChaser || currentPhase == BattlePhases.Final) { 
@@ -139,7 +138,6 @@ public class BattleScreen extends Main {
 		if(currentPhase == BattlePhases.Final) {phase = "final";}
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the "+phase+" phase and the "+turn+" turn");
-		
 	}
 	public void tick(){
 		
@@ -209,7 +207,6 @@ public class BattleScreen extends Main {
 	public void UseWeapon(Ship primary, Ship secondary,int position,Point shot){
 		Weapon weapon = (Weapon) primary.getSlot(position).getSlotItem();
 		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot).start();
-
 	}
 	
 	

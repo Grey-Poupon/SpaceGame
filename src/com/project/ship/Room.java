@@ -1,6 +1,8 @@
 package com.project.ship;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.project.Crew;
 
@@ -10,7 +12,24 @@ public class Room {
 	private int damageMod;
 	private int efficiency;
 	private Crew roomLeader;
+	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	
+	public void addCrew(Crew crew) {
+		crewInRoom.add(crew);
+	}
+	public void removeCrew(Crew crew) {
+		crewInRoom.remove(crew);
+	}
+	
+	public ArrayList<Crew> getCrewInRoom() {
+		return crewInRoom;
+	}
+	public void setCrewInRoom(ArrayList<Crew> crewInRoom) {
+		this.crewInRoom = crewInRoom;
+	}
+	public void setLocation(Point location) {
+		Location = location;
+	}
 	public Point getLocation() {
 		return Location;
 	}
@@ -42,5 +61,13 @@ public class Room {
 	public void setRoomLeader(Crew roomLeader) {
 		this.roomLeader = roomLeader;
 	}
+	public void UseRoom() {
+		
+	}
+	public ArrayList<String> getOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }

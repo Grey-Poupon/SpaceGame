@@ -2,9 +2,9 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,8 @@ import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.rooms.Cockpit;
+import com.project.ship.rooms.WeaponsRoom;
 import com.project.weapons.Weapon;
 
 public class Ship implements Handleable{
@@ -33,22 +35,40 @@ public class Ship implements Handleable{
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
-	private List<Room> damagableRooms = new ArrayList<Room>();
+	private List<Room> rooms = new ArrayList<Room>();
+	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
+	private Weapon[]       backWeapons 		   = new Weapon[4];
 	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 	private Sensor sensor;
+	private boolean isChased;
+	public boolean isChased() {
+		return isChased;
+	}
+
+
+
+
+	public void setChased(boolean isChased) {
+		this.isChased = isChased;
+	}
+
+
+
+
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
 
 	
 	
-	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew){
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
 		shipSlots= lImage.getSlots();
-		
+		this.isChased = isChased;
 		setSensors();
 		generateFlavourText();
+		
 		
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 
@@ -59,15 +79,26 @@ public class Ship implements Handleable{
 		for(int i=0;i<shipSlots.size();i++){
 			shipSlots.get(i).setSlotItem(defaultWeapon);
 		}
+		generateRooms();
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
-				crew.add(Crew.generateRandomCrew());
+				Crew crewie = Crew.generateRandomCrew();
+				crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
+				crew.add(crewie);
 			}
 		}	
 	}
 	
 	
 	
+
+	private void generateRooms() {
+		rooms.add(new WeaponsRoom(frontWeapons,backWeapons,isChased));
+		rooms.add(new Cockpit());
+	}
+
+
+
 
 	private void generateFlavourText() {
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
@@ -126,10 +157,10 @@ public class Ship implements Handleable{
 		return dmg;
 	}
 	public Room getClosestRoom(int x, int y) {
-		if(damagableRooms.size()<1) {return null;}
-		Room closestRoom = damagableRooms.get(0);
+		if(rooms.size()<1) {return null;}
+		Room closestRoom = rooms.get(0);
 		Point closest = closestRoom.getLocation();
-		for(Room r :damagableRooms) {
+		for(Room r :rooms) {
 			Point n=r.getLocation();
 			if(closest.x+closest.y>n.x+n.y && closest.x*closest.y > n.x*n.y) {
 				closest = n;
@@ -138,6 +169,48 @@ public class Ship implements Handleable{
 		}
 		return closestRoom;
 	}
+	public List<Room> getRooms() {
+		return rooms;
+	}
+
+
+
+
+	public void setRooms(List<Room> rooms) {
+		this.rooms = rooms;
+	}
+
+
+
+
+	public List<Slot> getShipSlots() {
+		return shipSlots;
+	}
+
+
+
+
+	public void setShipSlots(List<Slot> shipSlots) {
+		this.shipSlots = shipSlots;
+	}
+
+
+
+
+	public Sensor getSensor() {
+		return sensor;
+	}
+
+
+
+
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
+	}
+
+
+
+
 	public boolean isShipClicked(int x, int y) {
 		for(ImageHandler i : lImage.getLayers()) {
 			if(i.isClicked(x, y)) {
@@ -231,7 +304,6 @@ public class Ship implements Handleable{
 
 
 
-	@Override
 	public void render(Graphics g) {
 		for(int i =0;i<lImage.getNoLayers();i++) {
 			lImage.getLayers().get(i).render(g);

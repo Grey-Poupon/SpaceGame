@@ -5,13 +5,16 @@ public class ProjectileInfo {
 	private int turn;
 	private int damage;
 	private DamageType damageType;
-	private Boolean isChaser;
-	public ProjectileInfo(int waitCounter, int turn, int damage, DamageType damageType, Boolean isChaser) {
+	private boolean isChaser;
+	private boolean targetSelf;
+	
+	public ProjectileInfo(int waitCounter, int turn, int damage, DamageType damageType, boolean isChaser,boolean targetSelf) {
 		this.waitCounter = waitCounter;
 		this.turn = turn;
 		this.damage = damage;
 		this.damageType = damageType;
 		this.isChaser = isChaser;
+		this.setTargetSelf(targetSelf);
 	}
 	public int getWaitCounter() {
 		return waitCounter;
@@ -42,5 +45,11 @@ public class ProjectileInfo {
 	}
 	public void setIsChaser(Boolean isChaser) {
 		this.isChaser = isChaser;
+	}
+	public boolean isTargetSelf() {
+		return targetSelf;
+	}
+	public void setTargetSelf(boolean targetSelf) {
+		this.targetSelf = targetSelf;
 	}
 }

@@ -385,21 +385,15 @@ public class LayeredImage {
 
 					//this Line actually works
 					float shade  = ((e.getZ()/z)); 
-//					float shade  = (cameraZ-editable.layerZ[0])/(cameraZ-e.getZ()-(e.getImg().getWidth()-x)*cameraX/e.getImg().getWidth());
-//					float shade = (float) ((e.getZ()+10*((e.getxCoordinate()+x)/this.largestWidth)*Math.sqrt(9-(e.getXScale()*e.getXScale())))/(e.getImg().getWidth()+editable.layerZ[editable.layerZ.length-1]+5));
-//					shade = 1-shade*0.5f;
-					
+
 					Color col = new Color(e.getOriImg().getRGB(x,y),true);
 					int a = (int)(col.getAlpha());
-					if(a==0) {
-						continue;
-					}
+					if(a==0) {continue;}
 					int r = (int) (col.getRed()*(1-0.5*shade));
 					int g = (int) (col.getGreen()*(1-0.5*shade));
 					int b = (int) (col.getBlue()*(1-0.5*shade));
 					
-					int rgba = (a << 24) | (r << 16) | (g << 8) | b;
-					//if(shade<1) {img.setRGB(x,y,new Color(r,g,b,a).getRGB());}						
+					int rgba = (a << 24) | (r << 16) | (g << 8) | b;						
 					
 
 					img.setRGB(x,y,rgba);
