@@ -96,14 +96,6 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
 		Handler.addLowPriorityEntity(chasedHealthbar);		
-//		for(int i =0;i<playerShip.getCrew().size();i++) {
-//			Crew crew = playerShip.getCrew().get(i);
-//			System.out.println(crew.getName()+":"+crew.getRaceID().toString()+" "+crew.getGender());
-//			for(int j = 0;j<crew.getStats().size();j++) {
-//				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
-//			}
-//			System.out.println();
-//		}
 		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
@@ -180,8 +172,6 @@ public class BattleScreen extends Main {
 			}
 			
 			
-			
-			
 			if(chaserShip !=null && chasedShip != null) {
 				if(currentPhase!=null&&phase!=null) {
 					phase.setText("Current Phase: "+currentPhase.toString());
@@ -206,7 +196,7 @@ public class BattleScreen extends Main {
 
 	public void UseWeapon(Ship primary, Ship secondary,int position,Point shot){
 		Weapon weapon = (Weapon) primary.getSlot(position).getSlotItem();
-		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot).start();
+		new ProjectileAnimation(primary, secondary, position, 800, true, weapon.fire(), shot).start();
 	}
 	
 	

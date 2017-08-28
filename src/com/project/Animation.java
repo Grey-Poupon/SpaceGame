@@ -1,6 +1,7 @@
 package com.project;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -151,6 +152,9 @@ public class Animation implements Handleable {
 	}
 	public void setSpritesheet(String path) {
 		this.spritesheet = ResourceLoader.getImage(path);
+		if(this.spritesheet == null) {
+			throw new NullPointerException();
+		}
 	}
 	public void setSprite() {
 		if(spritesheet!=null) {
@@ -255,74 +259,33 @@ public class Animation implements Handleable {
 		else 	   {return new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),false,align, anims);}      
 		
 	}
-	public void setYEnd(int y) {
-		this.yPixelsToMove = Math.abs(y-yStart);
-		
-		if(y != yEnd || yVel == 0) {
+
+	public void setStartAndEnd(Point start,Point end) {
+		this.xStart = (float) start.getX();
+		this.yStart = (float) start.getY();
+		this.xEnd   = (float) end.getX();
+		this.yEnd   = (float) end.getY();
+		this.xPixelsToMove = Math.abs(xEnd-xStart);
+		this.yPixelsToMove = Math.abs(yEnd-yStart);
+		this.xCoordinate = this.xStart;
+		this.yCoordinate = this.yStart;
+		if(xVel == 0 ^ yVel == 0) {
 			if(xVel == 0) {
-				yVel = yVel == 0 ? DEFAULT_SPEED : yVel;
+				xVel = ((xPixelsToMove)*Math.abs(yVel))/(yPixelsToMove);
 			}
 			else {
-				yVel = ((y-yStart)*Math.abs(xVel))/(xPixelsToMove);
+				yVel = ((yPixelsToMove)*Math.abs(xVel))/(xPixelsToMove);
 			}
 		}
-		this.yEnd = y;
-		
+		else if (xVel == 0) {
+			xVel = xEnd>xStart ? DEFAULT_SPEED : -DEFAULT_SPEED;
+			yVel = ((yPixelsToMove)*Math.abs(xVel))/(xPixelsToMove);
+		}
+		if(xVel<0) {this.scale = - Math.abs(scale);}
+		else {
+			this.scale = Math.abs(scale);
+		}
 
-	}
-	public void setYStart(int y) {
-		this.yPixelsToMove = Math.abs(yEnd-y);
-		
-		if(y != yStart || yVel == 0) {
-			if(xVel == 0) {
-				yVel = yVel == 0 ? DEFAULT_SPEED : yVel;
-			}
-			else {
-				yVel = ((yEnd-y)*Math.abs(xVel))/(xPixelsToMove);
-			}
-		}
-		this.yStart = y;
-		this.yCoordinate = y;
-
-		
-		
-	}
-	public void setXEnd(int x) {
-		this.xPixelsToMove = Math.abs(x-xStart);
-
-		if(x != xEnd || xVel == 0) {
-			if(yVel == 0) {
-				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
-				if(x<xStart) {xVel = -xVel;}
-			}
-			else {
-				xVel = (x-xStart*Math.abs(yVel))/(yPixelsToMove);
-			}
-		}
-		
-		this.xEnd = x;
-		if(xVel < 0 ) {
-			scale = -Math.abs(scale);
-		}
-	}
-	public void setXStart(int x) {
-		this.xPixelsToMove = Math.abs(xEnd-x);
-
-		if(x != xStart || xVel == 0) {
-			if(yVel == 0) {
-				xVel = xVel == 0 ? DEFAULT_SPEED : xVel;
-			}
-			else {
-				xVel = ((xEnd-x)*Math.abs(yVel))/(yPixelsToMove);
-			}
-		}
-		this.xStart = x;
-		this.xCoordinate = x;
-		if(xVel < 0 ) {
-			scale = -Math.abs(scale);
-		}
-		
-		
 	}
 	public int getTileWidth() {
 		return sprite.getTileWidth();
@@ -348,6 +311,8 @@ public class Animation implements Handleable {
 		float x = ticks*xVel;
 		yCoordinate -= y;
 		xCoordinate -= x;
+		this.xPixelsToMove += x;
+		this.yPixelsToMove += y;
 		this.pushed = true;
 		
 	}

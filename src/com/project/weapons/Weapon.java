@@ -39,7 +39,7 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 		this.effects = effects;
 	}
 	public Animation getFiringAnimation() {
-		return firingAnimation;
+		return firingAnimation.copy();
 	}
 	public void setFiringAnimations(Animation firingAnimation) {
 		this.firingAnimation = firingAnimation;
@@ -70,9 +70,6 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	public String getSprite() {
 		// TODO Auto-generated method stub
 		return "res/missileSpritesheet.png";
-	}
-	public Animation getAnimation() {
-		return firingAnimation.copy();
 	}
 
 	public int getProjectileGap() {

@@ -67,8 +67,7 @@ public class BattleUI extends UI{
 						Weapon w = room.getFrontWeapons().get(i);
 						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
 					}
-				}
-				
+				}			
 			}
 			else if(crew.getRoomIn() instanceof EngineRoom) {
 				

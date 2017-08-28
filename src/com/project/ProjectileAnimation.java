@@ -56,10 +56,7 @@ public class ProjectileAnimation implements Handleable{
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
-		for(int i = 0; i < animations.length;i++) {
-			animations[i] =  weapon.getAnimation();
-			animations[i].setMonitored(true);
-		}
+	
 		Handler.addHighPriorityEntity(this);
 		animationsRunning++;
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
@@ -73,11 +70,12 @@ public class ProjectileAnimation implements Handleable{
 		
 		for(int i = 0;i<noOfProjectiles;i++) {
 			Animation temp = weapon.getFiringAnimation();
-			temp.setXStart(primary.getSlot(slotPostion).getX());
-			temp.setYStart(primary.getSlot(slotPostion).getY());
-			temp.setXEnd(click.x);
-			temp.setYEnd(click.y);
+			temp.setMonitored(true);
+			Point start = new Point ();
+			start.setLocation(primary.getSlot(slotPostion).getX(),primary.getSlot(slotPostion).getY());
+			temp.setStartAndEnd(start, click);
 			temp.setMask(mask);
+			animations[i] =  temp;
 			}
 		}
 	}
@@ -106,7 +104,7 @@ public class ProjectileAnimation implements Handleable{
 			// pushback after the mid point
 			if(animations[i].isRunning()) {
 				stillRunning = true;
-				if(!isLeftToRight) {
+				if(isLeftToRight) {
 					if(!animations[i].isPushed() && animations[i].getxCoordinate()>Main.WIDTH/2) {
 						animations[i].pushBack(pushBack);
 						System.out.println("PushBack");
@@ -139,17 +137,16 @@ public class ProjectileAnimation implements Handleable{
 	}
 	private void doDamage() {
 		float[] accuracy = (float[]) damageDealt[1];
-		int newX,newY,extraDmg;
+		int newX,newY,dmg;
 		FireableWeapon fireWeapon = (FireableWeapon) weapon;
 		for(int j=0;j<(int)damageDealt[0];j++) {
 			if(accuracy[j]!=0) {
 				// add weaponSway
 				newX = (int) (rand.nextBoolean() ? click.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.x-((int)damageDealt[2]*(1/accuracy[j])));
 				newY = (int) (rand.nextBoolean() ? click.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.y-((int)damageDealt[2]*(1/accuracy[j])));
-				// get room dmg
-				extraDmg = secondary.roomDamage(newX, newY);
 				// dmg here
-				
+				dmg = secondary.roomDamage(newX, newY) + (Integer) damageDealt[3];
+				secondary.takeDamage(dmg,(DamageType)damageDealt[4]);
 			}
 		}
 	}
