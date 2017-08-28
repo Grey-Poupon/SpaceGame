@@ -33,9 +33,7 @@ public class Ship implements Handleable{
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
-	private List<Room> damagableRooms = new ArrayList<Room>();;
-	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
-	private Weapon[]       backWeapons 		   = new Weapon[4];
+	private List<Room> damagableRooms = new ArrayList<Room>();
 	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 	private Sensor sensor;
@@ -58,10 +56,8 @@ public class Ship implements Handleable{
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
 		}
-		for(int i=0;i<frontWeapons.length;i++){
-			setFrontWeapon(defaultWeapon, i);
-			setBackWeapon(defaultWeapon, i);
-//			shipSlots.add(new Slot(150,400+80*i,40,40));
+		for(int i=0;i<shipSlots.size();i++){
+			shipSlots.get(i).setSlotItem(defaultWeapon);
 		}
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
@@ -187,24 +183,7 @@ public class Ship implements Handleable{
 	public void setDamageDealtModifier(DamageType dt, int mod) {
 		damageDealtModifier.put(dt, Double.valueOf(mod));
 	}
-	public Weapon getFrontWeapon(int position) {
-		return frontWeapons[position];
-	}
-	public Weapon getBackWeapon(int position) {
-		return backWeapons[position];
-	}
-	public void setFrontWeapon(Weapon weapon, int position) {
-		this.frontWeapons[position] = weapon;
-	}
-	public void setBackWeapon(Weapon weapon, int position) {
-		this.backWeapons[position] = weapon;
-	}
-	public Weapon[] getFrontWeapons() {
-		return frontWeapons;
-	}
-	public Weapon[] getBackWeapons() {
-		return backWeapons;
-	}
+	
 	public LayeredImage getLayeredImage() {
 		return lImage;
 	}
@@ -295,6 +274,19 @@ public class Ship implements Handleable{
 
 	public void setPower(int power) {
 		this.power = power;
+	}
+
+
+
+
+	public List<Weapon> getWeapons() {
+		List<Weapon> weapons = new ArrayList<Weapon>();
+		for(int i = 0; i<shipSlots.size();i++) {
+			if(shipSlots.get(i).getSlotItem() instanceof Weapon) {
+				weapons.add((Weapon)shipSlots.get(i).getSlotItem());
+			}
+		}
+		return weapons;
 	}
 
 

@@ -23,7 +23,7 @@ import com.project.weapons.Weapon;
 public class BattleUI extends UI{
 	private ImageHandler overlay;
 	private static ImageHandler tooltipSeperator = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
-	private static Weapon[] weapons = new Weapon[4];
+	private static List<Weapon> weapons = new ArrayList<Weapon>();
 	private static TooltipSelectionID tooltipMenuSelection; 
 	private static final int	tooltipButtonWidth  = 524;
 	private static final int 	tooltipButtonHeight = 40;
@@ -40,7 +40,7 @@ public class BattleUI extends UI{
 	private Ship pShip;
 	private Ship eShip;
 	
-	public BattleUI (Weapon[] weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
+	public BattleUI (List<Weapon> weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
 		updateWeapons(weapons);
 		bs = battleScreen;
 		this.eShip = eShip;
@@ -62,8 +62,8 @@ public class BattleUI extends UI{
 			}
 			
 			if(tooltipMenuSelection == TooltipSelectionID.Weapons){// weapons selected
-				for(int i = 0;i<weapons.length;i++){
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, weapons[i].getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
+				for(int i = 0;i<weapons.size();i++){
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, weapons.get(i).getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
 				}		
 			}
 			else if(tooltipMenuSelection == TooltipSelectionID.Cockpit) {
@@ -83,8 +83,8 @@ public class BattleUI extends UI{
 			
 		
 	}
-	public static void updateWeapons(Weapon[] weapons1){
-		weapons = weapons1;
+	public static void updateWeapons(List<Weapon> weapons2){
+		weapons = weapons2;
 	}
 
 	

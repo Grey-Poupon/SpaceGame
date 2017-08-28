@@ -25,7 +25,7 @@ public class Destructive implements WeaponEffect {
 	}
 
 	
-	public Destructive(int rateOfFire, int damagePerShot, double accuracy, DamageType damageType,int weaponSwayMod){
+	public Destructive(int rateOfFire, int damagePerShot, float accuracy, DamageType damageType,int weaponSwayMod){
 		this.rateOfFire=rateOfFire;
 		this.damagePerShot =damagePerShot;
 		this.accuracy=accuracy;
@@ -34,11 +34,11 @@ public class Destructive implements WeaponEffect {
 		
 	}
 	public Object[] fire(){
-		double[] accuracy = new double[rateOfFire];
+		float[] accuracy = new float[rateOfFire];
 		Random rand = new Random();
 		for(int i=0; i<getRateOfFire();i++){
 			accuracy[i] = 1 ;
-			if(rand.nextDouble()>getAccuracy()){// if rand number is less than acc it's a hit
+			if(rand.nextFloat()>getAccuracy()){// if rand number is less than acc it's a hit
 				accuracy[i]=0;
 			}
 		}

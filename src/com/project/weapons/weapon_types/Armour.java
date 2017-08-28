@@ -9,9 +9,8 @@ import com.project.weapons.WeaponEffect;
 public class Armour extends Weapon {
 
 
-	public Armour(int cooldownDuration,Animation[] anims,List<Double> modifiers, String name,boolean targetSelf,WeaponEffect[] we) {
-		super(cooldownDuration, name, anims,targetSelf,we);
-		this.isBuffer = true;
+	public Armour(int cooldownDuration,Animation anim,List<Double> modifiers, String name,boolean targetSelf,WeaponEffect[] we,int projectileGap) {
+		super(cooldownDuration, name, anim,targetSelf,we,projectileGap);
 	}
 
 

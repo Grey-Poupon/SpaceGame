@@ -11,46 +11,17 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	private int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
 	protected String name;
-	protected boolean isBuffer;
-	protected boolean isDestructive;
-	protected boolean isDebuffer;
+	protected int projectileGap;
 	protected boolean targetSelf;
 	protected List<WeaponEffect> effects;	
-	protected List<Animation> firingAnimations = new ArrayList<Animation>(); 
+	protected Animation firingAnimation; 
 	
-	public List<WeaponEffect> getEffects() {
-		return effects;
-	}
-	public void setEffects(List<WeaponEffect> effects) {
-		this.effects = effects;
-	}
-	public List<Animation> getFiringAnimations() {
-		return firingAnimations;
-	}
-	public void setFiringAnimations(List<Animation> firingAnimations) {
-		this.firingAnimations = firingAnimations;
-	}
-	public boolean isTargetSelf() {
-		return targetSelf;
-	}
-	public void setTargetSelf(boolean targetSelf) {
-		this.targetSelf = targetSelf;
-	}
-	public boolean isBuffer() {// to check if the weapon buffs
-		return isBuffer;
-	}
-	public boolean isDestructive() { // to check if the weapon is destructive
-		return isDestructive;
-	}
-	public boolean isDebuffer(){ // to check if the weapon debuffs
-		return isDebuffer;
-	}
-
-	public Weapon(int cooldownDuration, String name,Animation[] anims,boolean targetSelf,WeaponEffect[] we){
-		this.firingAnimations = Arrays.asList(anims);
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap){
+		this.firingAnimation = anim;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;
+		this.projectileGap = projectileGap;
 		if(we!=null) {
 			this.effects = Arrays.asList(we);
 		}
@@ -58,6 +29,28 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 			this.effects = new ArrayList<>();
 		}
 	}
+	
+	
+	
+	public List<WeaponEffect> getEffects() {
+		return effects;
+	}
+	public void setEffects(List<WeaponEffect> effects) {
+		this.effects = effects;
+	}
+	public Animation getFiringAnimation() {
+		return firingAnimation;
+	}
+	public void setFiringAnimations(Animation firingAnimation) {
+		this.firingAnimation = firingAnimation;
+	}
+	public boolean isTargetSelf() {
+		return targetSelf;
+	}
+	public void setTargetSelf(boolean targetSelf) {
+		this.targetSelf = targetSelf;
+	}
+
 	protected int getCooldownDuration() {
 		return cooldownDuration;
 	}
@@ -78,7 +71,11 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 		// TODO Auto-generated method stub
 		return "res/missileSpritesheet.png";
 	}
-	public Animation getAnimation(int i) {
-		return firingAnimations.get(i).copy();
+	public Animation getAnimation() {
+		return firingAnimation.copy();
+	}
+
+	public int getProjectileGap() {
+		return projectileGap;
 	}	
 }
