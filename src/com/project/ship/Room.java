@@ -14,6 +14,10 @@ public class Room {
 	private Crew roomLeader;
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	
+	public Room(Point location) {
+		this.Location =location;
+	}
+	
 	public void addCrew(Crew crew) {
 		crewInRoom.add(crew);
 	}

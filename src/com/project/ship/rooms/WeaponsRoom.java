@@ -1,5 +1,6 @@
 package com.project.ship.rooms;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,13 +22,15 @@ public class WeaponsRoom extends Room {
 		this.weapons = weapons;
 	}
 
-	public WeaponsRoom() {
-		
+	public WeaponsRoom(Point location) {
+		super(location);
 	}
-	public WeaponsRoom(Weapon[] we) {
+	public WeaponsRoom(Weapon[] we,Point location) {
+		super(location);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 	}
-	public WeaponsRoom(Weapon[] frontWeapons2,Weapon[] backWeapons2,boolean isChased) {
+	public WeaponsRoom(Weapon[] frontWeapons2,Weapon[] backWeapons2,boolean isChased,Point location) {
+		super(location);
 		this.isChased = isChased;
 		this.frontWeapons=Arrays.asList(backWeapons2);
 		this.backWeapons = Arrays.asList(frontWeapons2);

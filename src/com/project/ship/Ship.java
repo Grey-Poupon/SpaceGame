@@ -36,30 +36,26 @@ public class Ship implements Handleable{
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
+	
 	private Weapon[]       frontWeapons		   = new Weapon[4]; // only allowed 4 front + 4 back weapons
 	private Weapon[]       backWeapons 		   = new Weapon[4];
 	private List<Slot>	   shipSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
 	private Sensor sensor;
 	private boolean isChased;
+	
+	
 	public boolean isChased() {
 		return isChased;
 	}
 
-
-
-
+	
 	public void setChased(boolean isChased) {
 		this.isChased = isChased;
 	}
 
-
-
-
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
-	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
-
-	
+	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
@@ -93,8 +89,8 @@ public class Ship implements Handleable{
 	
 
 	private void generateRooms() {
-		rooms.add(new WeaponsRoom(frontWeapons,backWeapons,isChased));
-		rooms.add(new Cockpit());
+		rooms.add(new WeaponsRoom(frontWeapons,backWeapons,isChased, new Point(50,50)));
+		rooms.add(new Cockpit(new Point(70,70)));
 	}
 
 
