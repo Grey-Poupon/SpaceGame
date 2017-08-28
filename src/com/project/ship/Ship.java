@@ -89,7 +89,7 @@ public class Ship implements Handleable{
 	
 
 	private void generateRooms() {
-		rooms.add(new WeaponsRoom(frontWeapons,backWeapons,isChased, new Point(50,50)));
+		rooms.add(new WeaponsRoom(getWeapons(),getWeapons(),isChased, new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
 	}
 

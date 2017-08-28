@@ -37,11 +37,7 @@ public class BattleUI extends UI{
 	private static final Color  fontColour 			= Color.WHITE;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
-	private Ship pShip;
-	private Ship eShip;
-	
 	public BattleUI (List<Weapon> weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
-		updateWeapons(weapons);
 		bs = battleScreen;
 		List<Button> flavourTexts = new ArrayList<Button>();
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
@@ -59,10 +55,23 @@ public class BattleUI extends UI{
 				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, true, crew.getSpeechOptions().get(i), fontName, fontStyle, fontSize, fontColour, bs,true));
 			}
 			
-			if(tooltipMenuSelection == TooltipSelectionID.Weapons){// weapons selected
-				for(int i = 0;i<weapons.size();i++){
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, weapons.get(i).getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
-				}		
+			if(crew.getRoomIn() instanceof WeaponsRoom) {
+				WeaponsRoom room = (WeaponsRoom) crew.getRoomIn();
+				if(room.isChased()) {
+					for(int i = 0;i<room.getBackWeapons().size();i++) {
+						Weapon w = room.getBackWeapons().get(i);
+						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
+					}
+				}else {
+					for(int i = 0;i<room.getFrontWeapons().size();i++) {
+						Weapon w = room.getFrontWeapons().get(i);
+						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
+					}
+				}
+				
+			}
+			else if(crew.getRoomIn() instanceof EngineRoom) {
+				
 			}
 			else if(crew.getRoomIn() instanceof Cockpit) {
 				for(int i = 0; i < 4;i++){
@@ -94,15 +103,4 @@ public class BattleUI extends UI{
 			
 		
 	}
-	public static void updateWeapons(List<Weapon> weapons2){
-		weapons = weapons2;
-	}
-
-
-	
-
-
-
-
-
 }
