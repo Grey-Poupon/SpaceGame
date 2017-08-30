@@ -7,7 +7,7 @@ import java.util.Collection;
 import com.project.Crew;
 
 public class Room {
-	private Point Location;
+	private Point location;
 	private int damagableRadius;
 	private int damageMod;
 	private int efficiency;
@@ -15,27 +15,26 @@ public class Room {
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	
 	public Room(Point location) {
-		this.Location =location;
+		this.location =location;
 	}
 	
 	public void addCrew(Crew crew) {
+		crew.setRoomIn(this);
 		crewInRoom.add(crew);
 	}
-	public void removeCrew(Crew crew) {
+	public void removeCrew(Crew crew,Room staffRoom) {
+		crew.setRoomIn(staffRoom);
 		crewInRoom.remove(crew);
 	}
 	
 	public ArrayList<Crew> getCrewInRoom() {
 		return crewInRoom;
 	}
-	public void setCrewInRoom(ArrayList<Crew> crewInRoom) {
-		this.crewInRoom = crewInRoom;
-	}
 	public void setLocation(Point location) {
-		Location = location;
+		this.location = location;
 	}
 	public Point getLocation() {
-		return Location;
+		return location;
 	}
 	public int getDamagableRadius() {
 		return damagableRadius;
@@ -63,6 +62,7 @@ public class Room {
 		return roomLeader;
 	}
 	public void setRoomLeader(Crew roomLeader) {
+		roomLeader.setRoomIn(this);
 		this.roomLeader = roomLeader;
 	}
 	public void UseRoom() {

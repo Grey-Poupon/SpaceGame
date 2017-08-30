@@ -264,7 +264,7 @@ public class BattleScreen extends Main {
 					}
 				}
 				if(ID == ButtonID.Crew){
-					BattleUI.changeTootlipSelection(chaserShip.getAllCrew().get(index),TooltipSelectionID.Room);
+					BattleUI.changeTootlipSelection(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
 				}
 				if(ID == ButtonID.Graph){
 					graphButton.getGraph().setPoint(MouseInput.mousePosition);
