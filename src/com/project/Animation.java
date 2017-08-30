@@ -137,6 +137,8 @@ public class Animation implements Handleable {
 		this.moving         = animation.moving;
 		this.running        = running;
 		this.followingAnims.addAll(Arrays.asList(followingAnims));
+		setSpritesheet(path);
+		setSprite();
 	}
 	
 
