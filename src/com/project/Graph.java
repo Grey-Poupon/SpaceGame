@@ -23,6 +23,8 @@ public class Graph implements Handleable {
 	private Text text;
 	private Function<Double,Double> function;
 	private int mouseX=0;
+	private int modNum = 10;
+	private int modNumY = 500;
 	public Shape getClip() {
 		return clip;
 	}
@@ -52,19 +54,15 @@ public class Graph implements Handleable {
 		Graphics2D g2d = (Graphics2D)g.create();
 		g2d.setColor(Color.white);
 		if(clip!=null) {g2d.setClip(clip);}
-		
 		for(int i =0;i<dataX.length-1;i++) {
 			g2d.drawLine((int)dataX[i], (int)dataY[i],(int) dataX[i+1],(int) dataY[i+1]);
 		}
-		
-		
 		g2d.drawLine(x, y+height, x+width, y+height);
 		g2d.drawLine(x, y, x, y+height);
 		g2d.setColor(Color.red);
-		g2d.drawLine(x,y+height-function.apply((double) mouseX*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+mouseX,y+height-function.apply((double) mouseX*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-		g2d.drawLine(x+mouseX, y+height, x+mouseX, y+height-function.apply((double) mouseX*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-		
-		g2d.fillRect(x+mouseX-2, y+height-function.apply((double) mouseX*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
+		g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+		g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-(int)(function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width)*(dataX.length/width)*height/function.apply((double)dataY.length)));
+		g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-(int)(function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width)*(dataX.length/width)*height/function.apply((double)dataY.length))-2, 5, 5);
 		
 	}
 	
@@ -100,13 +98,16 @@ public class Graph implements Handleable {
 	}
 
 	public void setPoint(Point pos) {
-		this.text.setText(Integer.toString(function.apply((double) (pos.x-x)).intValue())); 
 		this.mouseX = pos.x-x;
+		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
+		this.text.setText(Integer.toString(round-round%modNumY)); 
+		
 	}
 
 	public void drag(int x,int y, int button) {
-		this.text.setText(Integer.toString(function.apply((double) (x-this.x)).intValue()));
 		this.mouseX = x-this.x;
+		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
+		this.text.setText(Integer.toString((round-round%modNumY)));
 	}
 
 	@Override

@@ -41,6 +41,7 @@ public class Ship implements Handleable{
 	private List<Handleable> sprites = new ArrayList<Handleable>();
 	private Sensor sensor;
 	private boolean isChased;
+	private HashMap<String,Integer> resources = new HashMap<>();
 	
 	
 	public boolean isChased() {
@@ -63,23 +64,19 @@ public class Ship implements Handleable{
 		this.isChased = isChased;
 		setSensors();
 		generateFlavourText();
-		
-		
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
-
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
 		}
 		for(int i=0;i<shipBackSlots.size();i++){
 			shipBackSlots.get(i).setSlotItem(defaultWeapon);
-
 		}
 		for(int i=0;i<shipFrontSlots.size();i++){
 			shipFrontSlots.get(i).setSlotItem(defaultWeapon);
-
 		}
 		generateRooms();
+		generateResources();
 		sortSprites();
 			for(int i =0; i<10;i++) {
 				Crew crewie = Crew.generateRandomCrew(visibleCrew);
@@ -88,8 +85,11 @@ public class Ship implements Handleable{
 		}	
 	}
 	
-	
-	
+	private void generateResources() {
+		resources.put("fuel", 500);
+		resources.put("missiles", 500);
+	}
+
 
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),isChased, new Point(50,50)));
@@ -461,6 +461,26 @@ public class Ship implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	public HashMap<String,Integer> getResources() {
+		return resources;
+	}
+
+
+	public void setResources(HashMap<String,Integer> resources) {
+		this.resources = resources;
+	}
+	
+	public void getResource(String key) {
+		resources.get(key);
+	}
+	public void setResource(String key,int val) {
+		resources.replace(key, val);
+	}
+	public void incResource(String key,int inc) {
+		resources.replace(key, resources.get(key)+inc);
 	}
 
 
