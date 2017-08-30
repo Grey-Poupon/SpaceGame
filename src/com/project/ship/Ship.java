@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
+import java.util.Random;
 
 import com.project.Crew;
 import com.project.DamageType;
@@ -35,9 +37,10 @@ public class Ship implements Handleable{
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
-	private List<Slot>	   shipBackSlots           = new ArrayList<Slot>();
-	private List<Slot>	   shipFrontSlots           = new ArrayList<Slot>();
-	private List<Crew>     crew                = new ArrayList<Crew>();
+	private List<Slot>	   shipBackSlots       = new ArrayList<Slot>();
+	private List<Slot>	   shipFrontSlots      = new ArrayList<Slot>();
+	private List<Crew>     allCrew             = new ArrayList<Crew>();
+	private List<Crew>     unassignedCrew      = new ArrayList<Crew>();
 	private List<Handleable> sprites = new ArrayList<Handleable>();
 	private Sensor sensor;
 	private boolean isChased;
@@ -78,16 +81,36 @@ public class Ship implements Handleable{
 		generateRooms();
 		generateResources();
 		sortSprites();
-			for(int i =0; i<10;i++) {
-				Crew crewie = Crew.generateRandomCrew(visibleCrew);
-				crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
-				crew.add(crewie);
+		for(int i =0; i<10;i++) {
+			Crew crewie = Crew.generateRandomCrew(visibleCrew);
+			crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
+			allCrew.add(crewie);
+			unassignedCrew.add(crewie);
 		}	
+		randomlyFillRooms();
+
 	}
 	
 	private void generateResources() {
 		resources.put("fuel", 500);
 		resources.put("missiles", 500);
+	}
+
+
+	private void randomlyFillRooms() {
+		Random rand = new Random();
+		int index;
+		for(Room room : rooms) {			
+			index = rand.nextInt(unassignedCrew.size());
+			room.setRoomLeader(unassignedCrew.get(index));
+			unassignedCrew.remove(index);
+		}
+		for(Crew crew:unassignedCrew) {
+			index = rand.nextInt(rooms.size());
+			rooms.get(index).addCrew(crew);
+		}
+		unassignedCrew.clear();
+		
 	}
 
 
@@ -166,8 +189,8 @@ public class Ship implements Handleable{
 	}
 	public List<Button> getCrewButtons(BattleScreen bs){
 		List<Button> buttons = new ArrayList<Button>();
-		for(int i = 0;i<crew.size();i++) {
-			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,crew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,crew.get(i).getPortrait(), bs));
+		for(int i = 0;i<allCrew.size();i++) {
+			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,allCrew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,allCrew.get(i).getPortrait(), bs));
 		}
 		return buttons;
 	}
@@ -200,7 +223,23 @@ public class Ship implements Handleable{
 	public List<Room> getRooms() {
 		return rooms;
 	}
-
+	public List<Crew> getRoomLeaders(){
+		List<Crew> leaders = new ArrayList<Crew>();
+		for(Room room: rooms) {
+			leaders.add(room.getRoomLeader());
+		}
+		return leaders;
+	}
+	public List<Button> getLeaderButtons(BattleScreen bs){
+		List<Crew> leaders = getRoomLeaders();
+		List<Button> buttons = new ArrayList<Button>();
+		for(int i = 0;i<leaders.size();i++) {
+			Crew crew = leaders.get(i);
+			crew.getPortrait().setVisible(true);
+			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true, crew.getPortrait(), bs));
+		}
+		return buttons;
+	}
 
 
 
@@ -241,8 +280,8 @@ public class Ship implements Handleable{
 	}
 	
 	
-	public List<Crew> getCrew() {
-		return crew;
+	public List<Crew> getAllCrew() {
+		return allCrew;
 	}
 	public int getHealth() {
 		return health;

@@ -33,7 +33,7 @@ public class Buffer implements WeaponEffect{
 	public void applyBuff(Ship ship,int x,int y) {
 		if(toBuff == "crew") {
 			//Needs a function to find crew in specific rooms
-			ship.getCrew().get(0).setStatModifiers(dictKey, modifier);
+			ship.getAllCrew().get(0).setStatModifiers(dictKey, modifier);
 		}
 		else if(toBuff == "room") {
 			ship.getClosestRoom(x,y).setStatModifiers(dictKey,modifier);
