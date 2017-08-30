@@ -157,7 +157,7 @@ public class BattleScreen extends Main {
 				}
 				else if (currentPhase == BattlePhases.WeaponsClick){
 					if(playerIsChaser) {
-						chasedShotLocation = new Point(1000,350);
+						chasedShotLocation = new Point(350,350);
 					}
 					else {
 						chaserShotLocation = new Point(1000,450);
