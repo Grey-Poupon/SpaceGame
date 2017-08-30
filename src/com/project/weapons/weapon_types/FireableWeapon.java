@@ -63,13 +63,15 @@ public class FireableWeapon extends Weapon {
 		wb.setxCoordinate(slot.getX());
 		wb.setyCoordinate(slot.getY()+slot.getHeight()/2-wb.getTileHeight());
 		if(!slot.isFront()) {
-			wb.setFlipScale(-1);
+			wb.setxCoordinate(slot.getX()+slot.getWidth()/2);
+			wb.setxScale(-1);
 		}
 		//wb.setAlign(AdjustmentID.MidLeft);
 
 		wb.render(g);
 		
 	}
+
 
 
 

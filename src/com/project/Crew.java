@@ -111,7 +111,7 @@ public class Crew implements Observer{
 		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		getSpeechOptions().add("Talk");
 		loadPortrait();
-		//if(visible) {Handler.addHighPriorityEntity(this.portrait);}
+		//if(visible) {Handler.addHighPriorityEntity(portrait);}
 
 	}
 	

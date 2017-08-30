@@ -179,6 +179,7 @@ public class LayeredImage {
 			}
 			for(int i=0;i<backSlots.size();i++) {
 				Slot s =backSlots.get(i);
+				setScaling(s);
 				s.setX(layers.get(s.getLayerIndex()).getxCoordinate());
 				s.setY(layers.get(s.getLayerIndex()).getyCoordinate());
 				s.setWidth((int) (layers.get(s.getLayerIndex()).getXScale()*layers.get(s.getLayerIndex()).getImg().getWidth()));
@@ -186,6 +187,7 @@ public class LayeredImage {
 			}
 			for(int i=0;i<frontSlots.size();i++) {
 				Slot s =frontSlots.get(i);
+				setScaling(s);
 				s.setX(layers.get(s.getLayerIndex()).getxCoordinate());
 				s.setY(layers.get(s.getLayerIndex()).getyCoordinate());
 				s.setWidth((int) (layers.get(s.getLayerIndex()).getXScale()*layers.get(s.getLayerIndex()).getImg().getWidth()));
@@ -205,6 +207,26 @@ public class LayeredImage {
 			else {layers.get(i).setYVel((-1*(rand.nextInt(2)+1)));}
 		}
 		destroyed= true;
+		}
+	}
+	
+	private void setScaling(Slot s) {
+		float f = Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ));
+		double d1 =Math.atan2(cameraX, s.getZ());
+		double d = (Math.cos(d1)*scale*(f));
+		s.getSlotItem().getWeaponBody().setxScale((float)d);
+		if(cameraX>0) {
+			s.setX((int)(this.x+s.getSlotItem().getWeaponBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1)));
+		}
+		else {
+			s.setX((int)(this.x+s.getSlotItem().getWeaponBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1) + (this.largestWidth*(scale-(s.getSlotItem().getWeaponBody().getxScale())))));
+		}
+		s.getSlotItem().getWeaponBody().setyScale((float) Math.cos(Math.atan2(cameraY, s.getZ()))*scale*(Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ))));	    
+		if(cameraY>0) {
+			s.setY((int)(this.y+s.getSlotItem().getWeaponBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1)));
+		}
+		else {
+			s.setY((int)(this.y+s.getSlotItem().getWeaponBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1) + (this.largestHeight*(scale-(s.getSlotItem().getWeaponBody().getyScale())))));
 		}
 	}
 	
