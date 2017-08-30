@@ -65,7 +65,7 @@ public class ResourceLoader {
 		
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp,new Animation[0]));
+		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp_MidLeft,new Animation[0]));
 		
 		// combined
 		animations.put("missileWithExplosion",new Animation(animations.get("missile"), new Animation[] {animations.get("missileExplosion")},false));

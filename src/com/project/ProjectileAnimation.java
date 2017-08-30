@@ -8,6 +8,8 @@ import java.io.PushbackReader;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.GroupLayout.Alignment;
+
 import com.project.ship.Ship;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
@@ -42,6 +44,7 @@ public class ProjectileAnimation implements Handleable{
 		this.projectileGap = weapon.getProjectileGap();
 		
 		
+		
 		// effect handler; this only works if there's 1 instance of destructive
 		for(Object effect: effects) {
 			if(effect instanceof Destructive) {
@@ -60,21 +63,28 @@ public class ProjectileAnimation implements Handleable{
 		Handler.addHighPriorityEntity(this);
 		animationsRunning++;
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
+		AdjustmentID align = AdjustmentID.None;
 		if(isCrossScreen) {
 			if(isLeftToRight) {
 				mask = new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT); 
+				align = AdjustmentID.MidUp_Left;
 			}
 			else {
 				mask = new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH/2,Main.HEIGHT);
+				align = AdjustmentID.MidUp_MidLeft;
 			}
 		
 		for(int i = 0;i<noOfProjectiles;i++) {
 			Animation temp = weapon.getFiringAnimation();
-			temp.setMonitored(true);
+			
 			Point start = new Point ();
 			start.setLocation(primary.getSlot(slotPostion).getX(),primary.getSlot(slotPostion).getY());
+			
+			temp.setMonitored(true);
 			temp.setStartAndEnd(start, click);
 			temp.setMask(mask);
+			temp.setAlign(align);
+				
 			animations[i] =  temp;
 			}
 		}

@@ -160,7 +160,7 @@ public class BattleScreen extends Main {
 				chasedShip.setSpeed(200);
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice,chasedShotLocation);
-				UseWeapon(chaserShip, chasedShip, 2                 ,chaserShotLocation);
+				//UseWeapon(chaserShip, chasedShip, 2                 ,chaserShotLocation);
 				currentPhase = BattlePhases.Wait;
 			}
 			
