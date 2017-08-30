@@ -1,9 +1,12 @@
 package com.project.ship;
 
 
+import java.awt.Graphics;
+
+import com.project.Handleable;
 import com.project.Slottable;
 
-public class Slot {
+public class Slot implements Handleable{
 	private int x;
 	private int y;
 	private int relX;
@@ -13,9 +16,9 @@ public class Slot {
 	private Slottable slotItem;
 	private int layerIndex;
 	private boolean isFront;
+	private float z;
 	
-	
-	public Slot(int x, int y,int relX,int relY,int size,int index,boolean isFront) {
+	public Slot(int x, int y,int relX,int relY,int size,int index,boolean isFront,float z) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
@@ -24,7 +27,7 @@ public class Slot {
 		this.height = size;
 		this.width = size;
 		this.isFront = isFront;
-		
+		this.z = z;
 	}
 	
 	public void setX(int x) {
@@ -92,6 +95,24 @@ public class Slot {
 
 	public void setFront(boolean isFront) {
 		this.isFront = isFront;
+	}
+
+	@Override
+	public void render(Graphics g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return z;
 	}
 
 }

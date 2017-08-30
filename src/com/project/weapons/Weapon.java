@@ -15,14 +15,31 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	protected int projectileGap;
 	protected boolean targetSelf;
 	protected List<WeaponEffect> effects;	
-	protected Animation firingAnimation; 
+	protected Animation firingAnimation;
+	protected Animation weaponBody;
 	
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap){
+	
+	
+	
+	public Animation getWeaponBody() {
+		return weaponBody;
+	}
+
+
+
+	public void setWeaponBody(Animation weaponBody) {
+		this.weaponBody = weaponBody;
+	}
+
+
+
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody){
 		this.firingAnimation = anim;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;
 		this.projectileGap = projectileGap;
+		this.weaponBody = weaponBody;
 		if(we!=null) {
 			this.effects = Arrays.asList(we);
 		}
@@ -72,12 +89,11 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 		// TODO Auto-generated method stub
 		return "res/missileSpritesheet.png";
 	}
-	public Animation getAnimation() {
-		return firingAnimation.copy();
-	}
+
 	public void render(Graphics g) {
-		firingAnimation.render(g);
+		weaponBody.render(g);
 	}
+
 
 	public int getProjectileGap() {
 		return projectileGap;

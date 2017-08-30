@@ -90,14 +90,6 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
 		Handler.addLowPriorityEntity(chasedHealthbar);		
-//		for(int i =0;i<playerShip.getCrew().size();i++) {
-//			Crew crew = playerShip.getCrew().get(i);
-//			System.out.println(crew.getName()+":"+crew.getRaceID().toString()+" "+crew.getGender());
-//			for(int j = 0;j<crew.getStats().size();j++) {
-//				System.out.println(Crew.statNames[j]+": "+Byte.toString(crew.getStat(Crew.statNames[j])));
-//			}
-//			System.out.println();
-//		}
 		
 		this.addKeyListener(keyIn);	
 		this.addMouseListener(mouseIn);
@@ -162,7 +154,7 @@ public class BattleScreen extends Main {
 				chasedShip.setSpeed(200);
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice,chasedShotLocation);
-				UseWeapon(chaserShip, chasedShip, 2                 ,chaserShotLocation);
+				UseWeapon(chaserShip, chasedShip, 1                 ,chaserShotLocation);
 				currentPhase = BattlePhases.Wait;
 			}
 			
@@ -172,8 +164,6 @@ public class BattleScreen extends Main {
 					nextTurn();
 				}
 			}
-			
-			
 			
 			
 			if(chaserShip !=null && chasedShip != null) {
@@ -215,6 +205,8 @@ public class BattleScreen extends Main {
 		
 		
 		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot,slot).start();
+		
+
 	}
 
 	@Override

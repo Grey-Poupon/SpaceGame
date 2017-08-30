@@ -256,7 +256,7 @@ public class LayeredImage {
 				layer.setZ((float)(this.z-i*zPerLayer));
 				if(!layerIsSlot[layersX.size()-i-1].contains("!")) {
 					layer.setVisible(false);
-					Slot slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),layer.getImg().getWidth(),i,layerIsSlot[layersX.size()-i-1].contains("f"));
+					Slot slot = new Slot(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),layersX.get(layersX.size()-i-1),layersY.get(layersY.size()-i-1),layer.getImg().getWidth(),i,layerIsSlot[layersX.size()-i-1].contains("f"),(float)(this.z-i*zPerLayer));
 					if(slot.isFront()) {
 						frontSlots.add(slot);
 					}

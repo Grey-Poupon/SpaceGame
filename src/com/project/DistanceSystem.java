@@ -112,4 +112,9 @@ public class DistanceSystem implements Handleable {
 	public int getShipDistanceCurrent() {
 		return shipDistanceCurrent;
 	}
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

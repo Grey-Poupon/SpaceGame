@@ -2,7 +2,6 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +35,10 @@ public class Ship implements Handleable{
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
-
 	private List<Slot>	   shipBackSlots           = new ArrayList<Slot>();
 	private List<Slot>	   shipFrontSlots           = new ArrayList<Slot>();
 	private List<Crew>     crew                = new ArrayList<Crew>();
+	private List<Handleable> sprites = new ArrayList<Handleable>();
 	private Sensor sensor;
 	private boolean isChased;
 	
@@ -81,6 +80,7 @@ public class Ship implements Handleable{
 
 		}
 		generateRooms();
+		sortSprites();
 		if(generateCrew){
 			for(int i =0; i<10;i++) {
 				Crew crewie = Crew.generateRandomCrew();
@@ -96,6 +96,29 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),isChased, new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
+	}
+	
+	private void sortSprites() {
+		List<Handleable> temp = new ArrayList<Handleable>();
+		List<Handleable> all = new ArrayList<Handleable>();
+		all.addAll(shipBackSlots);
+		all.addAll(lImage.getLayers());
+		all.addAll(shipFrontSlots);
+		int index = 0;
+		float largestZ = all.get(0).getZ();
+		while(all.size()>0) {
+			largestZ = all.get(0).getZ();
+			for(int i =0;i<all.size();i++) {
+				if(all.get(i).getZ()>=largestZ) {
+					index = i;
+					largestZ = all.get(i).getZ();
+				}
+			}
+
+			temp.add(all.get(index));
+			all.remove(index);
+		}
+		sprites = temp;
 	}
 
 
@@ -186,18 +209,6 @@ public class Ship implements Handleable{
 	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
 	}
-
-
-
-
-	
-
-
-
-
-	
-
-
 
 
 	public Sensor getSensor() {
@@ -308,16 +319,30 @@ public class Ship implements Handleable{
 
 
 	public void render(Graphics g) {
-		for(int i =0;i<lImage.getNoLayers();i++) {
-			lImage.getLayers().get(i).render(g);
+		
+		for(int i = 0; i<sprites.size();i++) {
+			if(sprites.get(i) instanceof Slot) {
+				((Slot) sprites.get(i)).getSlotItem().render(g,(Slot) sprites.get(i));
+			}
+			if(sprites.get(i) instanceof ImageHandler) {
+				sprites.get(i).render(g);
+			}
 		}
 		
-		for(int i=0;i<shipBackSlots.size();i++) {
-			shipBackSlots.get(i).getSlotItem().render(g);
-		}
+		
+//		for(int i =0;i<lImage.getNoLayers();i++) {
+//			lImage.getLayers().get(i).render(g);
+//		}
+//		
+//		for(int i=0;i<shipBackSlots.size();i++) {
+//			shipBackSlots.get(i).getSlotItem().render(g,shipBackSlots.get(i));
+//		}
+//		for(int i=0;i<shipFrontSlots.size();i++) {
+//			shipFrontSlots.get(i).getSlotItem().render(g,shipFrontSlots.get(i));
+//		}
 		
 		
-		
+//		
 //		Graphics2D g2d = (Graphics2D)g.create();
 //		for(int i=0;i<shipBackSlots.size();i++) {
 //			Slot s = shipBackSlots.get(i);
@@ -422,6 +447,26 @@ public class Ship implements Handleable{
 		return shipFrontSlots.get(position);
 		
 	}
+
+
+	public List<Handleable> getSprites() {
+		return sprites;
+	}
+
+
+	public void setSprites(List<Handleable> sprites) {
+		this.sprites = sprites;
+	}
+
+
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	
 
 
 

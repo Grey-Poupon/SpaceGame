@@ -54,7 +54,7 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150));		
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher")));		
 
 	}
 
@@ -62,13 +62,17 @@ public class ResourceLoader {
 		//moving
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGap, int xGap, int yGap, int frameRate, float scale, float xStart, float xEnd, float yStart, float yEnd, float xVel, Rectangle2D mask, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
 		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None,new Animation[0]));
-		
+		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 32,32,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None,new Animation[0]));
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
+		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,2,1, false,AdjustmentID.None,new Animation[0]));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp,new Animation[0]));
 		
 		// combined
-		animations.put("missileWithExplosion",new Animation(animations.get("missile"), new Animation[] {animations.get("missileExplosion")},false));
+		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));
+		
+		
+		
 	}
 
 	public BufferedImage loadImage(String path) {
@@ -102,6 +106,8 @@ public class ResourceLoader {
 		put(images,"res/octiodLazer1Anim.png");
 		put(images,"res/mousePointer.png");
 		put(images,"res/missileSpritesheet.png");
+		put(images,"res/octoidMissileLauncher.png");
+		put(images,"res/octoidMissileProjectile.png");
 		put(images,"res/healthUncertainty.png");
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
