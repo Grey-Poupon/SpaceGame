@@ -1,9 +1,12 @@
 package com.project.ship;
 
 
+import java.awt.Graphics;
+
+import com.project.Handleable;
 import com.project.Slottable;
 
-public class Slot {
+public class Slot implements Handleable{
 	private int x;
 	private int y;
 	private int relX;
@@ -12,36 +15,19 @@ public class Slot {
 	private int height;
 	private Slottable slotItem;
 	private int layerIndex;
+	private boolean isFront;
+	private float z;
 	
-	
-	public Slot(int x, int y,int relX,int relY,int width,int height) {
-		this.x = x;
-		this.y = y;
-		this.relX = relX;
-		this.relY = relY;
-		this.setWidth(width);
-		this.setHeight(height);
-	}
-	
-	public Slot(int x, int y,int relX,int relY,char type,int index) {
+	public Slot(int x, int y,int relX,int relY,int size,int index,boolean isFront,float z) {
 		this.x = x;
 		this.y = y;
 		this.relX = relX;
 		this.relY = relY;
 		this.setLayerIndex(index);
-		if(type == 's') {
-			this.setWidth(20);
-			this.setHeight(20);			
-		}
-		if(type == 'm') {
-			this.setWidth(30);
-			this.setHeight(30);			
-		}
-		if(type == 'l') {
-			this.setWidth(40);
-			this.setHeight(40);			
-		}
-		
+		this.height = size;
+		this.width = size;
+		this.isFront = isFront;
+		this.z = z;
 	}
 	
 	public void setX(int x) {
@@ -101,6 +87,32 @@ public class Slot {
 
 	public void setLayerIndex(int layerIndex) {
 		this.layerIndex = layerIndex;
+	}
+
+	public boolean isFront() {
+		return isFront;
+	}
+
+	public void setFront(boolean isFront) {
+		this.isFront = isFront;
+	}
+
+	@Override
+	public void render(Graphics g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return z;
 	}
 
 }

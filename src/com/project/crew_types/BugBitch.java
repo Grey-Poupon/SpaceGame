@@ -11,15 +11,15 @@ public class BugBitch extends Crew {
 	public static String[] names = {"Sandy","Sam","Jesse","Ste","Frank","Charlie"};
 	private static float raceRelationVariance = 0.2f;
 	public BugBitch(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.bugBitch);
+			char gender,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.bugBitch,visible);
 	}
-	public BugBitch(boolean random) {
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.bugBitch);
+	public BugBitch(boolean random,boolean visible) {
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.bugBitch, visible);
 		generateRaceTable();
 	}
-	public BugBitch() {
-		super(RaceID.bugBitch);
+	public BugBitch(boolean visible) {
+		super(RaceID.bugBitch,visible);
 		this.setGender(getRandomGender());
 		if(this.getGender()=='m') {
 			stats.put("social", getRandomWeightedStat(statVariance,(byte)15));

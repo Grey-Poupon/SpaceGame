@@ -1,7 +1,11 @@
 package com.project.weapons.weapon_types;
 
+import java.awt.Graphics;
+
+import com.project.AdjustmentID;
 import com.project.Animation;
 import com.project.DamageType;
+import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 import com.project.weapons.WeaponEffect;
@@ -9,8 +13,8 @@ import com.project.weapons.WeaponEffect;
 public class FireableWeapon extends Weapon {
 
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap) {
-		super(cooldownDuration, name,anim,targetSelf,we,projectileGap);
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody) {
+		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody);
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
 
@@ -41,5 +45,35 @@ public class FireableWeapon extends Weapon {
 	public double getAccuracy() {
 		return effects.get(effects.size()-1).getAccuracy();
 	}
+
+
+
+
+	@Override
+	public void render(Graphics g) {
+		super.render(g);
+	}
+
+
+
+
+	@Override
+	public void render(Graphics g, Slot slot) {
+		Animation wb = weaponBody.copy();
+		wb.setxCoordinate(slot.getX());
+		wb.setyCoordinate(slot.getY()+slot.getHeight()/2-wb.getTileHeight());
+		if(!slot.isFront()) {
+			wb.setFlipScale(-1);
+		}
+		//wb.setAlign(AdjustmentID.MidLeft);
+
+		wb.render(g);
+		
+	}
+
+
+
+
+
 
 }

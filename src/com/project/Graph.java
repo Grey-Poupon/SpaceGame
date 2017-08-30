@@ -108,6 +108,12 @@ public class Graph implements Handleable {
 		this.text.setText(Integer.toString(function.apply((double) (x-this.x)).intValue()));
 		this.mouseX = x-this.x;
 	}
+
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 

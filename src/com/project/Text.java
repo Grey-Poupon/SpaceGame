@@ -120,4 +120,9 @@ public class Text implements Handleable{
 	public void setText(String text) {
 		this.text = text;
 	}
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

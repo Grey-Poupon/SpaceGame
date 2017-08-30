@@ -37,7 +37,9 @@ public class BattleUI extends UI{
 	private static final Color  fontColour 			= Color.WHITE;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
-	public BattleUI (List<Weapon> weapons,BattleScreen battleScreen, Ship pShip, Ship eShip){
+
+	public BattleUI (BattleScreen battleScreen, Ship pShip, Ship eShip){
+
 		bs = battleScreen;
 		List<Button> flavourTexts = new ArrayList<Button>();
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
@@ -59,6 +61,7 @@ public class BattleUI extends UI{
 				WeaponsRoom room = (WeaponsRoom) crew.getRoomIn();
 				if(room.isChased()) {
 					for(int i = 0;i<room.getBackWeapons().size();i++) {
+						
 						Weapon w = room.getBackWeapons().get(i);
 						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
 					}
@@ -90,7 +93,7 @@ public class BattleUI extends UI{
 //					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineChoice, i, true, "Engine Choice "+i, fontName, fontStyle, fontSize, fontColour, bs,true));
 //				}
 //			}
-			else if(tooltipMenuSelection == TooltipSelectionID.Stats) {
+			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
 					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(Crew.statNames[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
 				}

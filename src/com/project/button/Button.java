@@ -262,6 +262,11 @@ public class Button extends Observable  implements Handleable{
 		
 		
 	}
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 
 }

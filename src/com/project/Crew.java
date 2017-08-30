@@ -48,7 +48,7 @@ public class Crew implements Observer{
 	protected ImageHandler portrait;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender, RaceID race) {
+			char gender, RaceID race,boolean visible) {
 		
 		this.gender = gender;
 		this.race = race;
@@ -83,9 +83,10 @@ public class Crew implements Observer{
 		getSpeechOptions().add("Talk");
 		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		loadPortrait();
+		if(visible) {Handler.addHighPriorityEntity(portrait);}
 	}
 	
-	public Crew(RaceID race) {
+	public Crew(RaceID race,boolean visible) {
 		this.race = race;
 		stats = new HashMap<>();
 		statModifier = new HashMap<>();
@@ -110,6 +111,8 @@ public class Crew implements Observer{
 		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		getSpeechOptions().add("Talk");
 		loadPortrait();
+		if(visible) {Handler.addHighPriorityEntity(portrait);}
+
 	}
 	
 	protected void moveRoom(TooltipSelectionID room) {
@@ -248,25 +251,25 @@ public class Crew implements Observer{
 		this.speechOptions = speechOptions;
 	}
 	
-	public static Crew generateRandomCrew() {
+	public static Crew generateRandomCrew(boolean visible) {
 		Crew crew;
 		int t = rand.nextInt(7);
 		switch (t) {
-		   case 0:  crew = new BlueLizard();
+		   case 0:  crew = new BlueLizard(visible);
 					break;
-           case 1:  crew = new BugBitch();
+           case 1:  crew = new BugBitch(visible);
                     break;
-           case 2:  crew = new Ent();
+           case 2:  crew = new Ent(visible);
                     break;
-           case 3:  crew = new MoleBitch();
+           case 3:  crew = new MoleBitch(visible);
                     break;
-           case 4:  crew = new OctoBitch();
+           case 4:  crew = new OctoBitch(visible);
                     break;
-           case 5:  crew = new Robot();
+           case 5:  crew = new Robot(visible);
                     break;
-           case 6:  crew = new YellowLizard();
+           case 6:  crew = new YellowLizard(visible);
                     break;
-           default: crew = new BlueLizard();
+           default: crew = new BlueLizard(visible);
                     break;
        }
 		return crew;
@@ -282,13 +285,11 @@ public class Crew implements Observer{
 	protected void loadPortrait() {
 		if(this.race!=RaceID.robot){
 			this.portrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,2,2, EntityID.crew);
-			Handler.addHighPriorityEntity(portrait);
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
 		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,2,2, EntityID.crew));
-		Handler.addHighPriorityEntity(portrait);
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {

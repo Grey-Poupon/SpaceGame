@@ -43,7 +43,12 @@ public class Animation implements Handleable {
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
 	private List<Animation> followingAnims = new ArrayList<Animation>();
+	private int flipScale=1;
 	
+	public AdjustmentID getAlign() {
+		return align;
+	}
+
 	//16 stationary
 	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, float xCoordinate, float yCoordinate,float scale,int NoOfloops,boolean running,AdjustmentID align) {
 
@@ -109,6 +114,18 @@ public class Animation implements Handleable {
 		if(running) {
 			start();
 		}
+	}
+	public float getScale() {
+		return scale;
+	}
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	public void setxCoordinate(float xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
+	public void setyCoordinate(float yCoordinate) {
+		this.yCoordinate = yCoordinate;
 	}
 	public Animation(Animation animation,Animation[] followingAnims,boolean running) {
 		this.path 		    = animation.path;
@@ -176,7 +193,7 @@ public class Animation implements Handleable {
 		if(mask!=null) {g.setClip(mask);}
 		int xAdjustment =(int) (AdjustmentID.getXAdjustment(align)*tileWidth*scale);
 		int yAdjustment =(int) (AdjustmentID.getYAdjustment(align)*tileHeight*scale);
-		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale),Math.round(sprite.getHeight()*scale), null);
+		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale*flipScale),Math.round(sprite.getHeight()*scale), null);
 
 	}
 	public static void delete(Animation anim) {
@@ -331,6 +348,23 @@ public class Animation implements Handleable {
 	public void setMonitored(boolean b) {
 		this.monitored  = b;
 	}
+
+	public void flip() {
+		this.setFlipScale(this.getFlipScale() * -1);
+	}
+	public int getFlipScale() {
+		return flipScale;
+	}
+	public void setFlipScale(int flipScale) {
+		this.flipScale = flipScale;
+	}
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+
 	public void setAlign(AdjustmentID align) {
 		this.align = align;
 	}

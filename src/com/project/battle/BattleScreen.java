@@ -1,13 +1,8 @@
 package com.project.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import com.project.Animation;
-import com.project.DamageType;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.Graph;
@@ -17,7 +12,6 @@ import com.project.Main;
 import com.project.MathFunctions;
 import com.project.MouseInput;
 import com.project.ProjectileAnimation;
-import com.project.ProjectileInfo;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.Star;
@@ -26,10 +20,8 @@ import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
-import com.project.weapons.Buffer;
+import com.project.ship.Slot;
 import com.project.weapons.Weapon;
-import com.project.weapons.WeaponEffect;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main {
 
@@ -92,9 +84,11 @@ public class BattleScreen extends Main {
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
-		sl					 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
+	    //sl  				 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
-		ui 					 = new BattleUI(chaserShip.getWeapons(),this,chaserShip,chasedShip);
+
+		ui 					 = new BattleUI(this,chaserShip,chasedShip);
+
 		keyIn				 = new BattleKeyInput(this);
 		mouseIn				 = new BattleMouseInput(handler);
 		chaserHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
@@ -217,12 +211,27 @@ public class BattleScreen extends Main {
 		}
 	}
 
+
+
+
 	public void UseWeapon(Ship primary, Ship secondary,int position,Point shot){
-		Weapon weapon = (Weapon) primary.getSlot(position).getSlotItem();
-		new ProjectileAnimation(primary, secondary, position, 800, true, weapon.fire(), shot).start();
+		Weapon weapon = null;
+		Slot slot = null;
+		if(primary.isChased()) {
+			 slot = primary.getBackSlot(position);
+			 weapon = (Weapon) primary.getBackSlot(position).getSlotItem();
+		}
+		else {
+			 slot = primary.getBackSlot(position);
+			 weapon = (Weapon) primary.getFrontSlot(position).getSlotItem();
+		}
+		
+		
+		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot,slot).start();
+		
+
 	}
-	
-	
+
 	@Override
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {

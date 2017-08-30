@@ -2,18 +2,15 @@ package com.project;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.io.PushbackReader;
-import java.util.List;
 import java.util.Random;
 
 import javax.swing.GroupLayout.Alignment;
 
 import com.project.ship.Ship;
+import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
-import com.project.weapons.WeaponEffect;
 import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ProjectileAnimation implements Handleable{
@@ -30,17 +27,19 @@ public class ProjectileAnimation implements Handleable{
 	private int projectilesStarted = 0;
 	private boolean isLeftToRight;
 	private boolean isCrossScreen;
+	private Slot fromSlot;
 	private Object[] damageDealt;
 	private Animation animations[];
-	public ProjectileAnimation( Ship primary, Ship secondary, int slotPostion,int pushBack, boolean isCrossScreen ,Object[] effects,Point click) {
+	public ProjectileAnimation( Ship primary, Ship secondary, int slotPostion,int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
 		this.primary       = primary;
 		this.secondary     = secondary;
 		this.slotPostion   = slotPostion;
 		this.isCrossScreen = isCrossScreen;
 		this.pushBack	   = pushBack;
 		this.click         = click;
-		this.isLeftToRight = click.x > primary.getSlot(slotPostion).getX();
-		this.weapon        = (Weapon)  primary.getSlot(slotPostion).getSlotItem();
+		this.fromSlot = slot;
+		this.isLeftToRight = click.x > slot.getX();
+		this.weapon        = (Weapon)  slot.getSlotItem();
 		this.projectileGap = weapon.getProjectileGap();
 		
 		
@@ -76,11 +75,13 @@ public class ProjectileAnimation implements Handleable{
 		
 		for(int i = 0;i<noOfProjectiles;i++) {
 			Animation temp = weapon.getFiringAnimation();
-			
-			Point start = new Point ();
-			start.setLocation(primary.getSlot(slotPostion).getX(),primary.getSlot(slotPostion).getY());
-			
+
+
 			temp.setMonitored(true);
+			Point start = new Point ();
+			start.setLocation(slot.getX(),slot.getY());
+
+
 			temp.setStartAndEnd(start, click);
 			temp.setMask(mask);
 			temp.setAlign(align);
@@ -106,7 +107,7 @@ public class ProjectileAnimation implements Handleable{
 			
 			if(projectilesStarted<noOfProjectiles) {
 				// staggered starting
-				if(i!=0 && animations[i-1].getxCoordinate()-primary.getSlot(slotPostion).getX() > projectileGap){
+				if(i!=0 && animations[i-1].getxCoordinate()-fromSlot.getX() > projectileGap){
 					animations[i].start();
 				}
 					
@@ -159,6 +160,12 @@ public class ProjectileAnimation implements Handleable{
 				secondary.takeDamage(dmg,(DamageType)damageDealt[4]);
 			}
 		}
+	}
+
+	@Override
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
