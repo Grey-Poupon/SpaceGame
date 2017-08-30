@@ -55,7 +55,7 @@ public class Ship implements Handleable{
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();	
 	
-	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean generateCrew,boolean isChased){
+	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = this.maxHealth = health;
 		shipBackSlots= lImage.getBackSlots();
@@ -81,12 +81,10 @@ public class Ship implements Handleable{
 		}
 		generateRooms();
 		sortSprites();
-		if(generateCrew){
 			for(int i =0; i<10;i++) {
-				Crew crewie = Crew.generateRandomCrew();
+				Crew crewie = Crew.generateRandomCrew(visibleCrew);
 				crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
 				crew.add(crewie);
-			}
 		}	
 	}
 	

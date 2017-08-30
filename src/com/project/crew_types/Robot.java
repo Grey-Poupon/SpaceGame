@@ -13,22 +13,22 @@ public class Robot extends Crew {
 	private static float raceRelationVariance = 0.2f;
 	
 	public Robot(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender,byte gen) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,  RaceID.robot);
+			char gender,byte gen,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,  RaceID.robot, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 		this.generation =gen;
 		this.loadPortrait(gen);
 	}
-	public Robot(boolean random){
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, '?', RaceID.robot);
+	public Robot(boolean random,boolean visible){
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, '?', RaceID.robot, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 		this.generation = getRandomGeneration();
 		this.loadPortrait(this.generation);
 	}
-	public Robot() {
-		super(RaceID.robot);
+	public Robot(boolean visible) {
+		super(RaceID.robot, visible);
 		this.setGender('?');
 		this.generation=getRandomGeneration();
 		if(this.getGeneration()==2) {

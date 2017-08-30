@@ -84,7 +84,7 @@ public class BattleScreen extends Main {
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
-		sl					 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
+	    //sl  				 = new ScrollableList(chaserShip.getCrewButtons(this), 2, 55, 100, 664,100,100,true);
 		//Animation anim       = new Animation("res/octiodLazer1Anim.png", 97, 21, 4, 2,1,3,3,9, 12, 670, 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
 
 		ui 					 = new BattleUI(this,chaserShip,chasedShip);
@@ -151,7 +151,7 @@ public class BattleScreen extends Main {
 				}
 				else if (currentPhase == BattlePhases.WeaponsClick){
 					if(playerIsChaser) {
-						chasedShotLocation = new Point(1000,350);
+						chasedShotLocation = new Point(350,350);
 					}
 					else {
 						chaserShotLocation = new Point(1000,450);

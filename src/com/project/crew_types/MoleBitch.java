@@ -11,19 +11,19 @@ public class MoleBitch extends Crew {
 	public static String[] names = {"Sandy","Sam","Jesse","Ste","Frank","Charlie"};
 	
 	public MoleBitch(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.moleBitch);
+			char gender,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender,RaceID.moleBitch,visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public MoleBitch(boolean random) {
-		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomGender(), RaceID.moleBitch);
+	public MoleBitch(boolean random,boolean visible) {
+		super(getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomGender(), RaceID.moleBitch, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 		
 	}
-	public MoleBitch() {
-		super(getRandomWeightedStat(statVariance,(byte)35),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)5), getRandomWeightedStat(statVariance,(byte)40), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0,getRandomGender(), RaceID.moleBitch);
+	public MoleBitch(boolean visible) {
+		super(getRandomWeightedStat(statVariance,(byte)35),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)5), getRandomWeightedStat(statVariance,(byte)40), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0,getRandomGender(), RaceID.moleBitch,visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}

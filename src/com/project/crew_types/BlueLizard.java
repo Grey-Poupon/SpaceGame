@@ -13,17 +13,17 @@ public class BlueLizard extends Crew {
 	private static float raceRelationVariance = 0.2f;
 	
 	public BlueLizard(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.blueLizard);
+			char gender,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.blueLizard,visible);
 		generateRaceTable();
 	}
-	public BlueLizard(boolean random) {
-		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), 0, 0,  getRandomGender(), RaceID.blueLizard);
+	public BlueLizard(boolean random,boolean visible) {
+		super(getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance), 0, 0,  getRandomGender(), RaceID.blueLizard,visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public BlueLizard() {
-		super(RaceID.blueLizard);
+	public BlueLizard(boolean visible) {
+		super(RaceID.blueLizard,visible);
 		this.setGender(getRandomGender());
 		if(this.getGender()=='m') {
 			stats.put("social", getRandomWeightedStat(statVariance,(byte)45));

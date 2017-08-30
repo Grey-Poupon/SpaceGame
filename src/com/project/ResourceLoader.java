@@ -43,8 +43,8 @@ public class ResourceLoader {
 	}
 	
 	private void loadShip() {
-		ships.put("defaultPlayer", new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true, false));
-		ships.put("defaultEnemy" , new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true, true));
+		ships.put("defaultPlayer", new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false, false));
+		ships.put("defaultEnemy" , new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,true , true));
 	}
 
 	private void loadCrew() {
@@ -134,8 +134,6 @@ public class ResourceLoader {
 		}
 		return animations.get(key);
 	}
-
-	
 
 	public static void putImage(String key, BufferedImage value) {
 		images.put(key, value);
