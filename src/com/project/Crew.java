@@ -83,7 +83,7 @@ public class Crew implements Observer{
 		getSpeechOptions().add("Talk");
 		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		loadPortrait();
-		if(visible) {Handler.addHighPriorityEntity(portrait);}
+		//if(visible) {Handler.addHighPriorityEntity(this.portrait);}
 	}
 	
 	public Crew(RaceID race,boolean visible) {
@@ -111,7 +111,7 @@ public class Crew implements Observer{
 		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		getSpeechOptions().add("Talk");
 		loadPortrait();
-		if(visible) {Handler.addHighPriorityEntity(portrait);}
+		//if(visible) {Handler.addHighPriorityEntity(this.portrait);}
 
 	}
 	

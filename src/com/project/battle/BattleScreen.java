@@ -46,7 +46,7 @@ public class BattleScreen extends Main {
 	private int chasedWeaponChoice;
 	private int chasedEngineChoice;
 	private Random rand;
-	private boolean playerIsChaser = false;
+	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = !playerIsChaser;// chased goes first
 	private Text phase;
 	private Button graphButton;
