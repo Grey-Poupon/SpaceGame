@@ -10,18 +10,18 @@ Down_Left   ,Down_MidLeft   ,Down   ,Down_MidRight   ,Down_Right;
 
 	public static float getXAdjustment(AdjustmentID adjust) {
 		if(adjust == Up_Left     || adjust == MidUp_Left 	 || adjust == Left 	   || adjust == MidDown_Left     || adjust == Down_Left) {
-			return 1;
+			return -1;
 			}
 		if(adjust == Up_MidLeft  || adjust == MidUp_MidLeft  || adjust == MidLeft  || adjust == MidDown_MidLeft  || adjust == Down_MidLeft) {
-			return 0.5f;
+			return -0.5f;
 			}
 		if(adjust == Up          || adjust == MidUp 		 || adjust == None 	   || adjust == MidDown 		 || adjust == Down) {
 			return 0;
 			}
 		if(adjust == Up_MidRight || adjust == MidUp_MidRight || adjust == MidRight || adjust == MidDown_MidRight || adjust == Down_MidRight) {
-			return -0.5f;
+			return 0.5f;
 			}
-		else {return -1;}
+		else {return 1;}
 	}
 	public static float getYAdjustment(AdjustmentID adjust) {
 		if(adjust == Down_Left    || adjust == Down_MidLeft    || adjust == Down    || adjust == Down_MidRight    || adjust == Down_Right) {
