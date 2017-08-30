@@ -34,7 +34,6 @@ public class ResourceLoader {
 		shipWeapons= new HashMap<String,Weapon>();
 		crew	   = new HashMap<String,Crew>();
 		ships	   = new HashMap<String,Ship>();
-
 		loadImages();
 		loadFont();
 		loadAnimations();

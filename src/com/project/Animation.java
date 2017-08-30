@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +28,8 @@ public class Animation implements Handleable {
 	private float yPixelsToMove =-1;
 	private float xStart,xEnd;
 	private float yStart,yEnd;
+	private float xScale=1;
+	private float yScale=1;
 	private String path;
 	private boolean moving = false;
 	private boolean pushed = false; //for projectiles
@@ -43,7 +44,7 @@ public class Animation implements Handleable {
 	private BufferedImage spritesheet;
 	private BufferedImage sprite;
 	private List<Animation> followingAnims = new ArrayList<Animation>();
-	private int flipScale=1;
+	private float z;
 	
 	public AdjustmentID getAlign() {
 		return align;
@@ -193,7 +194,7 @@ public class Animation implements Handleable {
 		if(mask!=null) {g.setClip(mask);}
 		int xAdjustment =(int) (AdjustmentID.getXAdjustment(align)*tileWidth*scale);
 		int yAdjustment =(int) (AdjustmentID.getYAdjustment(align)*tileHeight*scale);
-		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale*flipScale),Math.round(sprite.getHeight()*scale), null);
+		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale*xScale),Math.round(sprite.getHeight()*scale*yScale), null);
 
 	}
 	public static void delete(Animation anim) {
@@ -349,19 +350,29 @@ public class Animation implements Handleable {
 		this.monitored  = b;
 	}
 
-	public void flip() {
-		this.setFlipScale(this.getFlipScale() * -1);
+
+
+	public float getxScale() {
+		return xScale;
 	}
-	public int getFlipScale() {
-		return flipScale;
+
+	public void setxScale(float xScale) {
+		this.xScale = xScale;
 	}
-	public void setFlipScale(int flipScale) {
-		this.flipScale = flipScale;
+
+	public float getyScale() {
+		return yScale;
 	}
+
+	public void setyScale(float yScale) {
+		this.yScale = yScale;
+	}
+
 	@Override
 	public float getZ() {
+		
 		// TODO Auto-generated method stub
-		return 0;
+		return z;
 	}
 	
 
