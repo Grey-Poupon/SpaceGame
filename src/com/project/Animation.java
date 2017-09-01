@@ -175,6 +175,7 @@ public class Animation implements Handleable {
 	}
 	public void setSprite() {
 		if(spritesheet!=null) {
+
 			sprite = spritesheet.getSubimage(xStartGap+xTile*(tileWidth+xGap), yStartGap+yTile*(tileHeight+yGap), tileWidth, tileHeight);
 		}
 	}

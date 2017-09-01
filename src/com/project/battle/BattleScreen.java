@@ -112,8 +112,13 @@ public class BattleScreen extends Main {
 	}
 	
 	private void nextTurn() {
+		if(currentPhase == BattlePhases.Engine) {
+			//
+			@SuppressWarnings("unused")
+			int jk = 0;
+		}
 		// if its the chased's turn, next phase
-		if(isPlayersTurn == playerIsChaser || currentPhase == BattlePhases.Final) { 
+		if(isPlayersTurn != playerIsChaser || currentPhase == BattlePhases.Final) { 
 			currentPhasePointer++;
 		}
 		// loop phases if necessary
