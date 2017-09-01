@@ -46,6 +46,17 @@ public class BattleUI extends UI{
 			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
 		}
 		ScrollableList flavourTextList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+		
+//		List<Button> resources = new ArrayList<Button>();
+//		int i = 0;
+//		for(String key : pShip.getResources().keySet()) {
+//			
+//			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.PlayerShip,i,true,key+": "+Integer.toString(pShip.getResources().get(key)),fontName,fontStyle,fontSize,fontColour,bs,false));
+//			i++;
+//		}
+//		ScrollableList resourceList = new ScrollableList(flavourTexts,xListOffset,50,tooltipBoxWidth,tooltipBoxHeight);
+		
+		
 	}
 
 	public static void changeTootlipSelection(Crew crew, TooltipSelectionID option){
