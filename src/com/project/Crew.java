@@ -158,7 +158,6 @@ public class Crew implements Observer{
 	public byte getStat(String string) {
 		return (byte) (statModifierInc.get(string) +stats.get(string)*statModifier.get(string));
 	}
-	
 	public HashMap<String,Byte> getStats(){
 		HashMap<String,Byte> temp = new HashMap<>();
 		temp.put("social", getStat("social"));
@@ -170,10 +169,7 @@ public class Crew implements Observer{
 		temp.put("science", getStat("science"));
 		temp.put("pilot", getStat("pilot"));
 		return temp;
-	}
-	
-	
-	
+	}	
 	public void interactSocially(Crew crew) {
 		
 	}
@@ -320,8 +316,7 @@ public class Crew implements Observer{
 	public static Random getRand() {
 		// TODO Auto-generated method stub
 		return rand;
-	}	
-	
+	}
 	public void setRoomIn(Room room) {
 		this.room = room;
 	}
@@ -329,6 +324,4 @@ public class Crew implements Observer{
 		return room;
 	}
 	
-	
-
 }

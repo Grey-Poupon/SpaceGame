@@ -6,20 +6,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import java.util.NoSuchElementException;
-import java.util.TreeMap;
-
 import javax.imageio.ImageIO;
-
 import com.project.ship.Ship;
-import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
-import com.project.weapons.WeaponEffect;
 import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ResourceLoader {
