@@ -235,4 +235,16 @@ public class ImageHandler implements Handleable {
 		Handler.entitiesLowPriority.remove(img);
 		Handler.entitiesHighPriority.remove(img);
 	}
+
+	public int getHeight() {
+		return img.getHeight();
+	}
+
+	public int getWidth() {
+		return img.getWidth();
+	}
+	public void start() {
+		Handler.addLowPriorityEntity(this);
+	}
+	
 }

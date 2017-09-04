@@ -20,6 +20,7 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Weapon;
@@ -48,7 +49,7 @@ public class BattleScreen extends Main {
 	private int chasedEngineChoice;
 	private Random rand;
 	private boolean playerIsChaser = true;
-	private boolean isPlayersTurn = !playerIsChaser;// chased goes first
+	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
 	private Button graphButton;
 	
@@ -112,11 +113,7 @@ public class BattleScreen extends Main {
 	}
 	
 	private void nextTurn() {
-		if(currentPhase == BattlePhases.Engine) {
-			//
-			@SuppressWarnings("unused")
-			int jk = 0;
-		}
+		
 		// if its the chased's turn, next phase
 		if(isPlayersTurn != playerIsChaser || currentPhase == BattlePhases.Final) { 
 			currentPhasePointer++;
@@ -244,7 +241,20 @@ public class BattleScreen extends Main {
 			if(button == MouseEvent.BUTTON1) {
 				
 				if(ID == ButtonID.BattleWeaponsChoice){
+					Weapon weapon;
+					Room room;
+					if (playerIsChaser) {
+						weapon = chaserShip.getFrontWeapons().get(index);
+						room = chaserShip.getWeaponRoom();
+					}
+					else {
+						weapon = chasedShip.getBackWeapons().get(index);
+						room = chasedShip.getWeaponRoom();
+					}
+					BattleUI.generateActionList(weapon, room);
+					
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
+						
 						if (playerIsChaser) {
 							chaserWeaponChoice = index;
 						}
@@ -269,7 +279,7 @@ public class BattleScreen extends Main {
 					}
 				}
 				if(ID == ButtonID.Crew){
-					BattleUI.changeTootlipSelection(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
+					BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
 				}
 				if(ID == ButtonID.Graph){
 					graphButton.getGraph().setPoint(MouseInput.mousePosition);
@@ -278,7 +288,7 @@ public class BattleScreen extends Main {
 			
 			if(button == MouseEvent.BUTTON3) {
 				if(ID == ButtonID.Crew) {
-					BattleUI.changeTootlipSelection(chaserShip.getAllCrew().get(index),TooltipSelectionID.Stats);
+					BattleUI.generateRoomButtons(chaserShip.getAllCrew().get(index),TooltipSelectionID.Stats);
 				}
 			}
 		

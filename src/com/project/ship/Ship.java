@@ -237,6 +237,7 @@ public class Ship implements Handleable{
 		for(int i = 0;i<leaders.size();i++) {
 			Crew crew = leaders.get(i);
 			crew.getPortrait().setVisible(true);
+			crew.getPortrait().start();
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true, crew.getPortrait(), bs));
 		}
 		return buttons;
@@ -521,6 +522,16 @@ public class Ship implements Handleable{
 	}
 	public void incResource(String key,int inc) {
 		resources.replace(key, resources.get(key)+inc);
+	}
+
+
+	public Room getWeaponRoom() {
+		for(Room room: rooms) {
+			if(room instanceof WeaponsRoom) {
+				return room;
+			}
+		}
+		return null;
 	}
 
 

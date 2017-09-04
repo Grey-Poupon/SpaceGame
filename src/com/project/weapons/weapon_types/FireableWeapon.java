@@ -1,9 +1,11 @@
 package com.project.weapons.weapon_types;
 
 import java.awt.Graphics;
+import java.util.List;
 
 import com.project.AdjustmentID;
 import com.project.Animation;
+import com.project.CrewAction;
 import com.project.DamageType;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
@@ -13,8 +15,8 @@ import com.project.weapons.WeaponEffect;
 public class FireableWeapon extends Weapon {
 
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody) {
-		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody);
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody,List<CrewAction>actions) {
+		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody,actions);
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
 

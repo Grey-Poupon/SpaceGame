@@ -31,7 +31,6 @@ public class Crew implements Observer{
 	protected Map<String, Byte> statModifierInc;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
-	protected TooltipSelectionID locationOnShip = TooltipSelectionID.Cockpit;
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
 	private boolean visible;
@@ -74,7 +73,6 @@ public class Crew implements Observer{
 		this.diseases = new ArrayList<Disease>();
 		this.visible = visible;
 		getSpeechOptions().add("Talk");
-		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		loadPortrait();
 	}
 	
@@ -102,15 +100,12 @@ public class Crew implements Observer{
 		
 		this.diseases = new ArrayList<Disease>();
 		this.visible = visible;
-		if(rand.nextBoolean()) {setLocationOnShip(TooltipSelectionID.Weapons);}
 		getSpeechOptions().add("Talk");
 		loadPortrait();
 
 	}
 	
-	protected void moveRoom(TooltipSelectionID room) {
-		this.setLocationOnShip(room);
-	}
+
 	public char getGender() {
 		return gender;
 	}
@@ -219,18 +214,12 @@ public class Crew implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg == ButtonID.Crew) {
-			BattleUI.changeTootlipSelection(this,TooltipSelectionID.Room);
+			BattleUI.generateRoomButtons(this,TooltipSelectionID.Room);
 		}
 		
 	}
 
-	public TooltipSelectionID getLocationOnShip() {
-		return locationOnShip;
-	}
 
-	public void setLocationOnShip(TooltipSelectionID locationOnShip) {
-		this.locationOnShip = locationOnShip;
-	}
 
 	public List<String> getSpeechOptions() {
 		return speechOptions;
@@ -275,14 +264,14 @@ public class Crew implements Observer{
 		if(this.race!=RaceID.robot){
 			this.portrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,1,1, EntityID.crew);
 			portrait.setVisible(visible);
-			Handler.addHighPriorityEntity(portrait);
+			if(visible) {Handler.addHighPriorityEntity(portrait);}
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
 		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,1,1, EntityID.crew));
 		portrait.setVisible(visible);
-		Handler.addHighPriorityEntity(portrait);
+		if(visible) {Handler.addHighPriorityEntity(portrait);}
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {

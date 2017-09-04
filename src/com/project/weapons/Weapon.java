@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.project.Actionable;
 import com.project.Animation;
+import com.project.CrewAction;
 import com.project.Slottable;
 
-public abstract class Weapon implements Slottable{ // Holds the shared functionality between all weapons
+public abstract class Weapon implements Slottable, Actionable{ // Holds the shared functionality between all weapons
 	private int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
 	protected String name;
@@ -17,24 +19,11 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	protected List<WeaponEffect> effects;	
 	protected Animation firingAnimation;
 	protected Animation weaponBody;
-	
-	
-	
-	
-	public Animation getWeaponBody() {
-		return weaponBody;
-	}
+	protected List<CrewAction> actions = new ArrayList<CrewAction>();
 
-
-
-	public void setWeaponBody(Animation weaponBody) {
-		this.weaponBody = weaponBody;
-	}
-
-
-
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody){
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody,List<CrewAction> actions){
 		this.firingAnimation = anim;
+		this.actions = actions;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;
@@ -50,6 +39,13 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	
 	
 	
+	
+	public Animation getWeaponBody() {
+		return weaponBody;
+	}
+	public void setWeaponBody(Animation weaponBody) {
+		this.weaponBody = weaponBody;
+	}
 	public List<WeaponEffect> getEffects() {
 		return effects;
 	}
@@ -97,5 +93,12 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 
 	public int getProjectileGap() {
 		return projectileGap;
+	}
+
+
+
+
+	public List<CrewAction> getActions() {
+		return actions;
 	}	
 }
