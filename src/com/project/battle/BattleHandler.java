@@ -70,7 +70,7 @@ public class BattleHandler extends Handler {
 			return false;
 		}
 		if(dragging instanceof DraggableIcon) {
-			((DraggableIcon) dragging ).drop();
+			((DraggableIcon) dragging ).drop(x,y,BattleUI.actionBoxes);
 		}
 		dragging = null;
 		return true;

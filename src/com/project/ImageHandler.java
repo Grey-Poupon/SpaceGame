@@ -89,8 +89,15 @@ public class ImageHandler implements Handleable {
 		this.yCoordinate = y;
 		this.visible = visible;
 		this.ID = ID;
-//		if(ID!=EntityID.star) {Handler.addLowPriorityEntity(this);}
-//		else {Handler.addStarEntity(this);}
+
+		}
+	public ImageHandler(int x, int y,BufferedImage img , boolean visible, EntityID ID){		
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.ID = ID;
+		setImg(img);
+
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;

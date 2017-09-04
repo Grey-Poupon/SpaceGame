@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.project.ActionBox;
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
@@ -28,7 +29,7 @@ import com.project.weapons.Weapon;
 
 public class BattleUI extends UI{
 	private ImageHandler overlay;
-	private static ImageHandler buttonTooltipUI = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
+	//private static ImageHandler buttonTooltipUI = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static List<Weapon> weapons = new ArrayList<Weapon>();
   	private static TooltipSelectionID tooltipMenuSelection; 
 	private static final int	tooltipButtonWidth  = 524;
@@ -44,8 +45,8 @@ public class BattleUI extends UI{
 	private static final Color  fontColour 			= Color.WHITE;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
-	private static List<DraggableIcon> actionBoxes = new ArrayList<DraggableIcon>();
-	private static List<ImageHandler> actionIcons = new ArrayList<ImageHandler>();
+	private static List<DraggableIcon> actionIcons = new ArrayList<DraggableIcon>();
+	public  static List<ActionBox>  actionBoxes = new ArrayList<ActionBox>();
 
 	public BattleUI (BattleScreen battleScreen, Ship pShip, Ship eShip){
 
@@ -111,7 +112,7 @@ public class BattleUI extends UI{
 				}
 				clickable = false;
 			}
-			if(actionIcons != null){clearActionImg();}
+			if(actionBoxes != null){clearActionImg();}
 			if(tooltipList != null){ScrollableList.delete(tooltipList);}
 			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			
@@ -120,18 +121,18 @@ public class BattleUI extends UI{
 	}
 
 	private static void clearActionImg() {
-		for(DraggableIcon img: actionBoxes) {
+		for(DraggableIcon img: actionIcons) {
 			DraggableIcon.delete(img);
 		}
-		for(ImageHandler img: actionIcons) {
-			ImageHandler.delete(img);
+		for(ActionBox box: actionBoxes) {
+			ActionBox.delete(box);
 		}
 		
 	}
 	public static void generateActionList(Actionable actionable,Room room) {
 		// wipe tooltip
 		if(tooltipList != null){ScrollableList.delete(tooltipList);}
-		if(actionIcons != null && actionBoxes != null ){clearActionImg();}
+		if(actionBoxes != null && actionIcons != null ){clearActionImg();}
 		
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		List<Crew>       crew    = room.getCrewInRoom();
@@ -150,14 +151,13 @@ public class BattleUI extends UI{
 			portrait.setxCoordinate(xListOffset+tooltipBoxWidth  - (column*portrait.getWidth()));
 			portrait.setyCoordinate(yListOffset+tooltipBoxHeight - (row*portrait.getHeight()));
 			DraggableIcon icon = new DraggableIcon(portrait, portrait.getxCoordinate(), portrait.getyCoordinate());
-			actionBoxes.add(icon);
+			actionIcons.add(icon);
 		}
 		// set action pics
 		for(int i = 0; i<actions.size();i++) {
 			BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
-			ImageHandler action = new ImageHandler(xListOffset, yListOffset + ((img.getHeight()+ boxGap)*i) , "res/actionBox.png", true, EntityID.UI);
-			action.start();
-			actionIcons.add(action);
+			ActionBox box = new ActionBox(img, xListOffset, yListOffset + ((img.getHeight()+ boxGap)*i), actionable);
+			actionBoxes.add(box);
 		}
 	}
 }

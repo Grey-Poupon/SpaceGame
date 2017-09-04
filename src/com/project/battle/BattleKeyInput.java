@@ -3,6 +3,7 @@ package com.project.battle;
 import java.awt.event.KeyEvent;
 
 import com.project.KeyInput;
+import com.project.LayeredImage;
 import com.project.TooltipSelectionID;
 
 
@@ -28,6 +29,13 @@ public class BattleKeyInput extends KeyInput {
 		if (key == KeyEvent.VK_P){BattleUI.generateRoomButtons(bs.chaserShip.getAllCrew().get(9),TooltipSelectionID.Room);}
 
 		//if (key == KeyEvent.VK_P){bs.setPaused(!bs.isPaused());}
+		
+		if(key==KeyEvent.VK_UP){LayeredImage.setCameraY(LayeredImage.getCameraY()    + 1f);}
+		if(key==KeyEvent.VK_DOWN){LayeredImage.setCameraY(LayeredImage.getCameraY()  - 1f);}
+		if(key==KeyEvent.VK_LEFT){LayeredImage.setCameraX(LayeredImage.getCameraX()  + 1f);}
+		if(key==KeyEvent.VK_RIGHT){LayeredImage.setCameraX(LayeredImage.getCameraX() - 1f);}
+		
+		
 	}
 	@Override
 	public void keyReleased(KeyEvent e){

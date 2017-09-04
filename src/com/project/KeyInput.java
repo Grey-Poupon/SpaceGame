@@ -22,7 +22,9 @@ public class KeyInput extends KeyAdapter {
 		if(key==KeyEvent.VK_Q) {}
 		if(key==KeyEvent.VK_S){}
 		if(key==KeyEvent.VK_A){}
-		if(key==KeyEvent.VK_D){}			
+		if(key==KeyEvent.VK_D){}
+		
+		
 	}
 	
 	public void keyReleased(KeyEvent e){
