@@ -16,6 +16,7 @@ import com.project.ImageHandler;
 import com.project.Main;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
+import com.project.StatID;
 import com.project.TooltipSelectionID;
 import com.project.UI;
 import com.project.button.Button;
@@ -139,7 +140,7 @@ public class BattleUI extends UI{
 
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(Crew.statNames[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
+					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
 				}
 				clickable = false;
 			}

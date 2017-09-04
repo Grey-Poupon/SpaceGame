@@ -75,8 +75,8 @@ public class DraggableIcon {
 			boolean rightWall  = x < box.getX() + box.getWidth() + snapToRange;
 			boolean topWall    = y > box.getY() - snapToRange;
 			boolean bottomWall = y < box.getY() + box.getHeight() + snapToRange;
-			
-			if(leftWall && rightWall && topWall && bottomWall && box.isOpen()) {
+			boolean xp         = box.getLevelRequirement() <= getLevel(box.getStatType()) ;
+			if(leftWall && rightWall && topWall && bottomWall && box.isOpen() && xp ) {
 				snapped = true;
 				
 				box.setCrew(this);
@@ -105,9 +105,20 @@ public class DraggableIcon {
 	}
 
 
+	private int getLevel(StatID statType) {
+		return crew.getStat(statType);
+	}
+
+
+
+
+
 	public Crew getCrew() {
 		return crew;
 	}
+
+
+	
 
 
 	

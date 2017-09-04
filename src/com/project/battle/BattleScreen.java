@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Random;
 
+import com.project.CrewAction;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.Handler;
@@ -235,57 +236,44 @@ public class BattleScreen extends Main {
 
 	
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
-			if(button == MouseEvent.BUTTON1) {
+		Ship playerShip = playerIsChaser ? chaserShip : chasedShip;	
+		if(button == MouseEvent.BUTTON1) {
 				if(ID == ButtonID.BattleWeaponsChoice){
-					Weapon weapon;
-					Room room;
-					if (playerIsChaser) {
-						weapon = chaserShip.getFrontWeapons().get(index);
-						room = chaserShip.getWeaponRoom();
-					}
-					else {
-						weapon = chasedShip.getBackWeapons().get(index);
-						room = chasedShip.getWeaponRoom();
-					}
+					
+					Weapon weapon = playerShip.getFrontWeapons().get(index);
+					Room room = playerShip.getWeaponRoom();
+					
 					BattleUI.generateActionList(weapon, room);
 					
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
 						
+
 						if (playerIsChaser) {
 							chaserWeaponChoice = chaserShip.getFrontWeapons().get(index);
 						}
 						else {
 							chasedWeaponChoice = chasedShip.getBackWeapons().get(index);
 						}
+
 						System.out.println("Player is about to use weapon "+index+"!");
 						nextTurn();
 					}
 				}
-				if(ID == ButtonID.BattleEngineChoice){
-					Engine engine;
-					Room room;
-					if (playerIsChaser) {
-						engine = chaserShip.getEngines().get(index);
-						room = chaserShip.getGeneratorRoom();
-					}
-					else {
-						engine = chasedShip.getEngines().get(index);
-						room = chasedShip.getGeneratorRoom();
-					}
+				if(ID == ButtonID.BattleEngineChoice){		
+					
+					Engine engine = playerShip.getEngines().get(index);
+					Room room = playerShip.getGeneratorRoom();
+					
 					BattleUI.generateActionList(engine, room,true);
 					//System.out.println("PEantu");
 					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
-						
-						
-						
+				
 						if (playerIsChaser) {
-							
-							chaserEngineChoice = chaserShip.getEngines().get(index);
+							chaserEngineChoice = playerShip.getEngines().get(index);
 						}
 						else {
-							chasedEngineChoice = chaserShip.getEngines().get(index);
+							chasedEngineChoice = playerShip.getEngines().get(index);
 						}
-						
 						
 						System.out.println("Player Engine choice made");
 						nextTurn();
@@ -300,7 +288,19 @@ public class BattleScreen extends Main {
 				}
 				if(ID == ButtonID.BattleWeaponActionChoice) {
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
-						nextTurn();
+						Weapon weapon = playerIsChaser ? chaserWeaponChoice:chasedWeaponChoice;
+						List<CrewAction> actions = weapon.getActions();
+						boolean complete = true;
+						// check that the actions have been completed
+						for(CrewAction action : actions) {
+							if(action.getActor() == null) {
+								complete = false;
+							}
+						}
+						if (complete){
+							weapon.giveXP();
+							nextTurn();
+						}
 					}
 				}
 				if(ID == ButtonID.Crew){

@@ -2,12 +2,16 @@ package com.project;
 
 public class CrewAction {
 	private String name;
-	private float xpRequirement;
+	private int levelRequirement;
+	private int xpReward;
+	private StatID statType;
 	private Crew actor;
 	
-	public CrewAction(String name, float xpRequirement) {
+	public CrewAction(String name,StatID statType, int xpRequirement, int levelReward) {
 		this.name = name;
-		this.xpRequirement = xpRequirement;
+		this.levelRequirement = levelRequirement;
+		this.xpReward = xpReward;
+		this.statType = statType;
 	}
 
 	public Crew getActor() {
@@ -26,8 +30,16 @@ public class CrewAction {
 		return name;
 	}
 
-	public float getXpRequirement() {
-		return xpRequirement;
+	public int getLevelRequirement() {
+		return levelRequirement;
+	}
+
+	public int getXpReward() {
+		return xpReward;
+	}
+
+	public StatID getStatType() {
+		return statType;
 	}
 	
 }

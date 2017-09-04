@@ -10,14 +10,14 @@ public class ActionBox {
 	private boolean openCrewSlot = true;
 	private Text	actionText;
 	private DraggableIcon crew = null;
-	
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
-		this.x = x;
-		this.y = y;
-		this.action = action;
-		actionText = new Text(getName(), true, x+getWidth(), y);
+		this.x 			= x;
+		this.y 		    = y;
+
+		this.action     = action;
+		actionText      = new Text(getName(), true, x+getWidth(), y);
 	}
 	
 	public void setCrew(DraggableIcon crew) {
@@ -81,12 +81,16 @@ public class ActionBox {
 		action.setActor(actor);
 	}
 
-	public float getXpRequirement() {
-		return action.getXpRequirement();
+	public int getLevelRequirement() {
+		return action.getLevelRequirement();
 	}
 
 	public void removeActor() {
 		action.removeActor();
+	}
+
+	public StatID getStatType() {
+		return action.getStatType();
 	}
 
 	

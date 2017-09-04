@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.project.DamageType;
+import com.project.StatID;
 import com.project.ship.Ship;
 
 public class Buffer implements WeaponEffect{
@@ -13,7 +14,7 @@ public class Buffer implements WeaponEffect{
 	private List<DamageType> damageTypes; // types of damage that change
 	private float modifier;
 	private String toBuff;
-	private String dictKey;
+	private StatID dictKey;
 	public List<Double> getModifiers() {
 		return new ArrayList<Double>(modifiers); 
 	}
@@ -24,7 +25,7 @@ public class Buffer implements WeaponEffect{
 	}
 
 
-	public Buffer(String toBuff,String key, float modifier){
+	public Buffer(String toBuff,StatID key, float modifier){
 		this.toBuff =toBuff; 
 		this.modifier = modifier;
 		this.dictKey= key;
