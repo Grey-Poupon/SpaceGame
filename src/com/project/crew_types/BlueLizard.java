@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.project.Crew;
 import com.project.RaceID;
+import com.project.StatID;
 
 public class BlueLizard extends Crew {
 
@@ -26,24 +27,24 @@ public class BlueLizard extends Crew {
 		super(RaceID.blueLizard,visible);
 		this.setGender(getRandomGender());
 		if(this.getGender()=='m') {
-			stats.put("social", getRandomWeightedStat(statVariance,(byte)45));
-			stats.put("combat", getRandomWeightedStat(statVariance,(byte)25));
-			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)30));
-			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)25));
-			stats.put("science", getRandomWeightedStat(statVariance,(byte)30));
-			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)35));
-			stats.put("stress", (byte)0);
-			stats.put("hunger", (byte)0);
+			stats.put(StatID.social, getRandomWeightedStat(statVariance,(byte)45));
+			stats.put(StatID.combat, getRandomWeightedStat(statVariance,(byte)25));
+			stats.put(StatID.gunner, getRandomWeightedStat(statVariance,(byte)30));
+			stats.put(StatID.engineering, getRandomWeightedStat(statVariance,(byte)25));
+			stats.put(StatID.science, getRandomWeightedStat(statVariance,(byte)30));
+			stats.put(StatID.pilot, getRandomWeightedStat(statVariance,(byte)35));
+			stats.put(StatID.stress, (byte)0);
+			stats.put(StatID.hunger, (byte)0);
 		}
 		else {
-			stats.put("social", getRandomWeightedStat(statVariance,(byte)30));
-			stats.put("combat", getRandomWeightedStat(statVariance,(byte)25));
-			stats.put("pilot", getRandomWeightedStat(statVariance,(byte)35));
-			stats.put("engineering", getRandomWeightedStat(statVariance,(byte)30));
-			stats.put("gunner", getRandomWeightedStat(statVariance,(byte)35));
-			stats.put("science", getRandomWeightedStat(statVariance,(byte)30));			
-			stats.put("stress", (byte)0);
-			stats.put("hunger", (byte)0);
+			stats.put(StatID.social, getRandomWeightedStat(statVariance,(byte)30));
+			stats.put(StatID.combat, getRandomWeightedStat(statVariance,(byte)25));
+			stats.put(StatID.pilot, getRandomWeightedStat(statVariance,(byte)35));
+			stats.put(StatID.engineering, getRandomWeightedStat(statVariance,(byte)30));
+			stats.put(StatID.gunner, getRandomWeightedStat(statVariance,(byte)35));
+			stats.put(StatID.science, getRandomWeightedStat(statVariance,(byte)30));			
+			stats.put(StatID.stress, (byte)0);
+			stats.put(StatID.hunger, (byte)0);
 		}
 
 		generateRaceTable();

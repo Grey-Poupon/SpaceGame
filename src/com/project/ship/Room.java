@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.project.Crew;
+import com.project.StatID;
 
 public class Room {
 	private Point location;
@@ -48,10 +49,7 @@ public class Room {
 	public void setDamageMod(int damageMod) {
 		this.damageMod = damageMod;
 	}
-	public void setStatModifiers(String dictKey, float modifier) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	public int getEfficiency() {
 		return efficiency;
 	}
@@ -71,6 +69,11 @@ public class Room {
 	public ArrayList<String> getOptions() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setStatModifiers(StatID dictKey, float modifier) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

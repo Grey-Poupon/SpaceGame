@@ -27,9 +27,9 @@ public class Crew implements Observer{
 	protected char gender;
 	protected static Random rand = new Random();
 	private ArrayList<Disease> diseases;
-	protected Map<String,Byte> stats;
-	protected Map<String,Float> statModifier;
-	protected Map<String, Byte> statModifierInc;
+	protected Map<StatID,Byte> stats;
+	protected Map<StatID,Float> statModifier;
+	protected Map<StatID, Byte> statModifierInc;
 	private RaceID race;
 	protected Map<RaceID,Float> raceRelations;
 	protected List<String> speechOptions = new ArrayList<String>();
@@ -46,32 +46,32 @@ public class Crew implements Observer{
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
-		stats.put("social", (byte)social);
-		stats.put("combat", (byte)combat);
-		stats.put("gunner", (byte)gunner);
-		stats.put("engineering", (byte)engineering);
-		stats.put("stress", (byte)stress);
-		stats.put("hunger", (byte)hunger);
-		stats.put("science", (byte)science);
-		stats.put("pilot", (byte)pilot);
+		stats.put(StatID.social, (byte)social);
+		stats.put(StatID.combat, (byte)combat);
+		stats.put(StatID.gunner, (byte)gunner);
+		stats.put(StatID.engineering, (byte)engineering);
+		stats.put(StatID.stress, (byte)stress);
+		stats.put(StatID.hunger, (byte)hunger);
+		stats.put(StatID.science, (byte)science);
+		stats.put(StatID.pilot, (byte)pilot);
 		statModifier = new HashMap<>();
-		statModifier.put("social", 1f);
-		statModifier.put("combat", 1f);
-		statModifier.put("gunner", 1f);
-		statModifier.put("engineering", 1f);
-		statModifier.put("stress", 1f);
-		statModifier.put("hunger", 1f);
-		statModifier.put("science", 1f);
-		statModifier.put("pilot", 1f);
+		statModifier.put(StatID.social, 1f);
+		statModifier.put(StatID.combat, 1f);
+		statModifier.put(StatID.gunner, 1f);
+		statModifier.put(StatID.engineering, 1f);
+		statModifier.put(StatID.stress, 1f);
+		statModifier.put(StatID.hunger, 1f);
+		statModifier.put(StatID.science, 1f);
+		statModifier.put(StatID.pilot, 1f);
 		statModifierInc = new HashMap<>();
-		statModifierInc.put("social", (byte)0);
-		statModifierInc.put("combat", (byte)0);
-		statModifierInc.put("gunner", (byte)0);
-		statModifierInc.put("engineering", (byte)0);
-		statModifierInc.put("stress", (byte)0);
-		statModifierInc.put("hunger", (byte)0);
-		statModifierInc.put("science", (byte)0);
-		statModifierInc.put("pilot", (byte)0);
+		statModifierInc.put(StatID.social, (byte)0);
+		statModifierInc.put(StatID.combat, (byte)0);
+		statModifierInc.put(StatID.gunner, (byte)0);
+		statModifierInc.put(StatID.engineering, (byte)0);
+		statModifierInc.put(StatID.stress, (byte)0);
+		statModifierInc.put(StatID.hunger, (byte)0);
+		statModifierInc.put(StatID.science, (byte)0);
+		statModifierInc.put(StatID.pilot, (byte)0);
 		this.diseases = new ArrayList<Disease>();
 		this.visible = visible;
 		getSpeechOptions().add("Talk");
@@ -82,23 +82,23 @@ public class Crew implements Observer{
 		this.race = race;
 		stats = new HashMap<>();
 		statModifier = new HashMap<>();
-		statModifier.put("social", 1f);
-		statModifier.put("combat", 1f);
-		statModifier.put("gunner", 1f);
-		statModifier.put("engineering", 1f);
-		statModifier.put("stress", 1f);
-		statModifier.put("hunger", 1f);
-		statModifier.put("science", 1f);
-		statModifier.put("pilot", 1f);
+		statModifier.put(StatID.social, 1f);
+		statModifier.put(StatID.combat, 1f);
+		statModifier.put(StatID.gunner, 1f);
+		statModifier.put(StatID.engineering, 1f);
+		statModifier.put(StatID.stress, 1f);
+		statModifier.put(StatID.hunger, 1f);
+		statModifier.put(StatID.science, 1f);
+		statModifier.put(StatID.pilot, 1f);
 		statModifierInc = new HashMap<>();
-		statModifierInc.put("social", (byte)0);
-		statModifierInc.put("combat", (byte)0);
-		statModifierInc.put("gunner", (byte)0);
-		statModifierInc.put("engineering", (byte)0);
-		statModifierInc.put("stress", (byte)0);
-		statModifierInc.put("hunger", (byte)0);
-		statModifierInc.put("science", (byte)0);
-		statModifierInc.put("pilot", (byte)0);
+		statModifierInc.put(StatID.social, (byte)0);
+		statModifierInc.put(StatID.combat, (byte)0);
+		statModifierInc.put(StatID.gunner, (byte)0);
+		statModifierInc.put(StatID.engineering, (byte)0);
+		statModifierInc.put(StatID.stress, (byte)0);
+		statModifierInc.put(StatID.hunger, (byte)0);
+		statModifierInc.put(StatID.science, (byte)0);
+		statModifierInc.put(StatID.pilot, (byte)0);
 		
 		this.diseases = new ArrayList<Disease>();
 		this.visible = visible;
@@ -129,42 +129,42 @@ public class Crew implements Observer{
 		disease.cure(this);
 	}
 	
-	public void setStat(String string,byte num) {
-		stats.replace(string, num);
+	public void setStat(StatID stat,byte num) {
+		stats.replace(stat, num);
 	}
 	
-	public void setStatModifiers(String string, float num) {
-		statModifier.replace(string, num);
+	public void setStatModifiers(StatID stat, float num) {
+		statModifier.replace(stat, num);
 	}
-	public void setStatModifiersInc(String string, byte num) {
-		statModifierInc.replace(string, num);
+	public void setStatModifiersInc(StatID stat, byte num) {
+		statModifierInc.replace(stat, num);
 	}
-	public float getStatModifier(String string) {
-		return statModifier.get(string);
+	public float getStatModifier(StatID stat) {
+		return statModifier.get(stat);
 	}
-	public Map<String,Float> getStatModifiers(){
+	public Map<StatID,Float> getStatModifiers(){
 		return statModifier;
 	}
-	public byte getStatModifierInc(String string) {
-		return statModifierInc.get(string);
+	public byte getStatModifierInc(StatID stat) {
+		return statModifierInc.get(stat);
 	}
-	public Map<String,Byte> getStatModifiersInc(){
+	public Map<StatID,Byte> getStatModifiersInc(){
 		return statModifierInc;
 	}
 	
-	public byte getStat(String string) {
-		return (byte) (statModifierInc.get(string) +stats.get(string)*statModifier.get(string));
+	public byte getStat(StatID stat) {
+		return (byte) (statModifierInc.get(stat) +stats.get(stat)*statModifier.get(stat));
 	}
-	public HashMap<String,Byte> getStats(){
-		HashMap<String,Byte> temp = new HashMap<>();
-		temp.put("social", getStat("social"));
-		temp.put("combat", getStat("combat"));
-		temp.put("gunner", getStat("gunner"));
-		temp.put("engineering", getStat("engineering"));
-		temp.put("stress", getStat("stress"));
-		temp.put("hunger", getStat("hunger"));
-		temp.put("science", getStat("science"));
-		temp.put("pilot", getStat("pilot"));
+	public HashMap<StatID,Byte> getStats(){
+		HashMap<StatID,Byte> temp = new HashMap<>();
+		temp.put(StatID.social, getStat(StatID.social));
+		temp.put(StatID.combat, getStat(StatID.combat));
+		temp.put(StatID.gunner, getStat(StatID.gunner));
+		temp.put(StatID.engineering, getStat(StatID.engineering));
+		temp.put(StatID.stress, getStat(StatID.stress));
+		temp.put(StatID.hunger, getStat(StatID.hunger));
+		temp.put(StatID.science, getStat(StatID.science));
+		temp.put(StatID.pilot, getStat(StatID.pilot));
 		return temp;
 	}	
 	public void interactSocially(Crew crew) {
@@ -314,5 +314,7 @@ public class Crew implements Observer{
 	public Room getRoomIn() {
 		return room;
 	}
+
+
 	
 }

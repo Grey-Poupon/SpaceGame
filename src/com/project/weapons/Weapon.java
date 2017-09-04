@@ -140,5 +140,13 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 
 	public void setSlot(Slot slot) {
 		this.slot = slot;
+	}
+
+
+
+
+	public void giveXP() {
+		// TODO Auto-generated method stub
+		
 	}	
 }
