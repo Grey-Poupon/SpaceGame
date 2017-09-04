@@ -63,6 +63,7 @@ public class Slot implements Handleable{
 
 	public void setSlotItem(Slottable slotItem) {
 		this.slotItem = slotItem;
+		this.slotItem.setSlot(this);
 	}
 
 	public int getRelX() {

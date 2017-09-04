@@ -50,6 +50,9 @@ public class BattleUI extends UI{
 	private static ScrollableList rightHandList;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
+
+	private static List<Button> flavourTexts;
+
 	private static List<DraggableIcon> actionIcons = new ArrayList<DraggableIcon>();
 	public  static List<ActionBox>  actionBoxes = new ArrayList<ActionBox>();
 	private static List<Button>  miscButtons = new ArrayList<Button>();
@@ -60,7 +63,7 @@ public class BattleUI extends UI{
 	public BattleUI (BattleScreen battleScreen, Ship pShip, Ship eShip){
 
 		bs = battleScreen;
-		List<Button> flavourTexts = new ArrayList<Button>();
+		 flavourTexts = new ArrayList<Button>();
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
 			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
 		}
@@ -73,12 +76,11 @@ public class BattleUI extends UI{
 //			i++;
 //		}
 //		ScrollableList resourceList = new ScrollableList(flavourTexts,xListOffset,50,tooltipBoxWidth,tooltipBoxHeight);
-		
-		
 	}
 
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option){
 		boolean clickable = true;
+		rightHandList.clear();
 		if(bs.isPlayerIsChaser()) {
 			playerShip = bs.getChaserShip();
 		}else {playerShip = bs.getChasedShip();}
@@ -146,8 +148,10 @@ public class BattleUI extends UI{
 			if(tooltipList != null){ScrollableList.delete(tooltipList);}
 			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			if(rightTooltipButtons.size()>0) {
-				rightHandList.clear();
 				rightHandList  = new ScrollableList(rightTooltipButtons,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+			}
+			else {
+				rightHandList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
 			}
 			
 		

@@ -46,22 +46,8 @@ public class Button extends Observable  implements Handleable{
 		this.bs = bs;
 		Handler.addButton(this);
 	}
-	// 8 Graph
-		public Button(int x,int y,int width,int height,ButtonID buttonID,boolean clickable,Graph graph, BattleScreen bs){
-			this.xCoordinate = x;
-			this.yCoordinate =y;
-			this.mask = new Rectangle2D.Float(x, y, width, height);
-			this.width = width;
-			this.height = height;
-			this.buttonID = buttonID;
-			this.clickable = clickable;
-			this.bs = bs;
-			graph.setX(graph.getX()+x);
-			graph.setY(graph.getY()+y);
-			this.graph = graph;
-			Handler.addLowPriorityEntity(graph);
-			Handler.addButton(this);
-		}
+
+		
 		// 9 Img
 		public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
 			this.xCoordinate = x;
@@ -112,6 +98,23 @@ public class Button extends Observable  implements Handleable{
 		Handler.addButton(this);
 	}
 	
+	// 8 graph
+	public Button(int x,int y,int width,int height,ButtonID buttonID,boolean clickable,Graph graph, BattleScreen bs){
+		this.xCoordinate = x;
+		this.yCoordinate =y;
+		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.width = width;
+		this.height = height;
+		this.buttonID = buttonID;
+		this.clickable = clickable;
+		this.bs = bs;
+		graph.setX(graph.getX()+x);
+		graph.setY(graph.getY()+y);
+		this.graph = graph;
+		this.graph.getText().setVisible(true);
+		Handler.addLowPriorityEntity(this.graph);
+		Handler.addButton(this);
+	}
 	
 	
 	public boolean isInside(int x, int y) {
@@ -259,7 +262,7 @@ public class Button extends Observable  implements Handleable{
 		Handler.buttons.remove(b);
 		if(b.text!=null) {Text.delete(b.text);}
 		if(b.img!=null) {ImageHandler.delete(b.img);}
-		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);}
+		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);Text.delete(b.graph.getText());}
 		
 	}
 	public void setIsButton(boolean clickable) {

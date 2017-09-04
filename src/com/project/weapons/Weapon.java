@@ -2,13 +2,13 @@ package com.project.weapons;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.project.Actionable;
 import com.project.Animation;
 import com.project.CrewAction;
 import com.project.Slottable;
+import com.project.ship.Slot;
 
 
 
@@ -23,7 +23,7 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 	protected List<WeaponEffect> effects;	
 	protected Animation firingAnimation;
 	protected Animation weaponBody;
-
+	protected Slot slot;
 	
 	
 	
@@ -36,10 +36,10 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 
 	protected List<CrewAction> actions = new ArrayList<CrewAction>();
 
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction> actions){
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction> actions,Slot slot){
 
 	
-
+		this.slot = slot;
 		this.firingAnimation = anim;
 		this.actions = actions;
 		this.cooldownDuration=cooldownDuration;
@@ -126,5 +126,19 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 
 	public List<CrewAction> getActions() {
 		return actions;
+	}
+
+
+
+
+	public Slot getSlot() {
+		return slot;
+	}
+
+
+
+
+	public void setSlot(Slot slot) {
+		this.slot = slot;
 	}	
 }
