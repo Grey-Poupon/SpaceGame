@@ -13,7 +13,6 @@ public class WeaponsRoom extends Room {
 	private List<Weapon> weapons = new ArrayList<>();
 	private List<Weapon> frontWeapons = new ArrayList<>();
 	private List<Weapon> backWeapons = new ArrayList<>();
-	private boolean isChased;
 	public List<Weapon> getWeapons() {
 		return weapons;
 	}
@@ -29,9 +28,8 @@ public class WeaponsRoom extends Room {
 		super(location);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 	}
-	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,boolean isChased,Point location) {
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,Point location) {
 		super(location);
-		this.isChased = isChased;
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		weapons.addAll(backWeapons);
@@ -68,15 +66,7 @@ public class WeaponsRoom extends Room {
 		this.backWeapons = backWeapons;
 	}
 
-	public boolean isChased() {
-		return isChased;
-	}
 
-	public void setChased(boolean isChased) {
-		this.isChased = isChased;
-	}
-	
-	
 	
 	
 	

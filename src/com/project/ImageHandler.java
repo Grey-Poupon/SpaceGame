@@ -225,6 +225,12 @@ public class ImageHandler implements Handleable {
 	public int getxCoordinate() {
 		return xCoordinate;
 	}
+	public float getOnScreenHeight() {
+		return getImg().getHeight()*getyScale();
+	}
+	public float getOnScreenWidth() {
+		return getImg().getWidth()*getxScale();
+	}
 	public boolean isClicked(int x, int y) {
 		if(x>xCoordinate && x<xCoordinate+(img.getWidth()*xScale) && y>yCoordinate && y<yCoordinate+(img.getHeight()*yScale)) {
 			double X = ((x-xCoordinate)/xScale);

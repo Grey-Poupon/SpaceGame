@@ -105,7 +105,7 @@ public class Slot implements Handleable{
 
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
+		slotItem.getSlotItemBody().tick();
 		
 	}
 

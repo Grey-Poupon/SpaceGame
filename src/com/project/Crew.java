@@ -21,6 +21,7 @@ import com.project.crew_types.Robot;
 import com.project.crew_types.YellowLizard;
 import com.project.crew_types.diseases.Disease;
 import com.project.ship.Room;
+import com.project.ship.Ship;
 
 public class Crew implements Observer{
 	protected char gender;
@@ -35,6 +36,7 @@ public class Crew implements Observer{
 	private String name;
 	private boolean visible;
 	protected Room room;
+
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
 	

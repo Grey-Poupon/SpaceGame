@@ -1,9 +1,10 @@
 package com.project.weapons.weapon_types;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+
 import java.util.List;
 
-import com.project.AdjustmentID;
 import com.project.Animation;
 import com.project.CrewAction;
 import com.project.DamageType;
@@ -15,17 +16,18 @@ import com.project.weapons.WeaponEffect;
 public class FireableWeapon extends Weapon {
 
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody,List<CrewAction>actions) {
+
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction>actions) {
 		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody,actions);
+
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
-
-	
 
 	
 	@Override
 	public Object[] fire(){
 		resetCooldown();
+		weaponBody.start(false);
 		Object[] returnableEffects = new Object[effects.size()];
 		
 		for(int i = 0;i < returnableEffects.length;i++) {
@@ -61,17 +63,26 @@ public class FireableWeapon extends Weapon {
 
 	@Override
 	public void render(Graphics g, Slot slot) {
-		Animation wb = weaponBody.copy();
-		wb.setxCoordinate(slot.getX());
-		wb.setyCoordinate(slot.getY()+slot.getHeight()/2-wb.getTileHeight());
+		weaponBody.setxCoordinate(slot.getX());
+		weaponBody.setyCoordinate(slot.getY()+slot.getHeight()/2-weaponBody.getTileHeight());
 		if(!slot.isFront()) {
-			wb.setxCoordinate(slot.getX()+slot.getWidth()/2);
-			wb.setxScale(-1);
+			weaponBody.setxCoordinate(slot.getX()+slot.getWidth()/2);
+			weaponBody.setxFlip(-1);
 		}
 		//wb.setAlign(AdjustmentID.MidLeft);
 
-		wb.render(g);
+		weaponBody.render(g);
 		
+	}
+	
+	public Weapon copy() {
+		//WHEN NEW TYPES OF WEAPON BESIDES FIREABLE NEED TO ADD CHECK
+		if(effects.size()==1) {
+			return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, null, projectileGap, weaponBody,actions);
+		}
+		List<WeaponEffect> temp = effects;
+		temp.remove(effects.size()-1);
+		return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, temp, projectileGap, weaponBody,actions);
 	}
 
 

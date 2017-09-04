@@ -214,19 +214,19 @@ public class LayeredImage {
 		float f = Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ));
 		double d1 =Math.atan2(cameraX, s.getZ());
 		double d = (Math.cos(d1)*scale*(f));
-		s.getSlotItem().getWeaponBody().setxScale((float)d);
+		s.getSlotItem().getSlotItemBody().setxScale((float)d);
 		if(cameraX>0) {
-			s.setX((int)(this.x+s.getSlotItem().getWeaponBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1)));
+			s.setX((int)(this.x+s.getSlotItem().getSlotItemBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1)));
 		}
 		else {
-			s.setX((int)(this.x+s.getSlotItem().getWeaponBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1) + (this.largestWidth*(scale-(s.getSlotItem().getWeaponBody().getxScale())))));
+			s.setX((int)(this.x+s.getSlotItem().getSlotItemBody().getxScale()*layersX.get(layersX.size()-s.getLayerIndex()-1) + (this.largestWidth*(scale-(s.getSlotItem().getSlotItemBody().getxScale())))));
 		}
-		s.getSlotItem().getWeaponBody().setyScale((float) Math.cos(Math.atan2(cameraY, s.getZ()))*scale*(Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ))));	    
+		s.getSlotItem().getSlotItemBody().setyScale((float) Math.cos(Math.atan2(cameraY, s.getZ()))*scale*(Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ))));	    
 		if(cameraY>0) {
-			s.setY((int)(this.y+s.getSlotItem().getWeaponBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1)));
+			s.setY((int)(this.y+s.getSlotItem().getSlotItemBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1)));
 		}
 		else {
-			s.setY((int)(this.y+s.getSlotItem().getWeaponBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1) + (this.largestHeight*(scale-(s.getSlotItem().getWeaponBody().getyScale())))));
+			s.setY((int)(this.y+s.getSlotItem().getSlotItemBody().getyScale()*layersY.get(layersY.size()-s.getLayerIndex()-1) + (this.largestHeight*(scale-(s.getSlotItem().getSlotItemBody().getyScale())))));
 		}
 	}
 	
@@ -347,9 +347,9 @@ public class LayeredImage {
 		    		layerIsSlot[i]="!";
 		    	}
 		    }
-		    for(int i =0; i<layerIsSlot.length;i++) {
-		    	System.out.println(layerIsSlot[i]);
-		    }
+//		    for(int i =0; i<layerIsSlot.length;i++) {
+//		    	System.out.println(layerIsSlot[i]);
+//		    }
 		    
 //		    
 //		    

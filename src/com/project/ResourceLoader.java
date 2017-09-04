@@ -11,7 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
 import javax.imageio.ImageIO;
+
+import com.project.engines.Engine;
 import com.project.ship.Ship;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
@@ -22,10 +25,12 @@ public class ResourceLoader {
 	private static Map<String,Ship> ships; 
 	private static Map<String,Animation> animations;
 	private static Map<String,Crew> crew;
+	private static Map<String,Engine> shipEngines;
 	public ResourceLoader() {
 		images	   = new HashMap<String,BufferedImage>();
 		animations = new HashMap<String,Animation>();
 		shipWeapons= new HashMap<String,Weapon>();
+		shipEngines = new HashMap<String, Engine>();
 		crew	   = new HashMap<String,Crew>();
 		ships	   = new HashMap<String,Ship>();
 		loadImages();
@@ -33,10 +38,25 @@ public class ResourceLoader {
 		loadAnimations();
 		loadShipWeapons();
 		loadCrew();
+		loadEngines();
 		loadShip();
+		
 	}
 	
-	private void loadShip() {		
+	private void loadEngines() {
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate", 0),new CrewAction("Manouevre", 0)});
+		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions));
+	}
+
+	public static Map<String, Engine> getShipEngines() {
+		return shipEngines;
+	}
+
+	public static void setShipEngines(Map<String, Engine> shipEngines) {
+		ResourceLoader.shipEngines = shipEngines;
+	}
+
+	private void loadShip() {
 		ships.put("defaultPlayer", new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false, false));
 		ships.put("defaultEnemy" , new Ship (0,0,50f,2f,"res/matron",true,EntityID.ship,50,3.5f,false, true));
 	}
@@ -60,8 +80,10 @@ public class ResourceLoader {
 		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,2,1, false,AdjustmentID.None));
+		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,1,1, false,AdjustmentID.None));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
+		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,1,-1,false,AdjustmentID.None));
+		
 		
 		// combined
 		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));
@@ -80,6 +102,7 @@ public class ResourceLoader {
 		put(images,"res/missileSpritesheet.png");
 		put(images,"res/octoidMissileLauncher.png");
 		put(images,"res/octoidMissileProjectile.png");
+		put(images,"res/octoidEngine.png");
 		put(images,"res/healthUncertainty.png");
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
@@ -175,6 +198,13 @@ public class ResourceLoader {
 			throw new NoSuchElementException();
 		}
 		return ships.get(key);
+	}
+
+	public static Engine getShipEngine(String key) {
+		if(!shipEngines.containsKey(key)) {
+			throw new NoSuchElementException();
+		}
+		return shipEngines.get(key);
 	}
 	
 }

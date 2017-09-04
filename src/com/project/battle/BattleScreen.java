@@ -6,11 +6,9 @@ import java.util.Random;
 
 import com.project.DistanceSystem;
 import com.project.EntityID;
-import com.project.Graph;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
-import com.project.MathFunctions;
 import com.project.MouseInput;
 import com.project.ProjectileAnimation;
 import com.project.ResourceLoader;
@@ -20,6 +18,7 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.engines.Engine;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
@@ -30,7 +29,8 @@ public class BattleScreen extends Main {
 	private static final long serialVersionUID = -6523236697457665386L;
 
 	public Ship chasedShip;
-
+	public Ship chaserShip; 
+	
 	private String selectedRoom;
 
 	private ImageHandler overlay;
@@ -96,8 +96,8 @@ public class BattleScreen extends Main {
 		mouseIn				 = new BattleMouseInput(handler);
 		chaserHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		chasedHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI); 
-		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
-		graphButton.setDraggable(true);
+//		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,0,0,150,150), this);
+//		graphButton.setDraggable(true);
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
 		Handler.addLowPriorityEntity(chasedHealthbar);		
@@ -226,7 +226,7 @@ public class BattleScreen extends Main {
 			 weapon = (Weapon) primary.getBackSlot(position).getSlotItem();
 		}
 		else {
-			 slot = primary.getBackSlot(position);
+			 slot = primary.getFrontSlot(position);
 			 weapon = (Weapon) primary.getFrontSlot(position).getSlotItem();
 		}
 		
@@ -239,7 +239,6 @@ public class BattleScreen extends Main {
 	@Override
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {
-				
 				if(ID == ButtonID.BattleWeaponsChoice){
 					Weapon weapon;
 					Room room;
@@ -265,19 +264,42 @@ public class BattleScreen extends Main {
 						nextTurn();
 					}
 				}
-		
 				if(ID == ButtonID.BattleEngineChoice){
+					Engine engine;
+					Room room;
+					if (playerIsChaser) {
+						engine = chaserShip.getEngines().get(index);
+						room = chaserShip.getGeneratorRoom();
+					}
+					else {
+						engine = chasedShip.getEngines().get(index);
+						room = chasedShip.getGeneratorRoom();
+					}
+					BattleUI.generateActionList(engine, room,true);
+					//System.out.println("PEantu");
 					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+						
+						
+						
 						if (playerIsChaser) {
+							
 							chaserEngineChoice = index;
 						}
 						else {
 							chasedEngineChoice = index;
 						}
+						
+						
 						System.out.println("Player Engine choice made");
 						nextTurn();
 					}
 				}
+				if(ID == ButtonID.BattleEngineActionChoice) {
+					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+						
+					}
+				}
+				
 				if(ID == ButtonID.Crew){
 					BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
 				}
@@ -291,7 +313,6 @@ public class BattleScreen extends Main {
 					BattleUI.generateRoomButtons(chaserShip.getAllCrew().get(index),TooltipSelectionID.Stats);
 				}
 			}
-		
 	}
 	
 	public boolean checkShipClick(int x, int y) {
@@ -324,6 +345,37 @@ public class BattleScreen extends Main {
 		else {
 			return chaserShip.getLayerClicked(x, y);
 		}
+	}
+	public Ship getChasedShip() {
+		return chasedShip;
+	}
+
+	public void setChasedShip(Ship chasedShip) {
+		this.chasedShip = chasedShip;
+	}
+
+	public Ship getChaserShip() {
+		return chaserShip;
+	}
+
+	public void setChaserShip(Ship chaserShip) {
+		this.chaserShip = chaserShip;
+	}
+
+	public boolean isPlayersTurn() {
+		return isPlayersTurn;
+	}
+
+	public void setPlayersTurn(boolean isPlayersTurn) {
+		this.isPlayersTurn = isPlayersTurn;
+	}
+
+	public boolean isPlayerIsChaser() {
+		return playerIsChaser;
+	}
+
+	public void setPlayerIsChaser(boolean playerIsChaser) {
+		this.playerIsChaser = playerIsChaser;
 	}
 
 }

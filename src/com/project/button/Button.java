@@ -100,7 +100,10 @@ public class Button extends Observable  implements Handleable{
 		this.buttonID = buttonID;
 		this.clickable = clickable;
 		this.bs = bs;
+		graph.setX(graph.getX()+x);
+		graph.setY(graph.getY()+y);
 		this.graph = graph;
+		Handler.addLowPriorityEntity(graph);
 		Handler.addButton(this);
 	}
 	
@@ -169,6 +172,10 @@ public class Button extends Observable  implements Handleable{
 		if(text != null) {
 			if(textBottomAligned) {text.move(x,y+height);}
 			else {text.move(x,y);}
+		}
+		if(graph!=null) {
+			graph.setX(x);
+			graph.setY(y);
 		}
 	}
 	public void shift(int x , int y) {
@@ -246,6 +253,7 @@ public class Button extends Observable  implements Handleable{
 		Handler.buttons.remove(b);
 		if(b.text!=null) {Text.delete(b.text);}
 		if(b.img!=null) {ImageHandler.delete(b.img);}
+		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);}
 		
 	}
 	public void setIsButton(boolean clickable) {

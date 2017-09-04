@@ -20,6 +20,34 @@ public class Destructive implements WeaponEffect {
 		return damagePerShot;
 	}
 
+	public DamageType getDamageType() {
+		return damageType;
+	}
+
+	public void setDamageType(DamageType damageType) {
+		this.damageType = damageType;
+	}
+
+	public int getWeaponSwayMod() {
+		return weaponSwayMod;
+	}
+
+	public void setWeaponSwayMod(int weaponSwayMod) {
+		this.weaponSwayMod = weaponSwayMod;
+	}
+
+	public void setRateOfFire(int rateOfFire) {
+		this.rateOfFire = rateOfFire;
+	}
+
+	public void setDamagePerShot(int damagePerShot) {
+		this.damagePerShot = damagePerShot;
+	}
+
+	public void setAccuracy(double accuracy) {
+		this.accuracy = accuracy;
+	}
+
 	public double getAccuracy() {
 		return accuracy;
 	}

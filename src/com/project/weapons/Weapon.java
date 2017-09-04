@@ -10,8 +10,12 @@ import com.project.Animation;
 import com.project.CrewAction;
 import com.project.Slottable;
 
+
+
+
 public abstract class Weapon implements Slottable, Actionable{ // Holds the shared functionality between all weapons
-	private int cooldownDuration; // weapons will have a cooldown period?
+	protected int cooldownDuration; // weapons will have a cooldown period?
+
 	protected int cooldownTurnsLeft; 
 	protected String name;
 	protected int projectileGap;
@@ -19,22 +23,37 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 	protected List<WeaponEffect> effects;	
 	protected Animation firingAnimation;
 	protected Animation weaponBody;
+
+	
+	
+	
+	
+	public Animation getSlotItemBody() {
+		return weaponBody;
+	}
+
+
+
 	protected List<CrewAction> actions = new ArrayList<CrewAction>();
 
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody,List<CrewAction> actions){
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction> actions){
+
+	
+
 		this.firingAnimation = anim;
 		this.actions = actions;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;
 		this.projectileGap = projectileGap;
-		this.weaponBody = weaponBody;
+		this.weaponBody = weaponBody.copy();
 		if(we!=null) {
-			this.effects = Arrays.asList(we);
+			this.effects =we;
 		}
 		else {
-			this.effects = new ArrayList<>();
+			this.effects = new ArrayList<WeaponEffect>();
 		}
+		
 	}
 	
 	
@@ -72,6 +91,13 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 	public Object[] fire(){ // this should be overridden
 		return new Object[]{0,0};
 	}
+	
+	public Weapon copy() {
+		return null;
+	}
+	
+	
+	
 	public Buffer getBuff(){ // ^^
 		return null;
 	}

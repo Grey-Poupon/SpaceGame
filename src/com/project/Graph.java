@@ -25,45 +25,45 @@ public class Graph implements Handleable {
 	private int mouseX=0;
 	private int modNum = 10;
 	private int modNumY = 500;
+	boolean textRight=false;
 	public Shape getClip() {
 		return clip;
 	}
 
 	public void setClip(int x,int y, int width, int height) {
-		this.clip = new Rectangle2D.Float(x, y, width, height);;
+		this.clip = new Rectangle2D.Float(x, y, width, height);
 	}
 
-	public Graph(Function<Double,Double> function, int x, int y, int width, int height) {
+	public Graph(Function<Double,Double> function, int x, int y, int width, int height,boolean textRight) {
+		this.textRight = textRight;
 		this.function = function;
 		for(int i = 0;i<dataY.length;i++) {
-			dataX[i]=x+i*width/dataX.length;
-			dataY[i]= y+height-function.apply((double) i).intValue()*height/function.apply((double)dataY.length).intValue();
+			dataX[i]=i*width/dataX.length;
+			dataY[i]= height-function.apply((double) i).intValue()*height/function.apply((double)dataY.length).intValue();
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
-		this.text = new Text("",true,x,y);
+		this.text = new Text("",true,x+width,y+20);
 		//text.changeMask(x, y, width, height);
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		Handler.addHighPriorityEntity(this);
-		//System.out.println("ASDA");
 	}
+	
 	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g.create();
 		g2d.setColor(Color.white);
 		if(clip!=null) {g2d.setClip(clip);}
 		for(int i =0;i<dataX.length-1;i++) {
-			g2d.drawLine((int)dataX[i], (int)dataY[i],(int) dataX[i+1],(int) dataY[i+1]);
+			g2d.drawLine(x+(int)dataX[i], y+(int)dataY[i],x+(int) dataX[i+1],y+(int) dataY[i+1]);
 		}
 		g2d.drawLine(x, y+height, x+width, y+height);
 		g2d.drawLine(x, y, x, y+height);
 		g2d.setColor(Color.red);
 		g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-		g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-(int)(function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width)*(dataX.length/width)*height/function.apply((double)dataY.length)));
-		g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-(int)(function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width)*(dataX.length/width)*height/function.apply((double)dataY.length))-2, 5, 5);
-		
+		g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+		g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
 	}
 	
 
@@ -72,12 +72,14 @@ public class Graph implements Handleable {
 	}
 	public void setX(int x) {
 		this.x = x;
+		this.text.xCoordinate = x+width; 
 	}
 	public int getY() {
 		return y;
 	}
 	public void setY(int y) {
 		this.y = y;
+		this.text.yCoordinate = y +50;
 	}
 	public int getWidth() {
 		return width;
@@ -98,16 +100,21 @@ public class Graph implements Handleable {
 	}
 
 	public void setPoint(Point pos) {
-		this.mouseX = pos.x-x;
+		if(pos.x-x<width&&pos.x-x>0) {
+			this.mouseX = pos.x-x;
+		}
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-		this.text.setText(Integer.toString(round-round%modNumY)); 
+		this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
 		
 	}
 
 	public void drag(int x,int y, int button) {
-		this.mouseX = x-this.x;
+		if(x-this.x<width&&x-this.x>0) {
+			this.mouseX = x-this.x;
+		}
+		
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-		this.text.setText(Integer.toString((round-round%modNumY)));
+		this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
 	}
 
 	@Override
@@ -116,6 +123,18 @@ public class Graph implements Handleable {
 		return 0;
 	}
 	
+	public Graph copy() {
+		return new Graph(function,x,y,width,height,textRight);
+	}
+	
+	public int getFuelCost() {
+		return mouseX-mouseX%modNum;
+	}
+	
+	public int getPower() {
+		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
+		return round-round%modNumY;
+	}
 	
 
 }
