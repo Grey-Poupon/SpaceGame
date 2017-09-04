@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.project.Actionable;
 import com.project.Crew;
 import com.project.DamageType;
 import com.project.EntityID;
@@ -97,6 +98,7 @@ public class Ship implements Handleable{
 	private void generateResources() {
 		resources.put("fuel", 500);
 		resources.put("missiles", 500);
+		resources.put("power", 0);
 	}
 
 
@@ -541,8 +543,8 @@ public class Ship implements Handleable{
 		this.resources = resources;
 	}
 	
-	public void getResource(String key) {
-		resources.get(key);
+	public int  getResource(String key) {
+		return resources.get(key);
 	}
 	public void setResource(String key,int val) {
 		resources.replace(key, val);
@@ -562,6 +564,8 @@ public class Ship implements Handleable{
 	}
 
 
+	
+	
 	public Generator getGenerator() {
 		return generator;
 	}

@@ -20,7 +20,7 @@ public class ProjectileAnimation implements Handleable{
 	private Weapon weapon;
 	private Point click;
 	private Random rand = new Random();
-	private int slotPostion;
+	//private int slotPostion;
 	private int noOfProjectiles;
 	private int projectileGap;
 	private int pushBack;
@@ -30,10 +30,10 @@ public class ProjectileAnimation implements Handleable{
 	private Slot fromSlot;
 	private Object[] damageDealt;
 	private Animation animations[];
-	public ProjectileAnimation( Ship primary, Ship secondary, int slotPostion,int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
+	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
 		this.primary       = primary;
 		this.secondary     = secondary;
-		this.slotPostion   = slotPostion;
+		//this.slotPostion   = slotPostion;
 		this.isCrossScreen = isCrossScreen;
 		this.pushBack	   = pushBack;
 		this.click         = click;

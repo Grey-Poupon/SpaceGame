@@ -8,6 +8,7 @@ import com.project.Animation;
 import com.project.CrewAction;
 import com.project.Graph;
 import com.project.Slottable;
+import com.project.ship.Ship;
 import com.project.ship.Slot;
 
 public class Engine implements Slottable,Actionable{
@@ -16,9 +17,9 @@ public class Engine implements Slottable,Actionable{
 	private Graph efficiencyGraph;
 	private List<CrewAction> actions;
 	private String name;
+	private Slot slot;
 	
-	
-	public Engine(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions) {
+	public Engine(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions,Slot slot) {
 		this.engineBody = engineBody.copy();
 		this.engineBody.start(false);
 		this.efficiencyGraph = efficiencyGraph;
@@ -62,7 +63,7 @@ public class Engine implements Slottable,Actionable{
 	}
 
 	public Engine copy() {
-		return new Engine(engineBody,name,efficiencyGraph,actions);
+		return new Engine(engineBody,name,efficiencyGraph,actions,slot);
 	}
 
 	
@@ -81,6 +82,33 @@ public class Engine implements Slottable,Actionable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+
+	public void doAction(int index,Ship ship) {
+		
+		if(actions.get(index).getName()=="Generate") {
+			ship.incResource("fuel", -efficiencyGraph.getFuelCost());
+			ship.incResource("power", efficiencyGraph.getPower());
+		}
+		
+	}
+
+
+
+	public Slot getSlot() {
+		return slot;
+	}
+
+
+
+	public void setSlot(Slot slot) {
+		this.slot = slot;
+	}
+
+
+
+
 	
 	
 

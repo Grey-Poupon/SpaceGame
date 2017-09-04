@@ -27,14 +27,17 @@ public class Text implements Handleable{
 		this.xCoordinate=x;
 		this.yCoordinate=y;
 		this.text=text;
+		this.visible = visible;
 		this.font = new Font(fontName, style, size);
 		this.colour =colour;
 		Handler.texts.add(this);
 	}
+	
 	public Text(String text,boolean visible,int x, int y){
 		this.xCoordinate=x;
 		this.yCoordinate=y;
 		this.text=text;	
+		this.visible = visible;
 		this.font = new Font("Sevensegies", Font.PLAIN, 36);
 		this.colour = Color.WHITE;
 		Handler.texts.add(this);

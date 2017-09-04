@@ -43,11 +43,12 @@ public class BattleScreen extends Main {
 	private Point chasedShotLocation;
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
-	private int chaserWeaponChoice;
-	private int chaserEngineChoice;
-	private int chasedWeaponChoice;
-	private int chasedEngineChoice;
+	private Weapon chaserWeaponChoice;
+	private Engine chaserEngineChoice;
+	private Weapon chasedWeaponChoice;
+	private Engine chasedEngineChoice;
 	private Random rand;
+	private Text fuel;
 	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
@@ -84,6 +85,7 @@ public class BattleScreen extends Main {
 		chasedShip.setX(WIDTH-430);
 		chasedShip.setY(110);
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150);
+		fuel   		 = new Text    ("Fuel: "+Integer.toString(chaserShip.getResource("fuel"))+" Power: "+Integer.toString(chaserShip.getResource("power")),true,150,180); 				
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		List<Button> temp = chaserShip.getLeaderButtons(this);
@@ -146,10 +148,10 @@ public class BattleScreen extends Main {
 			if(!isPlayersTurn) {
 				if(currentPhase == BattlePhases.WeaponsButton) {
 					if(playerIsChaser) {
-						chasedWeaponChoice=0;
+						chasedWeaponChoice=chasedShip.getBackWeapons().get(0);
 					}
 					else {
-						chaserWeaponChoice=0;
+						chaserWeaponChoice=chaserShip.getBackWeapons().get(0);
 					}
 					System.out.println("Enemy Weapon Reveal");
 				}
@@ -164,10 +166,10 @@ public class BattleScreen extends Main {
 				}
 				else if (currentPhase == BattlePhases.Engine){
 					if(playerIsChaser) {
-						chasedEngineChoice=0;
+						chasedEngineChoice=chasedShip.getEngines().get(0);
 					}
 					else {
-						chaserEngineChoice=0;
+						chaserEngineChoice=chaserShip.getEngines().get(0);
 					}
 					System.out.println("Enemy Engine Reveal");
 				}	
@@ -195,6 +197,7 @@ public class BattleScreen extends Main {
 			
 			if(chaserShip !=null && chasedShip != null) {
 				if(currentPhase!=null&&phase!=null) {
+					fuel.setText("Fuel: "+Integer.toString(chaserShip.getResource("fuel"))+" Power: "+Integer.toString(chaserShip.getResource("power")));
 					phase.setText("Current Phase: "+currentPhase.toString());
 				}
 				loadingScreen.setVisible(false);
@@ -218,25 +221,17 @@ public class BattleScreen extends Main {
 
 
 
-	public void UseWeapon(Ship primary, Ship secondary,int position,Point shot){
-		Weapon weapon = null;
-		Slot slot = null;
-		if(primary.isChased()) {
-			 slot = primary.getBackSlot(position);
-			 weapon = (Weapon) primary.getBackSlot(position).getSlotItem();
-		}
-		else {
-			 slot = primary.getFrontSlot(position);
-			 weapon = (Weapon) primary.getFrontSlot(position).getSlotItem();
-		}
+	public void UseWeapon(Ship primary, Ship secondary,Weapon weapon,Point shot){
 		
 		
-		new ProjectileAnimation(primary, secondary, position, 200, true, weapon.fire(), shot,slot).start();
+		
+		
+		new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot,weapon.getSlot()).start();
 		
 
 	}
 
-	@Override
+	
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {
 				if(ID == ButtonID.BattleWeaponsChoice){
@@ -255,10 +250,10 @@ public class BattleScreen extends Main {
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
 						
 						if (playerIsChaser) {
-							chaserWeaponChoice = index;
+							chaserWeaponChoice = chaserShip.getBackWeapons().get(index);
 						}
 						else {
-							chasedWeaponChoice = index;
+							chasedWeaponChoice = chasedShip.getBackWeapons().get(index);
 						}
 						System.out.println("Player is about to use weapon "+index+"!");
 						nextTurn();
@@ -283,10 +278,10 @@ public class BattleScreen extends Main {
 						
 						if (playerIsChaser) {
 							
-							chaserEngineChoice = index;
+							chaserEngineChoice = chaserShip.getEngines().get(index);
 						}
 						else {
-							chasedEngineChoice = index;
+							chasedEngineChoice = chaserShip.getEngines().get(index);
 						}
 						
 						
@@ -295,8 +290,10 @@ public class BattleScreen extends Main {
 					}
 				}
 				if(ID == ButtonID.BattleEngineActionChoice) {
-					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
-						
+					if(isPlayersTurn && currentPhase==BattlePhases.EngineActions ) {
+						if(playerIsChaser) {chaserEngineChoice.doAction(index,chaserShip);}
+						else {chasedEngineChoice.doAction(index, chasedShip);}
+						nextTurn();
 					}
 				}
 				

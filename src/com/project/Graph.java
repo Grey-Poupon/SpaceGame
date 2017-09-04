@@ -42,7 +42,8 @@ public class Graph implements Handleable {
 			dataY[i]= height-function.apply((double) i).intValue()*height/function.apply((double)dataY.length).intValue();
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
-		this.text = new Text("",true,x+width,y+20);
+		this.text = new Text("",false,x+width,y+20);
+		this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
 		//text.changeMask(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -134,6 +135,14 @@ public class Graph implements Handleable {
 	public int getPower() {
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
 		return round-round%modNumY;
+	}
+
+	public Text getText() {
+		return text;
+	}
+
+	public void setText(Text text) {
+		this.text = text;
 	}
 	
 

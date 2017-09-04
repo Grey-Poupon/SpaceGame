@@ -103,7 +103,8 @@ public class Button extends Observable  implements Handleable{
 		graph.setX(graph.getX()+x);
 		graph.setY(graph.getY()+y);
 		this.graph = graph;
-		Handler.addLowPriorityEntity(graph);
+		this.graph.getText().setVisible(true);
+		Handler.addLowPriorityEntity(this.graph);
 		Handler.addButton(this);
 	}
 	
@@ -253,7 +254,7 @@ public class Button extends Observable  implements Handleable{
 		Handler.buttons.remove(b);
 		if(b.text!=null) {Text.delete(b.text);}
 		if(b.img!=null) {ImageHandler.delete(b.img);}
-		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);}
+		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);Text.delete(b.graph.getText());}
 		
 	}
 	public void setIsButton(boolean clickable) {
