@@ -1,4 +1,4 @@
-package com.project;
+ package com.project;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -6,6 +6,7 @@ import java.util.List;
 
 public class DraggableIcon {
 	private ImageHandler img;
+	private Crew crew;
 	private int xCoordinate;
 	private int yCoordinate;
 	private int startX;
@@ -20,8 +21,9 @@ public class DraggableIcon {
 	private static final int boxLineWidth = 2;
 
 	
-	public DraggableIcon(ImageHandler img, int xCoordinate, int yCoordinate) {
+	public DraggableIcon(ImageHandler img,Crew crew, int xCoordinate, int yCoordinate) {
 		this.img         = img;
+		this.crew		 = crew;
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
 		this.startX      = xCoordinate;
@@ -57,8 +59,8 @@ public class DraggableIcon {
 
 
 	public static void delete(DraggableIcon img2) {
-		Handler.icons.remove(img2);
 		ImageHandler.delete(img2.img);
+		Handler.icons.remove(img2);
 		img2 = null;
 		
 	}
@@ -100,6 +102,11 @@ public class DraggableIcon {
 			this.img.xCoordinate = startX;
 			this.img.yCoordinate = startY;
 		}
+	}
+
+
+	public Crew getCrew() {
+		return crew;
 	}
 
 

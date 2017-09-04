@@ -299,7 +299,11 @@ public class BattleScreen extends Main {
 						
 					}
 				}
-				
+				if(ID == ButtonID.BattleWeaponActionChoice) {
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+						nextTurn();
+					}
+				}
 				if(ID == ButtonID.Crew){
 					BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
 				}

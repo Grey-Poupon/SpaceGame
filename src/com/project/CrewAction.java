@@ -18,6 +18,10 @@ public class CrewAction {
 		this.actor = actor;
 	}
 
+	public void removeActor() {
+		this.actor = null;
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -13,7 +13,8 @@ public class Text implements Handleable{
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
-	//private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
+	private static final float textRatio = 31f/35f;
+	//private ImageObserver observer;
 	private boolean visible = true;
 	private String text;
 	private Font font;
@@ -24,19 +25,19 @@ public class Text implements Handleable{
 	
 	
 	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour){
-		this.xCoordinate=x;
-		this.yCoordinate=y;
-		this.text=text;
-		this.font = new Font(fontName, style, size);
-		this.colour =colour;
+		this.xCoordinate = x;
+		this.yCoordinate = y+(int)(size*textRatio);
+		this.text        = text;
+		this.font        = new Font(fontName, style, size);
+		this.colour      = colour;
 		Handler.texts.add(this);
 	}
 	public Text(String text,boolean visible,int x, int y){
-		this.xCoordinate=x;
-		this.yCoordinate=y;
-		this.text=text;	
-		this.font = new Font("Sevensegies", Font.PLAIN, 36);
-		this.colour = Color.WHITE;
+		this.xCoordinate = x;
+		this.yCoordinate = y+32;
+		this.text        = text;	
+		this.font        = new Font("Sevensegies", Font.PLAIN, 36);
+		this.colour      = Color.WHITE;
 		Handler.texts.add(this);
 	}
 	public void render(Graphics g)

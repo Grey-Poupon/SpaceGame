@@ -33,6 +33,7 @@ public class Button extends Observable  implements Handleable{
 	public void setGraph(Graph graph) {
 		this.graph = graph;
 	}
+	//8 Basic
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable, BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
@@ -45,10 +46,43 @@ public class Button extends Observable  implements Handleable{
 		this.bs = bs;
 		Handler.addButton(this);
 	}
+	// 8 Graph
+		public Button(int x,int y,int width,int height,ButtonID buttonID,boolean clickable,Graph graph, BattleScreen bs){
+			this.xCoordinate = x;
+			this.yCoordinate =y;
+			this.mask = new Rectangle2D.Float(x, y, width, height);
+			this.width = width;
+			this.height = height;
+			this.buttonID = buttonID;
+			this.clickable = clickable;
+			this.bs = bs;
+			graph.setX(graph.getX()+x);
+			graph.setY(graph.getY()+y);
+			this.graph = graph;
+			Handler.addLowPriorityEntity(graph);
+			Handler.addButton(this);
+		}
+		// 9 Img
+		public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
+			this.xCoordinate = x;
+			this.yCoordinate =y;
+			this.mask = new Rectangle2D.Float(x, y, width, height);
+			this.width = width;
+			this.height = height;
+			this.buttonID = buttonID;
+			this.index = index;
+			this.clickable = clickable;
+			this.bs = bs;
+			img.setxCoordinate(x);
+			img.setyCoordinate(y);
+			this.img = img;
+			Handler.addButton(this);
+		}
+	//14 Text
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, BattleScreen bs,boolean bottomAlign){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
-		this.mask = new Rectangle2D.Float(x, y+size, width, height);
+		this.mask = new Rectangle2D.Float(x, y, width, height);
 		this.textBottomAligned = bottomAlign;
 		this.width = width;
 		this.height = height;
@@ -59,21 +93,8 @@ public class Button extends Observable  implements Handleable{
 		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
 		Handler.addButton(this);
 	}
-	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
-		this.xCoordinate = x;
-		this.yCoordinate =y;
-		this.mask = new Rectangle2D.Float(x, y, width, height);
-		this.width = width;
-		this.height = height;
-		this.buttonID = buttonID;
-		this.index = index;
-		this.clickable = clickable;
-		this.bs = bs;
-		img.setxCoordinate(x);
-		img.setyCoordinate(y);
-		this.img = img;
-		Handler.addButton(this);
-	}
+	
+	//14 Text + Image
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour,ImageHandler img, BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate =y;
@@ -91,21 +112,6 @@ public class Button extends Observable  implements Handleable{
 		Handler.addButton(this);
 	}
 	
-	public Button(int x,int y,int width,int height,ButtonID buttonID,boolean clickable,Graph graph, BattleScreen bs){
-		this.xCoordinate = x;
-		this.yCoordinate =y;
-		this.mask = new Rectangle2D.Float(x, y, width, height);
-		this.width = width;
-		this.height = height;
-		this.buttonID = buttonID;
-		this.clickable = clickable;
-		this.bs = bs;
-		graph.setX(graph.getX()+x);
-		graph.setY(graph.getY()+y);
-		this.graph = graph;
-		Handler.addLowPriorityEntity(graph);
-		Handler.addButton(this);
-	}
 	
 	
 	public boolean isInside(int x, int y) {
