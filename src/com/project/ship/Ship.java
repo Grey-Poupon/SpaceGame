@@ -21,6 +21,7 @@ import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.engines.Engine;
 import com.project.ship.rooms.Cockpit;
+import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.weapons.Weapon;
 
@@ -119,7 +120,18 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
+		rooms.add(new GeneratorRoom(new Point(20,20)));
 	}
+	
+	public Room getGeneratorRoom() {
+		for(int i = 0; i<rooms.size();i++) {
+			if(rooms.get(i) instanceof GeneratorRoom) {
+				return rooms.get(i); 
+			}
+		}
+		return null;
+	}
+	
 	
 	private void sortSprites() {
 		List<Handleable> temp = new ArrayList<Handleable>();
@@ -238,6 +250,7 @@ public class Ship implements Handleable{
 		for(int i = 0;i<leaders.size();i++) {
 			Crew crew = leaders.get(i);
 			crew.getPortrait().setVisible(true);
+			crew.getPortrait().start();
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true, crew.getPortrait(), bs));
 		}
 		return buttons;
@@ -381,7 +394,7 @@ public class Ship implements Handleable{
 //		}
 		
 		
-//		
+		
 //		Graphics2D g2d = (Graphics2D)g.create();
 //		for(int i=0;i<shipBackSlots.size();i++) {
 //			Slot s = shipBackSlots.get(i);
@@ -536,6 +549,26 @@ public class Ship implements Handleable{
 	}
 	public void incResource(String key,int inc) {
 		resources.replace(key, resources.get(key)+inc);
+	}
+
+
+	public Room getWeaponRoom() {
+		for(Room room: rooms) {
+			if(room instanceof WeaponsRoom) {
+				return room;
+			}
+		}
+		return null;
+	}
+
+
+	public Generator getGenerator() {
+		return generator;
+	}
+
+
+	public void setGenerator(Generator generator) {
+		this.generator = generator;
 	}
 
 

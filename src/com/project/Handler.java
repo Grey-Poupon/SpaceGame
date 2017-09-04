@@ -12,7 +12,8 @@ public class Handler {
 	public static ArrayList<Button> buttons = new ArrayList<Button>(); 
 	public static ArrayList<Animation> anims = new ArrayList<Animation>();
 	public static ArrayList<Text> texts = new ArrayList<Text>();
-	
+	public static ArrayList<DraggableIcon> icons = new ArrayList<DraggableIcon>();
+	protected Object dragging = null;
 
 	public void tick(UI ui){
 		
@@ -64,15 +65,6 @@ public class Handler {
 			}
 		}	
 		return false;
-	}
-	
-	public void checkDrag(int x, int y, int button) {
-		for(int i=0;i<buttons.size();i++) {
-			if(buttons.get(i).isDraggable()&&buttons.get(i)!=null && buttons.get(i).isInside(x, y)){
-				buttons.get(i).drag(x,y,button);
-			}
-		}
-		
 	}
 
 	public boolean checkClick(int x, int y, int button) {

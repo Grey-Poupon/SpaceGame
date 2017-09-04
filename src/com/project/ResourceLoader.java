@@ -6,7 +6,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -42,7 +44,8 @@ public class ResourceLoader {
 	}
 	
 	private void loadEngines() {
-		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),new Graph(MathFunctions.square,10,10,200,200,true)));
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate", 0),new CrewAction("Manouevre", 0)});
+		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions));
 	}
 
 	public static Map<String, Engine> getShipEngines() {
@@ -63,7 +66,9 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher")));		
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire", 0),new CrewAction("Reload", 0)});
+
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions));		
 
 	}
 
@@ -72,7 +77,7 @@ public class ResourceLoader {
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGap, int xGap, int yGap, int frameRate, float scale, float xStart, float xEnd, float yStart, float yEnd, float xVel, Rectangle2D mask, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
 
 		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
-		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 32,32,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
 		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,1,1, false,AdjustmentID.None));
@@ -87,29 +92,6 @@ public class ResourceLoader {
 		
 	}
 
-	public BufferedImage loadImage(String path) {
-		BufferedImage img =null;
-		try {
-			img = ImageIO.read(getClass().getResource("/"+path));
-		} 
-		catch (IOException e){
-			e.printStackTrace();
-		};
-		return img;
-	}
-	
-	public void put(Map<String,BufferedImage> tm,String path) {
-		tm.put(path,loadImage(path));
-	}
-	public void loadFont() {
-		try {
-		     GraphicsEnvironment ge = 
-		         GraphicsEnvironment.getLocalGraphicsEnvironment();
-		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/Sevensegies-Regular.ttf")));
-		} catch (IOException|FontFormatException e) {
-		     e.printStackTrace();
-		}
-	}
 	public void loadImages() {
 		put(images,"res/drawnUi2.png");
 		put(images,"res/loadingScreen.png");
@@ -125,6 +107,7 @@ public class ResourceLoader {
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/attackMousePointer.png");
+		put(images,"res/actionBox.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
 				put(images,"res/racePortraits/"+race.toString()+".png");
@@ -137,6 +120,35 @@ public class ResourceLoader {
 			put(images,"res/matron/data/layer"+Integer.toString(i)+".png");
 		}
 	}
+	public void put(Map<String,BufferedImage> tm,String path) {
+		tm.put(path,loadImage(path));
+	}
+	
+	public BufferedImage loadImage(String path) {
+		BufferedImage img =null;
+		try {
+			img = ImageIO.read(getClass().getResource("/"+path));
+		} 
+		catch (IOException e){
+			e.printStackTrace();
+		};
+		return img;
+	}
+	
+	
+	public void loadFont() {
+		try {
+		     GraphicsEnvironment ge = 
+		         GraphicsEnvironment.getLocalGraphicsEnvironment();
+		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/Sevensegies-Regular.ttf")));
+		} catch (IOException|FontFormatException e) {
+		     e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 	public static void putAnimation(String key, Animation value) {
 		animations.put(key, value);
 	}

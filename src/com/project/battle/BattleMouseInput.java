@@ -31,6 +31,25 @@ public class BattleMouseInput extends MouseInput {
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
 		scrollableLists.get(selectedList).scroll(arg0.getWheelRotation());
 	}
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
+		hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		hans.checkPress(arg0.getX(),arg0.getY(),arg0.getButton());
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		hans.checkRelease(arg0.getX(),arg0.getY(),arg0.getButton());
+
+	}
+	
+	
+	
 	public static void addList(ScrollableList scrollableList) {
 		scrollableLists.add(scrollableList);	
 	}

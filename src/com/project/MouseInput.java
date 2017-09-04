@@ -50,22 +50,10 @@ public class MouseInput implements MouseListener,MouseMotionListener,MouseWheelL
 
 	}
 	
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		
-
-	}
+	
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
-		hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
 	}
 
 	@Override
@@ -78,6 +66,20 @@ public class MouseInput implements MouseListener,MouseMotionListener,MouseWheelL
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

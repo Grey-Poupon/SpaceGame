@@ -6,11 +6,9 @@ import java.util.Random;
 
 import com.project.DistanceSystem;
 import com.project.EntityID;
-import com.project.Graph;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
-import com.project.MathFunctions;
 import com.project.MouseInput;
 import com.project.ProjectileAnimation;
 import com.project.ResourceLoader;
@@ -20,6 +18,8 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.engines.Engine;
+import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Weapon;
@@ -113,6 +113,7 @@ public class BattleScreen extends Main {
 	}
 	
 	private void nextTurn() {
+		
 		// if its the chased's turn, next phase
 		if(isPlayersTurn != playerIsChaser || currentPhase == BattlePhases.Final) { 
 			currentPhasePointer++;
@@ -238,9 +239,21 @@ public class BattleScreen extends Main {
 	@Override
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 			if(button == MouseEvent.BUTTON1) {
-				
 				if(ID == ButtonID.BattleWeaponsChoice){
+					Weapon weapon;
+					Room room;
+					if (playerIsChaser) {
+						weapon = chaserShip.getFrontWeapons().get(index);
+						room = chaserShip.getWeaponRoom();
+					}
+					else {
+						weapon = chasedShip.getBackWeapons().get(index);
+						room = chasedShip.getWeaponRoom();
+					}
+					BattleUI.generateActionList(weapon, room);
+					
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
+						
 						if (playerIsChaser) {
 							chaserWeaponChoice = index;
 						}
@@ -251,21 +264,44 @@ public class BattleScreen extends Main {
 						nextTurn();
 					}
 				}
-		
 				if(ID == ButtonID.BattleEngineChoice){
+					Engine engine;
+					Room room;
+					if (playerIsChaser) {
+						engine = chaserShip.getEngines().get(index);
+						room = chaserShip.getGeneratorRoom();
+					}
+					else {
+						engine = chasedShip.getEngines().get(index);
+						room = chasedShip.getGeneratorRoom();
+					}
+					BattleUI.generateActionList(engine, room,true);
+					//System.out.println("PEantu");
 					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+						
+						
+						
 						if (playerIsChaser) {
+							
 							chaserEngineChoice = index;
 						}
 						else {
 							chasedEngineChoice = index;
 						}
+						
+						
 						System.out.println("Player Engine choice made");
 						nextTurn();
 					}
 				}
+				if(ID == ButtonID.BattleEngineActionChoice) {
+					if(isPlayersTurn && currentPhase==BattlePhases.Engine ) {
+						
+					}
+				}
+				
 				if(ID == ButtonID.Crew){
-					BattleUI.changeTootlipSelection(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
+					BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index),TooltipSelectionID.Room);
 				}
 				if(ID == ButtonID.Graph){
 					graphButton.getGraph().setPoint(MouseInput.mousePosition);
@@ -274,10 +310,9 @@ public class BattleScreen extends Main {
 			
 			if(button == MouseEvent.BUTTON3) {
 				if(ID == ButtonID.Crew) {
-					BattleUI.changeTootlipSelection(chaserShip.getAllCrew().get(index),TooltipSelectionID.Stats);
+					BattleUI.generateRoomButtons(chaserShip.getAllCrew().get(index),TooltipSelectionID.Stats);
 				}
 			}
-		
 	}
 	
 	public boolean checkShipClick(int x, int y) {

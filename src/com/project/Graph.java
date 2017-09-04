@@ -100,14 +100,19 @@ public class Graph implements Handleable {
 	}
 
 	public void setPoint(Point pos) {
-		this.mouseX = pos.x-x;
+		if(pos.x-x<width&&pos.x-x>0) {
+			this.mouseX = pos.x-x;
+		}
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
 		this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
 		
 	}
 
 	public void drag(int x,int y, int button) {
-		this.mouseX = x-this.x;
+		if(x-this.x<width&&x-this.x>0) {
+			this.mouseX = x-this.x;
+		}
+		
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
 		this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
 	}

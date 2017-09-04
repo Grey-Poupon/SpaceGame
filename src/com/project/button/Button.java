@@ -115,6 +115,9 @@ public class Button extends Observable  implements Handleable{
 		}
 		return false;
 	}
+	public void drag() {
+		
+	}
 	public void click(int button){
 		if(isButton) {
 			setChanged();

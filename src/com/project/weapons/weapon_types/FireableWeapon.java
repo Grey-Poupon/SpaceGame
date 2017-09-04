@@ -2,9 +2,11 @@ package com.project.weapons.weapon_types;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.project.Animation;
+import com.project.CrewAction;
 import com.project.DamageType;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
@@ -14,8 +16,10 @@ import com.project.weapons.WeaponEffect;
 public class FireableWeapon extends Weapon {
 
 
-	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody) {
-		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody);
+
+	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction>actions) {
+		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody,actions);
+
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
 
@@ -74,11 +78,11 @@ public class FireableWeapon extends Weapon {
 	public Weapon copy() {
 		//WHEN NEW TYPES OF WEAPON BESIDES FIREABLE NEED TO ADD CHECK
 		if(effects.size()==1) {
-			return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, null, projectileGap, weaponBody);
+			return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, null, projectileGap, weaponBody,actions);
 		}
 		List<WeaponEffect> temp = effects;
 		temp.remove(effects.size()-1);
-		return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, temp, projectileGap, weaponBody);
+		return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, temp, projectileGap, weaponBody,actions);
 	}
 
 
