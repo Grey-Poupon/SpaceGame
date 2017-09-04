@@ -45,6 +45,8 @@ public class Animation implements Handleable {
 	private BufferedImage sprite;
 	private List<Animation> followingAnims = new ArrayList<Animation>();
 	private float z;
+	private int xFlip=1;
+	private int yFlip = 1;
 	
 	public AdjustmentID getAlign() {
 		return align;
@@ -66,7 +68,7 @@ public class Animation implements Handleable {
 		this.yStartGap = yStartGp;
 		this.xGap = xGap;
 		this.yGap = yGap;
-		this.framesLeft = NoOfloops<0 ? -1 : NoOfloops*noHorizTiles*noVertTiles;
+		this.framesLeft = NoOfloops<0 ? -10 : NoOfloops*noHorizTiles*noVertTiles;
 		this.scale = scale;
 		this.mask = null;
 		setSpritesheet(path);
@@ -164,6 +166,14 @@ public class Animation implements Handleable {
 		running = true;
 		Handler.addAnimation(this);
 	}
+	public void start(boolean add) {
+		running = true;
+		if(add) {
+			Handler.addAnimation(this);
+		}
+	}
+	
+	
 	public void addAnims(List<Animation> anims) {
 		this.followingAnims = anims;
 	}
@@ -194,7 +204,7 @@ public class Animation implements Handleable {
 		if(mask!=null) {g.setClip(mask);}
 		int xAdjustment =(int) (AdjustmentID.getXAdjustment(align)*tileWidth*scale);
 		int yAdjustment =(int) (AdjustmentID.getYAdjustment(align)*tileHeight*scale);
-		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale*xScale),Math.round(sprite.getHeight()*scale*yScale), null);
+		g.drawImage(sprite, (int)xCoordinate+xAdjustment, (int)yCoordinate+yAdjustment,Math.round(sprite.getWidth()*scale*xScale*xFlip),Math.round(sprite.getHeight()*scale*yScale*yFlip), null);
 
 	}
 	public static void delete(Animation anim) {
@@ -216,8 +226,11 @@ public class Animation implements Handleable {
 			if(tickCounter==ticksPerFrame) {
 				nextSprite();
 				tickCounter=0;
-				framesLeft--;
+				if(framesLeft>-5){
+					framesLeft--;
 				}
+				
+			}
 			// kill
 			if(moving) {
 				if(xPixelsToMove < 1 && yPixelsToMove < 1 ) {
@@ -234,7 +247,7 @@ public class Animation implements Handleable {
 			}
 			else
 			{					
-				if (framesLeft < 1) {
+				if (framesLeft < 1&&framesLeft>-5) {
 					// setup next animation in chain
 					if (followingAnims.size()>1) {
 						Animation next = followingAnims.get(0);
@@ -244,8 +257,8 @@ public class Animation implements Handleable {
 						followingAnims.get(0).start();
 					}
 					// kill self
-					if(monitored) {running = false;}
-					else {Animation.delete(this);}
+					if(!monitored) {Animation.delete(this);}
+					running = false;
 				}
 			}
 		}
@@ -379,4 +392,30 @@ public class Animation implements Handleable {
 	public void setAlign(AdjustmentID align) {
 		this.align = align;
 	}
+
+
+
+	public int getyFlip() {
+		return yFlip;
+	}
+
+	public void setyFlip(int yFlip) {
+		this.yFlip = yFlip;
+	}
+
+	public int getxFlip() {
+		return xFlip;
+	}
+
+	public void setxFlip(int xFlip) {
+		this.xFlip = xFlip;
+	}
+	
+	public float getOnScreenHeight() {
+		return getTileHeight()*getyScale()*getScale();
+	}
+	public float getOnScreenWidth() {
+		return getTileWidth()*getxScale()*getScale();
+	}
+	
 }

@@ -9,7 +9,7 @@ import com.project.Animation;
 import com.project.Slottable;
 
 public abstract class Weapon implements Slottable{ // Holds the shared functionality between all weapons
-	private int cooldownDuration; // weapons will have a cooldown period?
+	protected int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
 	protected String name;
 	protected int projectileGap;
@@ -21,7 +21,7 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	
 	
 	
-	public Animation getWeaponBody() {
+	public Animation getSlotItemBody() {
 		return weaponBody;
 	}
 
@@ -33,19 +33,20 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 
 
 
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,WeaponEffect[] we,int projectileGap,Animation weaponBody){
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody){
 		this.firingAnimation = anim;
 		this.cooldownDuration=cooldownDuration;
 		this.name = name;
 		this.targetSelf = targetSelf;
 		this.projectileGap = projectileGap;
-		this.weaponBody = weaponBody;
+		this.weaponBody = weaponBody.copy();
 		if(we!=null) {
-			this.effects = Arrays.asList(we);
+			this.effects =we;
 		}
 		else {
-			this.effects = new ArrayList<>();
+			this.effects = new ArrayList<WeaponEffect>();
 		}
+		
 	}
 	
 	
@@ -76,6 +77,13 @@ public abstract class Weapon implements Slottable{ // Holds the shared functiona
 	public Object[] fire(){ // this should be overridden
 		return new Object[]{0,0};
 	}
+	
+	public Weapon copy() {
+		return null;
+	}
+	
+	
+	
 	public Buffer getBuff(){ // ^^
 		return null;
 	}

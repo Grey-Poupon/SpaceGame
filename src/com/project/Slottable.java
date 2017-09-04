@@ -8,5 +8,5 @@ public interface Slottable {
 
 	void render(Graphics g, Slot slot);
 
-	Animation getWeaponBody();
+	Animation getSlotItemBody();
 }

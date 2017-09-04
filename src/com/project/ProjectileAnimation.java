@@ -79,7 +79,13 @@ public class ProjectileAnimation implements Handleable{
 
 			temp.setMonitored(true);
 			Point start = new Point ();
-			start.setLocation(slot.getX(),slot.getY());
+			if(slot.isFront()) {
+				start.setLocation(slot.getSlotItem().getSlotItemBody().getxCoordinate()+slot.getSlotItem().getSlotItemBody().getOnScreenWidth(),
+						slot.getSlotItem().getSlotItemBody().getyCoordinate()+slot.getSlotItem().getSlotItemBody().getOnScreenHeight()/2);
+			}else {
+				start.setLocation(slot.getX(),slot.getY());
+			}
+			
 
 
 			temp.setStartAndEnd(start, click);

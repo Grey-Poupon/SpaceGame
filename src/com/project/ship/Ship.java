@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Observer;
 import java.util.Random;
 
 import com.project.Crew;
@@ -20,6 +19,7 @@ import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.engines.Engine;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.weapons.Weapon;
@@ -33,7 +33,7 @@ public class Ship implements Handleable{
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
-	private Engine engine;
+	private Engine2 engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
@@ -68,15 +68,17 @@ public class Ship implements Handleable{
 		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
+		Engine defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
 		}
-		for(int i=0;i<shipBackSlots.size();i++){
-			shipBackSlots.get(i).setSlotItem(defaultWeapon);
+		shipBackSlots.get(0).setSlotItem(defaultWeapon.copy());
+		for(int i=1;i<shipBackSlots.size();i++){
+			shipBackSlots.get(i).setSlotItem(defaultEngine.copy());
 		}
 		for(int i=0;i<shipFrontSlots.size();i++){
-			shipFrontSlots.get(i).setSlotItem(defaultWeapon);
+			shipFrontSlots.get(i).setSlotItem(defaultWeapon.copy());
 		}
 		generateRooms();
 		generateResources();
@@ -115,7 +117,7 @@ public class Ship implements Handleable{
 
 
 	private void generateRooms() {
-		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),isChased, new Point(50,50)));
+		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
 	}
 	
@@ -408,12 +410,14 @@ public class Ship implements Handleable{
 	public void tick() {
 		lImage.tick();
 		for(int i = 0;i<shipBackSlots.size();i++) {
+			shipBackSlots.get(i).tick();
 			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());
 			shipBackSlots.get(i).setY(lImage.getBackSlots().get(i).getY());
 			shipBackSlots.get(i).setWidth(lImage.getBackSlots().get(i).getWidth());
 			shipBackSlots.get(i).setHeight(lImage.getBackSlots().get(i).getHeight());
 		}
 		for(int i = 0;i<shipFrontSlots.size();i++) {
+			shipFrontSlots.get(i).tick();
 			shipFrontSlots.get(i).setX(lImage.getFrontSlots().get(i).getX());
 			shipFrontSlots.get(i).setY(lImage.getFrontSlots().get(i).getY());
 			shipFrontSlots.get(i).setWidth(lImage.getFrontSlots().get(i).getWidth());
@@ -463,7 +467,7 @@ public class Ship implements Handleable{
 		for(int i = 0; i<shipFrontSlots.size();i++) {
 			if(shipFrontSlots.get(i).getSlotItem() instanceof Weapon) {
 				weapons.add((Weapon)shipFrontSlots.get(i).getSlotItem());
-				System.out.println("SSASD");
+				
 			}
 		}
 		return weapons;
@@ -473,11 +477,23 @@ public class Ship implements Handleable{
 		for(int i = 0; i<shipBackSlots.size();i++) {
 			if(shipBackSlots.get(i).getSlotItem() instanceof Weapon) {
 				weapons.add((Weapon)shipBackSlots.get(i).getSlotItem());
-				System.out.println("SAD");
+				
 			}
 		}
 		return weapons;
 	}
+	
+	public List<Engine> getEngines(){
+		List<Engine> engines = new ArrayList<>();
+		for(int i = 0; i<shipBackSlots.size();i++) {
+			if(shipBackSlots.get(i).getSlotItem() instanceof Engine) {
+				engines.add((Engine)shipBackSlots.get(i).getSlotItem());
+				
+			}
+		}
+		return engines;
+	}
+	
 
 
 	public Slot getFrontSlot(int position) {

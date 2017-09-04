@@ -29,7 +29,8 @@ public class BattleScreen extends Main {
 	private static final long serialVersionUID = -6523236697457665386L;
 
 	public Ship chasedShip;
-
+	public Ship chaserShip; 
+	
 	private String selectedRoom;
 
 	private ImageHandler overlay;
@@ -48,7 +49,7 @@ public class BattleScreen extends Main {
 	private int chasedEngineChoice;
 	private Random rand;
 	private boolean playerIsChaser = true;
-	private boolean isPlayersTurn = !playerIsChaser;// chased goes first
+	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
 	private Button graphButton;
 	
@@ -95,8 +96,8 @@ public class BattleScreen extends Main {
 		mouseIn				 = new BattleMouseInput(handler);
 		chaserHealthbar		 = new ImageHandler  (2,2,"res/healthseg.png",true,1,1,EntityID.UI);
 		chasedHealthbar		 = new ImageHandler  (797,2,"res/healthseg.png",true,1,1,EntityID.UI); 
-		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,150,350,150,150), this);
-		graphButton.setDraggable(true);
+//		graphButton   		 = new Button(150, 350, 150, 150, ButtonID.Graph, true, new Graph(MathFunctions.square,0,0,150,150), this);
+//		graphButton.setDraggable(true);
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
 		Handler.addLowPriorityEntity(chasedHealthbar);		
@@ -113,7 +114,7 @@ public class BattleScreen extends Main {
 	
 	private void nextTurn() {
 		// if its the chased's turn, next phase
-		if(isPlayersTurn == playerIsChaser || currentPhase == BattlePhases.Final) { 
+		if(isPlayersTurn != playerIsChaser || currentPhase == BattlePhases.Final) { 
 			currentPhasePointer++;
 		}
 		// loop phases if necessary
@@ -224,7 +225,7 @@ public class BattleScreen extends Main {
 			 weapon = (Weapon) primary.getBackSlot(position).getSlotItem();
 		}
 		else {
-			 slot = primary.getBackSlot(position);
+			 slot = primary.getFrontSlot(position);
 			 weapon = (Weapon) primary.getFrontSlot(position).getSlotItem();
 		}
 		
@@ -309,6 +310,37 @@ public class BattleScreen extends Main {
 		else {
 			return chaserShip.getLayerClicked(x, y);
 		}
+	}
+	public Ship getChasedShip() {
+		return chasedShip;
+	}
+
+	public void setChasedShip(Ship chasedShip) {
+		this.chasedShip = chasedShip;
+	}
+
+	public Ship getChaserShip() {
+		return chaserShip;
+	}
+
+	public void setChaserShip(Ship chaserShip) {
+		this.chaserShip = chaserShip;
+	}
+
+	public boolean isPlayersTurn() {
+		return isPlayersTurn;
+	}
+
+	public void setPlayersTurn(boolean isPlayersTurn) {
+		this.isPlayersTurn = isPlayersTurn;
+	}
+
+	public boolean isPlayerIsChaser() {
+		return playerIsChaser;
+	}
+
+	public void setPlayerIsChaser(boolean playerIsChaser) {
+		this.playerIsChaser = playerIsChaser;
 	}
 
 }
