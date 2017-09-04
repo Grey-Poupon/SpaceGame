@@ -87,7 +87,7 @@ public class Ship implements Handleable{
 		sortSprites();
 		for(int i =0; i<10;i++) {
 			Crew crewie = Crew.generateRandomCrew(visibleCrew);
-			crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
+			//crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
 			allCrew.add(crewie);
 			unassignedCrew.add(crewie);
 		}	
@@ -251,9 +251,10 @@ public class Ship implements Handleable{
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<leaders.size();i++) {
 			Crew crew = leaders.get(i);
-			crew.getPortrait().setVisible(true);
-			crew.getPortrait().start();
-			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true, crew.getPortrait(), bs));
+			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
+			leaderPortrait.setVisible(true);
+			leaderPortrait.start();
+			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;
 	}
@@ -573,6 +574,12 @@ public class Ship implements Handleable{
 
 	public void setGenerator(Generator generator) {
 		this.generator = generator;
+	}
+
+
+	public void accelerate() {
+		//formula to decide how much power turns into how speed 
+		
 	}
 
 

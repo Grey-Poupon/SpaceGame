@@ -21,7 +21,6 @@ import com.project.button.ButtonID;
 import com.project.engines.Engine;
 import com.project.ship.Room;
 import com.project.ship.Ship;
-import com.project.ship.Slot;
 import com.project.weapons.Weapon;
 
 public class BattleScreen extends Main {
@@ -179,8 +178,11 @@ public class BattleScreen extends Main {
 			// Final phase aka do stuff
 			if(currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
+				//apply speed setting parameters for end of turn based on remain power or assigned power
 				chaserShip.setSpeed(100);
 				chasedShip.setSpeed(200);
+				chaserShip.accelerate();
+				chasedShip.accelerate();
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice,chasedShotLocation);
 				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice,chaserShotLocation);
@@ -250,7 +252,7 @@ public class BattleScreen extends Main {
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
 						
 						if (playerIsChaser) {
-							chaserWeaponChoice = chaserShip.getBackWeapons().get(index);
+							chaserWeaponChoice = chaserShip.getFrontWeapons().get(index);
 						}
 						else {
 							chasedWeaponChoice = chasedShip.getBackWeapons().get(index);

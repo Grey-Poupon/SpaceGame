@@ -107,20 +107,20 @@ public class BattleUI extends UI{
 						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
 					}
 					
-					WeaponsRoom room = (WeaponsRoom) crew.getRoomIn();
-					if(playerShip.isChased()) {
-						for(int i = 0;i<room.getBackWeapons().size();i++) {
-							
-							Weapon w = room.getBackWeapons().get(i);
-							tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
-						}
-					}else {
-						for(int i = 0;i<room.getFrontWeapons().size();i++) {
-							Weapon w = room.getFrontWeapons().get(i);
-							tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
-						}
-
-					}
+//					WeaponsRoom room = (WeaponsRoom) crew.getRoomIn();
+//					if(playerShip.isChased()) {
+//						for(int i = 0;i<room.getBackWeapons().size();i++) {
+//							
+//							Weapon w = room.getBackWeapons().get(i);
+//							tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
+//						}
+//					}else {
+//						for(int i = 0;i<room.getFrontWeapons().size();i++) {
+//							Weapon w = room.getFrontWeapons().get(i);
+//							tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
+//						}
+//
+//					}
 				}
 			}
 			else if(crew.getRoomIn() instanceof GeneratorRoom) {

@@ -1,10 +1,12 @@
 package com.project.ship.rooms;
 
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.project.ResourceLoader;
 import com.project.ship.Room;
 import com.project.weapons.Weapon;
 
@@ -35,6 +37,9 @@ public class WeaponsRoom extends Room {
 		weapons.addAll(backWeapons);
 		weapons.addAll(frontWeapons);
 		
+	}
+	public BufferedImage getIcon() {
+		return ResourceLoader.getImage("res/roomIcons/weaponsRoomIcon.png");
 	}
 	
 	

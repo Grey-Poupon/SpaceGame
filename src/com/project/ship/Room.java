@@ -1,12 +1,13 @@
 package com.project.ship;
 
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import com.project.Crew;
 
-public class Room {
+public abstract class Room {
 	private Point location;
 	private int damagableRadius;
 	private int damageMod;
@@ -16,6 +17,10 @@ public class Room {
 	
 	public Room(Point location) {
 		this.location =location;
+	}
+	
+	public BufferedImage getIcon() {
+		return null;
 	}
 	
 	public void addCrew(Crew crew) {
@@ -64,6 +69,7 @@ public class Room {
 	public void setRoomLeader(Crew roomLeader) {
 		roomLeader.setRoomIn(this);
 		this.roomLeader = roomLeader;
+		this.crewInRoom.add(roomLeader);
 	}
 	public void UseRoom() {
 		
