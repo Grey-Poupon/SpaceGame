@@ -26,6 +26,11 @@ public class Graph implements Handleable {
 	private int modNum = 10;
 	private int modNumY = 500;
 	boolean textRight=false;
+	private boolean draggable=true;
+	private float yInput;
+	private float xInput;
+	
+	
 	public Shape getClip() {
 		return clip;
 	}
@@ -62,9 +67,33 @@ public class Graph implements Handleable {
 		g2d.drawLine(x, y+height, x+width, y+height);
 		g2d.drawLine(x, y, x, y+height);
 		g2d.setColor(Color.red);
-		g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-		g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-		g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
+		if(draggable) {
+			g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
+		}else {
+			g2d.drawLine(x,y+height-function.apply((double) (xInput-xInput%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+((int)xInput-(int)xInput%modNum),y+height-function.apply((double) (xInput-xInput%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			g2d.drawLine(x+(int)xInput, y+height, x+((int)xInput-(int)xInput%modNum), y+height-function.apply((double) (xInput-xInput%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			g2d.fillRect((int) (x+(xInput-xInput%modNum)-2), y+height-function.apply((double) (xInput-xInput%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
+		}
+
+	}
+	
+	public void setGraphPoint(int y) {
+		int index= 0;
+		int minDist =Integer.MAX_VALUE;
+		for(int i =0;i<dataY.length;i++) {
+			if(Math.abs(y-dataY[i])<minDist) {
+				index = i;
+				minDist = (int) Math.abs(y-dataY[i]);
+			}
+		}
+		yInput = dataY[index];
+		xInput = dataX[index];
+		
+		
+		
+		
 	}
 	
 
@@ -143,6 +172,30 @@ public class Graph implements Handleable {
 
 	public void setText(Text text) {
 		this.text = text;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
+	}
+
+	public void setDraggable(boolean draggable) {
+		this.draggable = draggable;
+	}
+
+	public float getyInput() {
+		return yInput;
+	}
+
+	public void setyInput(float yInput) {
+		this.yInput = yInput;
+	}
+
+	public float getxInput() {
+		return xInput;
+	}
+
+	public void setxInput(float xInput) {
+		this.xInput = xInput;
 	}
 	
 

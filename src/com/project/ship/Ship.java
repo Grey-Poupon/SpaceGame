@@ -16,6 +16,7 @@ import com.project.EntityID;
 import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
+import com.project.MathFunctions;
 import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
@@ -122,7 +123,8 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
-		rooms.add(new GeneratorRoom(new Point(20,20)));
+		rooms.add(new GeneratorRoom(new Point(20,20),new Generator("Reactor2",MathFunctions.square)));
+		
 	}
 	
 	public Room getGeneratorRoom() {

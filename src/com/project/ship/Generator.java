@@ -1,14 +1,21 @@
 package com.project.ship;
 
+import java.util.function.Function;
+
+import com.project.Graph;
+
 public class Generator {
 	private String name;
-	private boolean exploded;
+	private boolean exploded=false;
 	private Overclockable overclock;
+	private Function<Double,Double> efficiencyFunction;
+	private Graph efficiencyGraph; 
 	
-	public Generator(String name, boolean exploded, Overclockable overclock) {
+	public Generator(String name,Function<Double,Double> function) {
 		this.name = name;
-		this.exploded = exploded;
-		this.overclock = overclock;
+		this.efficiencyFunction = function;
+		this.efficiencyGraph = new Graph(function,0,0,0,0,true);
+		this.efficiencyGraph.setDraggable(false);
 	}
 
 	public double getPower(double amountOfFuel) {
