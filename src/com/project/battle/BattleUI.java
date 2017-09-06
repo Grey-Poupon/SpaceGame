@@ -39,8 +39,10 @@ public class BattleUI extends UI{
 	private static final int	genericButtonWidth  = 150;
 	private static final int 	genericButtonHeight = 50;
 	private static final int 	tooltipButtonHeightRight = 200;
-	private static final int    xListOffset 		= 104; 
-	private static final int    yListOffset			= Main.HEIGHT - (tooltipButtonHeight*5 + 10);
+	private static final int    xLeftListOffset     = 104; 
+	private static final int    yLeftListOffset		= Main.HEIGHT - 208;
+	private static final int    xRightListOffset    = Main.WIDTH  - 208; 
+	private static final int    yRightListOffset	= Main.HEIGHT - 208;
 	private static final int    tooltipBoxWidth 	= tooltipButtonWidth;
 	private static final int    tooltipBoxHeight 	= tooltipButtonHeight*5;
 	private static final int    boxGap           	= 20;
@@ -68,7 +70,7 @@ public class BattleUI extends UI{
 		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
 			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
 		}
-		rightHandList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+		rightHandList = new ScrollableList(flavourTexts,xRightListOffset,yRightListOffset,tooltipBoxWidth,tooltipBoxHeight);
 //		List<Button> resources = new ArrayList<Button>();
 //		int i = 0;
 //		for(String key : pShip.getResources().keySet()) {
@@ -147,12 +149,12 @@ public class BattleUI extends UI{
 			for(Button btn:miscButtons) {Button.delete(btn);}
 			if(actionBoxes != null){clearActionImg();}
 			if(tooltipList != null){ScrollableList.delete(tooltipList);}
-			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
+			tooltipList = new ScrollableList(tooltipButtons, xLeftListOffset,yLeftListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			if(rightTooltipButtons.size()>0) {
-				rightHandList  = new ScrollableList(rightTooltipButtons,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+				rightHandList  = new ScrollableList(rightTooltipButtons,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
 			}
 			else {
-				rightHandList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+				rightHandList = new ScrollableList(flavourTexts,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
 			}
 			
 		
@@ -179,7 +181,7 @@ public class BattleUI extends UI{
 		
 			actions = (actionable).getActions();
 		// confirm button
-		 miscButtons.add(new Button(xListOffset+tooltipBoxWidth-genericButtonWidth, yListOffset, genericButtonWidth, genericButtonHeight, ButtonID.BattleWeaponActionChoice, 0, true, "ffffff",fontName, fontStyle, fontSize, fontColour, bs,true));
+		 miscButtons.add(new Button(xLeftListOffset+tooltipBoxWidth-genericButtonWidth, yLeftListOffset, genericButtonWidth, genericButtonHeight, ButtonID.BattleWeaponActionChoice, 0, true, "ffffff",fontName, fontStyle, fontSize, fontColour, bs,true));
 		// set crew pics
 		for(int i = 0; i<crew.size();i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
@@ -187,15 +189,15 @@ public class BattleUI extends UI{
 			int column = (i % 3) + 1;
 			int row    = (i / 3) + 1;
 			portrait.setVisible(true);
-			portrait.setxCoordinate(xListOffset+tooltipBoxWidth  - (column*portrait.getWidth()));
-			portrait.setyCoordinate(yListOffset+tooltipBoxHeight - (row*portrait.getHeight()));
+			portrait.setxCoordinate(xLeftListOffset+tooltipBoxWidth  - (column*portrait.getWidth()));
+			portrait.setyCoordinate(yLeftListOffset+tooltipBoxHeight - (row*portrait.getHeight()));
 			DraggableIcon icon = new DraggableIcon(portrait,crew.get(i), portrait.getxCoordinate(), portrait.getyCoordinate());
 			actionIcons.add(icon);
 		}
 		// set action pics
 		for(int i = 0; i<actions.size();i++) {
 			BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
-			ActionBox box = new ActionBox(img, xListOffset, yListOffset + ((img.getHeight()+ boxGap)*i), actions.get(i));
+			ActionBox box = new ActionBox(img, xLeftListOffset, yLeftListOffset + ((img.getHeight()+ boxGap)*i), actions.get(i));
 			actionBoxes.add(box);
 		}
 	}
@@ -212,11 +214,11 @@ public class BattleUI extends UI{
 		b.setDraggable(true);
 		
 		rightTooltipButtons.add(b);
-		rightHandList = new ScrollableList(rightTooltipButtons,xListOffset+tooltipButtonWidth+13,yListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+		rightHandList = new ScrollableList(rightTooltipButtons,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
 		for(int i =0;i<engine.getActions().size();i++) {
 			tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineActionChoice, i, true, actions.get(i).getName(), fontName, fontStyle, fontSize, fontColour, bs,true));
 		}
-		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,true);
+		tooltipList = new ScrollableList(tooltipButtons, xLeftListOffset,yLeftListOffset, tooltipBoxWidth,tooltipBoxHeight,tooltipButtonWidth,tooltipButtonHeight,true);
 	}
 	
 	public static void clearTooltip() {
