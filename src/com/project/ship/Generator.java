@@ -1,14 +1,26 @@
 package com.project.ship;
 
-public class Generator {
+import java.util.List;
+import java.util.function.Function;
+
+import com.project.Actionable;
+import com.project.CrewAction;
+import com.project.Graph;
+
+public class Generator implements Actionable {
+	private List<CrewAction> actions;
 	private String name;
-	private boolean exploded;
+	private boolean exploded=false;
 	private Overclockable overclock;
+	private Function<Double,Double> efficiencyFunction;
+	private Graph efficiencyGraph; 
 	
-	public Generator(String name, boolean exploded, Overclockable overclock) {
+	public Generator(String name,Function<Double,Double> function,List<CrewAction> actions) {
 		this.name = name;
-		this.exploded = exploded;
-		this.overclock = overclock;
+		this.actions = actions;
+		this.efficiencyFunction = function;
+		this.efficiencyGraph = new Graph(function,0,0,0,0,true);
+		this.efficiencyGraph.setDraggable(false);
 	}
 
 	public double getPower(double amountOfFuel) {
@@ -29,5 +41,30 @@ public class Generator {
 
 	public int getExplodeChance() {
 		return overclock.getExplodeChance();
+	}
+
+	@Override
+	public List<CrewAction> getActions() {
+		// TODO Auto-generated method stub
+		return actions;
+	}
+
+	@Override
+	public void doAction(int index, Ship ship) {
+
+		
+	}
+
+	public Graph getEfficiencyGraph() {
+		return efficiencyGraph;
+	}
+
+	public void setEfficiencyGraph(Graph efficiencyGraph) {
+		this.efficiencyGraph = efficiencyGraph;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

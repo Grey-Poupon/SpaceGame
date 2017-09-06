@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
 
 import com.project.engines.Engine;
+import com.project.ship.Generator;
 import com.project.ship.Ship;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
@@ -26,6 +27,7 @@ public class ResourceLoader {
 	private static Map<String,Animation> animations;
 	private static Map<String,Crew> crew;
 	private static Map<String,Engine> shipEngines;
+	private static HashMap<String, Generator> shipGenerators;
 	public ResourceLoader() {
 		images	   = new HashMap<String,BufferedImage>();
 		animations = new HashMap<String,Animation>();
@@ -33,20 +35,29 @@ public class ResourceLoader {
 		shipEngines = new HashMap<String, Engine>();
 		crew	   = new HashMap<String,Crew>();
 		ships	   = new HashMap<String,Ship>();
+		shipGenerators = new HashMap<String, Generator>();
 		loadImages();
 		loadFont();
 		loadAnimations();
 		loadShipWeapons();
 		loadCrew();
 		loadEngines();
+		loadGenerators();
 		loadShip();
 		
 	}
 	
 	private void loadEngines() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 100, 10),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 100,10)});
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 100, 10,10000),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 100,10,10000)});
+
 		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions,null));
 	}
+	
+	private void loadGenerators() {
+		List<CrewAction> actions = Arrays.asList( new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 10, 10,10000),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 10,10,10000)});
+		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions));
+	}
+	
 
 	public static Map<String, Engine> getShipEngines() {
 		return shipEngines;
@@ -66,7 +77,8 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire",CrewActionID.Fire, StatID.gunner, 1,10),new CrewAction("Reload",CrewActionID.Reload,StatID.gunner, 1,10)});
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire",CrewActionID.Fire, StatID.gunner, 1,10,10),new CrewAction("Reload",CrewActionID.Reload,StatID.gunner, 1,10,10)});
+
 
 		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null));		
 
@@ -208,6 +220,13 @@ public class ResourceLoader {
 			throw new NoSuchElementException();
 		}
 		return shipEngines.get(key);
+	}
+	
+	public static Generator getShipGenerator(String key) {
+		if(!shipGenerators.containsKey(key)) {
+			throw new NoSuchElementException();
+		}
+		return shipGenerators.get(key);
 	}
 	
 }

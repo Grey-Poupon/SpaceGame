@@ -86,10 +86,9 @@ public class Engine implements Slottable,Actionable{
 
 
 	public void doAction(int index,Ship ship) {
-		
+		CrewAction action = actions.get(index);
 		if(actions.get(index).getName()=="Generate") {
-			ship.incResource("fuel", -efficiencyGraph.getFuelCost());
-			ship.incResource("power", efficiencyGraph.getPower());
+			ship.updatePowerConsumption(action);
 		}
 		
 	}

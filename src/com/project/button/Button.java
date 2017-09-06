@@ -130,7 +130,6 @@ public class Button extends Observable  implements Handleable{
 	public void click(int button){
 		if(isButton) {
 			setChanged();
-			
 			bs.update(buttonID,index,button);
 		}
 		

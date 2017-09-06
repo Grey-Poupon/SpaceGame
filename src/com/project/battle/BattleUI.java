@@ -44,10 +44,15 @@ public class BattleUI extends UI{
 	private static final int    yLeftListOffset		= Main.HEIGHT - 208;
 	private static final int    xRightListOffset    = Main.WIDTH  - 208; 
 	private static final int    yRightListOffset	= Main.HEIGHT - 208;
+
 	private static final int    tableTitleHeight    = 40;
 	private static final int 	tableColumnWidth    = 965/5;
+	
 	private static final int    leftListWidth	 	= 965;
 	private static final int    leftListHeight 		= tooltipButtonHeight*5;
+	private static final int    rightListHeight	=208;
+	private static final int    rightListWidth	=208;
+
 	private static final int    boxGap           	= 20;
 	private static final String fontName 			= "Sevensegies";
 	private static final int    fontStyle 			= Font.PLAIN;
@@ -163,6 +168,7 @@ public class BattleUI extends UI{
 		clearTooltip();
 
 		// initalise variables
+
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		List<Crew>       crew    = room.getCrewInRoom();
 		Text name;
@@ -207,12 +213,13 @@ public class BattleUI extends UI{
 		List<Crew>       crew    = room.getCrewInRoom();
 		List<Button> tooltipButtons = new ArrayList<Button>();
 		List<Button> rightTooltipButtons = new ArrayList<Button>();
+
+		Button b =new Button(0,0,rightListWidth, rightListHeight, ButtonID.BattleEngineGraph, true,engine.getEfficiencyGraph(),bs);
+		b.setDraggable(true);
 		
-	//	Button b =new Button(0,0,tooltipButtonWidth, tooltipButtonHeightRight, ButtonID.BattleEngineGraph, true,engine.getEfficiencyGraph(),bs);
-	//	b.setDraggable(true);
+		rightTooltipButtons.add(b);
+		rightHandList = new ScrollableList(rightTooltipButtons,xRightListOffset,yRightListOffset,rightListWidth,rightListHeight);
 		
-	//	rightTooltipButtons.add(b);
-		rightHandList = new ScrollableList(rightTooltipButtons,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,leftListWidth,leftListHeight);
 		for(int i =0;i<engine.getActions().size();i++) {
 			tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineActionChoice, i, true, actions.get(i).getName(), fontName, fontStyle, fontSize, fontColour, bs,true));
 		}

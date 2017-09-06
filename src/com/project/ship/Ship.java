@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.project.Actionable;
 import com.project.Crew;
+import com.project.CrewAction;
 import com.project.DamageType;
 import com.project.EntityID;
 import com.project.Handleable;
@@ -122,8 +122,15 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
-		rooms.add(new GeneratorRoom(new Point(20,20)));
+		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default")));
 	}
+	
+	public void updatePowerConsumption(CrewAction action) {
+		getGenerator().getEfficiencyGraph().setGraphPoint(action.getPowerCost());
+		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		incResource("power", action.getPowerCost());
+	}
+	
 	
 	public Room getGeneratorRoom() {
 		for(int i = 0; i<rooms.size();i++) {
@@ -567,7 +574,7 @@ public class Ship implements Handleable{
 	
 	
 	public Generator getGenerator() {
-		return generator;
+		return ((GeneratorRoom) getGeneratorRoom()).getGenerator();
 	}
 
 

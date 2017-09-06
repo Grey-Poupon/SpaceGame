@@ -8,7 +8,7 @@ public enum ButtonID {
 	BattleEngineChoice,
 	Crew,
 	Graph,
-	EnemyShip, PlayerShip, BattleEngineGraph,BattleEngineActionChoice;
+	EnemyShip, PlayerShip, BattleEngineGraph,BattleEngineActionChoice, BattleCockpitChoice;
 	
 
 }
