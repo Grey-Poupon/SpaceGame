@@ -79,11 +79,14 @@ public class DraggableIcon {
 			if(leftWall && rightWall && topWall && bottomWall && box.isOpen() && xp ) {
 				snapped = true;
 				
-				box.setCrew(this);
+				// remove the crew from the current actionbox
 				if(actionBox != null && actionBox !=  box) {
 					actionBox.removeCrew();
 				}
+				// set new actionbox
+				box.setCrew(this);
 				actionBox = box;
+				
 				
 				mouse                = null;
 				this.xCoordinate     = box.getX() + boxLineWidth;
