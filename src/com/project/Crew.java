@@ -316,5 +316,17 @@ public class Crew implements Observer{
 	}
 
 
-	
+	public static ImageHandler getLeaderPortrait(Crew crew) {
+		BufferedImage img = crew.getPortrait().getImg();
+		BufferedImage roomIcon = crew.getRoomIn().getIcon();
+		for(int x =0;x<roomIcon.getWidth();x++) {
+			for(int y =0;y<roomIcon.getHeight();y++) {
+				Color col = new Color(roomIcon.getRGB(x, y),true);
+				img.setRGB(img.getWidth()-roomIcon.getWidth()+x, y, col.getRGB());
+			}
+		}
+		
+		return new ImageHandler(0,0,img,true,EntityID.crew);
+	}
+
 }
