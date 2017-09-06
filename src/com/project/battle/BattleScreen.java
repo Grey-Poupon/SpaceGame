@@ -172,7 +172,10 @@ public class BattleScreen extends Main {
 						chaserEngineChoice=chaserShip.getEngines().get(0);
 					}
 					System.out.println("Enemy Engine Reveal");
-				}	
+				}
+				else if(currentPhase == BattlePhases.Cockpit) {
+					
+				}
 				nextTurn();
 			}
 			
@@ -259,6 +262,17 @@ public class BattleScreen extends Main {
 						nextTurn();
 					}
 				}
+				
+				if(ID ==ButtonID.BattleCockpitChoice) {
+					
+					
+					if(isPlayersTurn && currentPhase==BattlePhases.Cockpit ) {
+						
+					}
+				}
+				
+				
+				
 				if(ID == ButtonID.BattleEngineChoice){		
 					
 					Engine engine = playerShip.getEngines().get(index);

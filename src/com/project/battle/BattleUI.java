@@ -43,6 +43,8 @@ public class BattleUI extends UI{
 	private static final int    yLeftListOffset		= Main.HEIGHT - 208;
 	private static final int    xRightListOffset    = Main.WIDTH  - 208; 
 	private static final int    yRightListOffset	= Main.HEIGHT - 208;
+	private static final int    RightListHeight	=208;
+	private static final int    RightListWidth	=208;
 	private static final int    tooltipBoxWidth 	= tooltipButtonWidth;
 	private static final int    tooltipBoxHeight 	= tooltipButtonHeight*5;
 	private static final int    boxGap           	= 20;
@@ -172,8 +174,6 @@ public class BattleUI extends UI{
 	public static void generateActionList(Actionable actionable,Room room) {
 		// wipe tooltip
 		clearTooltip();
-
-		
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		List<Crew>       crew    = room.getCrewInRoom();
 		
@@ -210,11 +210,11 @@ public class BattleUI extends UI{
 		List<Button> tooltipButtons = new ArrayList<Button>();
 		List<Button> rightTooltipButtons = new ArrayList<Button>();
 		
-		Button b =new Button(0,0,tooltipButtonWidth, tooltipButtonHeightRight, ButtonID.BattleEngineGraph, true,engine.getEfficiencyGraph(),bs);
+		Button b =new Button(0,0,RightListWidth, RightListHeight, ButtonID.BattleEngineGraph, true,engine.getEfficiencyGraph(),bs);
 		b.setDraggable(true);
 		
 		rightTooltipButtons.add(b);
-		rightHandList = new ScrollableList(rightTooltipButtons,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,tooltipBoxWidth,tooltipBoxHeight);
+		rightHandList = new ScrollableList(rightTooltipButtons,xRightListOffset,yRightListOffset,RightListWidth,RightListHeight);
 		for(int i =0;i<engine.getActions().size();i++) {
 			tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleEngineActionChoice, i, true, actions.get(i).getName(), fontName, fontStyle, fontSize, fontColour, bs,true));
 		}
