@@ -8,5 +8,5 @@ public interface Actionable {
 
 	public List<CrewAction> getActions();
 	public void doAction(int index,Ship ship);
-	
+	public String getName();
 }

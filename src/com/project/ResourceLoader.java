@@ -44,7 +44,7 @@ public class ResourceLoader {
 	}
 	
 	private void loadEngines() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate",StatID.engineering, 100, 10),new CrewAction("Manouevre",StatID.engineering, 100,10)});
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 100, 10),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 100,10)});
 		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions,null));
 	}
 
@@ -66,7 +66,7 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire", StatID.gunner, 100,10),new CrewAction("Reload",StatID.gunner, 100,10)});
+		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire",CrewActionID.Fire, StatID.gunner, 1,10),new CrewAction("Reload",CrewActionID.Reload,StatID.gunner, 1,10)});
 
 		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null));		
 

@@ -5,10 +5,12 @@ public class CrewAction {
 	private int levelRequirement;
 	private int xpReward;
 	private StatID statType;
+	private CrewActionID actionType;
 	private Crew actor;
 	
-	public CrewAction(String name,StatID statType, int xpRequirement, int levelReward) {
+	public CrewAction(String name,CrewActionID actionType,StatID statType, int levelRequirement, int xpReward) {
 		this.name = name;
+		this.actionType = actionType;
 		this.levelRequirement = levelRequirement;
 		this.xpReward = xpReward;
 		this.statType = statType;
@@ -40,6 +42,10 @@ public class CrewAction {
 
 	public StatID getStatType() {
 		return statType;
+	}
+
+	public CrewActionID getActionType() {
+		return actionType;
 	}
 	
 }

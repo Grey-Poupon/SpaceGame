@@ -483,7 +483,6 @@ public class Ship implements Handleable{
 		for(int i = 0; i<shipFrontSlots.size();i++) {
 			if(shipFrontSlots.get(i).getSlotItem() instanceof Weapon) {
 				weapons.add((Weapon)shipFrontSlots.get(i).getSlotItem());
-				
 			}
 		}
 		return weapons;
