@@ -91,7 +91,8 @@ public class FireableWeapon extends Weapon {
 
 
 	public void doAction(int index, Ship ship) {
-		// TODO Auto-generated method stub
+		CrewAction action = actions.get(index);
+		ship.updatePowerConsumption(action);
 		
 	}
 

@@ -20,10 +20,10 @@ import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
-import com.project.engines.Engine;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
+import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
 public class Ship implements Handleable{
@@ -47,6 +47,7 @@ public class Ship implements Handleable{
 	private Sensor sensor;
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
+	private int mass=200;
 	
 	
 	public boolean isChased() {
@@ -70,7 +71,7 @@ public class Ship implements Handleable{
 		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
-		Engine defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
+		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
 		for(DamageType dmg : DamageType.values()){
 			damageTakenModifier.put(dmg, 1d);
 			damageDealtModifier.put(dmg, 1d);
@@ -126,9 +127,18 @@ public class Ship implements Handleable{
 	}
 	
 	public void updatePowerConsumption(CrewAction action) {
-		getGenerator().getEfficiencyGraph().setGraphPoint(action.getPowerCost());
+		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		incResource("power", action.getPowerCost());
+		//incResource("power", action.getPowerCost());
+	}
+	
+	public Room getCockpit() {
+		for(int i = 0; i<rooms.size();i++) {
+			if(rooms.get(i) instanceof Cockpit) {
+				return rooms.get(i); 
+			}
+		}
+		return null;
 	}
 	
 	
@@ -506,15 +516,15 @@ public class Ship implements Handleable{
 		return weapons;
 	}
 	
-	public List<Engine> getEngines(){
-		List<Engine> engines = new ArrayList<>();
+	public List<Thruster> getThrusters(){
+		List<Thruster> thrusters = new ArrayList<>();
 		for(int i = 0; i<shipBackSlots.size();i++) {
-			if(shipBackSlots.get(i).getSlotItem() instanceof Engine) {
-				engines.add((Engine)shipBackSlots.get(i).getSlotItem());
+			if(shipBackSlots.get(i).getSlotItem() instanceof Thruster) {
+				thrusters.add((Thruster)shipBackSlots.get(i).getSlotItem());
 				
 			}
 		}
-		return engines;
+		return thrusters;
 	}
 	
 
@@ -584,8 +594,17 @@ public class Ship implements Handleable{
 	}
 
 
-	public void accelerate() {
+	public void accelerate(int speed) {
+		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+mass*speed);
+		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		incSpeed(speed);
 		//formula to decide how much power turns into how speed 
+		
+	}
+
+
+	private void incSpeed(int speed) {
+		setSpeed(speed+getSpeed());
 		
 	}
 

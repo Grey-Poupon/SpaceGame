@@ -19,7 +19,7 @@ public class Generator implements Actionable {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
-		this.efficiencyGraph = new Graph(function,0,0,0,0,true);
+		this.efficiencyGraph = new Graph(function,10,10,200,200,true);
 		this.efficiencyGraph.setDraggable(false);
 	}
 
@@ -51,8 +51,11 @@ public class Generator implements Actionable {
 
 	@Override
 	public void doAction(int index, Ship ship) {
-
-		
+		CrewAction action = actions.get(index);
+		ship.updatePowerConsumption(action);
+		if(actions.get(index).getName()=="Generate") {
+			ship.incResource("power", action.getPowerCost());
+		}
 	}
 
 	public Graph getEfficiencyGraph() {
