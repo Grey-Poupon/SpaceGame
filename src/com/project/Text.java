@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import com.project.battle.BattleScreen;
+
 public class Text implements Handleable{
 
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
@@ -22,28 +24,37 @@ public class Text implements Handleable{
 	private Shape clip;
 	private int justOnce = 0;
 	private boolean leftAlign=false;
+	private int onScreenHeight =0;
+	private int onScreenWidth = 0;
 	
 	
-	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour){
+	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour,BattleScreen bs){
 
 		this.xCoordinate = x;
 		this.yCoordinate = y+(int)(size*textRatio);
 		this.text        = text;
-		this.visible = visible;
+		this.visible     = visible;
 		this.font        = new Font(fontName, style, size);
 		this.colour      = colour;
-
+		if(bs!=null) {
+			onScreenWidth = bs.getGraphics().getFontMetrics(font).stringWidth(text);
+			onScreenHeight = bs.getGraphics().getFontMetrics(font).getHeight();
+		}
 		Handler.texts.add(this);
 	}
 	
-	public Text(String text,boolean visible,int x, int y){
+
+	public Text(String text,boolean visible,int x, int y,BattleScreen bs){
 		this.xCoordinate = x;
 		this.yCoordinate = y+32;
-		this.visible = visible;
+		this.visible     = visible;
 		this.text        = text;	
 		this.font        = new Font("Sevensegies", Font.PLAIN, 36);
 		this.colour      = Color.WHITE;
-
+		if(bs!=null) {
+			onScreenWidth = bs.getGraphics().getFontMetrics(font).stringWidth(text);
+			onScreenHeight = bs.getGraphics().getFontMetrics(font).getHeight();
+		}
 		Handler.texts.add(this);
 	}
 	public void render(Graphics g)
@@ -95,7 +106,6 @@ public class Text implements Handleable{
 						else{g2d.drawString(text.split("\n")[i], (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text.split("\n")[i]))/2), yCoordinate+(i)*metrics.getHeight());}
 					}
 			}else {g2d.drawString(text, xCoordinate, yCoordinate);}
-			
 		}
 	};
 	public static void delete(Text t) {
@@ -131,5 +141,21 @@ public class Text implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public int getOnScreenHeight() {
+		return onScreenHeight;
+	}
+
+	public void setOnScreenHeight(int onScreenHeight) {
+		this.onScreenHeight = onScreenHeight;
+	}
+
+	public int getOnScreenWidth() {
+		return onScreenWidth;
+	}
+
+	public void setOnScreenWidth(int onScreenWidth) {
+		this.onScreenWidth = onScreenWidth;
 	}
 }

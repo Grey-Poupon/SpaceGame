@@ -6,7 +6,10 @@ import java.util.function.Function;
 import com.project.Actionable;
 import com.project.CrewAction;
 import com.project.FuelTypeID;
+import com.project.CrewActionID;
+
 import com.project.Graph;
+import com.project.battle.BattleScreen;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
@@ -56,15 +59,7 @@ public class Generator implements Actionable {
 		return actions;
 	}
 
-	@Override
-	public void doAction(int index, Ship ship) {
-		CrewAction action = actions.get(index);
-		ship.updatePowerConsumption(action);
-		if(actions.get(index).getName()=="Generate") {
-			ship.incResource("power", action.getPowerCost());
-		}
-	}
-	
+
 	public void generate() {
 		if(efficiencyGraph.inDangerZone()) {
 			dangerRollTable();
@@ -75,11 +70,27 @@ public class Generator implements Actionable {
 		System.out.println("You blew up XD");
 	}
 
+
 	public Graph getEfficiencyGraph() {
 		return efficiencyGraph;
 	}
 
 	public void setEfficiencyGraph(Graph efficiencyGraph) {
 		this.efficiencyGraph = efficiencyGraph;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void doAction(CrewAction action, BattleScreen bs) {
+		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
+		ship.updatePowerConsumption(action);
+		if(action.getActionType() == CrewActionID.Generate) {
+			ship.incResource("power", action.getPowerCost());
+		}
+		
 	}
 }

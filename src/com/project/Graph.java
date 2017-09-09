@@ -5,11 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.function.Function;
 
-import com.project.Handleable;
-import com.project.Handler;
+import com.project.battle.BattleScreen;
 
 public class Graph implements Handleable {
 	//THIS MAKES ME CRY
@@ -48,7 +46,7 @@ public class Graph implements Handleable {
 			dataY[i]= function.apply((double) i);
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
-		this.text = new Text("",false,x+width,y+20);
+		this.text = new Text("",false,x+width,y+20,null);
 		this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
 		//text.changeMask(x, y, width, height);
 		this.x = x;

@@ -2,6 +2,8 @@ package com.project;
 
 import java.awt.image.BufferedImage;
 
+import com.project.battle.BattleScreen;
+
 public class ActionBox {
 	private ImageHandler img;
 	private int x;
@@ -10,14 +12,14 @@ public class ActionBox {
 	private boolean openCrewSlot = true;
 	private Text	actionText;
 	private DraggableIcon crew = null;
-	public ActionBox(BufferedImage img, int x, int y, CrewAction action) {
+	public ActionBox(BufferedImage img, int x, int y, CrewAction action,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
 		this.x 			= x;
 		this.y 		    = y;
 
 		this.action     = action;
-		actionText      = new Text(getName(), true, x+getWidth(), y);
+		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
 	}
 	
 	public void setCrew(DraggableIcon crew) {

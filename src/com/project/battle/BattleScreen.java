@@ -4,10 +4,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-
+import java.util.Set;
+import com.project.Actionable;
 import com.project.CrewAction;
+import com.project.CrewActionID;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.Handler;
@@ -26,6 +32,7 @@ import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main {
 
@@ -46,9 +53,9 @@ public class BattleScreen extends Main {
 	private Point chasedShotLocation;
 	private int currentPhasePointer = 0;
 	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
-	private Weapon chaserWeaponChoice;
+	private List<Weapon> chaserWeaponChoice = new ArrayList<Weapon>();
+	private List<Weapon> chasedWeaponChoice = new ArrayList<Weapon>();
 	private Thruster chaserThrusterChoice;
-	private Weapon chasedWeaponChoice;
 	private Thruster chasedThrusterChoice;
 	private int chasedSpeedChoice;
 	private int chaserSpeedChoice;
@@ -90,11 +97,10 @@ public class BattleScreen extends Main {
 		chaserShip.setY(150);
 		chasedShip.setX(WIDTH - 430);
 		chasedShip.setY(110);
-		phase = new Text("Current Phase: " + currentPhase.toString(), true, 150, 150);
-		fuel = new Text("Fuel: " + Integer.toString(chaserShip.getResource("fuel")) + " Power: "
-				+ Integer.toString(chaserShip.getResource("power")), true, 150, 180);
-		ds = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
-		overlay = new ImageHandler(0, 0, "res/drawnUi2.png", true, EntityID.UI);
+		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150,this);
+		fuel   	         	 = new Text    ("Fuel: "+Integer.toString(chaserShip.getResource("fuel"))+" Power: "+Integer.toString(chaserShip.getResource("power")),true,150,180,this); 				
+		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
+		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		List<Button> temp = chaserShip.getLeaderButtons(this);
 		temp.add(new Button(0, 0, 120, 120, ButtonID.Go, temp.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), this));
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 50), 50, (temp.size() * 50), 50, 50, true);
@@ -161,12 +167,15 @@ public class BattleScreen extends Main {
 		if (!isPaused()) {
 			super.tick();
 			// AI turns
-			if (!isPlayersTurn) {
-				if (currentPhase == BattlePhases.WeaponsButton) {
-					if (playerIsChaser) {
-						chasedWeaponChoice = chasedShip.getBackWeapons().get(0);
-					} else {
-						chaserWeaponChoice = chaserShip.getBackWeapons().get(0);
+
+			if(!isPlayersTurn) {
+				if(currentPhase == BattlePhases.WeaponsButton) {
+					if(playerIsChaser) {
+						chasedWeaponChoice.add(chasedShip.getBackWeapons().get(0));
+					}
+					else {
+						chaserWeaponChoice.add(chaserShip.getBackWeapons().get(0));
+
 					}
 					System.out.println("Enemy Weapon Reveal");
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
@@ -246,47 +255,68 @@ public class BattleScreen extends Main {
 		}
 	}
 
-	public void UseWeapon(Ship primary, Ship secondary, Weapon weapon, Point shot) {
 
-		new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot, weapon.getSlot()).start();
 
+	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,Point shot){
+		
+		
+		
+		for(Weapon weapon:weapons) {
+			new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot,weapon.getSlot()).start();
+		}
 	}
-
-	public void update(ButtonID ID, int index, int button) {// this gets notified by the click function inside button
-		Ship playerShip = playerIsChaser ? chaserShip : chasedShip;
-		if (button == MouseEvent.BUTTON1) {
-			if (ID == ButtonID.BattleWeaponsChoice) {
-
-				Weapon weapon = playerShip.getFrontWeapons().get(index);
+	
+	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
+		Ship playerShip = playerIsChaser ? chaserShip : chasedShip;	
+		if(button == MouseEvent.BUTTON1) {
+			if(ID == ButtonID.BattleWeaponsChoice){
+				
+				List<Weapon> weapons = playerShip.getFrontWeapons();
 				Room room = playerShip.getWeaponRoom();
-
-				BattleUI.generateActionList(weapon, room);
-
-				if (isPlayersTurn && currentPhase == BattlePhases.WeaponsButton) {
-
-					if (playerIsChaser) {
-						chaserWeaponChoice = chaserShip.getFrontWeapons().get(index);
-					} else {
-						chasedWeaponChoice = chasedShip.getBackWeapons().get(index);
-					}
-
-					System.out.println("Player is about to use weapon " + index + "!");
+				
+				BattleUI.generateActionList(weapons, room);
+				
+				if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
+//						
+//
+//						if (playerIsChaser) {
+//							chaserWeaponChoice = chaserShip.getFrontWeapons().get(index);
+//						}
+//						else {
+//							chasedWeaponChoice = chasedShip.getBackWeapons().get(index);
+//						}
+//
+//						System.out.println("Player is about to use weapon "+index+"!");
 					nextTurn();
 				}
+
+				System.out.println("Player is about to use weapon " + index + "!");
+				nextTurn();
 			}
 			
+
 			if(ID == ButtonID.Go) {
 				if(isPlayersTurn && currentPhase == BattlePhases.Go) {
 					nextTurn();
 				}
 			}
 			
+			if(ID == ButtonID.Back) {
+				BattleUI.back();
+			}
+			
+
 
 			if (ID == ButtonID.BattleCockpitChoice) {
 
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
 					BattleUI.generateActionList(playerShip.getThrusters().get(0), playerShip.getCockpit(), false);
 				}
+
+			}
+			
+			if(ID == ButtonID.WeaponInfo) {
+				BattleUI.generateWeaponInfo(playerShip.getFrontWeapons().get(index));
 			}
 
 			if (ID == ButtonID.BattleThrusterChoice) {
@@ -323,45 +353,83 @@ public class BattleScreen extends Main {
 				}
 			}
 
-			if (ID == ButtonID.BattleGeneratorChoice) {
-				if (isPlayersTurn && currentPhase == BattlePhases.GeneratorActions) {
-					playerShip.getGenerator().doAction(index, playerShip);
-					nextTurn();
-				}
-			}
-			if (ID == ButtonID.BattleWeaponActionChoice) {
-				if (isPlayersTurn && currentPhase == BattlePhases.WeaponActions) {
-					Weapon weapon = playerIsChaser ? chaserWeaponChoice : chasedWeaponChoice;
-					List<CrewAction> actions = weapon.getActions();
-					boolean complete = true;
-					// check that the actions have been completed
-					for (CrewAction action : actions) {
-						if (action.getActor() == null) {
-							complete = false;
-						}
-					}
-					if (complete) {
-						//try to level  up all characters that have acted this turn
-						for(CrewAction action : actions) {
-							action.getActor().attemptLevelUp(action.getStatType());
-						}
-						weapon.doAction(index, playerShip);
-						weapon.giveXP();
+				
+			if(ID == ButtonID.BattleWeaponActionChoice) {
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+						// intalise variables
+						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getFrontWeapons();
+						List<Weapon> firedWeapons = new ArrayList<Weapon>();
+						List<CrewAction> actions  = new ArrayList<CrewAction>();;
+						List<CrewAction> refinedActions = new ArrayList<CrewAction>();
+						CrewAction action;
+						List<CrewAction> actionsNeeded;
+						HashMap<CrewActionID,List<CrewAction>> actionMap = new HashMap<>();
+
+						boolean complete;
+						
+						// check which weapons are fired
+						for(int i = 0;i<weapons.size();i++) {
+							actions = weapons.get(i).getActions();
+							// setup HashMaps
+							for(int j = 0; j<actions.size(); j++) {
+								actionsNeeded = actions.get(j).getActionsNeeded();
+								// map the CrewActions(Boxes) to the actions they need to be completed
+								for(int k = 0; k < actionsNeeded.size();k++) {
+									if(!actionMap.containsKey(actionsNeeded.get(k))) {
+										List<CrewAction> aa = new ArrayList<CrewAction>();
+										aa.add(actions.get(j));
+										actionMap.put(actionsNeeded.get(k).getActionType(), aa);
+									}
+									else {
+										actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
+									}
+								}
+								// add the actions that have an actor in them to the refined list
+								if(actions.get(j).getActor()!=null) {
+									refinedActions.add(actions.get(j));
+								}
+							}
+							// sort actions based on the amount of actions needed
+							Collections.sort(refinedActions);
+							for(int j = 0; j<refinedActions.size(); j++) {
+								action = refinedActions.get(j);
+								// if this actions doesnt need anymore actions to be completed
+								if(refinedActions.get(j).getActionsNeeded().size()==0) {
+									actions = actionMap.get(action.getActionType());
+									//remove it from every other actionNeeded
+									if(actions!=null) {
+										for(int k = 0;k<actions.size();k++) {
+											actions.get(k).removeActionNeeded(action);
+										}
+									}
+									// do action
+									weapons.get(i).doAction(action, this);
+									action.resetActions();
+								}
+							}
+						}									
+
 						nextTurn();
 					}
+					
 				}
-			}
+			
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index), TooltipSelectionID.Room);
 			}
 			if (ID == ButtonID.Graph) {
 				graphButton.getGraph().setPoint(MouseInput.mousePosition);
 			}
-		}
-
-		if (button == MouseEvent.BUTTON3) {
-			if (ID == ButtonID.Crew) {
-				BattleUI.generateRoomButtons(chaserShip.getAllCrew().get(index), TooltipSelectionID.Stats);
+			if (ID == ButtonID.BattleGeneratorChoice) {
+				if (isPlayersTurn && currentPhase == BattlePhases.GeneratorActions) {
+					playerShip.getGenerator().doAction(playerShip.getGenerator().getActions().get(index), this);
+					nextTurn();
+				}
+			}
+			if (button == MouseEvent.BUTTON3) {
+				if (ID == ButtonID.Crew) {
+					BattleUI.generateRoomButtons(chaserShip.getAllCrew().get(index), TooltipSelectionID.Stats);
+				}
 			}
 		}
 	}
@@ -420,12 +488,23 @@ public class BattleScreen extends Main {
 		this.isPlayersTurn = isPlayersTurn;
 	}
 
-	public boolean isPlayerIsChaser() {
+	public boolean playerIsChaser() {
 		return playerIsChaser;
 	}
 
 	public void setPlayerIsChaser(boolean playerIsChaser) {
 		this.playerIsChaser = playerIsChaser;
 	}
+
+	public void addChaserWeaponChoice(Weapon weapon) {
+		chaserWeaponChoice.add(weapon);
+		
+	}
+	public void addChasedWeaponChoice(Weapon weapon) {
+		chasedWeaponChoice.add(weapon);
+		
+	}
+
+	
 
 }
