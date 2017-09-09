@@ -7,8 +7,9 @@ public enum ButtonID {
 	BattleWeaponActionChoice,
 	BattleThrusterChoice,
 	Crew,
+	Go,
 	Graph,
-	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice;
+	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final;
 	
 
 }

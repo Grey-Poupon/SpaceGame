@@ -25,6 +25,7 @@ public class Graph implements Handleable {
 	private int mouseX=0;
 	private int modNum = 10;
 	private int modNumY = 500;
+	private float dangerZone = 0.25f;
 	boolean textRight=false;
 	private boolean draggable=false;
 	private double yInput=0;
@@ -79,7 +80,7 @@ public class Graph implements Handleable {
 		
 		
 		g2d.setColor(dangerCol);
-		g2d.fillRect(x+width-width/5, y, width/5, height);
+		g2d.fillRect((int)(x+width-width*dangerZone), y, (int)(width*dangerZone), height);
 
 	}
 	
@@ -207,6 +208,10 @@ public class Graph implements Handleable {
 
 	public void setxInput(float xInput) {
 		this.xInput = xInput;
+	}
+
+	public boolean inDangerZone() {
+		return xInput>width*(1-dangerZone);
 	}
 	
 

@@ -31,6 +31,7 @@ public class Crew implements Observer{
 	protected Map<StatID,Float> statModifier;
 	protected Map<StatID, Byte> statModifierInc;
 	private RaceID race;
+	private float lvlBoost = 1;
 	protected Map<RaceID,Float> raceRelations;
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
@@ -170,6 +171,13 @@ public class Crew implements Observer{
 	public void interactSocially(Crew crew) {
 		
 	}
+	
+	public void attemptLevelUp(StatID key) {
+		if(rand.nextInt(stats.get(key))/lvlBoost==1 &&stats.get(key)<255) {
+			stats.replace(key, (byte) (stats.get(key)+1));
+		}
+	}
+	
 	
 	protected static byte getRandomStat(float statVariance) {
 		byte stat = (byte)0;

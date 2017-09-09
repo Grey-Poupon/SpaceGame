@@ -48,10 +48,15 @@ public class Ship implements Handleable{
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
-	
+	private int endSpeed;
 	
 	public boolean isChased() {
 		return isChased;
+	}
+	
+	public void generate() {
+		incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
+		getGenerator().generate();
 	}
 
 	
@@ -123,7 +128,7 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
-		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default")));
+		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
 	}
 	
 	public void updatePowerConsumption(CrewAction action) {
@@ -594,12 +599,16 @@ public class Ship implements Handleable{
 	}
 
 
-	public void accelerate(int speed) {
+	public void accelerate() {
+		incSpeed(endSpeed);
+		endSpeed =0;
+		//formula to decide how much power turns into how speed 
+	}
+	public void setEndSpeed(int speed) {
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+mass*speed);
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		incSpeed(speed);
+		endSpeed = speed;
 		//formula to decide how much power turns into how speed 
-		
 	}
 
 

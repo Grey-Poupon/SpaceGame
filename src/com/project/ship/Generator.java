@@ -5,12 +5,14 @@ import java.util.function.Function;
 
 import com.project.Actionable;
 import com.project.CrewAction;
+import com.project.FuelTypeID;
 import com.project.Graph;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
 	private String name;
 	private boolean exploded=false;
+	private FuelTypeID fuelType;
 	private Overclockable overclock;
 	private Function<Double,Double> efficiencyFunction;
 	private Graph efficiencyGraph; 
@@ -31,6 +33,11 @@ public class Generator implements Actionable {
 		}
 		return amountOfFuel * effiency;
 	}
+	
+	public Generator copy() {
+		return new Generator(this.name,this.efficiencyFunction,this.actions);
+	}
+	
 	
 	public void explode() {
 		exploded = true;
@@ -56,6 +63,16 @@ public class Generator implements Actionable {
 		if(actions.get(index).getName()=="Generate") {
 			ship.incResource("power", action.getPowerCost());
 		}
+	}
+	
+	public void generate() {
+		if(efficiencyGraph.inDangerZone()) {
+			dangerRollTable();
+		}
+	}
+
+	private void dangerRollTable() {
+		System.out.println("You blew up XD");
 	}
 
 	public Graph getEfficiencyGraph() {
