@@ -6,6 +6,7 @@ import java.util.function.Function;
 import com.project.Actionable;
 import com.project.CrewAction;
 import com.project.Graph;
+import com.project.battle.BattleScreen;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
@@ -49,11 +50,8 @@ public class Generator implements Actionable {
 		return actions;
 	}
 
-	@Override
-	public void doAction(int index, Ship ship) {
-
-		
-	}
+	
+	
 
 	public Graph getEfficiencyGraph() {
 		return efficiencyGraph;
@@ -66,5 +64,11 @@ public class Generator implements Actionable {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void doAction(CrewAction action, BattleScreen bs) {
+		// TODO Auto-generated method stub
+		
 	}
 }

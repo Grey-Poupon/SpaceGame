@@ -8,6 +8,7 @@ import com.project.Animation;
 import com.project.CrewAction;
 import com.project.Graph;
 import com.project.Slottable;
+import com.project.battle.BattleScreen;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 
@@ -103,6 +104,14 @@ public class Engine implements Slottable,Actionable{
 
 	public void setSlot(Slot slot) {
 		this.slot = slot;
+	}
+
+
+
+	@Override
+	public void doAction(CrewAction action, BattleScreen bs) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

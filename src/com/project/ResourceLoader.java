@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,14 +49,25 @@ public class ResourceLoader {
 	}
 	
 	private void loadEngines() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 100, 10,10000),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 100,10,10000)});
-
-		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions,null));
+		List<CrewAction> actions = new ArrayList<CrewAction>();
+		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,actions, 100,10,10000);
+		CrewAction manoeuvre = new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering,actions, 100,10,10000);
+		List<CrewAction> actions2 = new ArrayList<CrewAction>();
+		actions2.add(generate);
+		actions2.add(manoeuvre);
+		
+		shipEngines.put("octoidEngine", new Engine(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions2,null));
 	}
 	
 	private void loadGenerators() {
-		List<CrewAction> actions = Arrays.asList( new CrewAction[] {new CrewAction("Generate",CrewActionID.Generate,StatID.engineering, 10, 10,10000),new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering, 10,10,10000)});
-		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions));
+		List<CrewAction> empty = new ArrayList<CrewAction>();
+		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,empty, 100,10,10000);
+		CrewAction manoeuvre = new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering,empty, 100,10,10000);
+		List<CrewAction> actions2 = new ArrayList<CrewAction>();
+		actions2.add(generate);
+		actions2.add(manoeuvre);
+		
+		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions2));
 	}
 	
 
@@ -77,12 +89,23 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		List<CrewAction> actions = Arrays.asList(new CrewAction[] {new CrewAction("Fire",CrewActionID.Fire, StatID.gunner, 1,10,10),new CrewAction("Reload",CrewActionID.Reload,StatID.gunner, 1,10,10)});
+		List<CrewAction> empty  = new ArrayList<CrewAction>();
+		List<CrewAction> actions2 = new ArrayList<CrewAction>();
+		List<CrewAction> actions3 = new ArrayList<CrewAction>();
 
-
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null));		
+		CrewAction reload = new CrewAction("Reload",CrewActionID.Reload,StatID.gunner,empty, 1,10,10);
+		actions2.add(reload);
+		CrewAction fire   = new CrewAction("Fire"  ,CrewActionID.Fire  ,StatID.gunner,actions2, 1,10,10);
+		actions3.add(reload);
+		actions3.add(fire);
+		
+		
+		
+		
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions3,null));		
 
 	}
+
 
 	private void loadAnimations() {
 		//moving
@@ -90,17 +113,15 @@ public class ResourceLoader {
 
 		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
 		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
 		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,1,1, false,AdjustmentID.None));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
 		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,1,-1,false,AdjustmentID.None));
 		
-		
 		// combined
 		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));
-		
-		
 		
 	}
 

@@ -2,8 +2,12 @@ package com.project.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.project.Actionable;
 import com.project.CrewAction;
@@ -26,6 +30,7 @@ import com.project.engines.Engine;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main {
 
@@ -251,7 +256,7 @@ public class BattleScreen extends Main {
 					
 					BattleUI.generateActionList(weapons, room);
 					
-//					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
 //						
 //
 //						if (playerIsChaser) {
@@ -263,7 +268,7 @@ public class BattleScreen extends Main {
 //
 //						System.out.println("Player is about to use weapon "+index+"!");
 						nextTurn();
-//					}
+					}
 				}
 				
 				if(ID ==ButtonID.BattleCockpitChoice) {
@@ -307,17 +312,57 @@ public class BattleScreen extends Main {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getFrontWeapons();
 						List<Weapon> firedWeapons = new ArrayList<Weapon>();
-						List<CrewAction> actions;
+						List<CrewAction> actions  = new ArrayList<CrewAction>();;
+						List<CrewAction> refinedActions = new ArrayList<CrewAction>();
+						CrewAction action;
+						List<CrewAction> actionsNeeded;
+						HashMap<CrewActionID,List<CrewAction>> actionMap = new HashMap<>();
+
+						boolean complete;
 						
 						// check which weapons are fired
 						for(int i = 0;i<weapons.size();i++) {
 							actions = weapons.get(i).getActions();
-							for(int j = 0;j<actions.size();j++) {
-								if(actions.get(j).getActionType() == CrewActionID.Fire && actions.get(j).getActor()!=null) {
-									firedWeapons.add(weapons.get(i));
+							// setup HashMaps
+							for(int j = 0; j<actions.size(); j++) {
+								actionsNeeded = actions.get(j).getActionsNeeded();
+								// map the CrewActions(Boxes) to the actions they need to be completed
+								for(int k = 0; k < actionsNeeded.size();k++) {
+									if(!actionMap.containsKey(actionsNeeded.get(k))) {
+										List<CrewAction> aa = new ArrayList<CrewAction>();
+										aa.add(actions.get(j));
+										actionMap.put(actionsNeeded.get(k).getActionType(), aa);
+									}
+									else {
+										actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
+									}
+								}
+								// add the actions that have an actor in them to the refined list
+								if(actions.get(j).getActor()!=null) {
+									refinedActions.add(actions.get(j));
+								}
+							}
+							// sort actions based on the amount of actions needed
+							Collections.sort(refinedActions);
+							for(int j = 0; j<refinedActions.size(); j++) {
+								action = refinedActions.get(j);
+								// if this actions doesnt need anymore actions to be completed
+								if(refinedActions.get(j).getActionsNeeded().size()==0) {
+									actions = actionMap.get(action.getActionType());
+									//remove it from every other actionNeeded
+									if(actions!=null) {
+										for(int k = 0;k<actions.size();k++) {
+											actions.get(k).removeActionNeeded(action);
+										}
+									}
+									// do action
+									weapons.get(i).doAction(action, this);
+									action.resetActions();
 								}
 							}
 						}
+						
+						
 						// set the fired weapons
 						if(playerIsChaser) {chaserWeaponChoice = firedWeapons;}
 						else               {chasedWeaponChoice = firedWeapons;}
@@ -394,12 +439,23 @@ public class BattleScreen extends Main {
 		this.isPlayersTurn = isPlayersTurn;
 	}
 
-	public boolean isPlayerIsChaser() {
+	public boolean playerIsChaser() {
 		return playerIsChaser;
 	}
 
 	public void setPlayerIsChaser(boolean playerIsChaser) {
 		this.playerIsChaser = playerIsChaser;
 	}
+
+	public void addChaserWeaponChoice(Weapon weapon) {
+		chaserWeaponChoice.add(weapon);
+		
+	}
+	public void addChasedWeaponChoice(Weapon weapon) {
+		chasedWeaponChoice.add(weapon);
+		
+	}
+
+	
 
 }

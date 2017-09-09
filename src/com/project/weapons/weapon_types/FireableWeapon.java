@@ -7,7 +7,9 @@ import java.util.List;
 
 import com.project.Animation;
 import com.project.CrewAction;
+import com.project.CrewActionID;
 import com.project.DamageType;
+import com.project.battle.BattleScreen;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
@@ -90,8 +92,16 @@ public class FireableWeapon extends Weapon {
 
 
 
-	public void doAction(int index, Ship ship) {
-		// TODO Auto-generated method stub
+	@Override
+	public void doAction(CrewAction action, BattleScreen bs) {
+		if(action.getActionType() == CrewActionID.Fire) {
+			if(bs.playerIsChaser()) {
+				bs.addChaserWeaponChoice(this);
+			}
+			else {
+				bs.addChasedWeaponChoice(this);
+			}
+		}
 		
 	}
 

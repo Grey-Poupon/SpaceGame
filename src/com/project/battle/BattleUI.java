@@ -86,7 +86,7 @@ public class BattleUI extends UI{
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option){
 		boolean clickable = true;
 	//	rightHandList.clear();
-		if(bs.isPlayerIsChaser()) {
+		if(bs.playerIsChaser()) {
 			playerShip = bs.getChaserShip();
 		}else {playerShip = bs.getChasedShip();}
 		
@@ -100,7 +100,7 @@ public class BattleUI extends UI{
 			
 			if(crew.getRoomIn() instanceof WeaponsRoom) {
 
-				if(!bs.isPlayerIsChaser()) {
+				if(!bs.playerIsChaser()) {
 					for(int i = 0;i<playerShip.getBackWeapons().size();i++) {
 						
 						Weapon w = playerShip.getBackWeapons().get(i);
@@ -136,9 +136,7 @@ public class BattleUI extends UI{
 
 			
 			//clear 
-			for(Button btn:miscButtons) {Button.delete(btn);}
-			if(actionBoxes != null){clearActionImg();}
-			if(tooltipList != null){ScrollableList.delete(tooltipList);}
+			clearTooltip();
 			
 			// setup scrollable lists
 			tooltipList = new ScrollableList(tooltipButtons, xLeftListOffset,yLeftListOffset, leftListWidth,leftListHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
@@ -209,9 +207,9 @@ public class BattleUI extends UI{
 	public static void generateActionList(Engine engine, Room room,boolean bool) {
 		clearTooltip();
 		
-		List<CrewAction> actions = engine.getActions();
-		List<Crew>       crew    = room.getCrewInRoom();
-		List<Button> tooltipButtons = new ArrayList<Button>();
+		List<CrewAction> actions         = engine.getActions();
+		List<Crew>       crew            = room.getCrewInRoom();
+		List<Button> tooltipButtons      = new ArrayList<Button>();
 		List<Button> rightTooltipButtons = new ArrayList<Button>();
 
 		Button b =new Button(0,0,rightListWidth, rightListHeight, ButtonID.BattleEngineGraph, true,engine.getEfficiencyGraph(),bs);
