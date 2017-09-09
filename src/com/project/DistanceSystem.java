@@ -47,7 +47,9 @@ public class DistanceSystem implements Handleable {
 		}
 		else {
 			movingShip  = chaser;
-			stationaryShip = chased;}
+			stationaryShip = chased;
+		}
+		
 		if(movingShip.getDistanceToEnd()==0 && movingShip.getSpeedChange()>0) {
 			int netSpeed = -(movingShip.getSpeed()-stationaryShip.getSpeed());
 			stationaryShip.increaseDistanceToEnd(netSpeed);
@@ -77,8 +79,12 @@ public class DistanceSystem implements Handleable {
 		else {
 			  totalTicks = Math.abs(chaserXDest - chaserXCurrent);
 		}
+		if(totalTicks!=0) {
 		distanceIncrement = Math.abs(shipDistanceDest-shipDistanceCurrent)/totalTicks;
-
+		}
+		else{
+			distanceIncrement = 0;
+		}
 	}
 	public void render(Graphics g) {
 		g.setColor(Color.WHITE);

@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import com.project.Actionable;
 import com.project.CrewAction;
+import com.project.CrewActionID;
 import com.project.Graph;
 import com.project.battle.BattleScreen;
 
@@ -20,7 +21,7 @@ public class Generator implements Actionable {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
-		this.efficiencyGraph = new Graph(function,0,0,0,0,true);
+		this.efficiencyGraph = new Graph(function,10,10,200,200,true);
 		this.efficiencyGraph.setDraggable(false);
 	}
 
@@ -50,8 +51,6 @@ public class Generator implements Actionable {
 		return actions;
 	}
 
-	
-	
 
 	public Graph getEfficiencyGraph() {
 		return efficiencyGraph;
@@ -68,7 +67,11 @@ public class Generator implements Actionable {
 
 	@Override
 	public void doAction(CrewAction action, BattleScreen bs) {
-		// TODO Auto-generated method stub
+		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
+		ship.updatePowerConsumption(action);
+		if(action.getActionType() == CrewActionID.Generate) {
+			ship.incResource("power", action.getPowerCost());
+		}
 		
 	}
 }

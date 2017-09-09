@@ -27,9 +27,9 @@ public class Graph implements Handleable {
 	private int modNumY = 500;
 	boolean textRight=false;
 	private boolean draggable=false;
-	private double yInput;
-	private double xInput;
-	
+	private double yInput=0;
+	private double xInput=0;
+	Color dangerCol = new Color(1f,0f,0f,0.3f);
 	
 	public Shape getClip() {
 		return clip;
@@ -71,11 +71,15 @@ public class Graph implements Handleable {
 			g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
-		}else {
+		}else if(xInput!=0) {
 			g2d.drawLine(x,y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+((int)xInput),y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.drawLine(x+(int)xInput, y+height, x+((int)xInput), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.fillRect((int) (x+(xInput-2)), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
 		}
+		
+		
+		g2d.setColor(dangerCol);
+		g2d.fillRect(x+width-width/5, y, width/5, height);
 
 	}
 	

@@ -97,11 +97,14 @@ public class FireableWeapon extends Weapon {
 		if(action.getActionType() == CrewActionID.Fire) {
 			if(bs.playerIsChaser()) {
 				bs.addChaserWeaponChoice(this);
+				bs.chaserShip.updatePowerConsumption(action);
 			}
 			else {
 				bs.addChasedWeaponChoice(this);
+				bs.chasedShip.updatePowerConsumption(action);
 			}
 		}
+
 		
 	}
 

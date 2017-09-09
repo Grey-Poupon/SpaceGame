@@ -1,6 +1,7 @@
-package com.project.engines;
+package com.project.thrusters;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.project.Actionable;
@@ -12,7 +13,7 @@ import com.project.battle.BattleScreen;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 
-public class Engine implements Slottable,Actionable{
+public class Thruster implements Slottable,Actionable{
 
 	private Animation engineBody;
 	private Graph efficiencyGraph;
@@ -20,7 +21,7 @@ public class Engine implements Slottable,Actionable{
 	private String name;
 	private Slot slot;
 	
-	public Engine(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions,Slot slot) {
+	public Thruster(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions,Slot slot) {
 		this.engineBody = engineBody.copy();
 		this.engineBody.start(false);
 		this.efficiencyGraph = efficiencyGraph;
@@ -63,8 +64,8 @@ public class Engine implements Slottable,Actionable{
 		this.efficiencyGraph = efficiencyGraph;
 	}
 
-	public Engine copy() {
-		return new Engine(engineBody,name,efficiencyGraph,actions,slot);
+	public Thruster copy() {
+		return new Thruster(engineBody,name,efficiencyGraph,actions,slot);
 	}
 
 	
@@ -83,13 +84,21 @@ public class Engine implements Slottable,Actionable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	public ArrayList<Integer> getSpeeds(){
+		ArrayList<Integer> speeds  = new ArrayList<Integer>();
+		for(int i =1;i<6;i++) {
+			speeds.add(i*100);
+		}
+		return speeds;
+	}
 
 
 
 	public void doAction(int index,Ship ship) {
 		CrewAction action = actions.get(index);
+		ship.updatePowerConsumption(action);
 		if(actions.get(index).getName()=="Generate") {
-			ship.updatePowerConsumption(action);
+			ship.incResource("power", action.getPowerCost());
 		}
 		
 	}
