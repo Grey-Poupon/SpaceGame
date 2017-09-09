@@ -37,11 +37,6 @@ public class Generator implements Actionable {
 		return amountOfFuel * effiency;
 	}
 	
-	public Generator copy() {
-		return new Generator(this.name,this.efficiencyFunction,this.actions);
-	}
-	
-	
 	public void explode() {
 		exploded = true;
 	}
@@ -92,5 +87,9 @@ public class Generator implements Actionable {
 			ship.incResource("power", action.getPowerCost());
 		}
 		
+	}
+
+	public Generator copy() {
+		return new Generator(name, efficiencyFunction, actions);
 	}
 }

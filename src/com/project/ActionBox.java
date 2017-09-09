@@ -35,7 +35,9 @@ public class ActionBox {
 		removeActor();
 	}
 
+	
 	public static void delete(ActionBox box) {
+		box.removeActor();
 		if(box.img       !=null) {ImageHandler .delete(box.img );}
 		if(box.crew      !=null) {DraggableIcon.delete(box.crew);}
 		if(box.actionText!=null) {Text         .delete(box.actionText);}

@@ -49,6 +49,10 @@ public class Ship implements Handleable{
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
 	private int endSpeed;
+	private boolean visible;	
+	private boolean visibleCrew;
+	private EntityID entityID;
+
 	
 	public boolean isChased() {
 		return isChased;
@@ -65,7 +69,8 @@ public class Ship implements Handleable{
 	}
 
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
-	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();	
+	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
+	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
@@ -73,6 +78,9 @@ public class Ship implements Handleable{
 		shipBackSlots= lImage.getBackSlots();
 		shipFrontSlots= lImage.getFrontSlots();
 		this.isChased = isChased;
+		this.visible = visible;
+		this.visibleCrew = visibleCrew;
+		this.entityID = id;
 		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
@@ -614,6 +622,11 @@ public class Ship implements Handleable{
 	private void incSpeed(int speed) {
 		setSpeed(speed+getSpeed());
 		
+	}
+
+
+	public Ship copy() {
+		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , health, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
 
