@@ -74,4 +74,8 @@ public class Generator implements Actionable {
 		}
 		
 	}
+
+	public Generator copy() {
+		return new Generator(name, efficiencyFunction, actions);
+	}
 }

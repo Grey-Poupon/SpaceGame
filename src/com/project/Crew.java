@@ -329,4 +329,8 @@ public class Crew implements Observer{
 		return new ImageHandler(0,0,img,true,EntityID.crew);
 	}
 
+	public Crew copy() {
+		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible);
+	}
+
 }

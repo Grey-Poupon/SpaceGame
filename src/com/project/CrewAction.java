@@ -81,7 +81,11 @@ public class CrewAction implements Comparable {
 	}
 	
 	public void removeActionNeeded(CrewAction action) {
-		actionsNeeded.remove(action);
+		for(int i = 0;i<actionsNeeded.size();i++) {
+			if(actionsNeeded.get(i).getActionType() == action.getActionType()) {
+				actionsNeeded.remove(i);
+			}
+		}
 	}
 
 	@Override
@@ -101,6 +105,19 @@ public class CrewAction implements Comparable {
 
 	public void resetActions() {
 		Collections.copy(actionsNeeded, actionsNeededAfterUse);
+	}
+
+	public CrewAction copy() {
+		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement);
+		// remove actions that have been completed
+		if(actionsNeeded.size() == actionsNeededAfterUse.size()) {
+			for(CrewAction a:actionsNeededAfterUse) {
+				if(!actionsNeeded.contains(a)) {
+					action.removeActionNeeded(a);
+				}
+			}
+		}
+		return action;
 	}
 	
 }

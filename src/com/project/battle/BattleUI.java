@@ -91,13 +91,11 @@ public class BattleUI extends UI{
 
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option){
 		boolean clickable = true;
-	//	rightHandList.clear();
 		if(bs.playerIsChaser()) {
 
 			playerShip = bs.getChaserShip();
 		}else {playerShip = bs.getChasedShip();}
 		
-			//tooltipMenuSelection = option == TooltipSelectionID.Room ? crew.getLocationOnShip() : option;
 			List<Button> tooltipButtons = new ArrayList<Button>();
 			List<Button> rightTooltipButtons = new ArrayList<Button>();
 
@@ -175,8 +173,8 @@ public class BattleUI extends UI{
 		}
 	}
 	public static void generateActionList(List<? extends Actionable> actionables,Room room) {
+		
 		// wipe tooltip
-
 		clearTooltip();
 
 		// initalise variables
@@ -205,9 +203,11 @@ public class BattleUI extends UI{
 		
 		// set Action Table
 		for(int j = 0; j<actionables.size();j++) {
+			
 			// populate variables
 			actions = (actionables.get(j)).getActions();
 			name    = new Text(actionables.get(j).getName(), true, xLeftListOffset+(j*tableColumnWidth), yLeftListOffset);
+			
 			// set column title
 			actionTableTitleText.add(name);
 			

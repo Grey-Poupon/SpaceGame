@@ -5,6 +5,8 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -195,7 +197,7 @@ public class ResourceLoader {
 		if(!animations.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return animations.get(key);
+		return animations.get(key).copy();
 	}
 
 	public static void putImage(String key, BufferedImage value) {
@@ -205,7 +207,7 @@ public class ResourceLoader {
 		if(!images.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return images.get(key);
+		return copyBufferedImage(images.get(key));
 	}
 
 	public static void putShipWeapon(String key, Weapon value) {
@@ -215,7 +217,7 @@ public class ResourceLoader {
 		if(!shipWeapons.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return shipWeapons.get(key);
+		return shipWeapons.get(key).copy();
 	}
 
 	public static void put(String key, Crew value) {
@@ -225,7 +227,7 @@ public class ResourceLoader {
 		if(!crew.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return crew.get(key);
+		return crew.get(key).copy();
 	}
 
 	public static void putShip(String key, Ship value) {
@@ -235,21 +237,26 @@ public class ResourceLoader {
 		if(!ships.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return ships.get(key);
+		return ships.get(key).copy();
 	}
 
 	public static Thruster getShipEngine(String key) {
 		if(!shipThrusters.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return shipThrusters.get(key);
+		return shipThrusters.get(key).copy();
 	}
 	
 	public static Generator getShipGenerator(String key) {
 		if(!shipGenerators.containsKey(key)) {
 			throw new NoSuchElementException();
 		}
-		return shipGenerators.get(key);
+		return shipGenerators.get(key).copy();
 	}
-	
+	public static BufferedImage copyBufferedImage(BufferedImage img) {
+		 ColorModel cm = img.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = img.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
 }

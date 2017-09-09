@@ -20,7 +20,6 @@ public class DraggableIcon {
 	private static final int snapToRange = 25;
 	private static final int boxLineWidth = 2;
 
-	
 	public DraggableIcon(ImageHandler img,Crew crew, int xCoordinate, int yCoordinate) {
 		this.img         = img;
 		this.crew		 = crew;
@@ -32,7 +31,6 @@ public class DraggableIcon {
 		this.height      = img.getHeight();
 		Handler.icons.add(this);// fuk u adam
 	}
-
 
 	public boolean isInside(int x, int y) {
 		if(x>= xCoordinate && x<= xCoordinate+width && y>= yCoordinate && y<= yCoordinate+height) {
@@ -57,15 +55,12 @@ public class DraggableIcon {
 		}
 	}
 
-
 	public static void delete(DraggableIcon img2) {
 		ImageHandler.delete(img2.img);
 		Handler.icons.remove(img2);
 		img2 = null;
 		
 	}
-
-
 
 	public void drop(int x, int y, List<ActionBox> actionBoxes) {
 		snapped = false;
@@ -93,7 +88,7 @@ public class DraggableIcon {
 				this.yCoordinate     = box.getY() + boxLineWidth;
 				this.img.xCoordinate = box.getX() + boxLineWidth;
 				this.img.yCoordinate = box.getY() + boxLineWidth;
-				
+				break;
 			}
 		}
 		if(!snapped) {
@@ -107,14 +102,9 @@ public class DraggableIcon {
 		}
 	}
 
-
 	private int getLevel(StatID statType) {
 		return crew.getStat(statType);
 	}
-
-
-
-
 
 	public Crew getCrew() {
 		return crew;

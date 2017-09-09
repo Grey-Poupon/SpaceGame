@@ -31,7 +31,6 @@ import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class BattleScreen extends Main {
 
@@ -176,7 +175,6 @@ public class BattleScreen extends Main {
 					}
 					else {
 						chaserWeaponChoice.add(chaserShip.getBackWeapons().get(0));
-
 					}
 					System.out.println("Enemy Weapon Reveal");
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
@@ -219,6 +217,8 @@ public class BattleScreen extends Main {
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocation);
 				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, chaserShotLocation);
+				chasedWeaponChoice.clear();
+				chaserWeaponChoice.clear();
 				currentPhase = BattlePhases.Wait;
 			}
 
@@ -260,9 +260,6 @@ public class BattleScreen extends Main {
 
 
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,Point shot){
-		
-		
-		
 		for(Weapon weapon:weapons) {
 			new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot,weapon.getSlot()).start();
 		}
@@ -298,11 +295,9 @@ public class BattleScreen extends Main {
 			
 
 			if (ID == ButtonID.BattleCockpitChoice) {
-
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
 					BattleUI.generateActionList(playerShip.getThrusters().get(0), playerShip.getCockpit(), false);
 				}
-
 			}
 
 			if (ID == ButtonID.BattleThrusterChoice) {
@@ -335,21 +330,27 @@ public class BattleScreen extends Main {
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getFrontWeapons();
-						List<Weapon> firedWeapons = new ArrayList<Weapon>();
+						
 						List<CrewAction> actions  = new ArrayList<CrewAction>();;
-						List<CrewAction> refinedActions = new ArrayList<CrewAction>();
+						List<CrewAction> refinedActions;
 						CrewAction action;
 						List<CrewAction> actionsNeeded;
-						HashMap<CrewActionID,List<CrewAction>> actionMap = new HashMap<>();
+						HashMap<CrewActionID,List<CrewAction>> actionMap;
 
 						boolean complete;
 						
 						// check which weapons are fired
 						for(int i = 0;i<weapons.size();i++) {
+							
+							// initalise variables
+							refinedActions = new ArrayList<CrewAction>();
+							actionMap = new HashMap<>();
 							actions = weapons.get(i).getActions();
+						
 							// setup HashMaps
 							for(int j = 0; j<actions.size(); j++) {
 								actionsNeeded = actions.get(j).getActionsNeeded();
+								
 								// map the CrewActions(Boxes) to the actions they need to be completed
 								for(int k = 0; k < actionsNeeded.size();k++) {
 									if(!actionMap.containsKey(actionsNeeded.get(k))) {
@@ -361,27 +362,33 @@ public class BattleScreen extends Main {
 										actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
 									}
 								}
+								
 								// add the actions that have an actor in them to the refined list
 								if(actions.get(j).getActor()!=null) {
 									refinedActions.add(actions.get(j));
 								}
 							}
+							
 							// sort actions based on the amount of actions needed
 							Collections.sort(refinedActions);
 							for(int j = 0; j<refinedActions.size(); j++) {
 								action = refinedActions.get(j);
+								
 								// if this actions doesnt need anymore actions to be completed
 								if(refinedActions.get(j).getActionsNeeded().size()==0) {
 									actions = actionMap.get(action.getActionType());
+									
 									//remove it from every other actionNeeded
 									if(actions!=null) {
 										for(int k = 0;k<actions.size();k++) {
 											actions.get(k).removeActionNeeded(action);
 										}
 									}
+									
 									// do action
 									weapons.get(i).doAction(action, this);
 									action.resetActions();
+									action.removeActor();
 								}
 							}
 						}									
