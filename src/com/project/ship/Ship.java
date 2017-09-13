@@ -19,12 +19,14 @@ import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
+import com.project.Recreation.RecreationalItem;
 import com.project.battle.BattleScreen;
 import com.project.battle.BattleUI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
+import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
@@ -57,7 +59,6 @@ public class Ship implements Handleable{
 	private EntityID entityID;
 	private Crew captain;
 	private boolean isPlayer=false;
-	
 	public boolean isChased() {
 		return isChased;
 	}
@@ -142,16 +143,13 @@ public class Ship implements Handleable{
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
 		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
+		ArrayList<RecreationalItem> items = new ArrayList<>();
+		items.add(new RecreationalItem("ArmChair",4));
+		rooms.add(new StaffRoom(items));
 		setRoomPositions();
 	}
 	
-	public void updatePowerConsumption(CrewAction action) {
-		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
-		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
-		if(isPlayer) {BattleUI.updateResources(this);}
-		
-	}
+	
 	
 	public Room getCockpit() {
 		for(int i = 0; i<rooms.size();i++) {
@@ -430,8 +428,8 @@ public class Ship implements Handleable{
 			Room r= rooms.get(i);
 			g2d.setColor(Color.red);
 			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
+			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
 		}
-		
 		
 //		for(int i =0;i<lImage.getNoLayers();i++) {
 //			lImage.getLayers().get(i).render(g);
@@ -488,6 +486,20 @@ public class Ship implements Handleable{
 			shipFrontSlots.get(i).setHeight(lImage.getFrontSlots().get(i).getHeight());
 		}
 	}
+	
+	public void updatePowerConsumption(CrewAction action) {
+		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
+		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
+		if(isPlayer) {BattleUI.updateResources(this);}
+		
+	}
+	
+	public void tempUpdatePowerConsumption(CrewAction action) {
+		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
+		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
+		if(isPlayer) {BattleUI.updateResources(this);}
+	}
 
 
 
@@ -496,6 +508,15 @@ public class Ship implements Handleable{
 		return power;
 	}
 
+	
+	public StaffRoom getStaffRoom() {
+		for(int i=0;i<rooms.size();i++) {
+			if(rooms.get(i) instanceof StaffRoom) {
+				return (StaffRoom) rooms.get(i);
+			}
+		}
+		return null;
+	}
 
 
 
@@ -688,15 +709,17 @@ public class Ship implements Handleable{
 	public void setRoomPositions() {
 		boolean complete = false;
 		int num = 0;
+		int tolerance = 10;
+		int rectTolerance = 2;
 		Random rand = new Random();
 		ImageHandler image  = lImage.getLargestLayer();
 		while(!complete) {
 			num = 0;
 			ArrayList<Rectangle> roomRects = new ArrayList<>();
 			for(int i = 0; i<rooms.size();i++) {
-				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rooms.get(i).getSize());
-				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rooms.get(i).getSize());
-				Rectangle roomRect = new Rectangle(rectX,rectY,rooms.get(i).getSize(),rooms.get(i).getSize());
+				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rectTolerance*2-rooms.get(i).getSize());
+				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rectTolerance*2-rooms.get(i).getSize());
+				Rectangle roomRect = new Rectangle(rectX,rectY,rooms.get(i).getSize()+rectTolerance*2,rooms.get(i).getSize()+rectTolerance*2);
 				boolean rectFits = true;
 				for(int k =0;k<roomRects.size();k++) {
 						if(roomRects.get(k).intersects(roomRect)) {
@@ -710,21 +733,20 @@ public class Ship implements Handleable{
 					for(int y= 0;y<roomRect.height;y++) {
 						if((new Color(image.getImg().getRGB(rectX+x, rectY+y),true)).getAlpha()==0) {
 							numFails++;
-							if(numFails>10) {
+							if(numFails>tolerance) {
 								rectFits =false;
 								break;
 							}
 						}
 					}
-					if(numFails>10) {
+					if(numFails>tolerance) {
 						rectFits =false;
 						break;
 					}
-					
 				}
 				if(rectFits) {
 					num++;
-					rooms.get(i).setLocation(new Point(rectX,rectY));
+					rooms.get(i).setLocation(new Point(rectX+rectTolerance,rectY+rectTolerance));
 					roomRects.add(roomRect);
 				}
 			}

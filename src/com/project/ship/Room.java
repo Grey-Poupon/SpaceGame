@@ -20,6 +20,9 @@ public abstract class Room {
 	public Room(Point location) {
 		this.location =location;
 	}
+	public Room() {
+		
+	}
 	
 	public BufferedImage getIcon() {
 		return null;

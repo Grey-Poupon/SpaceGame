@@ -31,6 +31,7 @@ public class ResourceLoader {
 	private static Map<String,Crew> crew;
 	private static Map<String,Thruster> shipThrusters;
 	private static HashMap<String, Generator> shipGenerators;
+	
 	public ResourceLoader() {
 		images	   = new HashMap<String,BufferedImage>();
 		animations = new HashMap<String,Animation>();
@@ -47,7 +48,6 @@ public class ResourceLoader {
 		loadThrusters();
 		loadGenerators();
 		loadShip();
-		
 	}
 	
 	private void loadThrusters() {
@@ -75,7 +75,7 @@ public class ResourceLoader {
 		actions2.add(overclock);
 		actions2.add(fix);
 		
-		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions2));
+		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2));
 
 	}
 	
@@ -138,6 +138,7 @@ public class ResourceLoader {
 	public void loadImages() {
 		put(images,"res/roomIcons/cockpitIcon.png");
 		put(images,"res/roomIcons/captain.png");
+		put(images,"res/roomIcons/staffRoomIcon.png");
 		put(images,"res/info.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");

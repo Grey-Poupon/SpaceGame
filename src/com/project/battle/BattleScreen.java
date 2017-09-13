@@ -94,11 +94,10 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(chasedShip);
 		// place ships
 		chaserShip.setX(-200);
-		chaserShip.setY(150);
+		chaserShip.setY(0);
 		chasedShip.setX(WIDTH - 430);
-		chasedShip.setY(110);
-		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150,this);
- 				
+		chasedShip.setY(0);
+		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		//Set buttons 
@@ -297,7 +296,13 @@ public class BattleScreen extends Main {
 			}
 			
 			if(ID == ButtonID.WeaponInfo) {
-				BattleUI.generateWeaponInfo(playerShip.getFrontWeapons().get(index));
+				BattleUI.generateInfo(playerShip.getFrontWeapons().get(index));
+			}
+			if(ID == ButtonID.GeneratorInfo) {
+				BattleUI.generateInfo(playerShip.getGenerator());
+			}
+			if(ID== ButtonID.RecreationalInfo) {
+				BattleUI.generateInfo(playerShip.getStaffRoom().getItems().get(index));
 			}
 
 			if (ID == ButtonID.BattleThrusterChoice) {
@@ -391,7 +396,7 @@ public class BattleScreen extends Main {
 										}
 									}									
 									// do action
-									weapons.get(i).doAction(action, this);
+									weapons.get(i).doAction(action.getActor(),action, this);
 									action.resetActions();
 									action.removeActor();
 								}
@@ -409,7 +414,7 @@ public class BattleScreen extends Main {
 			}
 			if (ID == ButtonID.BattleGeneratorChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.GeneratorActions) {
-					playerShip.getGenerator().doAction(playerShip.getGenerator().getActions().get(index), this);
+					playerShip.getGenerator().doAction(playerShip.getGenerator().getActions().get(index).getActor(),playerShip.getGenerator().getActions().get(index), this);
 					nextTurn();
 				}
 			}

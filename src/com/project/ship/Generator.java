@@ -1,15 +1,18 @@
 package com.project.ship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 import com.project.Actionable;
+import com.project.Crew;
 import com.project.CrewAction;
-import com.project.FuelTypeID;
 import com.project.CrewActionID;
-
+import com.project.FuelTypeID;
 import com.project.Graph;
 import com.project.battle.BattleScreen;
+import com.project.button.Button;
+import com.project.button.ButtonID;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
@@ -80,7 +83,7 @@ public class Generator implements Actionable {
 	}
 
 	@Override
-	public void doAction(CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
 		ship.updatePowerConsumption(action);
 		if(action.getActionType() == CrewActionID.Generate) {
@@ -91,5 +94,12 @@ public class Generator implements Actionable {
 
 	public Generator copy() {
 		return new Generator(name, efficiencyFunction, actions);
+	}
+
+	@Override
+	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
+		List<Button> buttons = new ArrayList<>();
+		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
+		return buttons;
 	}
 }

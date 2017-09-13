@@ -253,11 +253,10 @@ public class LayeredImage {
 		
 	private int getLargestWidth() {
 		int largest = 0;
-		int index = 0;
 		for(int i =0;i<layers.size();i++) {
 			if(layers.get(i).getImg().getWidth()>largest) {
 				largest  = layers.get(i).getImg().getWidth();
-				index = i;
+			
 			}
 		}
 		
