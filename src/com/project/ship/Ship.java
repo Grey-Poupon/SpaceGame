@@ -2,7 +2,9 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +78,8 @@ public class Ship implements Handleable{
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		this.currHealth = this.maxHealth = health;
+		this.currHealth = health; 
+		this.maxHealth = health;
 		shipBackSlots= lImage.getBackSlots();
 		shipFrontSlots= lImage.getFrontSlots();
 		this.isChased = isChased;
@@ -139,6 +142,7 @@ public class Ship implements Handleable{
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
 		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
+		setRoomPositions();
 	}
 	
 	public void updatePowerConsumption(CrewAction action) {
@@ -419,6 +423,16 @@ public class Ship implements Handleable{
 		}
 		
 		
+		
+		//Render the rooms square
+		Graphics2D g2d = (Graphics2D)g.create();
+		for(int i = 0;i<rooms.size();i++) {
+			Room r= rooms.get(i);
+			g2d.setColor(Color.red);
+			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
+		}
+		
+		
 //		for(int i =0;i<lImage.getNoLayers();i++) {
 //			lImage.getLayers().get(i).render(g);
 //		}
@@ -629,7 +643,7 @@ public class Ship implements Handleable{
 
 
 	public Ship copy() {
-		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , health, lImage.getScale(), this.visibleCrew, isChased);
+		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , maxHealth, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
 	public List<Button> getPhaseLeaderButtons(BattleScreen bs) {
@@ -670,6 +684,58 @@ public class Ship implements Handleable{
 		this.isPlayer = isPlayer;
 	}
 
+	
+	public void setRoomPositions() {
+		boolean complete = false;
+		int num = 0;
+		Random rand = new Random();
+		ImageHandler image  = lImage.getLargestLayer();
+		while(!complete) {
+			num = 0;
+			ArrayList<Rectangle> roomRects = new ArrayList<>();
+			for(int i = 0; i<rooms.size();i++) {
+				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rooms.get(i).getSize());
+				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rooms.get(i).getSize());
+				Rectangle roomRect = new Rectangle(rectX,rectY,rooms.get(i).getSize(),rooms.get(i).getSize());
+				boolean rectFits = true;
+				for(int k =0;k<roomRects.size();k++) {
+						if(roomRects.get(k).intersects(roomRect)) {
+							rectFits= false;
+							break;
+						}
+				}
+				if(!rectFits) {break;}
+				int numFails = 0;
+				for(int x = 0;x<roomRect.width;x++) {
+					for(int y= 0;y<roomRect.height;y++) {
+						if((new Color(image.getImg().getRGB(rectX+x, rectY+y),true)).getAlpha()==0) {
+							numFails++;
+							if(numFails>10) {
+								rectFits =false;
+								break;
+							}
+						}
+					}
+					if(numFails>10) {
+						rectFits =false;
+						break;
+					}
+					
+				}
+				if(rectFits) {
+					num++;
+					rooms.get(i).setLocation(new Point(rectX,rectY));
+					roomRects.add(roomRect);
+				}
+			}
+			if(num==rooms.size()) {complete = true;}
+			
+			
+		}
+		
+		
+		
+	}
 	
 
 

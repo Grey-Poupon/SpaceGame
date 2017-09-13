@@ -23,6 +23,7 @@ public class LayeredImage {
 	private int tickerZ;
 	private int tickerX;
 	private int tickerY;
+	private ImageHandler largestLayer;
 	private ArrayList<Integer> layersX=new ArrayList<>();;
 	private ArrayList<Integer> layersY=new ArrayList<>();;
 	private ArrayList<Slot> backSlots= new ArrayList<>();
@@ -252,11 +253,14 @@ public class LayeredImage {
 		
 	private int getLargestWidth() {
 		int largest = 0;
+		int index = 0;
 		for(int i =0;i<layers.size();i++) {
 			if(layers.get(i).getImg().getWidth()>largest) {
 				largest  = layers.get(i).getImg().getWidth();
+				index = i;
 			}
 		}
+		
 		return largest;
 	}
 	private int getLargestHeight() {
@@ -438,5 +442,20 @@ public class LayeredImage {
 				}
 			}
 			e.setImg(img);
+	}
+	public ImageHandler getLargestLayer() {
+		if(largestLayer==null) {
+			int largestArea = 0;
+			for(int i =0;i<layers.size();i++) {
+				if(layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth()>largestArea) {
+					largestLayer = layers.get(i);
+					largestArea = layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth();
+				}
+			}
+		}
+		return largestLayer;
+	}
+	public void setLargestLayer(ImageHandler largestLayer) {
+		this.largestLayer = largestLayer;
 	}	
 }
