@@ -69,6 +69,7 @@ public class BattleUI extends UI{
 	private static ScrollableList rightHandList;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
+	private static ScrollableList graphList;
 
 	private static List<Button> flavourTexts;
 
@@ -77,7 +78,7 @@ public class BattleUI extends UI{
 	private static List<Button>  miscButtons = new ArrayList<Button>();
 	private static List<Text> actionTableTitleText = new ArrayList<Text>();
 	private static List<Button> actionTableTitleInfoButtons = new ArrayList<>();
-	
+	private static Button resourcesButton;
 	private static Ship playerShip;
 
 
@@ -89,12 +90,19 @@ public class BattleUI extends UI{
 		 flavourTexts = new ArrayList<Button>();
 //		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
 //			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
+		String resources = "Resources:";
+		for(String key: pShip.getResources().keySet()) {
+			resources= resources +" "+key+":"+pShip.getResource(key); 
+		}
+		resourcesButton = new Button(xRightListOffset-2*rightListWidth,yRightListOffset,2*rightListWidth,bs.getGraphics().getFontMetrics().getHeight()*3,ButtonID.UI, 0,false,resources,bs,false);
 
-		Button b =new Button(0,0,rightListWidth, rightListHeight, ButtonID.BattleThrusterGraph, true,pShip.getGenerator().getEfficiencyGraph(),bs);
-		b.setDraggable(true);
-		List<Button> rightTooltipButtons = new ArrayList<Button>();
-		rightTooltipButtons.add(b);
-		rightHandList = new ScrollableList(rightTooltipButtons,xRightListOffset,yRightListOffset,rightListWidth,rightListHeight);
+		Button graph =new Button(0,0,pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,pShip.getGenerator().getEfficiencyGraph(),bs);
+		graph.setDraggable(true);
+		List<Button> graphEnd = new ArrayList<Button>();
+		graphEnd.add(graph);
+		//GO BUTTON
+		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.Go, graphEnd.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), bs));
+		graphList = new ScrollableList(graphEnd,xRightListOffset+rightListWidth-pShip.getGenerator().getEfficiencyGraph().getWidth(),yRightListOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2*pShip.getGenerator().getEfficiencyGraph().getHeight());
 
 	}
 
@@ -277,6 +285,12 @@ public class BattleUI extends UI{
 		for(Button btn:miscButtons) {Button.delete(btn);}
 		for(Text txt:actionTableTitleText) {Text.delete(txt);}
 		for(Button butt:actionTableTitleInfoButtons) {Button.delete(butt);}
-
+	}
+	public static void updateResources(Ship pShip) {
+		String resources = "Resources:";
+		for(String key: pShip.getResources().keySet()) {
+			resources= resources +" "+key+":"+pShip.getResource(key); 
+		}
+		resourcesButton.getText().setText(resources);
 	}
 }

@@ -3,11 +3,12 @@ package com.project;
 public class Player {
 	private int money;
 	private RaceID raceID;
+	private Crew playerCrew;
 	
-	
-	public Player(int money, RaceID raceID){
+	public Player(int money){
 		this.money = money;
-		this.raceID = raceID;
+		this.playerCrew = Crew.generateRandomCrew(false);
+		this.playerCrew.setCaptain();
 	}
 
 
@@ -25,6 +26,16 @@ public class Player {
 	}
 	public void decreaseMoney(int amount){
 		this.money-=amount;
+	}
+
+
+	public Crew getPlayerCrew() {
+		return playerCrew;
+	}
+
+
+	public void setPlayerCrew(Crew playerCrew) {
+		this.playerCrew = playerCrew;
 	}
 	
 }

@@ -16,7 +16,6 @@ public class Text implements Handleable{
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
 	private static final float textRatio = 31f/35f;
-	//private ImageObserver observer;
 	private boolean visible = true;
 	private String text;
 	private Font font;
@@ -102,7 +101,7 @@ public class Text implements Handleable{
 			
 				}
 					for(int i= 0 ; i<text.split("\n").length;i++) {
-						if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i+1)*metrics.getHeight());}
+						if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i)*metrics.getHeight());}
 						else{g2d.drawString(text.split("\n")[i], (int) (xCoordinate+(clip.getBounds().getWidth()-metrics.stringWidth(text.split("\n")[i]))/2), yCoordinate+(i)*metrics.getHeight());}
 					}
 			}else {g2d.drawString(text, xCoordinate, yCoordinate);}
@@ -157,5 +156,10 @@ public class Text implements Handleable{
 
 	public void setOnScreenWidth(int onScreenWidth) {
 		this.onScreenWidth = onScreenWidth;
+	}
+
+
+	public String getText() {
+		return text;
 	}
 }

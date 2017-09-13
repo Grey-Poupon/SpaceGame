@@ -24,7 +24,7 @@ public class Generator implements Actionable {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
-		this.efficiencyGraph = new Graph(function,10,10,200,200,true);
+		this.efficiencyGraph = new Graph(function,10,10,150,100,true);
 		this.efficiencyGraph.setDraggable(false);
 	}
 

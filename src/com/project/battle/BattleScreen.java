@@ -7,11 +7,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import com.project.Actionable;
+
 import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.DistanceSystem;
@@ -20,6 +18,7 @@ import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
 import com.project.MouseInput;
+import com.project.Player;
 import com.project.ProjectileAnimation;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
@@ -59,13 +58,13 @@ public class BattleScreen extends Main {
 	private int chasedSpeedChoice;
 	private int chaserSpeedChoice;
 	private Random rand;
-	private Text fuel;
 	private boolean playerIsChaser = true;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
 	private Button graphButton;
-
+	private Player player;
 	public BattleScreen() {
+		player = new Player(100);
 		handler = new BattleHandler(this);
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
 		Handler.addHighPriorityEntity(loadingScreen);
@@ -74,8 +73,10 @@ public class BattleScreen extends Main {
 		if (playerIsChaser) {
 			chaserShip = ResourceLoader.getShip("defaultPlayer");
 			chasedShip = ResourceLoader.getShip("defaultEnemy");
+			chaserShip.setPlayer(true);
 		} else {
 			chasedShip = ResourceLoader.getShip("defaultPlayer");
+			chasedShip.setPlayer(true);
 			chaserShip = ResourceLoader.getShip("defaultEnemy");
 		}
 		chaserShip.setChased(false);
@@ -97,11 +98,13 @@ public class BattleScreen extends Main {
 		chasedShip.setX(WIDTH - 430);
 		chasedShip.setY(110);
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,150,150,this);
-		fuel   	         	 = new Text    ("Fuel: "+Integer.toString(chaserShip.getResource("fuel"))+" Power: "+Integer.toString(chaserShip.getResource("power")),true,150,180,this); 				
+ 				
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
-		List<Button> temp = chaserShip.getLeaderButtons(this);
-		temp.add(new Button(0, 0, 120, 120, ButtonID.Go, temp.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), this));
+		//Set buttons 
+		chaserShip.setCaptain(player.getPlayerCrew());
+		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
+		
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 50), 50, (temp.size() * 50), 50, 50, true);
 		// Animation anim = new Animation("res/octiodLazer1Anim.png", 97, 21, 4,
 		// 2,1,3,3,9, 12, 670,
@@ -231,8 +234,8 @@ public class BattleScreen extends Main {
 
 			if (chaserShip != null && chasedShip != null) {
 				if (currentPhase != null && phase != null) {
-					fuel.setText("Fuel: " + Integer.toString(chaserShip.getResource("fuel")) + " Power: "
-							+ Integer.toString(chaserShip.getResource("power")));
+//					fuel.setText("Fuel: " + Integer.toString(chaserShip.getResource("fuel")) + " Power: "
+//							+ Integer.toString(chaserShip.getResource("power")));
 					phase.setText("Current Phase: " + currentPhase.toString());
 				}
 				loadingScreen.setVisible(false);
@@ -422,7 +425,7 @@ public class BattleScreen extends Main {
 				}
 			
 			if (ID == ButtonID.Crew) {
-				BattleUI.generateRoomButtons(chaserShip.getRoomLeaders().get(index), TooltipSelectionID.Room);
+				BattleUI.generateRoomButtons(chaserShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
 			}
 			if (ID == ButtonID.Graph) {
 				graphButton.getGraph().setPoint(MouseInput.mousePosition);

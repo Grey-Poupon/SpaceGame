@@ -47,7 +47,7 @@ public class Graph implements Handleable {
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
 		this.text = new Text("",false,x+width,y+20,null);
-		this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
+		//this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
 		//text.changeMask(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -75,8 +75,6 @@ public class Graph implements Handleable {
 			g2d.drawLine(x+(int)xInput, y+height, x+((int)xInput), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.fillRect((int) (x+(xInput-2)), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
 		}
-		
-		
 		g2d.setColor(dangerCol);
 		g2d.fillRect((int)(x+width-width*dangerZone), y, (int)(width*dangerZone), height);
 
@@ -93,7 +91,7 @@ public class Graph implements Handleable {
 		}
 		yInput = dataY[index];
 		xInput = dataX[index];
-		this.text.setText("Power: "+Integer.toString(y)+" Fuel: "+Integer.toString((int)xInput-(int)xInput%modNum));
+		//this.text.setText("Power: "+Integer.toString(y)+" Fuel: "+Integer.toString((int)xInput-(int)xInput%modNum));
 		
 		
 		
@@ -138,7 +136,7 @@ public class Graph implements Handleable {
 				this.mouseX = pos.x-x;
 			}
 			int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-			this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
+			//this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
 			
 		}
 		
@@ -151,7 +149,7 @@ public class Graph implements Handleable {
 			}
 			
 			int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-			this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
+			//this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
 		
 		}
 	}

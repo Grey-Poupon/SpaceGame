@@ -131,6 +131,7 @@ public class ResourceLoader {
 
 	public void loadImages() {
 		put(images,"res/roomIcons/cockpitIcon.png");
+		put(images,"res/roomIcons/captain.png");
 		put(images,"res/info.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");

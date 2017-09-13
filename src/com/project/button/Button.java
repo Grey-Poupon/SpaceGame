@@ -76,7 +76,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y, fontName, style, size, colour,bs);
+		this.text = new Text(text, true, x, y, fontName, style, size, colour,bs);
 		Handler.addButton(this);
 	}
 	
@@ -92,7 +92,8 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y,bs);
+		this.text = new Text(text, true, x, y,bs);
+		this.text.changeMask(x, y, width, height);
 		Handler.addButton(this);
 	}
 	
@@ -301,6 +302,12 @@ public class Button extends Observable  implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public Text getText() {
+		return text;
+	}
+	public void setText(Text text) {
+		this.text = text;
 	}
 	
 
