@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.project.ActionBox;
@@ -22,6 +23,7 @@ import com.project.TooltipSelectionID;
 import com.project.UI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Generator;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
@@ -35,29 +37,34 @@ public class BattleUI extends UI{
 	//private static ImageHandler buttonTooltipUI = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static List<Weapon> weapons = new ArrayList<Weapon>();
   	private static TooltipSelectionID tooltipMenuSelection; 
-	private static final int	tooltipButtonWidth  = 524;
-	private static final int 	tooltipButtonHeight = 40;
-	private static final int	genericButtonWidth  = 150;
-	private static final int 	genericButtonHeight = 50;
+	private static final int 	tooltipButtonWidth   = 524;
+	private static final int 	tooltipButtonHeight  = 40;
+	private static final int	genericButtonWidth   = 150;
+	private static final int 	genericButtonHeight  = 50;
 	private static final int 	tooltipButtonHeightRight = 200;
-	private static final int    xLeftListOffset     = 104; 
-	private static final int    yLeftListOffset		= Main.HEIGHT - 208;
-	private static final int    xRightListOffset    = Main.WIDTH  - 208; 
-	private static final int    yRightListOffset	= Main.HEIGHT - 208;
 
-	private static final int    tableTitleHeight    = 40;
-	private static final int 	tableColumnWidth    = 965/5;
+	private static final int    engineListWidth      = 534;
+	private static final int    weaponListWidth      = 965;
+
+	private static final int    xListOffset          = 104; 
+	private static final int    yListOffset		     = Main.HEIGHT - 208;
+	private static final int    xRightListOffset     = Main.WIDTH  - 208; 
+	private static final int    yRightListOffset	 = Main.HEIGHT - 208;
+
+	private static final int    tableTitleHeight     = 40;
+	private static final int 	tableColumnWidth     = 965/6;
 	
-	private static final int    leftListWidth	 	= 965;
-	private static final int    leftListHeight 		= tooltipButtonHeight*5;
-	private static final int    rightListHeight	=208;
-	private static final int    rightListWidth	=208;
+	private static int 		    listWidth	 	     = 965;
+	private static int  	    listHeight 		     = tooltipButtonHeight*5;
+	private static final int    rightListHeight	     = 208;
+	private static final int    rightListWidth	     = 208;
 
-	private static final int    boxGap           	= 20;
-	private static final String fontName 			= "Sevensegies";
-	private static final int    fontStyle 			= Font.PLAIN;
-	private static final int    fontSize 			= 50;
-	private static final Color  fontColour 			= Color.WHITE;
+	private static final int    titleGap             = 50;
+	private static final int    boxGap           	 = 20;
+	private static final String fontName 	   	 	 = "Sevensegies";
+	private static final int    fontStyle 	 		 = Font.PLAIN;
+	private static final int    fontSize 			 = 50;
+	private static final Color  fontColour 			 = Color.WHITE;
 	private static ScrollableList rightHandList;
 	private static BattleScreen   bs;
 	private static ScrollableList tooltipList;
@@ -65,9 +72,9 @@ public class BattleUI extends UI{
 	private static List<Button> flavourTexts;
 
 	private static List<DraggableIcon> actionIcons = new ArrayList<DraggableIcon>();
-	public  static List<ActionBox>  actionBoxes = new ArrayList<ActionBox>();
-	private static List<Button>  miscButtons = new ArrayList<Button>();
-	private static List<Text> actionTableTitleText = new ArrayList<Text>();
+	public  static List<ActionBox>     actionBoxes = new ArrayList<ActionBox>();
+	private static List<Button>        miscButtons = new ArrayList<Button>();
+	private static List<Text>          actionTableTitleText = new ArrayList<Text>();
 	
 	private static Ship playerShip;
 
@@ -99,48 +106,22 @@ public class BattleUI extends UI{
 			List<Button> tooltipButtons = new ArrayList<Button>();
 			List<Button> rightTooltipButtons = new ArrayList<Button>();
 
-			for(int i = 0;i<crew.getSpeechOptions().size(); i++){
-				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, true, crew.getSpeechOptions().get(i), fontName, fontStyle, fontSize, fontColour, bs,true));
-			}
 			
-			if(crew.getRoomIn() instanceof WeaponsRoom) {
-
-				if(!bs.playerIsChaser()) {
-					for(int i = 0;i<playerShip.getBackWeapons().size();i++) {
-						
-						Weapon w = playerShip.getBackWeapons().get(i);
-						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
-					}
-				}else {
-					for(int i = 0;i<playerShip.getFrontWeapons().size();i++) {
-						Weapon w = playerShip.getFrontWeapons().get(i);
-						tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleWeaponsChoice, i, true, w.getWeaponInfo(), fontName, fontStyle, fontSize, fontColour, bs,true));
-					}
-					
-				}
+			if(crew.getRoomIn() instanceof WeaponsRoom) {	
+				
+				List<Weapon> weapons = playerShip.getFrontWeapons();
+				Room         room    = crew.getRoomIn();
+				
+				BattleUI.generateActionList(weapons, room);
 			}
 			else if(crew.getRoomIn() instanceof GeneratorRoom) {
-				for(int i = 0; i<((GeneratorRoom)crew.getRoomIn()).getGenerator().getActions().size();i++) {
-					CrewAction action = ((GeneratorRoom)crew.getRoomIn()).getGenerator().getActions().get(i);
-					tooltipButtons.add(new Button(0,0,tooltipButtonWidth,tooltipButtonHeight,ButtonID.BattleGeneratorChoice,i, true, action.getName(), fontName, fontStyle, fontSize, fontColour, bs,true));
-				}
-			}
-			else if(crew.getRoomIn() instanceof Cockpit) {
-
-				for(int i = 0; i<playerShip.getThrusters().get(0).getActions().size();i++) {
-					CrewAction action = playerShip.getThrusters().get(0).getActions().get(i);
-					//Button b =new Button(0,0,tooltipButtonWidth, tooltipButtonHeightRight, ButtonID.BattleEngineGraph, true,e.getEfficiencyGraph(),bs);
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleThrusterChoice, i, true, action.getName(), fontName, fontStyle, fontSize, fontColour, bs,true));
-					//b.setDraggable(true);
-					//rightTooltipButtons.add(b);
-				}
-//				Button b =new Button(0,0,RightListWidth, RightListHeight, ButtonID.BattleEngineGraph, true,playerShip.getGenerator().getEfficiencyGraph(),bs);
-//				b.setDraggable(true);
-//
-//				rightTooltipButtons.add(b);
-//				rightHandList = new ScrollableList(rightTooltipButtons,xRightListOffset,yRightListOffset,RightListWidth,RightListHeight);
-			}
-
+				
+				GeneratorRoom room = (GeneratorRoom) crew.getRoomIn();
+				List<Generator> generator = new ArrayList<Generator>();
+				generator.add(room.getGenerator());
+				
+				generateActionList(generator, room);
+			}		
 
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
@@ -150,73 +131,94 @@ public class BattleUI extends UI{
 			}
 
 			//clear 
-			clearTooltip();
+			//clearTooltip();
 			
 			// setup scrollable lists
-			tooltipList = new ScrollableList(tooltipButtons, xLeftListOffset,yLeftListOffset, leftListWidth,leftListHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
+			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			
 			if(rightTooltipButtons.size()>0) {
-				rightHandList  = new ScrollableList(rightTooltipButtons,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,leftListWidth,leftListHeight);
+				rightHandList  = new ScrollableList(rightTooltipButtons,xListOffset+tooltipButtonWidth+13,yListOffset+2,listWidth,listHeight);
 			}
 			else {
-				rightHandList = new ScrollableList(flavourTexts,xLeftListOffset+tooltipButtonWidth+13,yLeftListOffset+2,leftListWidth,leftListHeight);
+				rightHandList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,listWidth,listHeight);
 			}
 
 	}
 
-	private static void clearActionImg() {
-		for(DraggableIcon img: actionIcons) {
-			DraggableIcon.delete(img);
-		}
-		for(ActionBox box: actionBoxes) {
-			ActionBox.delete(box);
-		}
-	}
+	
 	public static void generateActionList(List<? extends Actionable> actionables,Room room) {
 		
 		// wipe tooltip
 		clearTooltip();
 
 		// initalise variables
-
+		if(actionables.get(0) instanceof Weapon) {
+			listWidth = weaponListWidth;
+		}
+		else {
+			listWidth = engineListWidth;
+		}
+		HashMap<Crew,DraggableIcon> crewToIcon = new HashMap<>();
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		List<Crew>       crew    = room.getCrewInRoom();
 		Text name;
-		
+		int column;
+		int row;
 
 
 		// confirm button
-		 miscButtons.add(new Button(xLeftListOffset+leftListWidth-genericButtonWidth, yLeftListOffset, genericButtonWidth, genericButtonHeight, ButtonID.BattleWeaponActionChoice, 0, true, "ffffff",fontName, fontStyle, fontSize, fontColour, bs,true));
+		 miscButtons.add(new Button(xListOffset+listWidth-genericButtonWidth, yListOffset, genericButtonWidth, genericButtonHeight, ButtonID.EndPhase, 0, true, "ffffff",fontName, fontStyle, fontSize, fontColour, bs,true));
 		
 		 // set crew pics
 		for(int i = 0; i<crew.size();i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
 			portrait.start();
-			int column = (i % 3) + 1;
-			int row    = (i / 3) + 1;
+			column = (i % 3) + 1;
+			row    = (i / 3) + 1;
 			portrait.setVisible(true);
-			portrait.setxCoordinate(xLeftListOffset+leftListWidth  - (column*portrait.getWidth()));
-			portrait.setyCoordinate(yLeftListOffset+leftListHeight - (row*portrait.getHeight()));
+			portrait.setxCoordinate(xListOffset+listWidth  - (column*portrait.getWidth()));
+			portrait.setyCoordinate(yListOffset+listHeight - (row*portrait.getHeight()));
 			DraggableIcon icon = new DraggableIcon(portrait,crew.get(i), portrait.getxCoordinate(), portrait.getyCoordinate());
 			actionIcons.add(icon);
+			crewToIcon.put(crew.get(i), icon);
 		}
+		
+		// wipe shared variables
+		column = -1;
+		row = -1;
 		
 		// set Action Table
 		for(int j = 0; j<actionables.size();j++) {
+			// tick variables
+			column++;
 			
 			// populate variables
+			row = -1;
 			actions = (actionables.get(j)).getActions();
-			name    = new Text(actionables.get(j).getName(), true, xLeftListOffset+(j*tableColumnWidth), yLeftListOffset);
+			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset);
 			
 			// set column title
 			actionTableTitleText.add(name);
 			
 			// set the action boxes
 			for(int i = 0; i<actions.size();i++) {
+				// tick variables
+				if(row == 1) {column++; row = -1;}
+				row++;
+
 				BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
-				ActionBox box = new ActionBox(img, xLeftListOffset+(j*tableColumnWidth), yLeftListOffset + ((img.getHeight()+ boxGap)*(i+1)), actions.get(i));
+				ActionBox box = new ActionBox(img, xListOffset+(column*tableColumnWidth), yListOffset + titleGap +((img.getHeight()+ boxGap)*(row)), actions.get(i));
 				actionBoxes.add(box);
+				
+				// put crew back into their old positions
+				if(box.getActor()!=null) {
+					DraggableIcon icon = crewToIcon.get(box.getActor());
+					icon.moveTo(box.getX(),box.getY());
+					icon.setActionBox(box);
+					box.setCrew(icon);
+				}
 			}
+		
 		}
 	}
 
@@ -237,15 +239,20 @@ public class BattleUI extends UI{
 		for(int i =0;i<thruster.getSpeeds().size();i++) {
 			tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleThrusterActionChoice, i, true, Integer.toString(thruster.getSpeeds().get(i)), fontName, fontStyle, fontSize, fontColour, bs,true));
 		}
-		tooltipList = new ScrollableList(tooltipButtons, xLeftListOffset,yLeftListOffset, leftListWidth,leftListHeight,tooltipButtonWidth,tooltipButtonHeight,true);
+		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,true);
 	}
 	
 	public static void clearTooltip() {
 		if(tooltipList  != null){tooltipList.clear();}
-		if(actionIcons  != null && actionBoxes != null ){clearActionImg();}
+		for(DraggableIcon img: actionIcons) 		  {DraggableIcon.delete(img);}
+		for(ActionBox     box: actionBoxes)   		  {ActionBox.delete(box);}
+		for(Button        btn: miscButtons)           {Button.delete(btn);}
+		for(Text          txt: actionTableTitleText)  {Text.delete(txt);}
+		actionIcons.clear();
+		actionBoxes.clear();
+		miscButtons.clear();
+		actionTableTitleText.clear();
 		//if(rightHandList!= null){rightHandList.clear();}
-		for(Button btn:miscButtons) {Button.delete(btn);}
-		for(Text txt:actionTableTitleText) {Text.delete(txt);}
 
 	}
 }

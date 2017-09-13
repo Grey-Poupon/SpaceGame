@@ -63,11 +63,18 @@ public class ResourceLoader {
 	
 	private void loadGenerators() {
 		List<CrewAction> empty = new ArrayList<CrewAction>();
-		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,empty, 100,10,10000);
-		CrewAction manoeuvre = new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering,empty, 100,10,10000);
+		
+		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,empty, 1,10,10000);
+		CrewAction manoeuvre = new CrewAction("Cooling"  ,CrewActionID.Cooling  ,StatID.engineering,empty, 1,10,10000);
+		CrewAction overclock = new CrewAction("Overclock",CrewActionID.Overclock,StatID.engineering,empty, 1,10,10000);
+		CrewAction fix       = new CrewAction("Fix"      ,CrewActionID.Fix      ,StatID.engineering,empty, 1,10,10000);
+
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
+		
 		actions2.add(generate);
 		actions2.add(manoeuvre);
+		actions2.add(overclock);
+		actions2.add(fix);
 		
 		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions2));
 
