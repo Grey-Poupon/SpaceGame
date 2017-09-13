@@ -64,11 +64,10 @@ public class ResourceLoader {
 	private void loadGenerators() {
 		List<CrewAction> empty = new ArrayList<CrewAction>();
 		
-		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,empty, 1,10,10000);
-		CrewAction manoeuvre = new CrewAction("Cooling"  ,CrewActionID.Cooling  ,StatID.engineering,empty, 1,10,10000);
-		CrewAction overclock = new CrewAction("Overclock",CrewActionID.Overclock,StatID.engineering,empty, 1,10,10000);
-		CrewAction fix       = new CrewAction("Fix"      ,CrewActionID.Fix      ,StatID.engineering,empty, 1,10,10000);
-
+		CrewAction overclock = new CrewAction("Overclock" ,CrewActionID.Overclock,StatID.engineering,empty, 1,10,10000);
+		CrewAction fix       = new CrewAction("Fix"       ,CrewActionID.Fix      ,StatID.engineering,empty, 1,10,10000);
+		CrewAction generate  = new CrewAction("Generate"  ,CrewActionID.Generate,StatID.engineering,empty, 1,10,10000);
+		CrewAction manoeuvre = new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty, 1,10,10000);
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
 		
 		actions2.add(generate);
@@ -106,8 +105,8 @@ public class ResourceLoader {
 		CrewAction reload = new CrewAction("Reload",CrewActionID.Reload,StatID.gunner,empty, 1,10,10);
 		actions2.add(reload);
 		CrewAction fire   = new CrewAction("Fire"  ,CrewActionID.Fire  ,StatID.gunner,actions2, 1,10,10);
-		actions3.add(reload);
 		actions3.add(fire);
+		actions3.add(reload);
 		
 		
 		
@@ -138,6 +137,8 @@ public class ResourceLoader {
 
 	public void loadImages() {
 		put(images,"res/roomIcons/cockpitIcon.png");
+		put(images,"res/roomIcons/captain.png");
+		put(images,"res/info.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");
 		put(images,"res/drawnUi2.png");

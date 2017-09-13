@@ -80,9 +80,8 @@ public class DraggableIcon {
 				}
 				// set new actionbox
 				box.setCrew(this);
-				actionBox = box;
 				
-				
+				actionBox = box;				
 				mouse                = null;
 				this.xCoordinate     = box.getX() + boxLineWidth;
 				this.yCoordinate     = box.getY() + boxLineWidth;

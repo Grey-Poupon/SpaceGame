@@ -31,6 +31,7 @@ public class Crew implements Observer{
 	protected Map<StatID,Float> statModifier;
 	protected Map<StatID, Byte> statModifierInc;
 	private RaceID race;
+	private float lvlBoost = 1;
 	protected Map<RaceID,Float> raceRelations;
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
@@ -39,6 +40,7 @@ public class Crew implements Observer{
 
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
+	private boolean isCaptain=false;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
 			char gender, RaceID race,boolean visible) {
@@ -76,7 +78,7 @@ public class Crew implements Observer{
 		this.visible = visible;
 		getSpeechOptions().add("Talk");
 		loadPortrait();
-	}
+	}	
 	
 	public Crew(RaceID race,boolean visible) {
 		this.race = race;
@@ -170,6 +172,13 @@ public class Crew implements Observer{
 	public void interactSocially(Crew crew) {
 		
 	}
+	
+	public void attemptLevelUp(StatID key) {
+		if(rand.nextInt(stats.get(key))/lvlBoost==1 &&stats.get(key)<255) {
+			stats.replace(key, (byte) (stats.get(key)+1));
+		}
+	}
+	
 	
 	protected static byte getRandomStat(float statVariance) {
 		byte stat = (byte)0;
@@ -282,7 +291,6 @@ public class Crew implements Observer{
 	
 	private void randomisePortrait() {
 		BufferedImage img = new BufferedImage(this.getPortrait().getImg().getWidth(),this.portrait.getImg().getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
-
 		float shader  = (float)(rand.nextGaussian()*0.5 +1);
 		float shadeg  = (float)(rand.nextGaussian()*0.5 +1);
 		float shadeb  = (float)(rand.nextGaussian()*0.5 +1);
@@ -317,6 +325,7 @@ public class Crew implements Observer{
 
 
 	public static ImageHandler getLeaderPortrait(Crew crew) {
+		if(crew.isCaptain) {return crew.getPortrait();}
 		BufferedImage img = crew.getPortrait().getImg();
 		BufferedImage roomIcon = crew.getRoomIn().getIcon();
 		for(int x =0;x<roomIcon.getWidth();x++) {
@@ -328,9 +337,31 @@ public class Crew implements Observer{
 		
 		return new ImageHandler(0,0,img,true,EntityID.crew);
 	}
+	public void setCaptain() {
+		isCaptain = true;
+		BufferedImage img = getPortrait().getImg();
+		BufferedImage roomIcon = ResourceLoader.getImage("res/roomIcons/captain.png");
+		for(int x =0;x<roomIcon.getWidth();x++) {
+			for(int y =0;y<roomIcon.getHeight();y++) {
+				Color col = new Color(roomIcon.getRGB(x, y),true);
+				img.setRGB(img.getWidth()-roomIcon.getWidth()+x, y, col.getRGB());
+			}
+		}
+		
+		getPortrait().setImg(img);
+	}
+	
 
 	public Crew copy() {
 		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible);
+	}
+
+	public boolean isCaptain() {
+		return isCaptain;
+	}
+
+	public void setCaptain(boolean isCaptain) {
+		this.isCaptain = isCaptain;
 	}
 
 }

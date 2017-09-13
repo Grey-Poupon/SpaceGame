@@ -8,6 +8,8 @@ import com.project.Actionable;
 import com.project.Animation;
 import com.project.CrewAction;
 import com.project.Slottable;
+import com.project.battle.BattleScreen;
+import com.project.button.Button;
 import com.project.ship.Slot;
 
 
@@ -148,5 +150,13 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 	public void giveXP() {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+
+	public List<Button> getInfoButtons(int tooltipbuttonwidth, int tooltipbuttonheight, BattleScreen bs) {
+		
+		return null;
 	}	
 }

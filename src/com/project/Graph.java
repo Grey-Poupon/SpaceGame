@@ -5,11 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.function.Function;
 
-import com.project.Handleable;
-import com.project.Handler;
+import com.project.battle.BattleScreen;
 
 public class Graph implements Handleable {
 	//THIS MAKES ME CRY
@@ -25,6 +23,7 @@ public class Graph implements Handleable {
 	private int mouseX=0;
 	private int modNum = 10;
 	private int modNumY = 500;
+	private float dangerZone = 0.25f;
 	boolean textRight=false;
 	private boolean draggable=false;
 	private double yInput=0;
@@ -47,8 +46,8 @@ public class Graph implements Handleable {
 			dataY[i]= function.apply((double) i);
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
-		this.text = new Text("",false,x+width,y+20);
-		this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
+		this.text = new Text("",false,x+width,y+20,null);
+		//this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
 		//text.changeMask(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -76,10 +75,8 @@ public class Graph implements Handleable {
 			g2d.drawLine(x+(int)xInput, y+height, x+((int)xInput), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.fillRect((int) (x+(xInput-2)), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);
 		}
-		
-		
 		g2d.setColor(dangerCol);
-		g2d.fillRect(x+width-width/5, y, width/5, height);
+		g2d.fillRect((int)(x+width-width*dangerZone), y, (int)(width*dangerZone), height);
 
 	}
 	
@@ -94,7 +91,7 @@ public class Graph implements Handleable {
 		}
 		yInput = dataY[index];
 		xInput = dataX[index];
-		this.text.setText("Power: "+Integer.toString(y)+" Fuel: "+Integer.toString((int)xInput-(int)xInput%modNum));
+		//this.text.setText("Power: "+Integer.toString(y)+" Fuel: "+Integer.toString((int)xInput-(int)xInput%modNum));
 		
 		
 		
@@ -139,7 +136,7 @@ public class Graph implements Handleable {
 				this.mouseX = pos.x-x;
 			}
 			int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-			this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
+			//this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum)); 
 			
 		}
 		
@@ -152,7 +149,7 @@ public class Graph implements Handleable {
 			}
 			
 			int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
-			this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
+			//this.text.setText("Power: "+Integer.toString(round-round%modNumY)+" Fuel: "+Integer.toString(mouseX-mouseX%modNum));
 		
 		}
 	}
@@ -207,6 +204,10 @@ public class Graph implements Handleable {
 
 	public void setxInput(float xInput) {
 		this.xInput = xInput;
+	}
+
+	public boolean inDangerZone() {
+		return xInput>width*(1-dangerZone);
 	}
 	
 

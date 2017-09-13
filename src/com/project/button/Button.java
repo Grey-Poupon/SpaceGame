@@ -48,8 +48,8 @@ public class Button extends Observable  implements Handleable{
 	}
 
 		
-		// 9 Img
-		public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
+	// 9 Img
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,ImageHandler img, BattleScreen bs){
 			this.xCoordinate = x;
 			this.yCoordinate =y;
 			this.mask = new Rectangle2D.Float(x, y, width, height);
@@ -76,7 +76,24 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
+		this.text = new Text(text, true, x, y, fontName, style, size, colour,bs);
+		Handler.addButton(this);
+	}
+	
+	//14 Text default
+	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text, BattleScreen bs,boolean bottomAlign){
+		this.xCoordinate = x;
+		this.yCoordinate =y;
+		this.mask = new Rectangle2D.Float(x, y, width, height);
+		this.textBottomAligned = bottomAlign;
+		this.width = width;
+		this.height = height;
+		this.buttonID = buttonID;
+		this.index = index;
+		this.clickable = clickable;
+		this.bs = bs;
+		this.text = new Text(text, true, x, y,bs);
+		this.text.changeMask(x, y, width, height);
 		Handler.addButton(this);
 	}
 	
@@ -91,7 +108,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y, fontName, style, size, colour);
+		this.text = new Text(text, clickable, x, y, fontName, style, size, colour,bs);
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
@@ -285,6 +302,12 @@ public class Button extends Observable  implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public Text getText() {
+		return text;
+	}
+	public void setText(Text text) {
+		this.text = text;
 	}
 	
 

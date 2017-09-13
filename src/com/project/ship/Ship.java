@@ -18,6 +18,7 @@ import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
 import com.project.battle.BattleScreen;
+import com.project.battle.BattleUI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.rooms.Cockpit;
@@ -48,12 +49,20 @@ public class Ship implements Handleable{
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
+	private int endSpeed;
 	private boolean visible;	
 	private boolean visibleCrew;
 	private EntityID entityID;
+	private Crew captain;
+	private boolean isPlayer=false;
 	
 	public boolean isChased() {
 		return isChased;
+	}
+	
+	public void generate() {
+		incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
+		getGenerator().generate();
 	}
 
 	
@@ -129,13 +138,15 @@ public class Ship implements Handleable{
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
 		rooms.add(new Cockpit(new Point(70,70)));
-		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default")));
+		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
 	}
 	
 	public void updatePowerConsumption(CrewAction action) {
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		//incResource("power", action.getPowerCost());
+		setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
+		if(isPlayer) {BattleUI.updateResources(this);}
+		
 	}
 	
 	public Room getCockpit() {
@@ -599,12 +610,15 @@ public class Ship implements Handleable{
 	}
 
 
-	public void accelerate(int speed) {
-		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+mass*speed);
-		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		incSpeed(speed);
+	public void accelerate() {
+		incSpeed(endSpeed);
+		endSpeed =0;
 		//formula to decide how much power turns into how speed 
-		
+	}
+	public void setEndSpeed(int speed) {
+		updatePowerConsumption(new CrewAction(null, null, null, null, speed, speed, mass*speed));
+		endSpeed = speed;
+		//formula to decide how much power turns into how speed 
 	}
 
 
@@ -618,6 +632,43 @@ public class Ship implements Handleable{
 		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , health, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
+	public List<Button> getPhaseLeaderButtons(BattleScreen bs) {
+		List<Crew> leaders = new ArrayList<>();
+		leaders.add(getGeneratorRoom().getRoomLeader());
+		leaders.add(getWeaponRoom().getRoomLeader());
+		leaders.add(captain);
+		List<Button> buttons = new ArrayList<Button>();
+		for(int i = 0;i<leaders.size();i++) {
+			Crew crew = leaders.get(i);
+			
+			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
+			leaderPortrait.setVisible(true);
+			leaderPortrait.start();
+			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
+		}
+		return buttons;
+	}
+
+	
+	public List<Crew> getPhaseLeaders(){
+		List<Crew> leaders = new ArrayList<>();
+		leaders.add(getGeneratorRoom().getRoomLeader());
+		leaders.add(getWeaponRoom().getRoomLeader());
+		leaders.add(captain);
+		return leaders;
+	}
+	
+	public void setCaptain(Crew captain) {
+		this.captain = captain;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
+	}
 
 	
 

@@ -5,7 +5,9 @@ import java.util.function.Function;
 
 import com.project.Actionable;
 import com.project.CrewAction;
+import com.project.FuelTypeID;
 import com.project.CrewActionID;
+
 import com.project.Graph;
 import com.project.battle.BattleScreen;
 
@@ -13,6 +15,7 @@ public class Generator implements Actionable {
 	private List<CrewAction> actions;
 	private String name;
 	private boolean exploded=false;
+	private FuelTypeID fuelType;
 	private Overclockable overclock;
 	private Function<Double,Double> efficiencyFunction;
 	private Graph efficiencyGraph; 
@@ -21,7 +24,7 @@ public class Generator implements Actionable {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
-		this.efficiencyGraph = new Graph(function,10,10,200,200,true);
+		this.efficiencyGraph = new Graph(function,10,10,150,100,true);
 		this.efficiencyGraph.setDraggable(false);
 	}
 
@@ -49,6 +52,17 @@ public class Generator implements Actionable {
 	public List<CrewAction> getActions() {
 		// TODO Auto-generated method stub
 		return actions;
+	}
+
+
+	public void generate() {
+		if(efficiencyGraph.inDangerZone()) {
+			dangerRollTable();
+		}
+	}
+
+	private void dangerRollTable() {
+		System.out.println("You blew up XD");
 	}
 
 

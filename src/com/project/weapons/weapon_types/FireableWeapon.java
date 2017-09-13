@@ -2,7 +2,6 @@ package com.project.weapons.weapon_types;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import com.project.Animation;
@@ -10,7 +9,8 @@ import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.DamageType;
 import com.project.battle.BattleScreen;
-import com.project.ship.Ship;
+import com.project.button.Button;
+import com.project.button.ButtonID;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
@@ -113,6 +113,15 @@ public class FireableWeapon extends Weapon {
 		}
 
 		
+	}
+	
+	public List<Button> getInfoButtons(int width,int height,BattleScreen bs){
+		List<Button> buttons = new ArrayList<>();
+		buttons.add(new Button(0,0,width, height, ButtonID.WeaponInfo, 0,false,"Name: "+this.name,bs,true));
+		buttons.add(new Button(0,0,width, height, ButtonID.WeaponInfo, 1,false,"Dmg:"+effects.get(effects.size()-1).getDamagePerShot(),bs,true));
+		buttons.add(new Button(0,0,width, height, ButtonID.WeaponInfo, 1,false,"Acc:"+effects.get(effects.size()-1).getAccuracy(),bs,true));
+		buttons.add(new Button(0,0,width, height, ButtonID.WeaponInfo, 1,false,"RoF:"+effects.get(effects.size()-1).getRateOfFire(),bs,true));
+		return buttons;
 	}
 
 

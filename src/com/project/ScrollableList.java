@@ -45,7 +45,6 @@ public class ScrollableList  {
 			btn.setImgMask(x, y, listWidth, listHeight);}
 		placeButtons();
 		BattleMouseInput.addList(this);
-		
 	}
 	private void placeButtons() {
 		int bottom = yCoordinate;
@@ -63,6 +62,7 @@ public class ScrollableList  {
 	}
 	public void scroll(int y) {
 		y*=scrollAmplifier;
+		if(buttons.size()==0) {return;}
 		if(!((buttons.get(0).getY()>=this.getY()&&y>0)||(buttons.get(buttons.size()-1).getY()+buttons.get(buttons.size()-1).getHeight()<=this.getY()+this.getHeight()&&y<0))){
 			for (Button btn:buttons) {
 				btn.shift(0, y);
