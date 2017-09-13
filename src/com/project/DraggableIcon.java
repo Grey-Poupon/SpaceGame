@@ -109,6 +109,18 @@ public class DraggableIcon {
 		return crew;
 	}
 
+	public void moveTo(int x, int y) {
+		this.xCoordinate     = x;
+		this.yCoordinate     = y;
+		this.img.xCoordinate = x;
+		this.img.yCoordinate = y;
+		
+	}
+
+	public void setActionBox(ActionBox actionBox) {
+		this.actionBox = actionBox;
+	}
+
 
 	
 

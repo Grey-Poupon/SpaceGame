@@ -12,12 +12,12 @@ public class ActionBox {
 	private boolean openCrewSlot = true;
 	private Text	actionText;
 	private DraggableIcon crew = null;
+
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
 		this.x 			= x;
 		this.y 		    = y;
-
 		this.action     = action;
 		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
 	}
@@ -34,15 +34,13 @@ public class ActionBox {
 		openCrewSlot = true;
 		removeActor();
 	}
-
 	
 	public static void delete(ActionBox box) {
-		box.removeActor();
+		//box.removeCrew();
 		if(box.img       !=null) {ImageHandler .delete(box.img );}
 		if(box.crew      !=null) {DraggableIcon.delete(box.crew);}
 		if(box.actionText!=null) {Text         .delete(box.actionText);}
 		box = null;
-		
 	}
 
 	public int getX() {
@@ -95,6 +93,10 @@ public class ActionBox {
 
 	public StatID getStatType() {
 		return action.getStatType();
+	}
+
+	public Crew getActor() {
+		return action.getActor();
 	}
 
 	

@@ -24,7 +24,7 @@ public class CrewAction implements Comparable {
 		this.xpReward         = xpReward;
 		this.statType         = statType;
 		this.powerCost        = powerCost;	
-		this.actionsNeeded	  = actionsNeededToUse;
+		this.actionsNeeded.addAll(actionsNeededToUse);
 		this.actionsNeededAfterUse = actionsNeededToUse;
 	}
 
@@ -104,7 +104,8 @@ public class CrewAction implements Comparable {
 	}
 
 	public void resetActions() {
-		Collections.copy(actionsNeeded, actionsNeededAfterUse);
+		actionsNeeded.clear();
+		actionsNeeded.addAll(actionsNeededAfterUse);
 	}
 
 	public CrewAction copy() {

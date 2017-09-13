@@ -4,7 +4,7 @@ public enum ButtonID {
 
 	
 	BattleWeaponsChoice,
-	BattleWeaponActionChoice,
+	EndPhase,
 	BattleThrusterChoice,
 	Back,
 	Crew,

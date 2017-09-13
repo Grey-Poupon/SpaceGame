@@ -272,28 +272,10 @@ public class BattleScreen extends Main {
 			if(ID == ButtonID.BattleWeaponsChoice){
 				
 				List<Weapon> weapons = playerShip.getFrontWeapons();
-				Room room = playerShip.getWeaponRoom();
+				Room         room    = playerShip.getWeaponRoom();
 				
 				BattleUI.generateActionList(weapons, room);
-				
-				if(isPlayersTurn && currentPhase==BattlePhases.WeaponsButton ) {
-//						
-//
-//						if (playerIsChaser) {
-//							chaserWeaponChoice = chaserShip.getFrontWeapons().get(index);
-//						}
-//						else {
-//							chasedWeaponChoice = chasedShip.getBackWeapons().get(index);
-//						}
-//
-//						System.out.println("Player is about to use weapon "+index+"!");
-					nextTurn();
-				}
-
-				System.out.println("Player is about to use weapon " + index + "!");
-				nextTurn();
 			}
-			
 
 			if(ID == ButtonID.Go) {
 				if(isPlayersTurn && currentPhase == BattlePhases.Go) {
@@ -309,6 +291,7 @@ public class BattleScreen extends Main {
 
 			if (ID == ButtonID.BattleCockpitChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
+					
 					BattleUI.generateActionList(playerShip.getThrusters().get(0), playerShip.getCockpit(), false);
 				}
 			}
@@ -324,7 +307,6 @@ public class BattleScreen extends Main {
 				//
 				BattleUI.generateActionList(thruster, room, true);
 
-				// System.out.println("PEantu");
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
 
 					if (playerIsChaser) {
@@ -334,7 +316,7 @@ public class BattleScreen extends Main {
 					}
 
 					System.out.println("Player Engine choice made");
-					nextTurn();
+					
 				}
 			}
 			if (ID == ButtonID.BattleThrusterActionChoice) {
@@ -350,9 +332,7 @@ public class BattleScreen extends Main {
 					nextTurn();
 				}
 			}
-
-				
-			if(ID == ButtonID.BattleWeaponActionChoice) {
+				if(ID == ButtonID.EndPhase) {
 					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getFrontWeapons();
@@ -409,8 +389,7 @@ public class BattleScreen extends Main {
 										for(int k = 0;k<actions.size();k++) {
 											actions.get(k).removeActionNeeded(action);
 										}
-									}
-									
+									}									
 									// do action
 									weapons.get(i).doAction(action, this);
 									action.resetActions();
@@ -418,10 +397,8 @@ public class BattleScreen extends Main {
 								}
 							}
 						}									
-
-						nextTurn();
-					}
-					
+					}	
+					nextTurn();
 				}
 			
 			if (ID == ButtonID.Crew) {
@@ -463,7 +440,6 @@ public class BattleScreen extends Main {
 			return true;
 		}
 		return false;
-
 	}
 
 	public int getLayerClicked(int x, int y) {
