@@ -13,8 +13,10 @@ import com.project.Crew;
 import com.project.CrewAction;
 import com.project.DraggableIcon;
 import com.project.EntityID;
+import com.project.Graph;
 import com.project.ImageHandler;
 import com.project.Main;
+import com.project.MathFunctions;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.StatID;
@@ -87,7 +89,7 @@ public class BattleUI extends UI{
 	private static List<Text>          actionTableTitleText = new ArrayList<Text>();
 	private static List<Button> actionTableTitleInfoButtons = new ArrayList<>();
 	private static Button resourcesButton;
-
+	public  static Button speedInput;
 	private static Ship playerShip;
 
 
@@ -110,7 +112,7 @@ public class BattleUI extends UI{
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
 		//GO BUTTON
-		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.Go, graphEnd.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), bs));
+		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), bs));
 		graphList = new ScrollableList(graphEnd,xRightListOffset+rightListWidth-pShip.getGenerator().getEfficiencyGraph().getWidth(),yRightListOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2*pShip.getGenerator().getEfficiencyGraph().getHeight());
 
 	}
@@ -140,6 +142,12 @@ public class BattleUI extends UI{
 				generator.add(room.getGenerator());
 				
 				generateActionList(generator, room);
+				Graph speed  = new Graph(MathFunctions.speedInput,300, 50,300f);
+				speed.setDraggable(true);
+				Button speedbtn = new Button(xListOffset+engineListWidth+20, yListOffset+50, 300, 50, ButtonID.Graph, true, speed, bs);
+				speedbtn.setDraggable(true);
+				speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"),300f);
+				speedInput = (speedbtn);
 			}		
 
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
@@ -187,9 +195,6 @@ public class BattleUI extends UI{
 		int row;
 
 
-
-		// confirm button
-		 miscButtons.add(new Button(xListOffset+listWidth-genericButtonWidth, yListOffset, genericButtonWidth, genericButtonHeight, ButtonID.EndPhase, 0, true, "ffffff",fontName, fontStyle, fontSize, fontColour, bs,true));
 		
 		 // set crew pics
 		for(int i = 0; i<crew.size();i++) {
@@ -249,7 +254,6 @@ public class BattleUI extends UI{
 					box.setCrew(icon);
 				}
 			}
-		
 		}
 	}
 	
@@ -269,28 +273,11 @@ public class BattleUI extends UI{
 		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, weaponListWidth,listHeight,weaponListWidth,tooltipButtonHeight,true);;
 	}
 
-	public static void generateActionList(Thruster thruster, Room room,boolean bool) {
-		clearTooltip();
-		
-		List<CrewAction> actions         = thruster.getActions();
-		List<Crew>       crew            = room.getCrewInRoom();
-		List<Button> tooltipButtons      = new ArrayList<Button>();
-		List<Button> rightTooltipButtons = new ArrayList<Button>();
-
-		Button b =new Button(0,0,rightListWidth, rightListHeight, ButtonID.BattleThrusterGraph, true,thruster.getEfficiencyGraph(),bs);
-		b.setDraggable(true);
-		
-		rightTooltipButtons.add(b);
-		rightHandList = new ScrollableList(rightTooltipButtons,xRightListOffset,yRightListOffset,rightListWidth,rightListHeight);
-		
-		for(int i =0;i<thruster.getSpeeds().size();i++) {
-			tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.BattleThrusterActionChoice, i, true, Integer.toString(thruster.getSpeeds().get(i)), fontName, fontStyle, fontSize, fontColour, bs,true));
-		}
-		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,true);
-	}
+	public static void generatePilotActionList() {};
 	
 	public static void clearTooltip() {
 		if(tooltipList  != null){tooltipList.clear();}
+		if(speedInput   != null) {Button.delete(speedInput);}
 		for(DraggableIcon img: actionIcons) 		  {DraggableIcon.delete(img);}
 		for(ActionBox     box: actionBoxes)   		  {ActionBox.delete(box);}
 		for(Button        btn: miscButtons)           {Button.delete(btn);}

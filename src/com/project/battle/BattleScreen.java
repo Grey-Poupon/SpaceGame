@@ -215,6 +215,7 @@ public class BattleScreen extends Main {
 				// chasedShip.setSpeed(200);
 				// chaserShip.accelerate();
 				// chasedShip.accelerate();
+				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocation);
 				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, chaserShotLocation);
@@ -292,7 +293,6 @@ public class BattleScreen extends Main {
 			if (ID == ButtonID.BattleCockpitChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
 					
-					BattleUI.generateActionList(playerShip.getThrusters().get(0), playerShip.getCockpit(), false);
 				}
 			}
 			
@@ -305,7 +305,6 @@ public class BattleScreen extends Main {
 				Thruster thruster = playerShip.getThrusters().get(index);
 				Room room = playerShip.getGeneratorRoom();
 				//
-				BattleUI.generateActionList(thruster, room, true);
 
 				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
 
@@ -397,16 +396,18 @@ public class BattleScreen extends Main {
 								}
 							}
 						}									
-					}	
+					}
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+						if(playerIsChaser) {chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+						else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+					}
 					nextTurn();
 				}
 			
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(chaserShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
 			}
-			if (ID == ButtonID.Graph) {
-				graphButton.getGraph().setPoint(MouseInput.mousePosition);
-			}
+			
 			if (ID == ButtonID.BattleGeneratorChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.GeneratorActions) {
 					playerShip.getGenerator().doAction(playerShip.getGenerator().getActions().get(index), this);

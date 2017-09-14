@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.project.EntityID;
 import com.project.Graph;
 import com.project.Handleable;
 import com.project.Handler;
@@ -128,7 +130,7 @@ public class Button extends Observable  implements Handleable{
 		graph.setX(graph.getX()+x);
 		graph.setY(graph.getY()+y);
 		this.graph = graph;
-		this.graph.getText().setVisible(true);
+		if(graph.getText()!=null) {graph.getText().setVisible(true);}
 		Handler.addLowPriorityEntity(this.graph);
 		Handler.addButton(this);
 	}
@@ -263,10 +265,10 @@ public class Button extends Observable  implements Handleable{
 		return yCoordinate;
 	}
 	public void render(Graphics g) {
-		g.setColor(Color.MAGENTA);
-		g.drawRect(xCoordinate, yCoordinate, width, height);
-		g.setColor(Color.GREEN);
-		g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		//g.setColor(Color.MAGENTA);
+		//g.drawRect(xCoordinate, yCoordinate, width, height);
+		//g.setColor(Color.GREEN);
+		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
 		
 	}
 	@Override
@@ -308,6 +310,17 @@ public class Button extends Observable  implements Handleable{
 	}
 	public void setText(Text text) {
 		this.text = text;
+	}
+	public void addSpeedImg(BufferedImage image,float maxSpeed) {
+		this.img = new ImageHandler(xCoordinate, yCoordinate, image, true, EntityID.UI);
+		// box = 50 img = 100 scale = 0.5
+		// box = 50 img = 50 scale = 1
+		// box = 50 img = 25 scale = 2
+		img.setXScale((float)img.getWidth()/(maxSpeed*2));
+		setImgMask(xCoordinate, yCoordinate, width, height);
+		img.start();
+		img.setxCoordinate(xCoordinate);
+		img.setyCoordinate(yCoordinate);
 	}
 	
 
