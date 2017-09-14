@@ -16,6 +16,7 @@ public class StaffRoom extends Room {
 	}
 	public StaffRoom(List<RecreationalItem> items) {
 		this.items = items;
+		
 		// TODO Auto-generated constructor stub
 	}
 

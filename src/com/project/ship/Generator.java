@@ -17,6 +17,7 @@ import com.project.button.ButtonID;
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
 	private String name;
+	private boolean canGenerate=false;
 	private boolean exploded=false;
 	private FuelTypeID fuelType;
 	private Overclockable overclock;
@@ -85,10 +86,20 @@ public class Generator implements Actionable {
 	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
-		ship.updatePowerConsumption(action);
+		//System.out.println(action.getActionType().toString());
 		if(action.getActionType() == CrewActionID.Generate) {
-			ship.incResource("power", action.getPowerCost());
+			setCanGenerate(true);
 		}
+		if(action.getActionType()==CrewActionID.Fix) {
+			
+		}
+		if(action.getActionType()==CrewActionID.Overclock) {
+			
+		}
+		if(action.getActionType()==CrewActionID.Cooling) {
+			
+		}
+		
 		
 	}
 
@@ -101,5 +112,13 @@ public class Generator implements Actionable {
 		List<Button> buttons = new ArrayList<>();
 		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
 		return buttons;
+	}
+
+	public boolean canGenerate() {
+		return canGenerate;
+	}
+
+	public void setCanGenerate(boolean canGenerate) {
+		this.canGenerate = canGenerate;
 	}
 }

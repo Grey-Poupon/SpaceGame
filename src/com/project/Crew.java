@@ -37,6 +37,7 @@ public class Crew implements Observer{
 	private String name;
 	private boolean visible;
 	protected Room room;
+	private Ship ship;
 
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
@@ -362,6 +363,14 @@ public class Crew implements Observer{
 
 	public void setCaptain(boolean isCaptain) {
 		this.isCaptain = isCaptain;
+	}
+
+	public Ship getShip() {
+		return ship;
+	}
+
+	public void setShip(Ship ship) {
+		this.ship = ship;
 	}
 
 }

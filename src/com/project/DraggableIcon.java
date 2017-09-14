@@ -71,7 +71,7 @@ public class DraggableIcon {
 			boolean topWall    = y > box.getY() - snapToRange;
 			boolean bottomWall = y < box.getY() + box.getHeight() + snapToRange;
 			boolean xp         = box.getLevelRequirement() <= getLevel(box.getStatType()) ;
-			if(leftWall && rightWall && topWall && bottomWall && box.isOpen() && xp ) {
+			if(leftWall && rightWall && topWall && bottomWall && (box.isOpen()||box.getActor()==crew) && xp &&(crew.getRoomIn()==box.getRoom())) {
 				snapped = true;
 				
 				// remove the crew from the current actionbox

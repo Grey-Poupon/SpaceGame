@@ -15,6 +15,7 @@ public class GeneratorRoom extends Room{
 	public GeneratorRoom(Point location,Generator generator) {
 		super(location);
 		this.generator = generator;
+		
 		// TODO Auto-generated constructor stub
 	}
 	public BufferedImage getIcon() {

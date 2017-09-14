@@ -3,6 +3,7 @@ package com.project;
 import java.awt.image.BufferedImage;
 
 import com.project.battle.BattleScreen;
+import com.project.ship.Room;
 
 public class ActionBox {
 	private ImageHandler img;
@@ -12,10 +13,12 @@ public class ActionBox {
 	private boolean openCrewSlot = true;
 	private Text	actionText;
 	private DraggableIcon crew = null;
+	private Room room;
 
-	public ActionBox(BufferedImage img, int x, int y, CrewAction action,BattleScreen bs) {
+	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
+		this.room =room;
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
@@ -26,9 +29,12 @@ public class ActionBox {
 		if (openCrewSlot) {
 			this.crew = crew;
 			openCrewSlot = false;
-			setActor(crew.getCrew());
+			if(getActor()!=crew.getCrew()) {
+				setActor(crew.getCrew());
+			}
 		}
 	}
+	
 	public void removeCrew() {
 		this.crew = null;
 		openCrewSlot = true;
@@ -97,6 +103,22 @@ public class ActionBox {
 
 	public Crew getActor() {
 		return action.getActor();
+	}
+
+	public CrewAction getAction() {
+		return action;
+	}
+
+	public void setAction(CrewAction action) {
+		this.action = action;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 
 	

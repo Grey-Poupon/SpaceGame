@@ -64,8 +64,12 @@ public class Ship implements Handleable{
 	}
 	
 	public void generate() {
-		incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
-		getGenerator().generate();
+		if(getGenerator().canGenerate()) {
+			updatePowerConsumption();
+			getGenerator().generate();
+		}
+		//incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
+		
 	}
 
 	
@@ -107,6 +111,7 @@ public class Ship implements Handleable{
 		sortSprites();
 		for(int i =0; i<10;i++) {
 			Crew crewie = Crew.generateRandomCrew(visibleCrew);
+			crewie.setShip(this);
 			//crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
 			allCrew.add(crewie);
 			unassignedCrew.add(crewie);
@@ -487,18 +492,18 @@ public class Ship implements Handleable{
 		}
 	}
 	
-	public void updatePowerConsumption(CrewAction action) {
-		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
+	public void updatePowerConsumption() {
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
+		//setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
+		getGenerator().getEfficiencyGraph().setGraphPoint(0);
 		if(isPlayer) {BattleUI.updateResources(this);}
 		
 	}
 	
-	public void tempUpdatePowerConsumption(CrewAction action) {
-		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
+	public void tempUpdatePowerConsumption(int cost) {
+		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+cost);
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
-		if(isPlayer) {BattleUI.updateResources(this);}
+		//if(isPlayer) {BattleUI.updateResources(this);}
 	}
 
 
@@ -651,7 +656,7 @@ public class Ship implements Handleable{
 		//formula to decide how much power turns into how speed 
 	}
 	public void setEndSpeed(int speed) {
-		updatePowerConsumption(new CrewAction(null, null, null, null, speed, speed, mass*speed));
+		//updatePowerConsumption(new CrewAction(null, null, null, null, speed, speed, mass*speed));
 		endSpeed = speed;
 		//formula to decide how much power turns into how speed 
 	}
