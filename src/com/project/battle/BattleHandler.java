@@ -1,5 +1,9 @@
 package com.project.battle;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.ActionBox;
 import com.project.DraggableIcon;
 import com.project.Handler;
 import com.project.button.Button;
@@ -70,7 +74,10 @@ public class BattleHandler extends Handler {
 			return false;
 		}
 		if(dragging instanceof DraggableIcon) {
-			((DraggableIcon) dragging ).drop(x,y,BattleUI.actionBoxes);
+			List<ActionBox> boxes = new ArrayList<ActionBox>();
+			boxes.addAll(BattleUI.actionBoxes);
+			boxes.addAll(BattleUI.manoeuvreActionBoxes);
+			((DraggableIcon) dragging ).drop(x,y,boxes);
 		}
 		dragging = null;
 		return true;
