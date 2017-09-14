@@ -16,6 +16,8 @@ public class ImageHandler implements Handleable {
 	public float getzCoordinate() {
 		return zCoordinate;
 	}
+	
+
 
 	public void setzCoordinate(float zCoordinate) {
 		this.zCoordinate = zCoordinate;

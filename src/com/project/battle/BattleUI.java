@@ -23,13 +23,14 @@ import com.project.StatID;
 import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.UI;
+import com.project.Recreation.RecreationalItem;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Generator;
 import com.project.ship.Room;
 import com.project.ship.Ship;
-import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
+import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
@@ -39,10 +40,8 @@ public class BattleUI extends UI{
 	//private static ImageHandler buttonTooltipUI = new ImageHandler(BattleScreen.WIDTH-591-4,BattleScreen.HEIGHT-309,false,EntityID.UI);
 	private static List<Weapon> weapons = new ArrayList<Weapon>();
 	
-	public enum BattleUIID{Cockpit,Weapons,Thrusters}
 	
 	//vars to do back
-	private static BattleUIID lastUI;
 	private static List<? extends Actionable> lastActionables;
 	private static Room lastRoom;
 	
@@ -120,7 +119,6 @@ public class BattleUI extends UI{
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option){
 		boolean clickable = true;
 		if(bs.playerIsChaser()) {
-
 			playerShip = bs.getChaserShip();
 		}else {playerShip = bs.getChasedShip();}
 		
@@ -142,13 +140,21 @@ public class BattleUI extends UI{
 				generator.add(room.getGenerator());
 				
 				generateActionList(generator, room);
+
 				Graph speed  = new Graph(MathFunctions.speedInput,300, 50,300f);
 				speed.setDraggable(true);
 				Button speedbtn = new Button(xListOffset+engineListWidth+20, yListOffset+50, 300, 50, ButtonID.Graph, true, speed, bs);
 				speedbtn.setDraggable(true);
 				speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"),300f);
 				speedInput = (speedbtn);
-			}		
+					
+
+			}	
+			else if(crew.isCaptain()) {
+				StaffRoom room =  playerShip.getStaffRoom();
+				generateActionList(room.getItems(),room);
+			}
+
 
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
@@ -172,7 +178,6 @@ public class BattleUI extends UI{
 
 	}
 
-	
 	public static void generateActionList(List<? extends Actionable> actionables,Room room) {
 		
 		// wipe tooltip
@@ -190,7 +195,6 @@ public class BattleUI extends UI{
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		List<Crew>       crew    = room.getCrewInRoom();
 		Text name;
-
 		int column;
 		int row;
 
@@ -226,7 +230,17 @@ public class BattleUI extends UI{
 			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset,bs);
 			ImageHandler infoIcon  = new ImageHandler(0, 0, "res/info.png", true, EntityID.UI);
 			infoIcon.start();
-			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-infoIcon.getHeight()/2, 20, 20, ButtonID.WeaponInfo, j, true,infoIcon , bs);
+			ButtonID infoID = null;
+			if(room instanceof WeaponsRoom) {
+				infoID = ButtonID.WeaponInfo;
+			}
+			else if(room instanceof StaffRoom) {
+				infoID = ButtonID.RecreationalInfo;
+			}
+			else if(room instanceof GeneratorRoom) {
+				infoID = ButtonID.GeneratorInfo;
+			}
+			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-infoIcon.getHeight()/2, 20, 20,infoID , j, true,infoIcon , bs);
 
 
 			// set column title
@@ -258,17 +272,15 @@ public class BattleUI extends UI{
 	}
 	
 	public static void back() {
-		if(lastUI==BattleUIID.Weapons) {
-			generateActionList(lastActionables,lastRoom);
-		}
+		generateActionList(lastActionables,lastRoom);
+		
 		
 	}
 	
 	
-	public static void generateWeaponInfo(Weapon weapon) {
+	public static void generateInfo(Actionable actionable) {
 		clearTooltip();
-		lastUI = BattleUIID.Weapons;
-		List<Button> tooltipButtons = weapon.getInfoButtons(weaponListWidth,tooltipButtonHeight,bs);
+		List<Button> tooltipButtons = actionable.getInfoButtons(weaponListWidth,tooltipButtonHeight,bs);
 		tooltipButtons.add(new Button(0,0,weaponListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true,"Back",bs,true));
 		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, weaponListWidth,listHeight,weaponListWidth,tooltipButtonHeight,true);;
 	}

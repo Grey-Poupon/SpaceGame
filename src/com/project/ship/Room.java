@@ -14,10 +14,14 @@ public abstract class Room {
 	private int damageMod;
 	private int efficiency;
 	private Crew roomLeader;
+	private int size = 15;
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	
 	public Room(Point location) {
 		this.location =location;
+	}
+	public Room() {
+		
 	}
 	
 	public BufferedImage getIcon() {
@@ -80,6 +84,14 @@ public abstract class Room {
 	public void setStatModifiers(StatID dictKey, float modifier) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 	
 
