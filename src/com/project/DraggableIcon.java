@@ -91,13 +91,8 @@ public class DraggableIcon {
 			}
 		}
 		if(!snapped) {
-			if(actionBox != null) {actionBox.removeCrew();}
-			actionBox = null;
-			mouse                = null;
-			this.xCoordinate     = startX;
-			this.yCoordinate     = startY;
-			this.img.xCoordinate = startX;
-			this.img.yCoordinate = startY;
+			
+			reset();
 		}
 	}
 
@@ -119,6 +114,17 @@ public class DraggableIcon {
 
 	public void setActionBox(ActionBox actionBox) {
 		this.actionBox = actionBox;
+	}
+
+	public void reset() {
+		if(actionBox != null) {actionBox.removeCrew();}
+		actionBox = null;
+		mouse                = null;
+		this.xCoordinate     = startX;
+		this.yCoordinate     = startY;
+		this.img.xCoordinate = startX;
+		this.img.yCoordinate = startY;
+		
 	}
 
 
