@@ -314,7 +314,7 @@ public class BattleUI extends UI{
 
 			BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
 
-			ActionBox box = new ActionBox(img, xListOffset+halfListWidth+(column*tableColumnWidth), yListOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),bs);
+			ActionBox box = new ActionBox(img, xListOffset+lineWidth+halfListWidth+(column*tableColumnWidth), yListOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),bs);
 
 			manoeuvreActionBoxes.add(box);
 			
