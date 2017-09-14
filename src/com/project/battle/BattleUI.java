@@ -237,8 +237,7 @@ public class BattleUI extends UI{
 			actions = (actionables.get(j)).getActions();
 
 			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset,bs);
-			ImageHandler infoIcon  = new ImageHandler(0, 0, "res/info.png", true, EntityID.UI);
-			infoIcon.start();
+			
 			ButtonID infoID = null;
 			if(room instanceof WeaponsRoom) {
 				infoID = ButtonID.WeaponInfo;
@@ -249,7 +248,7 @@ public class BattleUI extends UI{
 			else if(room instanceof GeneratorRoom) {
 				infoID = ButtonID.GeneratorInfo;
 			}
-			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-infoIcon.getHeight()/2, 20, 20,infoID , j, true,infoIcon , bs);
+			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-ResourceLoader.getImage("res/info.png").getHeight()/2, 20, 20,infoID , j, true,new ImageHandler(0, 0, "res/info.png", true, EntityID.UI), bs);
 
 
 			// set column title
