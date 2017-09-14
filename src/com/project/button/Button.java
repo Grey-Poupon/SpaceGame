@@ -64,6 +64,7 @@ public class Button extends Observable  implements Handleable{
 			img.setxCoordinate(x);
 			img.setyCoordinate(y);
 			this.img = img;
+			img.start();
 			Handler.addButton(this);
 		}
 	//14 Text
@@ -114,6 +115,7 @@ public class Button extends Observable  implements Handleable{
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
+		img.start();
 		Handler.addButton(this);
 	}
 	
@@ -265,10 +267,10 @@ public class Button extends Observable  implements Handleable{
 		return yCoordinate;
 	}
 	public void render(Graphics g) {
-		//g.setColor(Color.MAGENTA);
-		//g.drawRect(xCoordinate, yCoordinate, width, height);
-		//g.setColor(Color.GREEN);
-		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		g.setColor(Color.MAGENTA);
+		g.drawRect(xCoordinate, yCoordinate, width, height);
+		g.setColor(Color.GREEN);
+		g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
 		
 	}
 	@Override

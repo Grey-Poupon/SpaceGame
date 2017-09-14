@@ -27,8 +27,11 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Generator;
 import com.project.ship.Room;
 import com.project.ship.Ship;
+import com.project.ship.rooms.Cockpit;
+import com.project.ship.rooms.GeneratorRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
@@ -322,6 +325,13 @@ public class BattleScreen extends Main {
 					System.out.println("Player Engine choice made");
 					
 				}
+			}
+			if(ID == ButtonID.Manoeuvres) {
+				BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
+			}
+			if(ID == ButtonID.SpeedInput) {
+				BattleUI.generateSpeedInput();
+				
 			}
 			if (ID == ButtonID.BattleThrusterActionChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.CockpitActions) {
