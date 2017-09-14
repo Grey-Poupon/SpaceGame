@@ -16,7 +16,7 @@ public enum ButtonID {
 	ThrusterInfo,
 	RecreationalInfo,
 	Graph,
-	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final;
+	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final, Manoeuvres, SpeedInput;
 	
 
 }

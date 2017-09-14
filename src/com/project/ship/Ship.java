@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +147,8 @@ public class Ship implements Handleable{
 
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
-		rooms.add(new Cockpit(new Point(70,70)));
+		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
+		rooms.add(new Cockpit(new Point(70,70),manoeuvres));
 		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
