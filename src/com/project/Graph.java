@@ -22,6 +22,7 @@ public class Graph implements Handleable {
 	private Function<Double,Double> function;
 	private int mouseX=0;
 	private int modNum = 10;
+	private int diff= 0;
 	private int modNumY = 500;
 	private float dangerZone = 0.25f;
 	boolean textRight=false;
@@ -30,7 +31,7 @@ public class Graph implements Handleable {
 	private double xInput=0;
 	Color dangerCol = new Color(1f,0f,0f,0.3f);
 	private boolean speedInput;
-	
+	private int xVal;
 	public Shape getClip() {
 		return clip;
 	}
@@ -68,6 +69,10 @@ public class Graph implements Handleable {
 	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g.create();
+		if(mouseX%modNum>modNum/2) {
+			xVal = mouseX-mouseX%modNum+modNum;
+		}
+		else {xVal = mouseX-mouseX%modNum;}
 		g2d.setColor(Color.white);
 		if(clip!=null) {g2d.setClip(clip);}
 		for(int i =0;i<dataX.length-1;i++) {
@@ -77,9 +82,9 @@ public class Graph implements Handleable {
 		if(!speedInput) {g2d.drawLine(x, y, x, y+height);}
 		g2d.setColor(Color.red);
 		if(draggable) {
-			g2d.drawLine(x,y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(mouseX-mouseX%modNum),y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-			g2d.drawLine(x+(mouseX-mouseX%modNum), y+height, x+(mouseX-mouseX%modNum), y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
-			if(!speedInput) {g2d.fillRect(x+(mouseX-mouseX%modNum)-2, y+height-function.apply((double) (mouseX-mouseX%modNum)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);}
+			g2d.drawLine(x,y+height-function.apply((double) (xVal)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+(xVal),y+height-function.apply((double) (xVal)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			g2d.drawLine(x+(xVal), y+height, x+(xVal), y+height-function.apply((double) (xVal)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
+			if(!speedInput) {g2d.fillRect(x+(xVal)-2, y+height-function.apply((double) (xVal)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue()-2, 5, 5);}
 		}else if(xInput!=0) {
 			g2d.drawLine(x,y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue(),x+((int)xInput),y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
 			g2d.drawLine(x+(int)xInput, y+height, x+((int)xInput), y+height-function.apply((double) (xInput)*dataX.length/width).intValue()*height/function.apply((double)dataY.length).intValue());
@@ -143,6 +148,7 @@ public class Graph implements Handleable {
 	public void setPoint(Point pos) {
 		if(draggable) {
 			if(pos.x-x<=width&&pos.x-x>=0) {
+				diff = mouseX-pos.x+this.x;
 				this.mouseX = pos.x-x;
 			}
 			int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
@@ -155,6 +161,10 @@ public class Graph implements Handleable {
 	public void drag(int x,int y, int button) {
 		if(draggable) {
 			if(x-this.x<=width&&x-this.x>=0) {
+				if(diff!=mouseX-x+this.x) {
+					diff = mouseX-x+this.x;
+				}
+				
 				this.mouseX = x-this.x;
 			}
 			
@@ -179,8 +189,9 @@ public class Graph implements Handleable {
 		return mouseX-mouseX%modNum;
 	}
 	public int getSpeed() {
-		return ((mouseX-mouseX%modNum)/modNum)*50;
+		return ((xVal));
 	}
+	
 	public int getPower() {
 		int round = function.apply((double) (mouseX-mouseX%modNum)).intValue();
 		return round-round%modNumY;

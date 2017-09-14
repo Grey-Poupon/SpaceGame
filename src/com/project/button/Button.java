@@ -153,8 +153,14 @@ public class Button extends Observable  implements Handleable{
 			setChanged();
 			bs.update(buttonID,index,button);
 		}
-		
 	}
+	public void drag(int x,int y,int button) {
+		if(graph!=null) {
+			bs.update(buttonID,index,70);
+			graph.drag(x,y,button);
+		}
+	}
+	
 	public void changeMask(int x , int y, int width, int height) {
 		width  = checkWidth(width);
 		height = checkHeight(height);
@@ -295,13 +301,7 @@ public class Button extends Observable  implements Handleable{
 	public void setDraggable(boolean draggable) {
 		this.draggable = draggable;
 	}
-	public void drag(int x,int y,int button) {
-		if(graph!=null) {
-			graph.drag(x,y,button);
-		}
-		
-		
-	}
+	
 	@Override
 	public float getZ() {
 		// TODO Auto-generated method stub

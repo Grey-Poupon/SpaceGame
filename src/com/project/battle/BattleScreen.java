@@ -270,6 +270,14 @@ public class BattleScreen extends Main {
 	
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 		Ship playerShip = playerIsChaser ? chaserShip : chasedShip;	
+		if(button ==70) {
+			if(currentPhase == BattlePhases.GeneratorActions) {
+				if(BattleUI.speedInput!=null) {
+					playerShip.setTempSpeed(BattleUI.speedInput.getGraph().getSpeed());
+				}
+			}
+		}
+		
 		if(button == MouseEvent.BUTTON1) {
 			if(ID == ButtonID.BattleWeaponsChoice){
 				
@@ -288,6 +296,7 @@ public class BattleScreen extends Main {
 			if(ID == ButtonID.Back) {
 				BattleUI.back();
 			}
+			
 			
 
 
@@ -346,8 +355,7 @@ public class BattleScreen extends Main {
 				}
 			}
 				if(ID == ButtonID.EndPhase) {
-					if(playerShip.getGenerator().canGenerate()) {
-						if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+						if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 							// intalise variables
 							List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
 							
@@ -478,11 +486,11 @@ public class BattleScreen extends Main {
 								
 						}
 						
-						if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
-							if(playerIsChaser) {chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+						if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
+							if(playerIsChaser) {chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();chaserShip.setEndSpeed(chaserSpeedChoice);}
 							else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
 						}
-					}
+					
 					
 					nextTurn();
 				}
