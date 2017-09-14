@@ -1,9 +1,9 @@
 package com.project;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+
+import com.project.ship.Room;
 
 public class CrewAction implements Comparable {
 	private String name;
@@ -13,6 +13,7 @@ public class CrewAction implements Comparable {
 	private CrewActionID actionType;
 	private Crew actor;
 	private int powerCost;
+	private static Graph PowerGraph;
 	private List<CrewAction> actionsNeeded = new ArrayList<CrewAction>();
 	private List<CrewAction> actionsNeededAfterUse = new ArrayList<CrewAction>();
 
@@ -33,11 +34,14 @@ public class CrewAction implements Comparable {
 	}
 
 	public void setActor(Crew actor) {
+		actor.getShip().tempUpdatePowerConsumption(powerCost);
 		this.actor = actor;
 	}
 
 	public void removeActor() {
+		actor.getShip().tempUpdatePowerConsumption(-powerCost);
 		this.actor = null;
+		
 	}
 	
 	public String getName() {
@@ -120,5 +124,13 @@ public class CrewAction implements Comparable {
 		}
 		return action;
 	}
-	
+
+	public static Graph getPowerGraph() {
+		return PowerGraph;
+	}
+
+	public static void setPowerGraph(Graph powerGraph) {
+		PowerGraph = powerGraph;
+	}
+
 }

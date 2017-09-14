@@ -190,7 +190,7 @@ public class BattleUI extends UI{
 	public static void generateActionList(List<? extends Actionable> actionables,Room room) {
 		
 		// wipe tooltip
-		clearLeftBox();
+		clearAllBoxes();
 		lastActionables = actionables;
 		lastRoom = room;
 		// initalise variables
@@ -213,10 +213,10 @@ public class BattleUI extends UI{
 		for(int i = 0; i<crew.size();i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
 			portrait.start();
-			column = (i % 3) + 1;
-			row    = (i / 3) + 1;
+			column = (i % 3);
+			row    = (i / 3) +1;
 			portrait.setVisible(true);
-			portrait.setxCoordinate(xListOffset+listWidth -(portrait.getWidth()*3) - (column*portrait.getWidth()));
+			portrait.setxCoordinate(xListOffset+listWidth-(portrait.getWidth()*(3-column)));
 			portrait.setyCoordinate(yListOffset+listHeight - (row*portrait.getHeight()));
 			DraggableIcon icon = new DraggableIcon(portrait,crew.get(i), portrait.getxCoordinate(), portrait.getyCoordinate());
 			actionIcons.add(icon);
@@ -237,8 +237,7 @@ public class BattleUI extends UI{
 			actions = (actionables.get(j)).getActions();
 
 			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset,bs);
-			ImageHandler infoIcon  = new ImageHandler(0, 0, "res/info.png", true, EntityID.UI);
-			infoIcon.start();
+			
 			ButtonID infoID = null;
 			if(room instanceof WeaponsRoom) {
 				infoID = ButtonID.WeaponInfo;
@@ -249,7 +248,7 @@ public class BattleUI extends UI{
 			else if(room instanceof GeneratorRoom) {
 				infoID = ButtonID.GeneratorInfo;
 			}
-			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-infoIcon.getHeight()/2, 20, 20,infoID , j, true,infoIcon , bs);
+			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-ResourceLoader.getImage("res/info.png").getHeight()/2, 20, 20,infoID , j, true,new ImageHandler(0, 0, "res/info.png", true, EntityID.UI), bs);
 
 
 			// set column title
@@ -265,7 +264,7 @@ public class BattleUI extends UI{
 
 				BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
 
-				ActionBox box = new ActionBox(img, xListOffset+(column*tableColumnWidth), yListOffset + titleGap +((img.getHeight()+ boxGap)*(row)), actions.get(i),bs);
+				ActionBox box = new ActionBox(img, xListOffset+(column*tableColumnWidth), yListOffset + titleGap +((img.getHeight()+ boxGap)*(row)), actions.get(i),room,bs);
 
 				actionBoxes.add(box);
 				
@@ -314,7 +313,9 @@ public class BattleUI extends UI{
 
 			BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
 
-			ActionBox box = new ActionBox(img, xListOffset+lineWidth+halfListWidth+(column*tableColumnWidth), yListOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),bs);
+			ActionBox box = new ActionBox(img, xListOffset+lineWidth+halfListWidth+(column*tableColumnWidth), yListOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),room,bs);
+
+
 
 			manoeuvreActionBoxes.add(box);
 			
@@ -332,14 +333,17 @@ public class BattleUI extends UI{
 	
 	
 	public static void generateInfo(Actionable actionable) {
-		clearLeftBox();
+		clearAllBoxes();
 		List<Button> tooltipButtons = actionable.getInfoButtons(fullListWidth,tooltipButtonHeight,bs);
 		tooltipButtons.add(new Button(0,0,fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true,"Back",bs,true));
 		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, fullListWidth,listHeight,fullListWidth,tooltipButtonHeight,true);;
 	}
 
 	
-	
+	public static void clearAllBoxes() {
+		clearLeftBox();
+		clearRightBox();
+	}
 	public static void clearLeftBox() {
 		if(tooltipList  != null){tooltipList.clear();}
 		if(speedInput   != null) {Button.delete(speedInput);}
