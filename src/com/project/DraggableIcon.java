@@ -136,6 +136,7 @@ public class DraggableIcon {
 	public void reset() {
 		if(actionBox != null) {actionBox.removeCrew();}
 		actionBox = null;
+
 		mouse     = null;
 		if(startingBox==null){
 			moveTo(startX,startY);
@@ -171,6 +172,7 @@ public class DraggableIcon {
 	public void setStartBox(ActionBox box) {
 		this.startingBox = box;
 	}
+
 
 	
 

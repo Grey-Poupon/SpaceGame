@@ -1,5 +1,6 @@
 package com.project.battle;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +79,7 @@ public class BattleHandler extends Handler {
 			boxes.addAll(BattleUI.actionBoxes);
 			boxes.addAll(BattleUI.manoeuvreActionBoxes);
 			((DraggableIcon) dragging ).drop(boxes);
+			if(button == MouseEvent.BUTTON3) {((DraggableIcon)dragging).reset();}
 		}
 		dragging = null;
 		return true;

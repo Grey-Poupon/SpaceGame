@@ -38,6 +38,7 @@ public class Ship implements Handleable{
 	private int maxHealth;
 	private int currHealth;
 	private int speed = 200;
+	private int tempSpeed =0;
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
@@ -551,6 +552,13 @@ public class Ship implements Handleable{
 	public void setShipFrontSlots(List<Slot> shipFrontSlots) {
 		this.shipFrontSlots = shipFrontSlots;
 	}
+	public void setTempSpeed(int speed) {
+		if(tempSpeed !=speed) {
+			tempUpdatePowerConsumption((speed-tempSpeed)*mass);
+			tempSpeed = speed;
+		}
+		
+	}
 
 
 
@@ -765,6 +773,14 @@ public class Ship implements Handleable{
 		
 		
 		
+	}
+
+	public int getMass() {
+		return mass;
+	}
+
+	public void setMass(int mass) {
+		this.mass = mass;
 	}
 	
 

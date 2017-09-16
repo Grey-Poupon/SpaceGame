@@ -129,10 +129,8 @@ public class ResourceLoader {
 		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,1,1, false,AdjustmentID.None));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
 		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,1,-1,false,AdjustmentID.None));
-		
 		// combined
-		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));
-		
+		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
 	}
 
 	public void loadImages() {
@@ -167,7 +165,6 @@ public class ResourceLoader {
 				put(images,"res/racePortraits/"+race.toString()+".png");
 			}
 		}
-
 		put(images,"res/racePortraits/gen2.png");
 		put(images,"res/racePortraits/gen3.png");
 		for(int i =0; i<8;i++) {
@@ -189,7 +186,6 @@ public class ResourceLoader {
 		return img;
 	}
 	
-	
 	public void loadFont() {
 		try {
 		     GraphicsEnvironment ge = 
@@ -199,9 +195,6 @@ public class ResourceLoader {
 		     e.printStackTrace();
 		}
 	}
-	
-	
-	
 	
 	public static void putAnimation(String key, Animation value) {
 		animations.put(key, value);

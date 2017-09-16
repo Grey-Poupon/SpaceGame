@@ -19,7 +19,8 @@ public class BattleMouseInput extends MouseInput {
 		super(hans);
 		this.hans = (BattleHandler) hans;
 	}
-	@Override
+	
+	
 	public void mouseClicked(MouseEvent arg0) {
 		
 		setpointClicked(arg0.getX(), arg0.getY());
@@ -37,25 +38,24 @@ public class BattleMouseInput extends MouseInput {
 			hans.checkRightClick(arg0.getX(),arg0.getY());
 		}
 	}
-	@Override
+	
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
 		scrollableLists.get(selectedList).scroll(arg0.getWheelRotation());
 	}
-	@Override
+	
 	public void mouseDragged(MouseEvent arg0) {
 		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
 			hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
 		}
 	}
-	@Override
+	
 	public void mousePressed(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
 			hans.checkPress(arg0.getX(),arg0.getY(),arg0.getButton());
 		}
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
 			hans.checkRelease(arg0.getX(),arg0.getY(),arg0.getButton());
