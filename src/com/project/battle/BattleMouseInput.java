@@ -5,6 +5,8 @@ import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import com.project.Handler;
 import com.project.MouseInput;
 import com.project.ScrollableList;
@@ -22,10 +24,18 @@ public class BattleMouseInput extends MouseInput {
 	public void mouseClicked(MouseEvent arg0) {
 		
 		setpointClicked(arg0.getX(), arg0.getY());
-		if(hans.checkClick(arg0.getX(), arg0.getY(),arg0.getButton())){
-			
-			int index = checkLists(arg0.getX(), arg0.getY());
-			if(index>-1 && selectedList!= index){selectedList = index;}
+		
+		if(SwingUtilities.isLeftMouseButton(arg0)) {
+			// left click
+			if(hans.checkLeftClick(arg0.getX(), arg0.getY(),arg0.getButton())){
+				
+				int index = checkLists(arg0.getX(), arg0.getY());
+				if(index>-1 && selectedList!= index){selectedList = index;}
+			}
+		}
+		else if(SwingUtilities.isRightMouseButton(arg0)) {
+			// right click
+			hans.checkRightClick(arg0.getX(),arg0.getY());
 		}
 	}
 	
@@ -35,17 +45,21 @@ public class BattleMouseInput extends MouseInput {
 	
 	public void mouseDragged(MouseEvent arg0) {
 		hans.updateMouse((int)arg0.getX(), (int)arg0.getY());
-		hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
+		if(SwingUtilities.isLeftMouseButton(arg0)) {
+			hans.checkDrag(arg0.getX(), arg0.getY(),arg0.getButton());
+		}
 	}
 	
 	public void mousePressed(MouseEvent arg0) {
-		hans.checkPress(arg0.getX(),arg0.getY(),arg0.getButton());
-
+		if(SwingUtilities.isLeftMouseButton(arg0)) {
+			hans.checkPress(arg0.getX(),arg0.getY(),arg0.getButton());
+		}
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
-		hans.checkRelease(arg0.getX(),arg0.getY(),arg0.getButton());
-
+		if(SwingUtilities.isLeftMouseButton(arg0)) {
+			hans.checkRelease(arg0.getX(),arg0.getY(),arg0.getButton());
+		}
 	}
 	
 	

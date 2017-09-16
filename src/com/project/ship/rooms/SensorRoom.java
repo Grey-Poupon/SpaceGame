@@ -12,6 +12,7 @@ public class SensorRoom extends Room {
 	
 	public SensorRoom(Sensor sensor) {
 		this.sensor= sensor;
+		setRoomName("Sensors");
 	}
 	public BufferedImage getIcon() {
 		return ResourceLoader.getImage("res/roomIcons/sensorRoomIcon.png");

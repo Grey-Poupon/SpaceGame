@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
 
+import com.project.battle.BattleUI;
+
 public class DraggableIcon {
 	private ImageHandler img;
 	private Crew crew;
@@ -11,13 +13,14 @@ public class DraggableIcon {
 	private int yCoordinate;
 	private int startX;
 	private int startY;
+	private ActionBox startingBox;
 	private int width;
 	private int height;
 	
 	private ActionBox actionBox = null;
 	private Point mouse;
 	private boolean snapped = false;;
-	private static final int snapToRange = 25;
+	private static final int snapToRange = 30;
 	private static final int boxLineWidth = 2;
 
 	public DraggableIcon(ImageHandler img,Crew crew, int xCoordinate, int yCoordinate) {
@@ -58,28 +61,43 @@ public class DraggableIcon {
 	public static void delete(DraggableIcon img2) {
 		ImageHandler.delete(img2.img);
 		Handler.icons.remove(img2);
-		img2 = null;
-		
+		img2 = null;		
 	}
 
-	public void drop(int x, int y, List<ActionBox> actionBoxes) {
-		snapped = false;
+	public void drop(List<ActionBox> actionBoxes) {
+ 		snapped = false;
+ 
 		for(int i = 0;i<actionBoxes.size();i++) {
 			ActionBox box = actionBoxes.get(i);
-			boolean leftWall   = x > box.getX() - snapToRange;
-			boolean rightWall  = x < box.getX() + box.getWidth() + snapToRange;
-			boolean topWall    = y > box.getY() - snapToRange;
-			boolean bottomWall = y < box.getY() + box.getHeight() + snapToRange;
+			
+			boolean walls      = Math.abs(xCoordinate - box.getX()) < snapToRange;
+			boolean ceiling    = Math.abs(yCoordinate - box.getY()) < snapToRange;
 			boolean xp         = box.getLevelRequirement() <= getLevel(box.getStatType()) ;
-			if(leftWall && rightWall && topWall && bottomWall && (box.isOpen()||box.getActor()==crew) && xp &&(crew.getRoomIn()==box.getRoom())) {
+			boolean sameRoom   = box.getMoveCrew()? true:(crew.getRoomIn()==box.getRoom());
+			boolean boxEmpty   = (box.isOpen()||box.getActor()==crew);
+			
+			if(walls && ceiling && boxEmpty && xp && sameRoom) {
 				snapped = true;
 				
 				// remove the crew from the current actionbox
 				if(actionBox != null && actionBox !=  box) {
 					actionBox.removeCrew();
 				}
+				
+				// for room swapping
+				if(box.getMoveCrew() && crew.getRoomIn() != box.getRoom() ) {
+					if(box.getRoom()==crew.getRoomMovingFrom()) {
+						crew.setMoving(false);
+					}
+					else {
+						crew.setMoving(true);
+						crew.setRoomMovingTo(box.getRoom());
+					}
+				}
+				
 				// set new actionbox
 				box.setCrew(this);
+				
 				
 				actionBox = box;				
 				mouse                = null;
@@ -91,7 +109,6 @@ public class DraggableIcon {
 			}
 		}
 		if(!snapped) {
-			
 			reset();
 		}
 	}
@@ -119,12 +136,41 @@ public class DraggableIcon {
 	public void reset() {
 		if(actionBox != null) {actionBox.removeCrew();}
 		actionBox = null;
-		mouse                = null;
-		this.xCoordinate     = startX;
-		this.yCoordinate     = startY;
-		this.img.xCoordinate = startX;
-		this.img.yCoordinate = startY;
+
+		mouse     = null;
+		if(startingBox==null){
+			moveTo(startX,startY);
+		}
+		else {
+			if(startingBox.isOpen()) {
+				moveTo(startingBox.getX(),startingBox.getY());
+				startingBox.setCrew(this);
+				
+			}
+			else {
+				boolean placed = false;
+				for(ActionBox box:BattleUI.actionBoxes) {
+					if(box.getRoom() == startingBox.getRoom() && box.isOpen()) {
+						box.setCrew(this);
+						moveTo(box.getX(), box.getY());
+						placed = true;
+						break;
+					}
+				}
+				if(!placed) {
+					// throw error;
+				}
+			}
+		}
+		crew.setMoving(false);
 		
+	}
+	public void setStart(int x, int y) {
+		this.startX = x;
+		this.startY = y;
+	}
+	public void setStartBox(ActionBox box) {
+		this.startingBox = box;
 	}
 
 

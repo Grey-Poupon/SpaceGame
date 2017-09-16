@@ -35,7 +35,7 @@ public class MouseInput implements MouseListener,MouseMotionListener,MouseWheelL
 	@Override
 	public void mouseClicked(MouseEvent arg0) { 
 		setpointClicked(arg0.getX(), arg0.getY());
-		hans.checkClick(arg0.getX(), arg0.getY(),arg0.getButton());
+		hans.checkLeftClick(arg0.getX(), arg0.getY(),arg0.getButton());
 		//System.out.println(Integer.toString(arg0.getX())+" "+Integer.toString(arg0.getY()));
 	}
 

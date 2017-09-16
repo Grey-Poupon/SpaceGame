@@ -1,5 +1,6 @@
 package com.project.ship.rooms;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ public class StaffRoom extends Room {
 	public BufferedImage getIcon() {
 		return ResourceLoader.getImage("res/roomIcons/staffRoomIcon.png");
 	}
-	public StaffRoom(List<RecreationalItem> items) {
+	public StaffRoom(List<RecreationalItem> items,String name) {
+		super(name);
 		this.items = items;
 		
 		// TODO Auto-generated constructor stub

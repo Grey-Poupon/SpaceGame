@@ -12,6 +12,7 @@ import com.project.ActionBox;
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
+import com.project.CrewActionID;
 import com.project.DraggableIcon;
 import com.project.EntityID;
 import com.project.Graph;
@@ -55,10 +56,10 @@ public class BattleUI extends UI{
 	private static final int 	tooltipButtonHeightRight = 200;
 	private static final int 	lineWidth            = 3;
 
-	private static final int    halfListWidth      = 534;
-	private static final int    fullListWidth      = 965;
+	private static final int    halfListWidth      = 586;
+	private static final int    fullListWidth      = 1017;
 
-	private static final int    xListOffset          = 104; 
+	private static final int    xListOffset          = 52; 
 	private static final int    yListOffset		     = Main.HEIGHT - 208;
 	private static final int    xRightListOffset     = Main.WIDTH  - 208; 
 	private static final int    yRightListOffset	 = Main.HEIGHT - 208;
@@ -90,12 +91,12 @@ public class BattleUI extends UI{
 	public  static List<ActionBox>     manoeuvreActionBoxes = new ArrayList<ActionBox>();
 	
 	
-	private static List<Button>        miscButtons = new ArrayList<Button>();
-	private static List<Text>          actionTableTitleText = new ArrayList<Text>();
-	private static List<Button> actionTableTitleInfoButtons = new ArrayList<>();
+	private static List<Button>        miscButtons                 = new ArrayList<Button>();
+	private static List<Text>          tableTitleText              = new ArrayList<Text>();
+	private static List<Button>        actionTableTitleInfoButtons = new ArrayList<>();
 	private static Button resourcesButton;
 	public  static Button speedInput;
-	private static Ship playerShip;
+	private static Ship   playerShip;
 
 
 
@@ -135,10 +136,12 @@ public class BattleUI extends UI{
 			
 			if(crew.getRoomIn() instanceof WeaponsRoom) {	
 				
-				List<Weapon> weapons = playerShip.getFrontWeapons();
-				Room         room    = crew.getRoomIn();
+				generateCrewMovementList(playerShip);
 				
-				BattleUI.generateActionList(weapons, room);
+//				List<Weapon> weapons = playerShip.getFrontWeapons();
+//				Room         room    = crew.getRoomIn();
+//				
+//				BattleUI.generateActionList(weapons, room);
 			}
 			else if(crew.getRoomIn() instanceof GeneratorRoom) {
 				
@@ -186,7 +189,81 @@ public class BattleUI extends UI{
 			}
 
 	}
-
+	public static void generateCrewMovementList(Ship ship) {
+		//clear
+		clearAllBoxes();
+		
+		// setup variables
+		List<Room> rooms = ship.getRooms();
+		int x;
+		int y;
+		float row;
+		float column = -1.5f;
+		int portraitWidth  = 0;
+		int portraitHeight = 0;
+		int titleOffset    = 5;
+		int titleToBoxGap  = 35;
+		String roomName;
+		
+		// loop through rooms
+		for(int i = 0; i<rooms.size();i++) {
+			
+			// setup variables
+			Room room = rooms.get(i);
+			List<Crew> crew = room.getCrewInRoom();
+			row = -1;
+			column+=1.5;
+			x = (int) (xListOffset + (column * (portraitWidth+5)));
+			y = yListOffset + titleOffset;
+			
+			// set crew
+			for(int j = 0;j<crew.size();j++) {
+				
+				//update variables
+				ImageHandler portrait = crew.get(j).getPortrait();
+				portrait.setVisible(true);
+				portrait.start();
+				portrait.setxCoordinate(500);
+				portrait.setyCoordinate(500);
+				
+				if(portraitHeight == 0) {
+					portraitHeight = portrait.getHeight(); 
+					portraitWidth = portrait.getWidth();
+				}
+				row++;
+				if(row > 2) {row = 0; column++;}
+				
+				// set crew icons
+				DraggableIcon icon = new DraggableIcon(portrait, crew.get(j), portrait.getxCoordinate(),portrait.getyCoordinate());
+				ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBox.png"),(int) (xListOffset+(column*(5+portraitWidth))), (int) (yListOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs);
+				icon.moveTo  (box.getX(), box.getY());
+				icon.setStartBox(box);
+				icon.setActionBox(box);
+				box.setCrew(icon);
+				box.setMoveCrew(true);
+				actionIcons.add(icon);
+				actionBoxes.add(box);
+			}
+			// set empty positions
+			if(room.getSize()>crew.size()) {
+				for(int j = 0; j < room.getSize() - crew.size();j++) {
+					
+					// update variables
+					row++;
+					if(row > 2) {row = 0; column++;}
+					
+					// set action box
+					ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBoxEmpty.png"),(int) (xListOffset+(column*(5+portraitWidth))),(int) (yListOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs,true);
+					actionBoxes.add(box);
+				}
+			}
+			
+			//setup room title
+			Text title = new Text(room.getRoomName(), true, x, y, bs);
+			tableTitleText.add(title);	
+			
+		}
+	}
 	public static void generateActionList(List<? extends Actionable> actionables,Room room) {
 		
 		// wipe tooltip
@@ -252,7 +329,7 @@ public class BattleUI extends UI{
 
 
 			// set column title
-			actionTableTitleText.add(name);
+			tableTitleText.add(name);
 			//set info text button
 			actionTableTitleInfoButtons.add(infoButton);
 			
@@ -350,13 +427,13 @@ public class BattleUI extends UI{
 		for(DraggableIcon img: actionIcons) 		  {DraggableIcon.delete(img);}
 		for(ActionBox     box: actionBoxes)   		  {ActionBox.delete(box);}
 		for(Button        btn: miscButtons)           {Button.delete(btn);}
-		for(Text          txt: actionTableTitleText)  {Text.delete(txt);}
+		for(Text          txt: tableTitleText)  {Text.delete(txt);}
 		for(Button btn:actionTableTitleInfoButtons) {Button.delete(btn);}
 
 		actionIcons.clear();
 		actionBoxes.clear();
 		miscButtons.clear();
-		actionTableTitleText.clear();
+		tableTitleText.clear();
 		//if(rightHandList!= null){rightHandList.clear();}
 	}
 	private static void clearRightBox() {

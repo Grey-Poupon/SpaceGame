@@ -67,7 +67,7 @@ public class Handler {
 		return false;
 	}
 
-	public boolean checkClick(int x, int y, int button) {
+	public boolean checkLeftClick(int x, int y, int button) {
 		return checkButtons(x, y,button);
 	}
 	public void updateMouse(int x, int y){
