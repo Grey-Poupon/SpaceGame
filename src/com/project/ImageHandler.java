@@ -13,12 +13,44 @@ public class ImageHandler implements Handleable {
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
 	protected float zCoordinate;
+	protected int xVel;//  speed of mob
+	protected int yVel;
+	protected float xScale = 1;
+	protected float yScale = 1;
+	private EntityID ID;
+	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
+	private BufferedImage img; 
+	private boolean visible = true;
+	private Shape clip;
+	protected BufferedImage oriImg;
+	
+	public BufferedImage getOriImg() {
+		return this.oriImg;
+	}
+	public static BufferedImage copyBufferedImage(BufferedImage img) {
+		ColorModel cm = img.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 
+		WritableRaster raster = img.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+	}
+	public ImageHandler copy() {
+		return new ImageHandler(xCoordinate, yCoordinate, img, isVisible(), xScale, yScale, getEntityID());
+	}
+	public void setOriImg(BufferedImage oriImg) {
+		this.oriImg = oriImg;
+	}
+
+	public void tick(){	
+		xCoordinate+=xVel;
+		yCoordinate+=yVel;
+	};
+
 	public float getzCoordinate() {
 		return zCoordinate;
 	}
 	
-
-
 	public void setzCoordinate(float zCoordinate) {
 		this.zCoordinate = zCoordinate;
 	}
@@ -38,30 +70,7 @@ public class ImageHandler implements Handleable {
 	public void setyScale(float yScale) {
 		this.yScale = yScale;
 	}
-	protected int xVel;//  speed of mob
-	protected int yVel;
-	protected float xScale = 1;
-	protected float yScale = 1;
-	private EntityID ID;
-	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
-	private BufferedImage img; 
-	private boolean visible = true;
-	private Shape clip;
-	protected BufferedImage oriImg;
 	
-	public BufferedImage getOriImg() {
-		return oriImg;
-	}
-
-	public void setOriImg(BufferedImage oriImg) {
-		this.oriImg = oriImg;
-	}
-
-	public void tick(){	
-		xCoordinate+=xVel;
-		yCoordinate+=yVel;
-	};
-
 	public void render(Graphics g)
 	{
 		if(visible){
@@ -109,7 +118,15 @@ public class ImageHandler implements Handleable {
 		this.yScale = yscale;
 		this.ID = ID;
 		setImg(path);
-//		Handler.addLowPriorityEntity(this);
+		}
+	public ImageHandler(int x, int y , BufferedImage img, boolean visible, float xscale, float yscale, EntityID ID){		// constructor for scaled mobs
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+		this.visible = visible;
+		this.xScale = xscale;
+		this.yScale = yscale;
+		this.ID = ID;
+		setImg(img);
 		}
 	public ImageHandler(int x, int y , String path, boolean visible, float scale, EntityID ID){		// constructor for scaled mobs
 		this.xCoordinate = x;
@@ -171,6 +188,9 @@ public class ImageHandler implements Handleable {
 	public void setObserver(ImageObserver observer) {
 		this.observer = observer;
 	}
+	public BufferedImage getImgCopy() {
+		return ImageHandler.copyBufferedImage(img);
+	}
 	public BufferedImage getImg() {
 		return img;
 	}
@@ -187,6 +207,9 @@ public class ImageHandler implements Handleable {
 	}
 	public void setImg(BufferedImage img) {
 		this.img = img;
+	}
+	public void setImg(ImageHandler img) {
+		this.img = img.getImg();
 	}
 	
 	public Object getID() {

@@ -9,16 +9,17 @@ import com.project.Crew;
 import com.project.StatID;
 
 public abstract class Room {
+	private String roomName;
 	private Point location;
 	private int damagableRadius;
 	private int damageMod;
 	private int efficiency;
 	private Crew roomLeader;
-	private int size = 15;
+	private int size = 9;
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	
-	public Room(Point location) {
-		this.location =location;
+	public Room(String name) {
+		this.roomName = name;
 	}
 	public Room() {
 		
@@ -32,9 +33,12 @@ public abstract class Room {
 		crew.setRoomIn(this);
 		crewInRoom.add(crew);
 	}
-	public void removeCrew(Crew crew,Room staffRoom) {
-		crew.setRoomIn(staffRoom);
+	public void removeCrew(Crew crew) {
 		crewInRoom.remove(crew);
+	}
+	public void moveCrew(Crew crew, Room moveTo) {
+		this.removeCrew(crew);
+		moveTo.addCrew(crew);
 	}
 	
 	public ArrayList<Crew> getCrewInRoom() {
@@ -69,7 +73,7 @@ public abstract class Room {
 		return roomLeader;
 	}
 	public void setRoomLeader(Crew roomLeader) {
-		roomLeader.setRoomIn(this);
+		roomLeader.setRoomLeader(true, this);
 		this.roomLeader = roomLeader;
 		this.crewInRoom.add(roomLeader);
 	}
@@ -92,6 +96,9 @@ public abstract class Room {
 
 	public void setSize(int size) {
 		this.size = size;
+	}
+	public String getRoomName() {
+		return roomName;
 	}
 	
 

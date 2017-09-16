@@ -36,11 +36,16 @@ public class Crew implements Observer{
 	protected List<String> speechOptions = new ArrayList<String>();
 	private String name;
 	private boolean visible;
-	protected Room room;
+	private boolean moving = false;
+	private Room movingTo;
+	protected Room roomIn;
 	private Ship ship;
+	private boolean roomLeader;
+	private Room roomLeading;
 
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
+	protected ImageHandler cleanPortrait;
 	private boolean isCaptain=false;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
@@ -274,14 +279,18 @@ public class Crew implements Observer{
 	}
 	protected void loadPortrait() {
 		if(this.race!=RaceID.robot){
-			this.portrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,1,1, EntityID.crew);
+			this.portrait      = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,1,1, EntityID.crew);
+			this.cleanPortrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,1,1, EntityID.crew);
+
 			portrait.setVisible(visible);
 			if(visible) {Handler.addHighPriorityEntity(portrait);}
 			randomisePortrait();
 		}
 	}
 	protected void loadPortrait(byte Gen) {
-		this.portrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,1,1, EntityID.crew));
+		this.portrait      = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,1,1, EntityID.crew));
+		this.cleanPortrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,1,1, EntityID.crew));
+
 		portrait.setVisible(visible);
 		if(visible) {Handler.addHighPriorityEntity(portrait);}
 		randomisePortrait();
@@ -311,6 +320,7 @@ public class Crew implements Observer{
 				img.setRGB(x,y,rgba);
 			}
 		}
+		this.cleanPortrait.setImg(ImageHandler.copyBufferedImage(img));
 		this.portrait.setImg(img);
 	}
 	public static Random getRand() {
@@ -318,10 +328,10 @@ public class Crew implements Observer{
 		return rand;
 	}
 	public void setRoomIn(Room room) {
-		this.room = room;
+		this.roomIn = room;
 	}
 	public Room getRoomIn() {
-		return room;
+		return roomIn;
 	}
 
 
@@ -329,26 +339,40 @@ public class Crew implements Observer{
 		if(crew.isCaptain) {return crew.getPortrait();}
 		BufferedImage img = crew.getPortrait().getImg();
 		BufferedImage roomIcon = crew.getRoomIn().getIcon();
+		attachIcon(img, roomIcon,1);
+		
+		return new ImageHandler(0,0,img,true,EntityID.crew);
+	}
+	
+	
+	public static void attachIcon(BufferedImage img,BufferedImage roomIcon, int corner) {
+		// corner
+		//  0  1
+		//   XX
+		//   XX
+		//  2  3
+
+		int xOffset =0;
+		int yOffset=0;
+		// apply bitwise mask
+		int top   = corner & 1;
+		int right = corner & 2;
+		// set offset
+		if(top  ==1) {xOffset = img.getWidth() -roomIcon.getWidth();}
+		if(right==2) {yOffset = img.getHeight()-roomIcon.getHeight();}
+		
 		for(int x =0;x<roomIcon.getWidth();x++) {
 			for(int y =0;y<roomIcon.getHeight();y++) {
 				Color col = new Color(roomIcon.getRGB(x, y),true);
-				img.setRGB(img.getWidth()-roomIcon.getWidth()+x, y, col.getRGB());
+				img.setRGB(xOffset+x, y+yOffset, col.getRGB());
 			}
 		}
-		
-		return new ImageHandler(0,0,img,true,EntityID.crew);
 	}
 	public void setCaptain() {
 		isCaptain = true;
 		BufferedImage img = getPortrait().getImg();
 		BufferedImage roomIcon = ResourceLoader.getImage("res/roomIcons/captain.png");
-		for(int x =0;x<roomIcon.getWidth();x++) {
-			for(int y =0;y<roomIcon.getHeight();y++) {
-				Color col = new Color(roomIcon.getRGB(x, y),true);
-				img.setRGB(img.getWidth()-roomIcon.getWidth()+x, y, col.getRGB());
-			}
-		}
-		
+		attachIcon(img, roomIcon,1);	
 		getPortrait().setImg(img);
 	}
 	
@@ -372,5 +396,61 @@ public class Crew implements Observer{
 	public void setShip(Ship ship) {
 		this.ship = ship;
 	}
+
+	public boolean isMoving() {
+		return moving;
+	}
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+		if(moving) {
+			attachIcon(getPortrait().getImg(),ResourceLoader.getImage("res/walkingIcon.png") , 3);
+			}
+		else {
+			removeExtraIcons();	
+		}
+	}
+
+	public boolean isRoomLeader() {
+		return roomLeader;
+	}
+
+	public void setRoomLeader(boolean roomLeader, Room room) {
+		this.roomLeader = roomLeader;
+		if(roomLeader) {
+			roomLeading = room;
+		}
+		else {
+			roomLeading = null;
+		}
+	}
+
+	public Room getRoomLeading() {
+		return roomLeading;
+	}
+
+	public Room getRoomMovingFrom() {
+		return roomIn;
+	}
+	
+	public Room getRoomMovingTo() {
+		return movingTo;
+	}
+	public void removeExtraIcons() {
+		portrait.setImg(getCleanPortrait().getImgCopy());
+		if(isRoomLeader()) {
+			attachIcon(getPortrait().getImg(),roomLeading.getIcon() , 1);
+		}
+	}
+
+	private ImageHandler getCleanPortrait() {
+		return cleanPortrait.copy();
+	}
+
+	public void setRoomMovingTo(Room room) {
+		movingTo = room;
+		
+	}
+
 
 }

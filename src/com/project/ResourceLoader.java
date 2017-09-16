@@ -63,9 +63,10 @@ public class ResourceLoader {
 		crewActions.put("basicManoeuvre",new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty ,1  ,10,10000));
 		crewActions.put("basicReload"   ,new CrewAction("Reload"    ,CrewActionID.Reload   ,StatID.gunner     ,empty ,1  ,10,10));
 		fireActions.add(crewActions.get("basicReload"));
-		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner     ,fireActions,1  ,10,10));
-		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot,empty,1  ,10,100));
-		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot,empty,1  ,10,100));
+		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10));
+		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0));
+		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0));
+		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0));
 
 	}
 	private void loadThrusters() {
@@ -159,6 +160,8 @@ public class ResourceLoader {
 		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/attackMousePointer.png");
 		put(images,"res/actionBox.png");
+		put(images,"res/actionBoxEmpty.png");
+		put(images,"res/walkingIcon.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
 				put(images,"res/racePortraits/"+race.toString()+".png");

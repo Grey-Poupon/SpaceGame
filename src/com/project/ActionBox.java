@@ -14,11 +14,24 @@ public class ActionBox {
 	private Text	actionText;
 	private DraggableIcon crew = null;
 	private Room room;
-
+	private boolean moveCrew = false;
+	
+	
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
 		this.room =room;
+		this.x 			= x;
+		this.y 		    = y;
+		this.action     = action;
+		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+	}
+	
+	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
+		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
+		this.img.start();
+		this.room       = room;
+		this.moveCrew   = moveCrew;
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
@@ -119,6 +132,14 @@ public class ActionBox {
 
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public void setMoveCrew(boolean b) {
+		moveCrew = b;
+	}
+
+	public boolean getMoveCrew() {
+		return moveCrew;
 	}
 
 	
