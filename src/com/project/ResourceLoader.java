@@ -136,8 +136,10 @@ public class ResourceLoader {
 		put(images,"res/roomIcons/cockpitIcon.png");
 		put(images,"res/roomIcons/captain.png");
 		put(images,"res/roomIcons/staffRoomIcon.png");
+		put(images,"res/roomIcons/sensorRoomIcon.png");
 		put(images,"res/info.png");
 		put(images,"res/speedometer.png");
+		put(images,"res/spaceRock.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");
 		put(images,"res/drawnUi2.png");

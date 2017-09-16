@@ -1,5 +1,7 @@
 package com.project;
 import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -158,6 +160,13 @@ public class LayeredImage {
 		cameraY = 0;
 		
 	}
+	
+	public Shape getClip() {
+		ImageHandler i = getLargestLayer();
+		AffineTransform t = new AffineTransform(i.getXScale(),0,0,i.getYScale(),i.xCoordinate,i.yCoordinate);
+		return getLargestLayer().getOutline().createTransformedArea(t);
+	}
+	
 	public void tick() {
 		if(cameraZ>=1.5||cameraZ<=-1.25) {
 			tickerZ*=-1;
@@ -449,8 +458,10 @@ public class LayeredImage {
 				if(layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth()>largestArea) {
 					largestLayer = layers.get(i);
 					largestArea = layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth();
+					
 				}
 			}
+			largestLayer.generateOutline();
 		}
 		return largestLayer;
 	}

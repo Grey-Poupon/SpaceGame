@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
+import com.project.ship.rooms.SensorRoom;
 import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
@@ -51,7 +53,6 @@ public class Ship implements Handleable{
 	private List<Crew>     allCrew             = new ArrayList<Crew>();
 	private List<Crew>     unassignedCrew      = new ArrayList<Crew>();
 	private List<Handleable> sprites = new ArrayList<Handleable>();
-	private Sensor sensor;
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
@@ -81,6 +82,7 @@ public class Ship implements Handleable{
 
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
+	private boolean beingSensed=false;
 	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
@@ -93,7 +95,6 @@ public class Ship implements Handleable{
 		this.visible = visible;
 		this.visibleCrew = visibleCrew;
 		this.entityID = id;
-		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
@@ -148,6 +149,7 @@ public class Ship implements Handleable{
 
 	private void generateRooms() {
 		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
+		rooms.add(new SensorRoom(new Sensor(0.8f)));
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
 		rooms.add(new Cockpit(new Point(70,70),manoeuvres));
 		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
@@ -311,14 +313,25 @@ public class Ship implements Handleable{
 
 
 	public Sensor getSensor() {
-		return sensor;
+		for(int i = 0;i<rooms.size();i++){
+			if(rooms.get(i) instanceof SensorRoom) {
+				return ((SensorRoom)rooms.get(i)).getSensor();
+			}
+		}
+		return null;
+		
 	}
 
 
 
 
 	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
+		for(int i = 0;i<rooms.size();i++){
+			if(rooms.get(i) instanceof SensorRoom) {
+				((SensorRoom)rooms.get(i)).setSensor(sensor);
+				break;
+			}
+		}
 	}
 
 
@@ -395,12 +408,7 @@ public class Ship implements Handleable{
 	public Slot getBackSlot(int position) {
 		return lImage.getBackSlots().get(position);
 	}
-	public void setSensors() {
-		sensor = new Sensor(0.8f);
-	}
-	public Sensor getSensors() {
-		return sensor;
-	}
+	
 	public ArrayList<String> getFlavourTexts(){
 		return flavourTexts;
 	}
@@ -428,7 +436,13 @@ public class Ship implements Handleable{
 			}
 		}
 		
-		
+		if(beingSensed) {
+			getGeneratorRoom().renderSensorSpheres(g, this);
+//			for(int i =0;i<rooms.size();i++) {
+//				rooms.get(i).renderSensorSpheres(g,this);
+//			}
+			
+		}
 		
 		//Render the rooms square
 		Graphics2D g2d = (Graphics2D)g.create();
@@ -474,9 +488,15 @@ public class Ship implements Handleable{
 	}
 
 
+	public void generateSensorSpheres(Sensor sensor) {
+		for(int i = 0; i<rooms.size();i++) {
+			rooms.get(i).generateSensorSpheres(sensor);
+		}
+	}
 
-
-	@Override
+	
+	
+	
 	public void tick() {
 		lImage.tick();
 		for(int i = 0;i<shipBackSlots.size();i++) {
@@ -611,7 +631,7 @@ public class Ship implements Handleable{
 	}
 
 
-	@Override
+	
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -780,6 +800,18 @@ public class Ship implements Handleable{
 
 	public void setMass(int mass) {
 		this.mass = mass;
+	}
+
+	public boolean isBeingSensed() {
+		return beingSensed;
+	}
+
+	public void setBeingSensed(boolean beingSensed) {
+		this.beingSensed = beingSensed;
+	}
+	
+	public Shape getClip() {
+		return lImage.getClip();
 	}
 	
 

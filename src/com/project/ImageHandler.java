@@ -1,6 +1,9 @@
 package com.project;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -13,10 +16,37 @@ public class ImageHandler implements Handleable {
 	protected int xCoordinate;//  top left coordinates of where the image is to be placed
 	protected int yCoordinate;
 	protected float zCoordinate;
+	protected Area outline;
 	public float getzCoordinate() {
 		return zCoordinate;
 	}
 	
+
+
+	public  void generateOutline() {
+        Area area = new Area();
+        for (int y=0; y<img.getHeight(); y++) {
+        	boolean lastcheck = false;
+        	int xStart=0;
+            for (int x=0; x<img.getWidth(); x++) {
+                Color pixel = new Color(img.getRGB(x,y),true);
+                if(pixel.getAlpha()!=0) {
+                	if(lastcheck!=true) {	xStart = x;lastcheck = true;}
+
+                }
+                if(lastcheck&&(pixel.getAlpha()==0||x==img.getWidth()-1)) {
+                	Area r = new Area(new Rectangle(xStart,y,x-1-xStart,1));
+                	area.add(r);
+                	lastcheck = false;
+                }
+            }
+        }
+        this.outline =area;
+    }
+	
+	public Area getOutline() {
+		return this.outline;
+	}
 
 
 	public void setzCoordinate(float zCoordinate) {

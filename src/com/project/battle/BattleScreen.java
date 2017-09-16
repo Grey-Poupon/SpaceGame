@@ -93,9 +93,9 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(chaserShip);
 		Handler.addLowPriorityEntity(chasedShip);
 		// place ships
-		chaserShip.setX(-200);
+		chaserShip.setX(-100);
 		chaserShip.setY(0);
-		chasedShip.setX(WIDTH - 430);
+		chasedShip.setX(WIDTH/2);
 		chasedShip.setY(0);
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
@@ -103,7 +103,7 @@ public class BattleScreen extends Main {
 		//Set buttons 
 		chaserShip.setCaptain(player.getPlayerCrew());
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
-		
+		temp.add(new Button(0, 0, 50, 50, ButtonID.StaffRoom, temp.size(), true,new ImageHandler(0,0,"res/roomIcons/staffRoomIcon.png",true,50/15,50/15,EntityID.UI) , this));
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 50), 50, (temp.size() * 50), 50, 50, true);
 		// Animation anim = new Animation("res/octiodLazer1Anim.png", 97, 21, 4,
 		// 2,1,3,3,9, 12, 670,
@@ -212,10 +212,7 @@ public class BattleScreen extends Main {
 				chasedShip.generate();
 				chaserShip.accelerate();
 				chasedShip.accelerate();
-				// chaserShip.setSpeed(300);
-				// chasedShip.setSpeed(200);
-				// chaserShip.accelerate();
-				// chasedShip.accelerate();
+		
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocation);
@@ -339,7 +336,6 @@ public class BattleScreen extends Main {
 			}
 			if(ID == ButtonID.SpeedInput) {
 				BattleUI.generateSpeedInput();
-				
 			}
 			if (ID == ButtonID.BattleThrusterActionChoice) {
 				if (isPlayersTurn && currentPhase == BattlePhases.CockpitActions) {
@@ -356,8 +352,12 @@ public class BattleScreen extends Main {
 			}
 				if(ID == ButtonID.EndPhase) {
 						if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+							//start sensoring
+							
+							
 							// intalise variables
 							List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
+							
 							
 							List<CrewAction> actions  = new ArrayList<CrewAction>();;
 							List<CrewAction> refinedActions;
@@ -422,6 +422,12 @@ public class BattleScreen extends Main {
 						}
 						//Do actions for generator phase
 						if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
+							//start sensor
+							if(playerIsChaser) {
+								chasedShip.generateSensorSpheres(playerShip.getSensor());
+								chasedShip.setBeingSensed(true);
+							}
+							
 							// intalise variables
 							Generator generator  = playerShip.getGenerator();
 							List<CrewAction> actions  = new ArrayList<CrewAction>();;
@@ -487,7 +493,12 @@ public class BattleScreen extends Main {
 						}
 						
 						if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
-							if(playerIsChaser) {chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();chaserShip.setEndSpeed(chaserSpeedChoice);}
+							if(playerIsChaser) {
+								if(BattleUI.speedInput!=null) {
+									chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();chaserShip.setEndSpeed(chaserSpeedChoice);
+								}else {chaserSpeedChoice=0;}
+							}
+								
 							else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
 						}
 					

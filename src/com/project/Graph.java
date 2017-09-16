@@ -31,7 +31,7 @@ public class Graph implements Handleable {
 	private double xInput=0;
 	Color dangerCol = new Color(1f,0f,0f,0.3f);
 	private boolean speedInput;
-	private int xVal;
+	private int xVal=0;
 	public Shape getClip() {
 		return clip;
 	}
