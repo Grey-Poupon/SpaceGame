@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.project.EntityID;
 import com.project.Graph;
 import com.project.Handleable;
 import com.project.Handler;
@@ -62,6 +64,7 @@ public class Button extends Observable  implements Handleable{
 			img.setxCoordinate(x);
 			img.setyCoordinate(y);
 			this.img = img;
+			img.start();
 			Handler.addButton(this);
 		}
 	//14 Text
@@ -76,7 +79,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y, fontName, style, size, colour,bs);
+		this.text = new Text(text, true, x, y, fontName, style, size, colour,bs);
 		Handler.addButton(this);
 	}
 	
@@ -92,7 +95,8 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y,bs);
+		this.text = new Text(text, true, x, y,bs);
+		this.text.changeMask(x, y, width, height);
 		Handler.addButton(this);
 	}
 	
@@ -111,6 +115,7 @@ public class Button extends Observable  implements Handleable{
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
+		img.start();
 		Handler.addButton(this);
 	}
 	
@@ -127,7 +132,7 @@ public class Button extends Observable  implements Handleable{
 		graph.setX(graph.getX()+x);
 		graph.setY(graph.getY()+y);
 		this.graph = graph;
-		this.graph.getText().setVisible(true);
+		if(graph.getText()!=null) {graph.getText().setVisible(true);}
 		Handler.addLowPriorityEntity(this.graph);
 		Handler.addButton(this);
 	}
@@ -140,16 +145,20 @@ public class Button extends Observable  implements Handleable{
 		}
 		return false;
 	}
-	public void drag() {
-		
-	}
+
 	public void click(int button){
 		if(isButton) {
 			setChanged();
 			bs.update(buttonID,index,button);
 		}
-		
 	}
+	public void drag(int x,int y,int button) {
+		if(graph!=null) {
+			bs.update(buttonID,index,70);
+			graph.drag(x,y,button);
+		}
+	}
+	
 	public void changeMask(int x , int y, int width, int height) {
 		width  = checkWidth(width);
 		height = checkHeight(height);
@@ -262,10 +271,10 @@ public class Button extends Observable  implements Handleable{
 		return yCoordinate;
 	}
 	public void render(Graphics g) {
-		g.setColor(Color.MAGENTA);
-		g.drawRect(xCoordinate, yCoordinate, width, height);
-		g.setColor(Color.GREEN);
-		g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
+		//g.setColor(Color.MAGENTA);
+		//g.drawRect(xCoordinate, yCoordinate, width, height);
+		//g.setColor(Color.GREEN);
+		//g.drawRect((int)mask.getX(), (int)mask.getY(), (int)mask.getWidth(), (int)mask.getHeight());
 		
 	}
 	@Override
@@ -290,17 +299,28 @@ public class Button extends Observable  implements Handleable{
 	public void setDraggable(boolean draggable) {
 		this.draggable = draggable;
 	}
-	public void drag(int x,int y,int button) {
-		if(graph!=null) {
-			graph.drag(x,y,button);
-		}
-		
-		
-	}
+	
 	@Override
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public Text getText() {
+		return text;
+	}
+	public void setText(Text text) {
+		this.text = text;
+	}
+	public void addSpeedImg(BufferedImage image,float maxSpeed) {
+		this.img = new ImageHandler(xCoordinate, yCoordinate, image, true, EntityID.UI);
+		// box = 50 img = 100 scale = 0.5
+		// box = 50 img = 50 scale = 1
+		// box = 50 img = 25 scale = 2
+		img.setXScale((float)img.getWidth()/(maxSpeed*2));
+		setImgMask(xCoordinate, yCoordinate, width, height);
+		img.start();
+		img.setxCoordinate(xCoordinate);
+		img.setyCoordinate(yCoordinate);
 	}
 	
 

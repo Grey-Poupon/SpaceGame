@@ -9,12 +9,16 @@ import com.project.ship.Room;
 
 public class GeneratorRoom extends Room{
 
+	
+	
 	private Generator generator;
 	
 	
-	public GeneratorRoom(Point location,Generator generator) {
-		super(location);
+	public GeneratorRoom(Generator generator,String name) {
+		super(name);
+		
 		this.generator = generator;
+		setSensorSphereRadius(100);
 		// TODO Auto-generated constructor stub
 	}
 	public BufferedImage getIcon() {

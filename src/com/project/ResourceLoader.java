@@ -31,45 +31,58 @@ public class ResourceLoader {
 	private static Map<String,Crew> crew;
 	private static Map<String,Thruster> shipThrusters;
 	private static HashMap<String, Generator> shipGenerators;
+	private static HashMap<String, CrewAction> crewActions;
+
+	
 	public ResourceLoader() {
-		images	   = new HashMap<String,BufferedImage>();
-		animations = new HashMap<String,Animation>();
-		shipWeapons= new HashMap<String,Weapon>();
-		shipThrusters = new HashMap<String, Thruster>();
-		crew	   = new HashMap<String,Crew>();
-		ships	   = new HashMap<String,Ship>();
+		images	       = new HashMap<String, BufferedImage>();
+		animations     = new HashMap<String, Animation>();
+		shipWeapons    = new HashMap<String, Weapon>();
+		shipThrusters  = new HashMap<String, Thruster>();
+		crew	       = new HashMap<String, Crew>();
+		ships	       = new HashMap<String, Ship>();
 		shipGenerators = new HashMap<String, Generator>();
+		crewActions    = new HashMap<String, CrewAction>();
 		loadImages();
 		loadFont();
 		loadAnimations();
+		loadCrewActions();
 		loadShipWeapons();
 		loadCrew();
 		loadThrusters();
 		loadGenerators();
 		loadShip();
-		
 	}
-	
+	private void loadCrewActions() {
+		List<CrewAction> empty = new ArrayList<CrewAction>();
+		List<CrewAction> fireActions = new ArrayList<CrewAction>();
+		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,100,10,10000));
+		crewActions.put("basicOverclock",new CrewAction("Overclock" ,CrewActionID.Overclock,StatID.engineering,empty ,1  ,10,10000));
+		crewActions.put("basicFix"      ,new CrewAction("Fix"       ,CrewActionID.Fix      ,StatID.engineering,empty ,1  ,10,10000));
+		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,1  ,10,10000));
+		crewActions.put("basicManoeuvre",new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty ,1  ,10,10000));
+		crewActions.put("basicReload"   ,new CrewAction("Reload"    ,CrewActionID.Reload   ,StatID.gunner     ,empty ,1  ,10,10));
+		fireActions.add(crewActions.get("basicReload"));
+		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10));
+		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0));
+		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0));
+		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0));
+
+	}
 	private void loadThrusters() {
-		List<CrewAction> actions = new ArrayList<CrewAction>();
-		CrewAction generate  = new CrewAction("Generate" ,CrewActionID.Generate ,StatID.engineering,actions, 100,10,10000);
-		CrewAction manoeuvre = new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering,actions, 100,10,10000);
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
-		actions2.add(generate);
-		actions2.add(manoeuvre);
+		actions2.add(crewActions.get("basicGenerate"));
 		
 		shipThrusters.put("octoidEngine", new Thruster(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions2,null));
 	}
 	
-	private void loadGenerators() {
-		List<CrewAction> empty = new ArrayList<CrewAction>();
-		CrewAction generate  = new CrewAction("OverClock" ,CrewActionID.OverClock ,StatID.engineering,empty, 100,10,10000);
-		CrewAction manoeuvre = new CrewAction("Manoeuvre",CrewActionID.Manoeuvre,StatID.engineering,empty, 100,10,10000);
+	private void loadGenerators() {		
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
-		actions2.add(generate);
-		actions2.add(manoeuvre);
+		actions2.add(crewActions.get("basicGenerate"));
+		actions2.add(crewActions.get("basicOverclock"));
+		actions2.add(crewActions.get("basicFix"));
 		
-		shipGenerators.put("default", new Generator("Reactor2",MathFunctions.square,actions2));
+		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2));
 
 	}
 	
@@ -92,20 +105,13 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
-		List<CrewAction> empty  = new ArrayList<CrewAction>();
-		List<CrewAction> actions2 = new ArrayList<CrewAction>();
-		List<CrewAction> actions3 = new ArrayList<CrewAction>();
+		List<CrewAction> actions = new ArrayList<CrewAction>();
 
-		CrewAction reload = new CrewAction("Reload",CrewActionID.Reload,StatID.gunner,empty, 1,10,10);
-		actions2.add(reload);
-		CrewAction fire   = new CrewAction("Fire"  ,CrewActionID.Fire  ,StatID.gunner,actions2, 1,10,10);
-		actions3.add(fire);
-		actions3.add(reload);
+		actions.add(crewActions.get("basicReload"));
+		actions.add(crewActions.get("basicFire"));
 		
 		
-		
-		
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions3,null));		
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null));		
 
 
 	}
@@ -123,18 +129,23 @@ public class ResourceLoader {
 		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,1,1, false,AdjustmentID.None));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
 		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,1,-1,false,AdjustmentID.None));
-		
 		// combined
-		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));
-		
+		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
 	}
 
 	public void loadImages() {
 		put(images,"res/roomIcons/cockpitIcon.png");
+		put(images,"res/roomIcons/captain.png");
+		put(images,"res/roomIcons/staffRoomIcon.png");
+		put(images,"res/roomIcons/sensorRoomIcon.png");
 		put(images,"res/info.png");
+		put(images,"res/speedometer.png");
+		put(images,"res/spaceRock.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");
 		put(images,"res/drawnUi2.png");
+		put(images,"res/manoeuvreTab.png");
+		put(images,"res/speedometerTab.png");
 		put(images,"res/loadingScreen.png");
 		put(images,"res/healthseg.png");
 		put(images,"res/tooltipSeparation4Sections.png");
@@ -149,12 +160,13 @@ public class ResourceLoader {
 		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/attackMousePointer.png");
 		put(images,"res/actionBox.png");
+		put(images,"res/actionBoxEmpty.png");
+		put(images,"res/walkingIcon.png");
 		for(RaceID race : RaceID.values()) {
 			if(race!=RaceID.robot) {
 				put(images,"res/racePortraits/"+race.toString()+".png");
 			}
 		}
-
 		put(images,"res/racePortraits/gen2.png");
 		put(images,"res/racePortraits/gen3.png");
 		for(int i =0; i<8;i++) {
@@ -176,7 +188,6 @@ public class ResourceLoader {
 		return img;
 	}
 	
-	
 	public void loadFont() {
 		try {
 		     GraphicsEnvironment ge = 
@@ -186,9 +197,6 @@ public class ResourceLoader {
 		     e.printStackTrace();
 		}
 	}
-	
-	
-	
 	
 	public static void putAnimation(String key, Animation value) {
 		animations.put(key, value);
@@ -259,5 +267,11 @@ public class ResourceLoader {
 		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 		 WritableRaster raster = img.copyData(null);
 		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+	public static CrewAction getCrewAction(String key) {
+		if(!crewActions.containsKey(key)) {
+			throw new NoSuchElementException();
+		}
+		return crewActions.get(key).copy();
 	}
 }

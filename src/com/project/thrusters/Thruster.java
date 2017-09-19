@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.project.Actionable;
 import com.project.Animation;
+import com.project.Crew;
 import com.project.CrewAction;
 import com.project.Graph;
 import com.project.Slottable;
 import com.project.battle.BattleScreen;
+import com.project.button.Button;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 
@@ -96,7 +98,7 @@ public class Thruster implements Slottable,Actionable{
 
 	public void doAction(int index,Ship ship) {
 		CrewAction action = actions.get(index);
-		ship.updatePowerConsumption(action);
+		//ship.updatePowerConsumption(action);
 		if(actions.get(index).getName()=="Generate") {
 			ship.incResource("power", action.getPowerCost());
 		}
@@ -118,9 +120,16 @@ public class Thruster implements Slottable,Actionable{
 
 
 	@Override
-	public void doAction(CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -1,19 +1,23 @@
 package com.project.ship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 import com.project.Actionable;
+import com.project.Crew;
 import com.project.CrewAction;
-import com.project.FuelTypeID;
 import com.project.CrewActionID;
-
+import com.project.FuelTypeID;
 import com.project.Graph;
 import com.project.battle.BattleScreen;
+import com.project.button.Button;
+import com.project.button.ButtonID;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
 	private String name;
+	private boolean canGenerate=false;
 	private boolean exploded=false;
 	private FuelTypeID fuelType;
 	private Overclockable overclock;
@@ -24,7 +28,7 @@ public class Generator implements Actionable {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
-		this.efficiencyGraph = new Graph(function,10,10,200,200,true);
+		this.efficiencyGraph = new Graph(function,10,10,150,100,true);
 		this.efficiencyGraph.setDraggable(false);
 	}
 
@@ -80,16 +84,41 @@ public class Generator implements Actionable {
 	}
 
 	@Override
-	public void doAction(CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
-		ship.updatePowerConsumption(action);
+		//System.out.println(action.getActionType().toString());
 		if(action.getActionType() == CrewActionID.Generate) {
-			ship.incResource("power", action.getPowerCost());
+			setCanGenerate(true);
 		}
+		if(action.getActionType()==CrewActionID.Fix) {
+			
+		}
+		if(action.getActionType()==CrewActionID.Overclock) {
+			
+		}
+		if(action.getActionType()==CrewActionID.Cooling) {
+			
+		}
+		
 		
 	}
 
 	public Generator copy() {
 		return new Generator(name, efficiencyFunction, actions);
+	}
+
+	@Override
+	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
+		List<Button> buttons = new ArrayList<>();
+		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
+		return buttons;
+	}
+
+	public boolean canGenerate() {
+		return canGenerate;
+	}
+
+	public void setCanGenerate(boolean canGenerate) {
+		this.canGenerate = canGenerate;
 	}
 }

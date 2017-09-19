@@ -4,14 +4,19 @@ public enum ButtonID {
 
 	
 	BattleWeaponsChoice,
-	BattleWeaponActionChoice,
+	EndPhase,
 	BattleThrusterChoice,
 	Back,
 	Crew,
 	Go,
+	UI,
 	WeaponInfo,
+	Info,
+	GeneratorInfo,
+	ThrusterInfo,
+	RecreationalInfo,
 	Graph,
-	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final;
+	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final, Manoeuvres, SpeedInput, StaffRoom;
 	
 
 }

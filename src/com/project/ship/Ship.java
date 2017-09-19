@@ -2,8 +2,12 @@ package com.project.ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +21,15 @@ import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
+import com.project.Recreation.RecreationalItem;
 import com.project.battle.BattleScreen;
+import com.project.battle.BattleUI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
+import com.project.ship.rooms.SensorRoom;
+import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
@@ -32,6 +40,7 @@ public class Ship implements Handleable{
 	private int maxHealth;
 	private int currHealth;
 	private int speed = 200;
+	private int tempSpeed =0;
 	private int distanceToEnd = 250; // for distance system
 	private int speedChange;
 	private int power = 0;
@@ -44,7 +53,6 @@ public class Ship implements Handleable{
 	private List<Crew>     allCrew             = new ArrayList<Crew>();
 	private List<Crew>     unassignedCrew      = new ArrayList<Crew>();
 	private List<Handleable> sprites = new ArrayList<Handleable>();
-	private Sensor sensor;
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
@@ -52,15 +60,19 @@ public class Ship implements Handleable{
 	private boolean visible;	
 	private boolean visibleCrew;
 	private EntityID entityID;
-
-	
+	private Crew captain;
+	private boolean isPlayer=false;
 	public boolean isChased() {
 		return isChased;
 	}
 	
 	public void generate() {
-		incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
-		getGenerator().generate();
+		if(getGenerator().canGenerate()) {
+			updatePowerConsumption();
+			getGenerator().generate();
+		}
+		//incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
+		
 	}
 
 	
@@ -70,18 +82,19 @@ public class Ship implements Handleable{
 
 	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
 	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
+	private boolean beingSensed=false;
 	
 	
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		this.currHealth = this.maxHealth = health;
+		this.currHealth = health; 
+		this.maxHealth = health;
 		shipBackSlots= lImage.getBackSlots();
 		shipFrontSlots= lImage.getFrontSlots();
 		this.isChased = isChased;
 		this.visible = visible;
 		this.visibleCrew = visibleCrew;
 		this.entityID = id;
-		setSensors();
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
@@ -101,6 +114,7 @@ public class Ship implements Handleable{
 		sortSprites();
 		for(int i =0; i<10;i++) {
 			Crew crewie = Crew.generateRandomCrew(visibleCrew);
+			crewie.setShip(this);
 			//crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
 			allCrew.add(crewie);
 			unassignedCrew.add(crewie);
@@ -122,6 +136,7 @@ public class Ship implements Handleable{
 		for(Room room : rooms) {			
 			index = rand.nextInt(unassignedCrew.size());
 			room.setRoomLeader(unassignedCrew.get(index));
+			unassignedCrew.get(index).setRoomIn(room);
 			unassignedCrew.remove(index);
 		}
 		for(Crew crew:unassignedCrew) {
@@ -134,16 +149,21 @@ public class Ship implements Handleable{
 
 
 	private void generateRooms() {
-		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(), new Point(50,50)));
-		rooms.add(new Cockpit(new Point(70,70)));
-		rooms.add(new GeneratorRoom(new Point(20,20),ResourceLoader.getShipGenerator("default").copy()));
+
+		rooms.add(new SensorRoom(new Sensor(0.8f)));
+
+		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room"));
+
+		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
+		rooms.add(new Cockpit(manoeuvres,"Cockpit"));
+		rooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room"));
+		ArrayList<RecreationalItem> items = new ArrayList<>();
+		items.add(new RecreationalItem("ArmChair",4));
+		rooms.add(new StaffRoom(items,"Staff Room"));
+		setRoomPositions();
 	}
 	
-	public void updatePowerConsumption(CrewAction action) {
-		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+action.getPowerCost());
-		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		//incResource("power", action.getPowerCost());
-	}
+	
 	
 	public Room getCockpit() {
 		for(int i = 0; i<rooms.size();i++) {
@@ -297,14 +317,25 @@ public class Ship implements Handleable{
 
 
 	public Sensor getSensor() {
-		return sensor;
+		for(int i = 0;i<rooms.size();i++){
+			if(rooms.get(i) instanceof SensorRoom) {
+				return ((SensorRoom)rooms.get(i)).getSensor();
+			}
+		}
+		return null;
+		
 	}
 
 
 
 
 	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
+		for(int i = 0;i<rooms.size();i++){
+			if(rooms.get(i) instanceof SensorRoom) {
+				((SensorRoom)rooms.get(i)).setSensor(sensor);
+				break;
+			}
+		}
 	}
 
 
@@ -381,12 +412,7 @@ public class Ship implements Handleable{
 	public Slot getBackSlot(int position) {
 		return lImage.getBackSlots().get(position);
 	}
-	public void setSensors() {
-		sensor = new Sensor(0.8f);
-	}
-	public Sensor getSensors() {
-		return sensor;
-	}
+	
 	public ArrayList<String> getFlavourTexts(){
 		return flavourTexts;
 	}
@@ -414,6 +440,22 @@ public class Ship implements Handleable{
 			}
 		}
 		
+		if(beingSensed) {
+			getGeneratorRoom().renderSensorSpheres(g, this);
+//			for(int i =0;i<rooms.size();i++) {
+//				rooms.get(i).renderSensorSpheres(g,this);
+//			}
+			
+		}
+		
+		//Render the rooms square
+		Graphics2D g2d = (Graphics2D)g.create();
+		for(int i = 0;i<rooms.size();i++) {
+			Room r= rooms.get(i);
+			g2d.setColor(Color.red);
+			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
+			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
+		}
 		
 //		for(int i =0;i<lImage.getNoLayers();i++) {
 //			lImage.getLayers().get(i).render(g);
@@ -450,9 +492,15 @@ public class Ship implements Handleable{
 	}
 
 
+	public void generateSensorSpheres(Sensor sensor) {
+		for(int i = 0; i<rooms.size();i++) {
+			rooms.get(i).generateSensorSpheres(sensor);
+		}
+	}
 
-
-	@Override
+	
+	
+	
 	public void tick() {
 		lImage.tick();
 		for(int i = 0;i<shipBackSlots.size();i++) {
@@ -470,6 +518,20 @@ public class Ship implements Handleable{
 			shipFrontSlots.get(i).setHeight(lImage.getFrontSlots().get(i).getHeight());
 		}
 	}
+	
+	public void updatePowerConsumption() {
+		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		//setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
+		getGenerator().getEfficiencyGraph().setGraphPoint(0);
+		if(isPlayer) {BattleUI.updateResources(this);}
+		
+	}
+	
+	public void tempUpdatePowerConsumption(int cost) {
+		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+cost);
+		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
+		//if(isPlayer) {BattleUI.updateResources(this);}
+	}
 
 
 
@@ -478,6 +540,15 @@ public class Ship implements Handleable{
 		return power;
 	}
 
+	
+	public StaffRoom getStaffRoom() {
+		for(int i=0;i<rooms.size();i++) {
+			if(rooms.get(i) instanceof StaffRoom) {
+				return (StaffRoom) rooms.get(i);
+			}
+		}
+		return null;
+	}
 
 
 
@@ -503,6 +574,13 @@ public class Ship implements Handleable{
 
 	public void setShipFrontSlots(List<Slot> shipFrontSlots) {
 		this.shipFrontSlots = shipFrontSlots;
+	}
+	public void setTempSpeed(int speed) {
+		if(tempSpeed !=speed) {
+			tempUpdatePowerConsumption((speed-tempSpeed)*mass);
+			tempSpeed = speed;
+		}
+		
 	}
 
 
@@ -557,7 +635,7 @@ public class Ship implements Handleable{
 	}
 
 
-	@Override
+	
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -612,8 +690,7 @@ public class Ship implements Handleable{
 		//formula to decide how much power turns into how speed 
 	}
 	public void setEndSpeed(int speed) {
-		getGenerator().getEfficiencyGraph().setGraphPoint((int)getGenerator().getEfficiencyGraph().getyInput()+mass*speed);
-		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		//updatePowerConsumption(new CrewAction(null, null, null, null, speed, speed, mass*speed));
 		endSpeed = speed;
 		//formula to decide how much power turns into how speed 
 	}
@@ -626,10 +703,120 @@ public class Ship implements Handleable{
 
 
 	public Ship copy() {
-		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , health, lImage.getScale(), this.visibleCrew, isChased);
+		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , maxHealth, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
+	public List<Button> getPhaseLeaderButtons(BattleScreen bs) {
+		List<Crew> leaders = new ArrayList<>();
+		leaders.add(getGeneratorRoom().getRoomLeader());
+		leaders.add(getWeaponRoom().getRoomLeader());
+		leaders.add(captain);
+		List<Button> buttons = new ArrayList<Button>();
+		for(int i = 0;i<leaders.size();i++) {
+			Crew crew = leaders.get(i);
+			
+			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
+			leaderPortrait.setVisible(true);
+			leaderPortrait.start();
+			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
+		}
+		return buttons;
+	}
 
+	
+	public List<Crew> getPhaseLeaders(){
+		List<Crew> leaders = new ArrayList<>();
+		leaders.add(getGeneratorRoom().getRoomLeader());
+		leaders.add(getWeaponRoom().getRoomLeader());
+		leaders.add(captain);
+		return leaders;
+	}
+	
+	public void setCaptain(Crew captain) {
+		this.captain = captain;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
+	}
+
+	
+	public void setRoomPositions() {
+		boolean complete = false;
+		int num = 0;
+		int tolerance = 10;
+		int rectTolerance = 2;
+		Random rand = new Random();
+		ImageHandler image  = lImage.getLargestLayer();
+		while(!complete) {
+			num = 0;
+			ArrayList<Rectangle> roomRects = new ArrayList<>();
+			for(int i = 0; i<rooms.size();i++) {
+				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rectTolerance*2-rooms.get(i).getSize());
+				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rectTolerance*2-rooms.get(i).getSize());
+				Rectangle roomRect = new Rectangle(rectX,rectY,rooms.get(i).getSize()+rectTolerance*2,rooms.get(i).getSize()+rectTolerance*2);
+				boolean rectFits = true;
+				for(int k =0;k<roomRects.size();k++) {
+						if(roomRects.get(k).intersects(roomRect)) {
+							rectFits= false;
+							break;
+						}
+				}
+				if(!rectFits) {break;}
+				int numFails = 0;
+				for(int x = 0;x<roomRect.width;x++) {
+					for(int y= 0;y<roomRect.height;y++) {
+						if((new Color(image.getImg().getRGB(rectX+x, rectY+y),true)).getAlpha()==0) {
+							numFails++;
+							if(numFails>tolerance) {
+								rectFits =false;
+								break;
+							}
+						}
+					}
+					if(numFails>tolerance) {
+						rectFits =false;
+						break;
+					}
+				}
+				if(rectFits) {
+					num++;
+					rooms.get(i).setLocation(new Point(rectX+rectTolerance,rectY+rectTolerance));
+					roomRects.add(roomRect);
+				}
+			}
+			if(num==rooms.size()) {complete = true;}
+			
+			
+		}
+		
+		
+		
+	}
+
+	public int getMass() {
+		return mass;
+	}
+
+	public void setMass(int mass) {
+		this.mass = mass;
+	}
+
+	public boolean isBeingSensed() {
+		return beingSensed;
+	}
+
+	public void setBeingSensed(boolean beingSensed) {
+		this.beingSensed = beingSensed;
+	}
+	
+	public Shape getClip() {
+		return lImage.getClip();
+	}
 	
 
 

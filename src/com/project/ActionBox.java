@@ -3,6 +3,7 @@ package com.project;
 import java.awt.image.BufferedImage;
 
 import com.project.battle.BattleScreen;
+import com.project.ship.Room;
 
 public class ActionBox {
 	private ImageHandler img;
@@ -12,12 +13,27 @@ public class ActionBox {
 	private boolean openCrewSlot = true;
 	private Text	actionText;
 	private DraggableIcon crew = null;
-	public ActionBox(BufferedImage img, int x, int y, CrewAction action,BattleScreen bs) {
+	private Room room;
+	private boolean moveCrew = false;
+	
+	
+	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start();
+		this.room =room;
 		this.x 			= x;
 		this.y 		    = y;
-
+		this.action     = action;
+		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+	}
+	
+	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
+		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
+		this.img.start();
+		this.room       = room;
+		this.moveCrew   = moveCrew;
+		this.x 			= x;
+		this.y 		    = y;
 		this.action     = action;
 		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
 	}
@@ -26,23 +42,24 @@ public class ActionBox {
 		if (openCrewSlot) {
 			this.crew = crew;
 			openCrewSlot = false;
-			setActor(crew.getCrew());
+			if(getActor()!=crew.getCrew()) {
+				setActor(crew.getCrew());
+			}
 		}
 	}
+	
 	public void removeCrew() {
 		this.crew = null;
 		openCrewSlot = true;
 		removeActor();
 	}
-
 	
 	public static void delete(ActionBox box) {
-		box.removeActor();
+		//box.removeCrew();
 		if(box.img       !=null) {ImageHandler .delete(box.img );}
 		if(box.crew      !=null) {DraggableIcon.delete(box.crew);}
 		if(box.actionText!=null) {Text         .delete(box.actionText);}
 		box = null;
-		
 	}
 
 	public int getX() {
@@ -95,6 +112,34 @@ public class ActionBox {
 
 	public StatID getStatType() {
 		return action.getStatType();
+	}
+
+	public Crew getActor() {
+		return action.getActor();
+	}
+
+	public CrewAction getAction() {
+		return action;
+	}
+
+	public void setAction(CrewAction action) {
+		this.action = action;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
+	public void setMoveCrew(boolean b) {
+		moveCrew = b;
+	}
+
+	public boolean getMoveCrew() {
+		return moveCrew;
 	}
 
 	

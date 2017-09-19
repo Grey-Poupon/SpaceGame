@@ -32,7 +32,7 @@ public class Main  extends Canvas implements Runnable{
 	public Main(){
 		r = new Random();
 		handler = new Handler();
-		player = new Player(100,RaceID.bugBitch);
+		player = new Player(100);
 		window = new Window(WIDTH,HEIGHT,"Space Game",this);
 		}
 
@@ -91,7 +91,7 @@ public class Main  extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer >1000){
 				timer +=1000;
-				System.out.println("FPS: "+frames);
+				//System.out.println("FPS: "+frames);
 				frames = 0;
 				
 			}

@@ -12,10 +12,11 @@ public class MathFunctions {
 	}
 	
 	public static Function<Double,Double> gaussian = x -> {
-		return ((5/(Math.sqrt(2*Math.PI)))*Math.pow(Math.E, -x*x/4));	};
-	public static Function<Double,Double> square = x -> {
-			return x*x;	};
-			
+		return ((5/(Math.sqrt(2*Math.PI)))*Math.pow(Math.E, -x*x/4));	
+	};
+	
+	public static Function<Double,Double> square     = x -> {return x*x;};
+	public static Function<Double,Double> speedInput = x -> {return 4d;};
 
 
 }

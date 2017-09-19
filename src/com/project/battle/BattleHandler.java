@@ -1,5 +1,10 @@
 package com.project.battle;
 
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.ActionBox;
 import com.project.DraggableIcon;
 import com.project.Handler;
 import com.project.button.Button;
@@ -23,7 +28,7 @@ public class BattleHandler extends Handler {
 		return bs.getLayerClicked(x,y);
 	}
 	
-	public boolean checkClick(int x, int y, int button) {
+	public boolean checkLeftClick(int x, int y, int button) {
 		if(checkButtons(x, y,button)){ return true;}
 		return clickShip(x,y);
 	}
@@ -70,10 +75,28 @@ public class BattleHandler extends Handler {
 			return false;
 		}
 		if(dragging instanceof DraggableIcon) {
-			((DraggableIcon) dragging ).drop(x,y,BattleUI.actionBoxes);
+			List<ActionBox> boxes = new ArrayList<ActionBox>();
+			boxes.addAll(BattleUI.actionBoxes);
+			boxes.addAll(BattleUI.manoeuvreActionBoxes);
+			((DraggableIcon) dragging ).drop(boxes);
+			if(button == MouseEvent.BUTTON3) {((DraggableIcon)dragging).reset();}
 		}
 		dragging = null;
 		return true;
+		
+	}
+	public void checkRightClick(int x, int y) {
+		checkDraggableIcons(x,y);
+		
+	}
+	private boolean checkDraggableIcons(int x, int y) {
+		for(int i = 0; i<icons.size();i++) {
+			if(icons.get(i).isInside(x, y)) {
+				icons.get(i).reset();
+				return true;
+			}
+		}
+		return false;
 		
 	}
 }

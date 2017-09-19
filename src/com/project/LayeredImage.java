@@ -1,5 +1,7 @@
 package com.project;
 import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -23,6 +25,7 @@ public class LayeredImage {
 	private int tickerZ;
 	private int tickerX;
 	private int tickerY;
+	private ImageHandler largestLayer;
 	private ArrayList<Integer> layersX=new ArrayList<>();;
 	private ArrayList<Integer> layersY=new ArrayList<>();;
 	private ArrayList<Slot> backSlots= new ArrayList<>();
@@ -157,6 +160,13 @@ public class LayeredImage {
 		cameraY = 0;
 		
 	}
+	
+	public Shape getClip() {
+		ImageHandler i = getLargestLayer();
+		AffineTransform t = new AffineTransform(i.getXScale(),0,0,i.getYScale(),i.xCoordinate,i.yCoordinate);
+		return getLargestLayer().getOutline().createTransformedArea(t);
+	}
+	
 	public void tick() {
 		if(cameraZ>=1.5||cameraZ<=-1.25) {
 			tickerZ*=-1;
@@ -255,8 +265,10 @@ public class LayeredImage {
 		for(int i =0;i<layers.size();i++) {
 			if(layers.get(i).getImg().getWidth()>largest) {
 				largest  = layers.get(i).getImg().getWidth();
+			
 			}
 		}
+		
 		return largest;
 	}
 	private int getLargestHeight() {
@@ -438,5 +450,22 @@ public class LayeredImage {
 				}
 			}
 			e.setImg(img);
+	}
+	public ImageHandler getLargestLayer() {
+		if(largestLayer==null) {
+			int largestArea = 0;
+			for(int i =0;i<layers.size();i++) {
+				if(layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth()>largestArea) {
+					largestLayer = layers.get(i);
+					largestArea = layers.get(i).getImg().getHeight()*layers.get(i).getImg().getWidth();
+					
+				}
+			}
+			largestLayer.generateOutline();
+		}
+		return largestLayer;
+	}
+	public void setLargestLayer(ImageHandler largestLayer) {
+		this.largestLayer = largestLayer;
 	}	
 }
