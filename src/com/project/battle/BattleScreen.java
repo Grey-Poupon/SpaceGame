@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.project.Crew;
 import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.DistanceSystem;
@@ -350,161 +351,174 @@ public class BattleScreen extends Main {
 					nextTurn();
 				}
 			}
-				if(ID == ButtonID.EndPhase) {
-						if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
-							//start sensoring
-							
-							
-							// intalise variables
-							List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
-							
-							
-							List<CrewAction> actions  = new ArrayList<CrewAction>();;
-							List<CrewAction> refinedActions;
-							CrewAction action;
-							List<CrewAction> actionsNeeded;
-							HashMap<CrewActionID,List<CrewAction>> actionMap;
-
-							boolean complete;
-							
-							// check which weapons are fired
-							for(int i = 0;i<weapons.size();i++) {
-								
-								// initalise variables
-								refinedActions = new ArrayList<CrewAction>();
-								actionMap = new HashMap<>();
-								actions = weapons.get(i).getActions();
-							
-								// setup HashMaps
-								for(int j = 0; j<actions.size(); j++) {
-									actionsNeeded = actions.get(j).getActionsNeeded();
-									
-									// map the CrewActions(Boxes) to the actions they need to be completed
-									for(int k = 0; k < actionsNeeded.size();k++) {
-										if(!actionMap.containsKey(actionsNeeded.get(k))) {
-											List<CrewAction> aa = new ArrayList<CrewAction>();
-											aa.add(actions.get(j));
-											actionMap.put(actionsNeeded.get(k).getActionType(), aa);
-										}
-										else {
-											actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
-										}
-									}
-									
-									// add the actions that have an actor in them to the refined list
-									if(actions.get(j).getActor()!=null) {
-										refinedActions.add(actions.get(j));
-									}
-								}
-								
-								// sort actions based on the amount of actions needed
-								Collections.sort(refinedActions);
-								for(int j = 0; j<refinedActions.size(); j++) {
-									action = refinedActions.get(j);
-									
-									// if this actions doesnt need anymore actions to be completed
-									if(refinedActions.get(j).getActionsNeeded().size()==0) {
-										actions = actionMap.get(action.getActionType());
-										
-										//remove it from every other actionNeeded
-										if(actions!=null) {
-											for(int k = 0;k<actions.size();k++) {
-												actions.get(k).removeActionNeeded(action);
-											}
-										}									
-										// do action
-										weapons.get(i).doAction(action.getActor(),action, this);
-										action.resetActions();
-										//action.removeActor();
-									}
-								}
-							}									
-						}
-						//Do actions for generator phase
-						if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
-							//start sensor
-							if(playerIsChaser) {
-								chasedShip.generateSensorSpheres(playerShip.getSensor());
-								chasedShip.setBeingSensed(true);
+			if(ID == ButtonID.EndPhase) {
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions){
+						List<Crew> crewList = playerShip.getAllCrew();
+						//move people 
+						for(int i = 0;i<crewList.size();i++){
+							Crew crew = crewList.get(i);
+							if(crew.isMoving()){
+								crew.getRoomMovingFrom().removeCrew(crew);
+								crew.getRoomMovingTo().addCrew(crew);
+								crew.setMoving(false);
 							}
 							
-							// intalise variables
-							Generator generator  = playerShip.getGenerator();
-							List<CrewAction> actions  = new ArrayList<CrewAction>();;
-							List<CrewAction> refinedActions;
-							CrewAction action;
-							List<CrewAction> actionsNeeded;
-							HashMap<CrewActionID,List<CrewAction>> actionMap;
+						}
+					}
+					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+						//start sensoring
+						
+						
+						// intalise variables
+						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
+						
+						
+						List<CrewAction> actions  = new ArrayList<CrewAction>();;
+						List<CrewAction> refinedActions;
+						CrewAction action;
+						List<CrewAction> actionsNeeded;
+						HashMap<CrewActionID,List<CrewAction>> actionMap;
 
-							boolean complete;
+						boolean complete;
+						
+						// check which weapons are fired
+						for(int i = 0;i<weapons.size();i++) {
 							
-							// check which weapons are fired
-							
+							// initalise variables
+							refinedActions = new ArrayList<CrewAction>();
+							actionMap = new HashMap<>();
+							actions = weapons.get(i).getActions();
+						
+							// setup HashMaps
+							for(int j = 0; j<actions.size(); j++) {
+								actionsNeeded = actions.get(j).getActionsNeeded();
 								
-								// initalise variables
-								refinedActions = new ArrayList<CrewAction>();
-								actionMap = new HashMap<>();
-								actions = generator.getActions();
-							
-								// setup HashMaps
-								for(int j = 0; j<actions.size(); j++) {
-									actionsNeeded = actions.get(j).getActionsNeeded();
-									
-									// map the CrewActions(Boxes) to the actions they need to be completed
-									for(int k = 0; k < actionsNeeded.size();k++) {
-										if(!actionMap.containsKey(actionsNeeded.get(k))) {
-											List<CrewAction> aa = new ArrayList<CrewAction>();
-											aa.add(actions.get(j));
-											actionMap.put(actionsNeeded.get(k).getActionType(), aa);
-										}
-										else {
-											actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
-										}
+								// map the CrewActions(Boxes) to the actions they need to be completed
+								for(int k = 0; k < actionsNeeded.size();k++) {
+									if(!actionMap.containsKey(actionsNeeded.get(k))) {
+										List<CrewAction> aa = new ArrayList<CrewAction>();
+										aa.add(actions.get(j));
+										actionMap.put(actionsNeeded.get(k).getActionType(), aa);
 									}
-									
-									// add the actions that have an actor in them to the refined list
-									if(actions.get(j).getActor()!=null) {
-										refinedActions.add(actions.get(j));
+									else {
+										actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
 									}
 								}
 								
-								// sort actions based on the amount of actions needed
-								Collections.sort(refinedActions);
-								for(int j = 0; j<refinedActions.size(); j++) {
-									action = refinedActions.get(j);
-									
-									// if this actions doesnt need anymore actions to be completed
-									if(refinedActions.get(j).getActionsNeeded().size()==0) {
-										actions = actionMap.get(action.getActionType());
-										
-										//remove it from every other actionNeeded
-										if(actions!=null) {
-											for(int k = 0;k<actions.size();k++) {
-												actions.get(k).removeActionNeeded(action);
-											}
-										}									
-										// do action
-										generator.doAction(action.getActor(),action, this);
-										action.resetActions();
-										//action.removeActor();
-									}
+								// add the actions that have an actor in them to the refined list
+								if(actions.get(j).getActor()!=null) {
+									refinedActions.add(actions.get(j));
 								}
+							}
+							
+							// sort actions based on the amount of actions needed
+							Collections.sort(refinedActions);
+							for(int j = 0; j<refinedActions.size(); j++) {
+								action = refinedActions.get(j);
 								
+								// if this actions doesnt need anymore actions to be completed
+								if(refinedActions.get(j).getActionsNeeded().size()==0) {
+									actions = actionMap.get(action.getActionType());
+									
+									//remove it from every other actionNeeded
+									if(actions!=null) {
+										for(int k = 0;k<actions.size();k++) {
+											actions.get(k).removeActionNeeded(action);
+										}
+									}									
+									// do action
+									weapons.get(i).doAction(action.getActor(),action, this);
+									action.resetActions();
+									//action.removeActor();
+								}
+							}
+						}									
+					}
+					//Do actions for generator phase
+					if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
+						//start sensor
+						if(playerIsChaser) {
+							chasedShip.generateSensorSpheres(playerShip.getSensor());
+							chasedShip.setBeingSensed(true);
 						}
 						
-						if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
-							if(playerIsChaser) {
-								if(BattleUI.speedInput!=null) {
-									chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();chaserShip.setEndSpeed(chaserSpeedChoice);
-								}else {chaserSpeedChoice=0;}
-							}
+						// intalise variables
+						Generator generator  = playerShip.getGenerator();
+						List<CrewAction> actions  = new ArrayList<CrewAction>();;
+						List<CrewAction> refinedActions;
+						CrewAction action;
+						List<CrewAction> actionsNeeded;
+						HashMap<CrewActionID,List<CrewAction>> actionMap;
+
+						boolean complete;
+						
+						// check which weapons are fired
+						
+							
+							// initalise variables
+							refinedActions = new ArrayList<CrewAction>();
+							actionMap = new HashMap<>();
+							actions = generator.getActions();
+						
+							// setup HashMaps
+							for(int j = 0; j<actions.size(); j++) {
+								actionsNeeded = actions.get(j).getActionsNeeded();
 								
-							else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+								// map the CrewActions(Boxes) to the actions they need to be completed
+								for(int k = 0; k < actionsNeeded.size();k++) {
+									if(!actionMap.containsKey(actionsNeeded.get(k))) {
+										List<CrewAction> aa = new ArrayList<CrewAction>();
+										aa.add(actions.get(j));
+										actionMap.put(actionsNeeded.get(k).getActionType(), aa);
+									}
+									else {
+										actionMap.get(actionsNeeded.get(k)).add(actions.get(j));
+									}
+								}
+								
+								// add the actions that have an actor in them to the refined list
+								if(actions.get(j).getActor()!=null) {
+									refinedActions.add(actions.get(j));
+								}
+							}
+							
+							// sort actions based on the amount of actions needed
+							Collections.sort(refinedActions);
+							for(int j = 0; j<refinedActions.size(); j++) {
+								action = refinedActions.get(j);
+								
+								// if this actions doesnt need anymore actions to be completed
+								if(refinedActions.get(j).getActionsNeeded().size()==0) {
+									actions = actionMap.get(action.getActionType());
+									
+									//remove it from every other actionNeeded
+									if(actions!=null) {
+										for(int k = 0;k<actions.size();k++) {
+											actions.get(k).removeActionNeeded(action);
+										}
+									}									
+									// do action
+									generator.doAction(action.getActor(),action, this);
+									action.resetActions();
+									//action.removeActor();
+								}
+							}
+							
+					}
+					
+					if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
+						if(playerIsChaser) {
+							if(BattleUI.speedInput!=null) {
+								chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();chaserShip.setEndSpeed(chaserSpeedChoice);
+							}else {chaserSpeedChoice=0;}
 						}
-					
-					
-					nextTurn();
-				}
+							
+						else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+					}
+				
+				
+				nextTurn();
+			}
 			
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(chaserShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);

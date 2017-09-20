@@ -85,7 +85,7 @@ public class DraggableIcon {
 				}
 				
 				// for room swapping
-				if(box.getMoveCrew() && crew.getRoomIn() != box.getRoom() ) {
+				if(box.getMoveCrew() && (crew.getRoomIn() != box.getRoom() || crew.isMoving()) ) {
 					if(box.getRoom()==crew.getRoomMovingFrom()) {
 						crew.setMoving(false);
 					}
@@ -145,6 +145,7 @@ public class DraggableIcon {
 			if(startingBox.isOpen()) {
 				moveTo(startingBox.getX(),startingBox.getY());
 				startingBox.setCrew(this);
+				actionBox = startingBox;
 				
 			}
 			else {
