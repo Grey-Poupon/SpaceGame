@@ -282,6 +282,7 @@ public class BattleScreen extends Main {
 				List<Weapon> weapons = playerShip.getFrontWeapons();
 				Room         room    = playerShip.getWeaponRoom();
 				
+				
 				BattleUI.generateActionList(weapons, room);
 			}
 
@@ -294,7 +295,9 @@ public class BattleScreen extends Main {
 			if(ID == ButtonID.Back) {
 				BattleUI.back();
 			}
-			
+			if(ID == ButtonID.StaffRoom) {
+				BattleUI.generateCrewMovementList(playerShip);
+			}
 			
 
 
@@ -314,7 +317,7 @@ public class BattleScreen extends Main {
 				BattleUI.generateInfo(playerShip.getStaffRoom().getItems().get(index));
 			}
 
-			if (ID == ButtonID.BattleThrusterChoice) {
+			if(ID == ButtonID.BattleThrusterChoice) {
 
 				Thruster thruster = playerShip.getThrusters().get(index);
 				Room room = playerShip.getGeneratorRoom();
@@ -361,8 +364,7 @@ public class BattleScreen extends Main {
 								crew.getRoomMovingFrom().removeCrew(crew);
 								crew.getRoomMovingTo().addCrew(crew);
 								crew.setMoving(false);
-							}
-							
+							}				
 						}
 					}
 					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
