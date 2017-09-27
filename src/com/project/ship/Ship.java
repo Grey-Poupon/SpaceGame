@@ -126,7 +126,6 @@ public class Ship implements Handleable{
 	private void generateResources() {
 		resources.put("fuel", 500);
 		resources.put("missiles", 500);
-		resources.put("power", 0);
 	}
 
 
@@ -337,9 +336,6 @@ public class Ship implements Handleable{
 			}
 		}
 	}
-
-
-
 
 	public boolean isShipClicked(int x, int y) {
 		for(ImageHandler i : lImage.getLayers()) {
