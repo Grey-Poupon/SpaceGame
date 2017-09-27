@@ -132,18 +132,17 @@ public class BattleUI extends UI{
 		
 			List<Button> tooltipButtons = new ArrayList<Button>();
 			List<Button> rightTooltipButtons = new ArrayList<Button>();
-
 			
-			if(crew.getRoomIn() instanceof WeaponsRoom) {	
+			if(crew.getRoomLeading() instanceof WeaponsRoom) {	
 				
-				generateCrewMovementList(playerShip);
+//				generateCrewMovementList(playerShip);
 				
-//				List<Weapon> weapons = playerShip.getFrontWeapons();
-//				Room         room    = crew.getRoomIn();
-//				
-//				BattleUI.generateActionList(weapons, room);
+				List<Weapon> weapons = playerShip.getFrontWeapons();
+				Room         room    = crew.getRoomIn();
+				
+				BattleUI.generateActionList(weapons, room);
 			}
-			else if(crew.getRoomIn() instanceof GeneratorRoom) {
+			else if(crew.getRoomLeading() instanceof GeneratorRoom) {
 				
 				GeneratorRoom room = (GeneratorRoom) playerShip.getGeneratorRoom();
 				List<Generator> generator = new ArrayList<Generator>();
@@ -158,8 +157,6 @@ public class BattleUI extends UI{
 				miscButtons.add(new Button(xListOffset+halfListWidth-img2.getWidth(),yListOffset+img2.getHeight(),50,50,ButtonID.SpeedInput,0,true,img2,bs));
 			
 				generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
-
-					
 
 			}	
 			else if(crew.isCaptain()) {
