@@ -73,7 +73,10 @@ public class ResourceLoader {
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
 		actions2.add(crewActions.get("basicGenerate"));
 		
-		shipThrusters.put("octoidEngine", new Thruster(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions2,null));
+		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
+		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
+		
+		shipThrusters.put("octoidEngine", new Thruster(animations.get("octoidEngine"),"MKII Octoid Thruster",new Graph(MathFunctions.square,10,10,200,200,true),actions2,null,portrait,background));
 	}
 	
 	private void loadGenerators() {		
@@ -82,7 +85,11 @@ public class ResourceLoader {
 		actions2.add(crewActions.get("basicOverclock"));
 		actions2.add(crewActions.get("basicFix"));
 		
-		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2));
+		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
+		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
+
+		
+		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2,portrait,background));
 
 	}
 	
@@ -109,9 +116,10 @@ public class ResourceLoader {
 
 		actions.add(crewActions.get("basicReload"));
 		actions.add(crewActions.get("basicFire"));
-		
-		
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null));		
+		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
+		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
+
+		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));		
 
 
 	}
@@ -134,6 +142,11 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/portraitFrameEngines.png");
+		put(images,"res/portraitFrameWeapons.png");
+		put(images,"res/portraitFrameCockpit.png");
+		put(images,"res/genericBackground.png");
+		put(images,"res/genericItemPortrait.png");
 		put(images,"res/roomIcons/cockpitIcon.png");
 		put(images,"res/roomIcons/captain.png");
 		put(images,"res/roomIcons/staffRoomIcon.png");
@@ -141,6 +154,7 @@ public class ResourceLoader {
 		put(images,"res/info.png");
 		put(images,"res/speedometer.png");
 		put(images,"res/spaceRock.png");
+		put(images,"res/moleCardBackground.png");
 		put(images,"res/roomIcons/weaponsRoomIcon.png");
 		put(images,"res/roomIcons/generatorRoomIcon.png");
 		put(images,"res/drawnUi2.png");

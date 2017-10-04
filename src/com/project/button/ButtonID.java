@@ -3,20 +3,18 @@ package com.project.button;
 public enum ButtonID {
 
 	
-	BattleWeaponsChoice,
 	EndPhase,
-	BattleThrusterChoice,
+	Final,
 	Back,
-	Crew,
-	Go,
-	UI,
-	WeaponInfo,
-	Info,
-	GeneratorInfo,
-	ThrusterInfo,
-	RecreationalInfo,
 	Graph,
-	EnemyShip, PlayerShip, BattleThrusterGraph,BattleThrusterActionChoice, BattleCockpitChoice,BattleGeneratorChoice,Final, Manoeuvres, SpeedInput, StaffRoom;
+	Crew,
+	Info,
+	UI,
+	EnemyShip,
+	PlayerShip,
+	BattleThrusterGraph,
+	Manoeuvres,
+	SpeedInput;
 	
 
 }

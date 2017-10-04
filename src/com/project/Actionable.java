@@ -11,4 +11,6 @@ public interface Actionable {
 	public void doAction(Crew crew,CrewAction action,BattleScreen bs);
 	public String getName();
 	public List<Button> getInfoButtons(int width,int height,BattleScreen bs);
+	public ImageHandler getCardBackground();
+	public ImageHandler getCardImage();
 }

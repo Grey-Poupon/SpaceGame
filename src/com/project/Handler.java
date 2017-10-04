@@ -38,7 +38,6 @@ public class Handler {
 		for(int i = 0; i<stars.size();i++) {
 			stars.get(i).render(g);
 		}
-		
 		for(int i =0; i<entitiesLowPriority.size();i++){
 			entitiesLowPriority.get(i).render(g.create());
 		}
@@ -48,13 +47,13 @@ public class Handler {
 		for(int i =0; i<buttons.size();i++){
 			buttons.get(i).render(g);
 		}
-		
-		for(int i =0; i<entitiesHighPriority.size();i++){
-			entitiesHighPriority.get(i).render(g.create());
-		}
 		for(int i =0; i<texts.size();i++){
 			texts.get(i).render(g.create());
 		}
+		for(int i =0; i<entitiesHighPriority.size();i++){
+			entitiesHighPriority.get(i).render(g.create());
+		}
+		
 		mousePointer.render(g);
 	}
 	public boolean checkButtons(int x,int y, int button){

@@ -5,5 +5,8 @@ public enum BattlePhases {
 	public static BattlePhases[] phases = new BattlePhases[] 
 			{GeneratorActions,WeaponActions,WeaponsClick,Final};
 		//	{GeneratorActions,WeaponsButton,WeaponActions,WeaponsClick,Cockpit,CockpitActions,Final};
+	public static BattlePhases getFinalPlayableStage(){
+		return phases[phases.length-1];
+	}
 
 }

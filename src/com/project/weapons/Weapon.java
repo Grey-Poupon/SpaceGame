@@ -7,6 +7,7 @@ import java.util.List;
 import com.project.Actionable;
 import com.project.Animation;
 import com.project.CrewAction;
+import com.project.ImageHandler;
 import com.project.Slottable;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
@@ -26,6 +27,9 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 	protected Animation firingAnimation;
 	protected Animation weaponBody;
 	protected Slot slot;
+	protected ImageHandler backgroundImg;
+	protected ImageHandler weaponImg;
+
 	
 	
 	
@@ -38,9 +42,10 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 
 	protected List<CrewAction> actions = new ArrayList<CrewAction>();
 
-	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction> actions,Slot slot){
+	public Weapon(int cooldownDuration, String name,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction> actions,Slot slot,ImageHandler weaponImg, ImageHandler backgroundImg){
 
-	
+		this.backgroundImg = backgroundImg;
+		this.weaponImg = weaponImg;
 		this.slot = slot;
 		this.firingAnimation = anim;
 		this.actions = actions;
@@ -151,7 +156,15 @@ public abstract class Weapon implements Slottable, Actionable{ // Holds the shar
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public ImageHandler getCardBackground() {
+		return backgroundImg.copy();
+	}
 
+
+	public ImageHandler getCardImage() {
+		return weaponImg.copy();
+	}
 
 
 

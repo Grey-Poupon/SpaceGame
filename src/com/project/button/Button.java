@@ -64,7 +64,7 @@ public class Button extends Observable  implements Handleable{
 			img.setxCoordinate(x);
 			img.setyCoordinate(y);
 			this.img = img;
-			img.start();
+			img.start(false);
 			Handler.addButton(this);
 		}
 	//14 Text
@@ -115,7 +115,7 @@ public class Button extends Observable  implements Handleable{
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
-		img.start();
+		img.start(false);
 		Handler.addButton(this);
 	}
 	
@@ -318,7 +318,7 @@ public class Button extends Observable  implements Handleable{
 		// box = 50 img = 25 scale = 2
 		img.setXScale((float)img.getWidth()/(maxSpeed*2));
 		setImgMask(xCoordinate, yCoordinate, width, height);
-		img.start();
+		img.start(false);
 		img.setxCoordinate(xCoordinate);
 		img.setyCoordinate(yCoordinate);
 	}

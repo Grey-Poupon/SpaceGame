@@ -283,7 +283,6 @@ public class Crew implements Observer{
 			this.cleanPortrait = new ImageHandler(0, 60,"res/racePortraits/"+this.race.toString()+".png", true,1,1, EntityID.crew);
 
 			portrait.setVisible(visible);
-			if(visible) {Handler.addHighPriorityEntity(portrait);}
 			randomisePortrait();
 		}
 	}
@@ -292,11 +291,10 @@ public class Crew implements Observer{
 		this.cleanPortrait = (new ImageHandler(0, 60,"res/racePortraits/gen"+Byte.toString(Gen)+".png", true,1,1, EntityID.crew));
 
 		portrait.setVisible(visible);
-		if(visible) {Handler.addHighPriorityEntity(portrait);}
 		randomisePortrait();
 	}
 	public ImageHandler getPortrait() {
-		return portrait;
+		return portrait.copy();
 	}
 	
 	private void randomisePortrait() {
