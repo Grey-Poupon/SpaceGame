@@ -20,11 +20,8 @@ import com.project.weapons.WeaponEffect;
 
 public class FireableWeapon extends Weapon {
 
-
-
 	public FireableWeapon(int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name, DamageType dt,int weaponSwayMod,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction>actions,Slot slot, ImageHandler backgroundImg, ImageHandler weaponImg) {
 		super(cooldownDuration, name,anim,targetSelf,we,projectileGap,weaponBody,actions,slot,weaponImg,backgroundImg);
-		
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
 
@@ -36,13 +33,13 @@ public class FireableWeapon extends Weapon {
 		for(int i = 0;i < returnableEffects.length;i++) {
 			returnableEffects[i] = effects.get(i);
 		}
-		
 		return returnableEffects;	
 	}
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
 		this.cooldownTurnsLeft = getCooldownDuration();
 	}
+	
 	public String getWeaponInfo(){
 		String info = this.name+" ( Dmg:"+effects.get(effects.size()-1).getDamagePerShot()+" Acc:"+effects.get(effects.size()-1).getAccuracy()+" RoF:"+effects.get(effects.size()-1).getRateOfFire()+")";
 		return info;
@@ -52,9 +49,6 @@ public class FireableWeapon extends Weapon {
 		return effects.get(effects.size()-1).getAccuracy();
 	}
 
-
-
-
 	public void render(Graphics g) {
 		super.render(g);
 	}
@@ -63,13 +57,10 @@ public class FireableWeapon extends Weapon {
 		weaponBody.setxCoordinate(slot.getX());
 		weaponBody.setyCoordinate(slot.getY()+slot.getHeight()/2-weaponBody.getTileHeight());
 		if(!slot.isFront()) {
-			weaponBody.setxCoordinate(slot.getX()+slot.getWidth()/2);
+			weaponBody.setxCoordinate((float) (slot.getX()+slot.getWidth()));
 			weaponBody.setxFlip(-1);
 		}
-		//wb.setAlign(AdjustmentID.MidLeft);
-
-		weaponBody.render(g);
-		
+		weaponBody.render(g);		
 	}
 	
 	public Weapon copy() {
@@ -79,8 +70,6 @@ public class FireableWeapon extends Weapon {
 			newActions.add(actions.get(i).copy());
 		}
 		
-		
-		
 		if(effects.size()==1) {
 			return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, null, projectileGap, weaponBody,newActions,slot,weaponImg,backgroundImg);
 		}
@@ -88,10 +77,6 @@ public class FireableWeapon extends Weapon {
 		temp.remove(effects.size()-1);
 		return new FireableWeapon(cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  ((Destructive)effects.get(effects.size()-1)).getDamageType(), ((Destructive)effects.get(effects.size()-1)).getWeaponSwayMod(), firingAnimation, targetSelf, temp, projectileGap, weaponBody,newActions,slot,weaponImg,backgroundImg);
 	}
-
-
-
-
 
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		if(action.getActionType() == CrewActionID.Fire) {
@@ -115,30 +100,17 @@ public class FireableWeapon extends Weapon {
 		return buttons;
 	}
 
-
-
 	public String getFlavorText() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	public ImageHandler getCardBackground() {
-		// TODO Auto-generated method stub
 		return backgroundImg.copy();
 	}
 
-
-	@Override
 	public ImageHandler getCardImage() {
 		// TODO Auto-generated method stub
 		return weaponImg.copy();
 	}
-
-
-
-
-
-
-
-
 
 }

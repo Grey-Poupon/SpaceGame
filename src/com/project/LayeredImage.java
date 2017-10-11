@@ -14,7 +14,7 @@ import com.project.ship.Slot;
 public class LayeredImage {
 	private int x;
 	private int y;
-	private float scale = 3.5f;
+	private float scale = 2.5f;
 	private double anglePhi;
 	private double angleTheta;
 	private static float cameraZ;

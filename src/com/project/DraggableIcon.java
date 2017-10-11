@@ -76,7 +76,7 @@ public class DraggableIcon {
 			boolean sameRoom   = box.getMoveCrew()? true:(crew.getRoomIn()==box.getRoom());
 			boolean boxEmpty   = (box.isOpen()||box.getActor()==crew);
 			
-			if(walls && ceiling && boxEmpty && xp && sameRoom) {
+			if(walls && ceiling && boxEmpty && xp) {
 				snapped = true;
 				
 				// remove the crew from the current actionbox
