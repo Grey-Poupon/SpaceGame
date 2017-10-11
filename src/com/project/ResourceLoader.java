@@ -9,7 +9,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,17 +23,17 @@ import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ResourceLoader {
+	
 	private static Map<String,BufferedImage> images;
-	private static Map<String,Weapon> shipWeapons; 
-	private static Map<String,Ship> ships; 
+	private static Map<String,Weapon> shipWeapons;
+	private static Map<String,Ship> ships;
 	private static Map<String,Animation> animations;
 	private static Map<String,Crew> crew;
 	private static Map<String,Thruster> shipThrusters;
 	private static HashMap<String, Generator> shipGenerators;
 	private static HashMap<String, CrewAction> crewActions;
-
 	
-	public ResourceLoader() {
+	public ResourceLoader(){
 		images	       = new HashMap<String, BufferedImage>();
 		animations     = new HashMap<String, Animation>();
 		shipWeapons    = new HashMap<String, Weapon>();
@@ -53,7 +52,8 @@ public class ResourceLoader {
 		loadGenerators();
 		loadShip();
 	}
-	private void loadCrewActions() {
+	
+	private void loadCrewActions(){
 		List<CrewAction> empty = new ArrayList<CrewAction>();
 		List<CrewAction> fireActions = new ArrayList<CrewAction>();
 		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,100,10,10000));
@@ -112,15 +112,13 @@ public class ResourceLoader {
 
 	private void loadShipWeapons() {
 		List<CrewAction> actions = new ArrayList<CrewAction>();
-
 		actions.add(crewActions.get("basicReload"));
 		actions.add(crewActions.get("basicFire"));
+
+		
 		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
-
 		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));		
-
-
 	}
 
 

@@ -29,44 +29,35 @@ public abstract class Room {
 		this.roomName = name;
 	}
 	public Room() {
-		
+
 	}
 	
 	public void generateSensorSpheres(Sensor sensor) {
 		if(sensorSpheres.size()>0) {return;}
-		Random rand = new Random();
+		Random rand = new Random();		
 		
-//		for(int i= 0;i<20*(1-sensor.getEfficiency());i++) {
-		for(int i= 0;i<20;i++) {
-			int num =rand.nextInt(4);
-			 
-			int yShift = 1;
-			int xShift = 1;
-			int index = i-1;
+		for(int i= 0;i<30;i++) {
 			
-			if(rand.nextBoolean()) {
-				yShift*=-1;
-			}
-			if(rand.nextBoolean()) {
-				xShift*=-1;
-			}
-
+			 
+			int index = 0;
 			if(rand.nextBoolean()&&i!=0) {
-				index = rand.nextInt(i);
+				if(rand.nextBoolean()) {
+				index =rand.nextInt(i);
+				}
+				else {
+					index = i-1;
+				}
 			}
-			if(rand.nextBoolean()) {
-				index =0;
-			}
+			
 			if(sensorSpheres.size()==0) {
 				sensorSpheres.add(new Ellipse2D.Double(location.x,location.y,(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency()),(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency())));
+			
 			}
 			else {
-				sensorSpheres.add(new Ellipse2D.Double(sensorSpheres.get(index).getCenterX()+(xShift*sensorSpheres.get(index).getWidth()*(0.5+rand.nextFloat()/2f)/2f),sensorSpheres.get(index).getCenterY()+yShift*sensorSpheres.get(index).getHeight()*(0.5+rand.nextFloat()/2f)/2f,(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency()),(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency())));
+				sensorSpheres.add(new Ellipse2D.Double(sensorSpheres.get(index).getCenterX()+((rand.nextInt(3)-2)*sensorSpheres.get(index).getWidth()*(0.5+rand.nextFloat()/2f)/2f),sensorSpheres.get(index).getCenterY()+(rand.nextInt(3)-2)*sensorSpheres.get(index).getHeight()*(0.5+rand.nextFloat()/2f)/2f,(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency()),(0.5+rand.nextFloat()/2f)*sensorSphereRadius*(1-sensor.getEfficiency())));	
 			}
-			
 		}
 	}
-	
 	
 	public BufferedImage getIcon() {
 		return null;
@@ -105,7 +96,6 @@ public abstract class Room {
 	public void setDamageMod(int damageMod) {
 		this.damageMod = damageMod;
 	}
-
 	public int getEfficiency() {
 		return efficiency;
 	}
@@ -127,20 +117,16 @@ public abstract class Room {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	public void setStatModifiers(StatID dictKey, float modifier) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	public int getSize() {
 		return size;
 	}
-
 	public void setSize(int size) {
 		this.size = size;
 	}
-
 	public int getSensorSphereRadius() {
 		return sensorSphereRadius;
 	}
@@ -148,7 +134,6 @@ public abstract class Room {
 		this.sensorSphereRadius = sensorSphereRadius;
 	}
 	public void renderSensorSpheres(Graphics g,Ship ship) {
-		
 		Graphics2D g2d  = (Graphics2D)g.create();
 		g2d.setColor(new Color(1f,0f,0f,0.5f));
 		Area composite = new Area();
@@ -161,14 +146,10 @@ public abstract class Room {
 		}
 		g2d.fill(composite);
 	}
-
 	public String getRoomName() {
 		return roomName;
-
-	}
+	}	
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
-	
-
 }

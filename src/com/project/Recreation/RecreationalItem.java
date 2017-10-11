@@ -52,7 +52,7 @@ public class RecreationalItem implements Actionable{
 		return buttons;
 	}
 
-	@Override
+
 	public ImageHandler getCardBackground() {
 		// TODO Auto-generated method stub
 		return null;
@@ -60,6 +60,11 @@ public class RecreationalItem implements Actionable{
 
 	@Override
 	public ImageHandler getCardImage() {
+		return null;
+	}
+
+	@Override
+	public String getFlavorText() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -141,7 +141,11 @@ public class Thruster implements Slottable,Actionable{
 
 
 
-	@Override
+
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public ImageHandler getCardBackground() {
 		// TODO Auto-generated method stub
 		return backgroundImg.copy();

@@ -28,8 +28,6 @@ public class FireableWeapon extends Weapon {
 		effects.add(new Destructive(rateOfFire,damagePerShot,accuracy,dt,weaponSwayMod));
 	}
 
-	
-	@Override
 	public Object[] fire(){
 		resetCooldown();
 		weaponBody.start(false);
@@ -45,7 +43,6 @@ public class FireableWeapon extends Weapon {
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
 		this.cooldownTurnsLeft = getCooldownDuration();
 	}
-	@Override
 	public String getWeaponInfo(){
 		String info = this.name+" ( Dmg:"+effects.get(effects.size()-1).getDamagePerShot()+" Acc:"+effects.get(effects.size()-1).getAccuracy()+" RoF:"+effects.get(effects.size()-1).getRateOfFire()+")";
 		return info;
@@ -58,15 +55,10 @@ public class FireableWeapon extends Weapon {
 
 
 
-	@Override
 	public void render(Graphics g) {
 		super.render(g);
 	}
 
-
-
-
-	@Override
 	public void render(Graphics g, Slot slot) {
 		weaponBody.setxCoordinate(slot.getX());
 		weaponBody.setyCoordinate(slot.getY()+slot.getHeight()/2-weaponBody.getTileHeight());
@@ -101,7 +93,6 @@ public class FireableWeapon extends Weapon {
 
 
 
-	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		if(action.getActionType() == CrewActionID.Fire) {
 			if(bs.playerIsChaser()) {
@@ -113,8 +104,6 @@ public class FireableWeapon extends Weapon {
 				//bs.chasedShip.updatePowerConsumption(action);
 			}
 		}
-
-		
 	}
 	
 	public List<Button> getInfoButtons(int width,int height,BattleScreen bs){
@@ -127,7 +116,11 @@ public class FireableWeapon extends Weapon {
 	}
 
 
-	@Override
+
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public ImageHandler getCardBackground() {
 		// TODO Auto-generated method stub
 		return backgroundImg.copy();

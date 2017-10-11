@@ -57,6 +57,7 @@ public class BattleUI extends UI{
 	private static final int 	tooltipButtonHeightRight = 200;
 	private static final int 	lineWidth            = 3;
 
+
 	private static final int    cardGap              =20;
 
 	private static final int    halfListWidth      = 586;
@@ -71,12 +72,10 @@ public class BattleUI extends UI{
 
 	private static final int    tableTitleHeight     = 40;
 	private static final int 	tableColumnWidth     = 965/6;
-	
 	private static int 		    listWidth	 	     = 965;
 	private static int  	    listHeight 		     = tooltipButtonHeight*5;
 	private static final int    rightListHeight	     = 208;
 	private static final int    rightListWidth	     = 208;
-
 	private static final int    titleGap             = 50;
 	private static final int    boxGap           	 = 20;
 	private static final String fontName 	   	 	 = "Sevensegies";
@@ -169,8 +168,6 @@ public class BattleUI extends UI{
 				StaffRoom room =  playerShip.getStaffRoom();
 				generateCrewMovementList(playerShip);
 			}
-
-
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
 					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
@@ -313,29 +310,6 @@ public class BattleUI extends UI{
 			shipCards.add(card);
 			
 			
-//			// set column title
-//			tableTitleText.add(name);
-//			
-//			// set the action boxes
-//			for(int i = 0; i<actions.size();i++) {
-//				// tick variables
-//				if(row == 1) {column++; row = -1;}
-//				row++;
-//
-//				BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
-//
-//				ActionBox box = new ActionBox(img, xListOffset+(column*tableColumnWidth), yListOffset + titleGap +((img.getHeight()+ boxGap)*(row)), actions.get(i),room,bs);
-//
-//				actionBoxes.add(box);
-//				
-//				// put crew back into their old positions
-//				if(box.getActor()!=null) {
-//					DraggableIcon icon = crewToIcon.get(box.getActor());
-//					icon.moveTo(box.getX(),box.getY());
-//					icon.setActionBox(box);
-//					box.setCrew(icon);
-//				}
-//			}
 		}
 	}
 	public static void generateSpeedInput() {

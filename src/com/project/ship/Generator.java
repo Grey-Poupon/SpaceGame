@@ -129,7 +129,6 @@ public class Generator implements Actionable {
 		this.canGenerate = canGenerate;
 	}
 
-	@Override
 	public ImageHandler getCardBackground() {
 		return backgroundImg.copy();
 	}
@@ -137,5 +136,11 @@ public class Generator implements Actionable {
 	@Override
 	public ImageHandler getCardImage() {
 		return generatorImg.copy();
+	}
+
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
