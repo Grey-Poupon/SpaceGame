@@ -52,7 +52,6 @@ public class Main  extends Canvas implements Runnable{
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 		bs.show();
-
 	}
 
 	public synchronized void stop(){

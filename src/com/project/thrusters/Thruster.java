@@ -134,6 +134,14 @@ public class Thruster implements Slottable,Actionable{
 
 
 
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 
 	
 	

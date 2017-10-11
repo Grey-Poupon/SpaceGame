@@ -55,23 +55,18 @@ public class BattleUI extends UI{
 	private static final int 	genericButtonHeight  = 50;
 	private static final int 	tooltipButtonHeightRight = 200;
 	private static final int 	lineWidth            = 3;
-
 	private static final int    halfListWidth      = 586;
 	private static final int    fullListWidth      = 1017;
-
 	private static final int    xListOffset          = 52; 
 	private static final int    yListOffset		     = Main.HEIGHT - 208;
 	private static final int    xRightListOffset     = Main.WIDTH  - 208; 
 	private static final int    yRightListOffset	 = Main.HEIGHT - 208;
-
 	private static final int    tableTitleHeight     = 40;
 	private static final int 	tableColumnWidth     = 965/6;
-	
 	private static int 		    listWidth	 	     = 965;
 	private static int  	    listHeight 		     = tooltipButtonHeight*5;
 	private static final int    rightListHeight	     = 208;
 	private static final int    rightListWidth	     = 208;
-
 	private static final int    titleGap             = 50;
 	private static final int    boxGap           	 = 20;
 	private static final String fontName 	   	 	 = "Sevensegies";
@@ -160,11 +155,8 @@ public class BattleUI extends UI{
 
 			}	
 			else if(crew.isCaptain()) {
-				StaffRoom room =  playerShip.getStaffRoom();
-				generateActionList(room.getItems(),room);
+				generateCrewMovementList(playerShip);
 			}
-
-
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
 				for(int i = 0;i<crew.getStats().size();i++) {
 					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
@@ -312,23 +304,23 @@ public class BattleUI extends UI{
 
 			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset,bs);
 			
-			ButtonID infoID = null;
-			if(room instanceof WeaponsRoom) {
-				infoID = ButtonID.WeaponInfo;
-			}
-			else if(room instanceof StaffRoom) {
-				infoID = ButtonID.RecreationalInfo;
-			}
-			else if(room instanceof GeneratorRoom) {
-				infoID = ButtonID.GeneratorInfo;
-			}
-			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-ResourceLoader.getImage("res/info.png").getHeight()/2, 20, 20,infoID , j, true,new ImageHandler(0, 0, "res/info.png", true, EntityID.UI), bs);
+//			ButtonID infoID = null;
+//			if(room instanceof WeaponsRoom) {
+//				infoID = ButtonID.WeaponInfo;
+//			}
+//			else if(room instanceof StaffRoom) {
+//				infoID = ButtonID.RecreationalInfo;
+//			}
+//			else if(room instanceof GeneratorRoom) {
+//				infoID = ButtonID.GeneratorInfo;
+//			}
+//			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-ResourceLoader.getImage("res/info.png").getHeight()/2, 20, 20,infoID , j, true,new ImageHandler(0, 0, "res/info.png", true, EntityID.UI), bs);
 
 
 			// set column title
 			tableTitleText.add(name);
 			//set info text button
-			actionTableTitleInfoButtons.add(infoButton);
+			//actionTableTitleInfoButtons.add(infoButton);
 			
 			// set the action boxes
 			for(int i = 0; i<actions.size();i++) {

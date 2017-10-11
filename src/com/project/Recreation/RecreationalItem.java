@@ -51,6 +51,12 @@ public class RecreationalItem implements Actionable{
 		return buttons;
 	}
 
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

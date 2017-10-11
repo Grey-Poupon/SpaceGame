@@ -126,6 +126,13 @@ public class FireableWeapon extends Weapon {
 	}
 
 
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
 

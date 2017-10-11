@@ -70,9 +70,7 @@ public class Ship implements Handleable{
 		if(getGenerator().canGenerate()) {
 			updatePowerConsumption();
 			getGenerator().generate();
-		}
-		//incResource("fuel", -(int) getGenerator().getEfficiencyGraph().getxInput());
-		
+		}	
 	}
 
 	
@@ -142,8 +140,7 @@ public class Ship implements Handleable{
 			index = rand.nextInt(rooms.size());
 			rooms.get(index).addCrew(crew);
 		}
-		unassignedCrew.clear();
-		
+		unassignedCrew.clear();	
 	}
 
 
@@ -183,7 +180,6 @@ public class Ship implements Handleable{
 		return null;
 	}
 	
-	
 	private void sortSprites() {
 		List<Handleable> temp = new ArrayList<Handleable>();
 		List<Handleable> all = new ArrayList<Handleable>();
@@ -214,32 +210,6 @@ public class Ship implements Handleable{
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
 	}
-//	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale,Weapon[] frontWeapons,Weapon[] backWeapons,Engine engine,Generator generator,List<Crew> crew){
-//		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-//		shipBackSlots= lImage.getBackSlots();
-//		shipFrontSlots= lImage.getFrontSlots();
-//		setSensors();
-//		generateFlavourText();
-//		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
-//		for(int i=0;i<shipBackSlots.size();i++){
-//			shipBackSlots.get(i).setSlotItem(defaultWeapon);
-//
-//		}
-//		for(int i=0;i<shipFrontSlots.size();i++){
-//			shipFrontSlots.get(i).setSlotItem(defaultWeapon);
-//
-//		}
-//		generateRooms();
-//		this.health = health;
-//		for(DamageType dmg : DamageType.values()){
-//			damageTakenModifier.put(dmg, 1d);
-//			damageDealtModifier.put(dmg, 1d);
-//		}
-//		this.generator=generator;
-//		this.engine=engine;
-//		this.crew = crew;
-//	}
-	
 	
 	public void useEngine(int amountOfFuel) {
 		double thrust = engine.getThrust(amountOfFuel);
@@ -324,8 +294,6 @@ public class Ship implements Handleable{
 		return null;
 		
 	}
-
-
 
 
 	public void setSensor(Sensor sensor) {
@@ -435,13 +403,8 @@ public class Ship implements Handleable{
 				sprites.get(i).render(g);
 			}
 		}
-		
 		if(beingSensed) {
 			getGeneratorRoom().renderSensorSpheres(g, this);
-//			for(int i =0;i<rooms.size();i++) {
-//				rooms.get(i).renderSensorSpheres(g,this);
-//			}
-			
 		}
 		
 		//Render the rooms square
@@ -452,18 +415,6 @@ public class Ship implements Handleable{
 			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
 		}
-		
-//		for(int i =0;i<lImage.getNoLayers();i++) {
-//			lImage.getLayers().get(i).render(g);
-//		}
-//		
-//		for(int i=0;i<shipBackSlots.size();i++) {
-//			shipBackSlots.get(i).getSlotItem().render(g,shipBackSlots.get(i));
-//		}
-//		for(int i=0;i<shipFrontSlots.size();i++) {
-//			shipFrontSlots.get(i).getSlotItem().render(g,shipFrontSlots.get(i));
-//		}
-		
 		
 		
 //		Graphics2D g2d = (Graphics2D)g.create();
@@ -493,9 +444,6 @@ public class Ship implements Handleable{
 			rooms.get(i).generateSensorSpheres(sensor);
 		}
 	}
-
-	
-	
 	
 	public void tick() {
 		lImage.tick();
@@ -519,8 +467,7 @@ public class Ship implements Handleable{
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
 		//setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
 		getGenerator().getEfficiencyGraph().setGraphPoint(0);
-		if(isPlayer) {BattleUI.updateResources(this);}
-		
+		if(isPlayer) {BattleUI.updateResources(this);}	
 	}
 	
 	public void tempUpdatePowerConsumption(int cost) {
@@ -785,12 +732,8 @@ public class Ship implements Handleable{
 					roomRects.add(roomRect);
 				}
 			}
-			if(num==rooms.size()) {complete = true;}
-			
-			
+			if(num==rooms.size()) {complete = true;}	
 		}
-		
-		
 		
 	}
 

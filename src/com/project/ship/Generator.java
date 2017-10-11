@@ -121,4 +121,10 @@ public class Generator implements Actionable {
 	public void setCanGenerate(boolean canGenerate) {
 		this.canGenerate = canGenerate;
 	}
+
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

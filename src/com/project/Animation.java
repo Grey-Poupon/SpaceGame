@@ -218,6 +218,7 @@ public class Animation implements Handleable {
 			tickCounter++;
 			// move
 			if(moving) {
+				System.out.println(xVel+" "+yVel);
 				xCoordinate   += xVel;
 				xPixelsToMove -= Math.abs(xVel);
 				yCoordinate   += yVel;
@@ -320,7 +321,7 @@ public class Animation implements Handleable {
 		}
 		else if (xVel == 0) {
 			xVel = xEnd>xStart ? DEFAULT_SPEED : -DEFAULT_SPEED;
-			yVel = ((yPixelsToMove)*Math.abs(xVel))/(xPixelsToMove);
+			yVel = yEnd>yStart ? ((yPixelsToMove)*Math.abs(xVel))/(xPixelsToMove): -((yPixelsToMove)*Math.abs(xVel))/(xPixelsToMove);
 		}
 		if(xVel<0) {this.scale = - Math.abs(scale);}
 		else {
@@ -355,7 +356,6 @@ public class Animation implements Handleable {
 		this.xPixelsToMove += Math.abs(x);
 		this.yPixelsToMove += Math.abs(y);
 		this.pushed = true;
-		
 	}
 	public boolean isPushed() {
 		return pushed;
@@ -393,8 +393,6 @@ public class Animation implements Handleable {
 	public void setAlign(AdjustmentID align) {
 		this.align = align;
 	}
-
-
 
 	public int getyFlip() {
 		return yFlip;

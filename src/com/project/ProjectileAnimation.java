@@ -4,9 +4,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
-
-import javax.swing.GroupLayout.Alignment;
-
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
@@ -20,7 +17,6 @@ public class ProjectileAnimation implements Handleable{
 	private Weapon weapon;
 	private Point click;
 	private Random rand = new Random();
-	//private int slotPostion;
 	private int noOfProjectiles;
 	private int projectileGap;
 	private int pushBack;
@@ -30,10 +26,10 @@ public class ProjectileAnimation implements Handleable{
 	private Slot fromSlot;
 	private Object[] damageDealt;
 	private Animation animations[];
+	
 	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
 		this.primary       = primary;
 		this.secondary     = secondary;
-		//this.slotPostion   = slotPostion;
 		this.isCrossScreen = isCrossScreen;
 		this.pushBack	   = pushBack;
 		this.click         = click;
@@ -41,10 +37,7 @@ public class ProjectileAnimation implements Handleable{
 		this.isLeftToRight = click.x > slot.getX();
 		this.weapon        = (Weapon)  slot.getSlotItem();
 		this.projectileGap = weapon.getProjectileGap();
-		
-		
-		
-		// effect handler; this only works if there's 1 instance of destructive
+		//effect handler; this only works if there's 1 instance of destructive
 		for(Object effect: effects) {
 			if(effect instanceof Destructive) {
 				//rateOfFire,accuracy,weaponSwayMod,DamagePerShot,damageType
@@ -86,12 +79,9 @@ public class ProjectileAnimation implements Handleable{
 				start.setLocation(slot.getX(),slot.getY());
 			}
 			
-
-
 			temp.setStartAndEnd(start, click);
 			temp.setMask(mask);
 			temp.setAlign(align);
-				
 			animations[i] =  temp;
 			}
 		}
@@ -101,11 +91,11 @@ public class ProjectileAnimation implements Handleable{
 		return (animationsRunning != 0);
 	}
 	
-	@Override
+	
 	public void render(Graphics g) {
 		
 	}
-	@Override
+	
 	public void tick() {
 		boolean stillRunning = false;;
 		

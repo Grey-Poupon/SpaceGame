@@ -39,9 +39,7 @@ public class BattleScreen extends Main {
 
 	public Ship chasedShip;
 	public Ship chaserShip;
-
 	private String selectedRoom;
-
 	private ImageHandler overlay;
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
@@ -64,6 +62,7 @@ public class BattleScreen extends Main {
 	private Text phase;
 	private Button graphButton;
 	private Player player;
+	
 	public BattleScreen() {
 		player = new Player(100);
 		handler = new BattleHandler(this);
@@ -104,14 +103,11 @@ public class BattleScreen extends Main {
 		//Set buttons 
 		chaserShip.setCaptain(player.getPlayerCrew());
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
-		temp.add(new Button(0, 0, 50, 50, ButtonID.StaffRoom, temp.size(), true,new ImageHandler(0,0,"res/roomIcons/staffRoomIcon.png",true,50/15,50/15,EntityID.UI) , this));
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 50), 50, (temp.size() * 50), 50, 50, true);
 		// Animation anim = new Animation("res/octiodLazer1Anim.png", 97, 21, 4,
 		// 2,1,3,3,9, 12, 670,
 		// 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
-
 		ui = new BattleUI(this, chaserShip, chasedShip);
-
 		keyIn = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
@@ -122,7 +118,6 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
 		Handler.addLowPriorityEntity(chasedHealthbar);
-
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -295,9 +290,7 @@ public class BattleScreen extends Main {
 			if(ID == ButtonID.Back) {
 				BattleUI.back();
 			}
-			if(ID == ButtonID.StaffRoom) {
-				BattleUI.generateCrewMovementList(playerShip);
-			}
+			
 			
 
 
