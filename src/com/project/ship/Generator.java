@@ -10,6 +10,7 @@ import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.FuelTypeID;
 import com.project.Graph;
+import com.project.ImageHandler;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
@@ -23,13 +24,19 @@ public class Generator implements Actionable {
 	private Overclockable overclock;
 	private Function<Double,Double> efficiencyFunction;
 	private Graph efficiencyGraph; 
+	private ImageHandler generatorImg;
+	private ImageHandler backgroundImg;
+
 	
-	public Generator(String name,Function<Double,Double> function,List<CrewAction> actions) {
+	public Generator(String name,Function<Double,Double> function,List<CrewAction> actions,ImageHandler generatorImg,ImageHandler backgroundImg) {
 		this.name = name;
 		this.actions = actions;
 		this.efficiencyFunction = function;
 		this.efficiencyGraph = new Graph(function,10,10,150,100,true);
 		this.efficiencyGraph.setDraggable(false);
+		this.generatorImg  = generatorImg;
+		this.backgroundImg = backgroundImg;
+
 	}
 
 	public double getPower(double amountOfFuel) {
@@ -104,7 +111,7 @@ public class Generator implements Actionable {
 	}
 
 	public Generator copy() {
-		return new Generator(name, efficiencyFunction, actions);
+		return new Generator(name, efficiencyFunction, actions,generatorImg,backgroundImg);
 	}
 
 	@Override
@@ -120,6 +127,15 @@ public class Generator implements Actionable {
 
 	public void setCanGenerate(boolean canGenerate) {
 		this.canGenerate = canGenerate;
+	}
+
+	public ImageHandler getCardBackground() {
+		return backgroundImg.copy();
+	}
+
+	@Override
+	public ImageHandler getCardImage() {
+		return generatorImg.copy();
 	}
 
 	@Override

@@ -100,13 +100,20 @@ public class BattleScreen extends Main {
 		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
-		//Set buttons 
+		
+		//Set Captain
 		chaserShip.setCaptain(player.getPlayerCrew());
+		
+		//Set Room Leader Tabs 
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
-		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 50), 50, (temp.size() * 50), 50, 50, true);
+
+		
 		// Animation anim = new Animation("res/octiodLazer1Anim.png", 97, 21, 4,
 		// 2,1,3,3,9, 12, 670,
 		// 347,1f,-1,true,AdjustmentID.None,Collections.<Animation>emptyList());
+
+		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
+
 		ui = new BattleUI(this, chaserShip, chasedShip);
 		keyIn = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
@@ -260,7 +267,9 @@ public class BattleScreen extends Main {
 			new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot,weapon.getSlot()).start();
 		}
 	}
-	
+	public void emptyTurnWarning(){
+		System.out.println("You've not selected any actions this turn, thats inadvisable");
+	}
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 		Ship playerShip = playerIsChaser ? chaserShip : chasedShip;	
 		if(button ==70) {
@@ -272,61 +281,9 @@ public class BattleScreen extends Main {
 		}
 		
 		if(button == MouseEvent.BUTTON1) {
-			if(ID == ButtonID.BattleWeaponsChoice){
-				
-				List<Weapon> weapons = playerShip.getFrontWeapons();
-				Room         room    = playerShip.getWeaponRoom();
-				
-				
-				BattleUI.generateActionList(weapons, room);
-			}
 
-			if(ID == ButtonID.Go) {
-				if(isPlayersTurn && currentPhase == BattlePhases.Go) {
-					nextTurn();
-				}
-			}
-			
 			if(ID == ButtonID.Back) {
 				BattleUI.back();
-			}
-			
-			
-
-
-			if (ID == ButtonID.BattleCockpitChoice) {
-				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
-					
-				}
-			}
-			
-			if(ID == ButtonID.WeaponInfo) {
-				BattleUI.generateInfo(playerShip.getFrontWeapons().get(index));
-			}
-			if(ID == ButtonID.GeneratorInfo) {
-				BattleUI.generateInfo(playerShip.getGenerator());
-			}
-			if(ID== ButtonID.RecreationalInfo) {
-				BattleUI.generateInfo(playerShip.getStaffRoom().getItems().get(index));
-			}
-
-			if(ID == ButtonID.BattleThrusterChoice) {
-
-				Thruster thruster = playerShip.getThrusters().get(index);
-				Room room = playerShip.getGeneratorRoom();
-				//
-
-				if (isPlayersTurn && currentPhase == BattlePhases.Cockpit) {
-
-					if (playerIsChaser) {
-						chaserThrusterChoice = playerShip.getThrusters().get(index);
-					} else {
-						chasedThrusterChoice = playerShip.getThrusters().get(index);
-					}
-
-					System.out.println("Player Engine choice made");
-					
-				}
 			}
 			if(ID == ButtonID.Manoeuvres) {
 				BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
@@ -334,23 +291,15 @@ public class BattleScreen extends Main {
 			if(ID == ButtonID.SpeedInput) {
 				BattleUI.generateSpeedInput();
 			}
-			if (ID == ButtonID.BattleThrusterActionChoice) {
-				if (isPlayersTurn && currentPhase == BattlePhases.CockpitActions) {
-					if(playerIsChaser) {
-						chaserSpeedChoice = playerShip.getThrusters().get(0).getSpeeds().get(index);
-						
-					}
-					else {
-						chasedSpeedChoice = playerShip.getThrusters().get(0).getSpeeds().get(index);
-					}
-					playerShip.setEndSpeed(playerShip.getThrusters().get(0).getSpeeds().get(index));
-					nextTurn();
-				}
+			if (ID == ButtonID.Crew) {
+				BattleUI.generateRoomButtons(chaserShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
 			}
 			if(ID == ButtonID.EndPhase) {
-					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions){
+				
+					//move people 
+					if(isPlayersTurn && currentPhase==BattlePhases.getFinalPlayableStage()){
 						List<Crew> crewList = playerShip.getAllCrew();
-						//move people 
+
 						for(int i = 0;i<crewList.size();i++){
 							Crew crew = crewList.get(i);
 							if(crew.isMoving()){
@@ -360,6 +309,8 @@ public class BattleScreen extends Main {
 							}				
 						}
 					}
+					
+					// fire weapons
 					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						//start sensoring
 						
@@ -406,29 +357,36 @@ public class BattleScreen extends Main {
 								}
 							}
 							
-							// sort actions based on the amount of actions needed
-							Collections.sort(refinedActions);
-							for(int j = 0; j<refinedActions.size(); j++) {
-								action = refinedActions.get(j);
+							if(refinedActions.size()>0){
 								
-								// if this actions doesnt need anymore actions to be completed
-								if(refinedActions.get(j).getActionsNeeded().size()==0) {
-									actions = actionMap.get(action.getActionType());
+								// sort actions based on the amount of actions needed
+								Collections.sort(refinedActions);
+								for(int j = 0; j<refinedActions.size(); j++) {
+									action = refinedActions.get(j);
 									
-									//remove it from every other actionNeeded
-									if(actions!=null) {
-										for(int k = 0;k<actions.size();k++) {
-											actions.get(k).removeActionNeeded(action);
-										}
-									}									
-									// do action
-									weapons.get(i).doAction(action.getActor(),action, this);
-									action.resetActions();
-									//action.removeActor();
+									// if this actions doesnt need anymore actions to be completed
+									if(refinedActions.get(j).getActionsNeeded().size()==0) {
+										actions = actionMap.get(action.getActionType());
+										
+										//remove it from every other actionNeeded
+										if(actions!=null) {
+											for(int k = 0;k<actions.size();k++) {
+												actions.get(k).removeActionNeeded(action);
+											}
+										}									
+										// do action
+										weapons.get(i).doAction(action.getActor(),action, this);
+										action.resetActions();
+										//action.removeActor();
+									}
 								}
+							}
+							else{
+								emptyTurnWarning();
 							}
 						}									
 					}
+					
 					//Do actions for generator phase
 					if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
 						//start sensor
@@ -449,7 +407,6 @@ public class BattleScreen extends Main {
 						
 						// check which weapons are fired
 						
-							
 							// initalise variables
 							refinedActions = new ArrayList<CrewAction>();
 							actionMap = new HashMap<>();
@@ -477,28 +434,32 @@ public class BattleScreen extends Main {
 								}
 							}
 							
-							// sort actions based on the amount of actions needed
-							Collections.sort(refinedActions);
-							for(int j = 0; j<refinedActions.size(); j++) {
-								action = refinedActions.get(j);
-								
-								// if this actions doesnt need anymore actions to be completed
-								if(refinedActions.get(j).getActionsNeeded().size()==0) {
-									actions = actionMap.get(action.getActionType());
+							if(refinedActions.size()>0){
+								// sort actions based on the amount of actions needed
+								Collections.sort(refinedActions);
+								for(int j = 0; j<refinedActions.size(); j++) {
+									action = refinedActions.get(j);
 									
-									//remove it from every other actionNeeded
-									if(actions!=null) {
-										for(int k = 0;k<actions.size();k++) {
-											actions.get(k).removeActionNeeded(action);
-										}
-									}									
-									// do action
-									generator.doAction(action.getActor(),action, this);
-									action.resetActions();
-									//action.removeActor();
+									// if this actions doesnt need anymore actions to be completed
+									if(refinedActions.get(j).getActionsNeeded().size()==0) {
+										actions = actionMap.get(action.getActionType());
+										
+										//remove it from every other actionNeeded
+										if(actions!=null) {
+											for(int k = 0;k<actions.size();k++) {
+												actions.get(k).removeActionNeeded(action);
+											}
+										}									
+										// do action
+										generator.doAction(action.getActor(),action, this);
+										action.resetActions();
+										//action.removeActor();
+									}
 								}
 							}
-							
+							else{
+								emptyTurnWarning();
+							}	
 					}
 					
 					if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
@@ -511,21 +472,11 @@ public class BattleScreen extends Main {
 						else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
 					}
 				
-				
-				nextTurn();
-			}
-			
-			if (ID == ButtonID.Crew) {
-				BattleUI.generateRoomButtons(chaserShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
-			}
-			
-			if (ID == ButtonID.BattleGeneratorChoice) {
-				if (isPlayersTurn && currentPhase == BattlePhases.GeneratorActions) {
-					playerShip.getGenerator().doAction(playerShip.getGenerator().getActions().get(index).getActor(),playerShip.getGenerator().getActions().get(index), this);
+				// next turn
+				if(isPlayersTurn){
 					nextTurn();
 				}
-			}
-			
+			}	
 		}
 //		if (button == MouseEvent.BUTTON3) {
 //			if (ID == ButtonID.Crew) {
@@ -602,6 +553,11 @@ public class BattleScreen extends Main {
 	public void addChasedWeaponChoice(Weapon weapon) {
 		chasedWeaponChoice.add(weapon);
 		
+	}
+
+	public Ship getPlayerShip() {
+		if(playerIsChaser){return chaserShip;}
+		return chasedShip;
 	}
 
 	

@@ -19,7 +19,7 @@ public class ActionBox {
 	
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
-		this.img.start();
+		this.img.start(false);
 		this.room =room;
 		this.x 			= x;
 		this.y 		    = y;
@@ -29,7 +29,7 @@ public class ActionBox {
 	
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
-		this.img.start();
+		this.img.start(false);
 		this.room       = room;
 		this.moveCrew   = moveCrew;
 		this.x 			= x;

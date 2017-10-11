@@ -318,8 +318,25 @@ public class ImageHandler implements Handleable {
 	public int getWidth() {
 		return img.getWidth();
 	}
-	public void start() {
-		Handler.addLowPriorityEntity(this);
+	public void start(boolean high) {
+		if(high){
+			Handler.addHighPriorityEntity(this);
+		}
+		else{Handler.addLowPriorityEntity(this);}
+	}
+	public void addImageFrame(BufferedImage bf,int xOffset,int yOffset){
+		
+		for(int x = xOffset;x<bf.getWidth();x++){
+			for(int y = yOffset;y<bf.getHeight();y++){
+				
+				if((bf.getRGB(x,y)>>24) == 0x00 && x-xOffset< img.getWidth() && y-yOffset < img.getHeight()){
+					bf.setRGB(x, y, img.getRGB(x-xOffset, y-yOffset));
+				}
+				
+			}
+		}
+		this.img = bf;
+	
 	}
 	
 }

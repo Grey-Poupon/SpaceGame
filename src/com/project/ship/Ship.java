@@ -272,7 +272,7 @@ public class Ship implements Handleable{
 			Crew crew = leaders.get(i);
 			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start();
+			leaderPortrait.start(false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;
@@ -659,8 +659,18 @@ public class Ship implements Handleable{
 			Crew crew = leaders.get(i);
 			
 			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
+			if(crew.getRoomLeading() == this.getWeaponRoom()){
+				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameWeapons.png"),6,6);
+			}
+			else if(crew.getRoomLeading() == this.getGeneratorRoom()){
+				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameEngines.png"),6,6);
+
+			}
+			else {
+				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameCockpit.png"),6,6);
+			}
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start();
+			leaderPortrait.start(false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;

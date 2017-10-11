@@ -21,6 +21,7 @@ import com.project.Main;
 import com.project.MathFunctions;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
+import com.project.ShipItemCard;
 import com.project.StatID;
 import com.project.Text;
 import com.project.TooltipSelectionID;
@@ -55,12 +56,20 @@ public class BattleUI extends UI{
 	private static final int 	genericButtonHeight  = 50;
 	private static final int 	tooltipButtonHeightRight = 200;
 	private static final int 	lineWidth            = 3;
+
+
+	private static final int    cardGap              =20;
+
 	private static final int    halfListWidth      = 586;
 	private static final int    fullListWidth      = 1017;
-	private static final int    xListOffset          = 52; 
-	private static final int    yListOffset		     = Main.HEIGHT - 208;
-	private static final int    xRightListOffset     = Main.WIDTH  - 208; 
-	private static final int    yRightListOffset	 = Main.HEIGHT - 208;
+
+	private static final int    mainMonitorXOffset       = 85; 
+	private static final int    mainMonitorYOffset		 = Main.HEIGHT - 255;
+	private static final int    secondMonitorXOffset     = Main.WIDTH  - 513; 
+	private static final int    secondMonitorYOffset	 = Main.HEIGHT - 230;
+	private static final int    graphMonitorXOffset      = Main.WIDTH  - 194;
+	private static final int    graphMonitorYOffset		 = Main.HEIGHT - 329;
+
 	private static final int    tableTitleHeight     = 40;
 	private static final int 	tableColumnWidth     = 965/6;
 	private static int 		    listWidth	 	     = 965;
@@ -84,6 +93,7 @@ public class BattleUI extends UI{
 	public  static List<ActionBox>     actionBoxes = new ArrayList<ActionBox>();
 	private static List<DraggableIcon> manoeuvreActionIcons = new ArrayList<DraggableIcon>();
 	public  static List<ActionBox>     manoeuvreActionBoxes = new ArrayList<ActionBox>();
+	public  static List<ShipItemCard>  shipCards = new ArrayList<ShipItemCard>();
 	
 	
 	private static List<Button>        miscButtons                 = new ArrayList<Button>();
@@ -107,7 +117,7 @@ public class BattleUI extends UI{
 		for(String key: pShip.getResources().keySet()) {
 			resources= resources +" "+key+":"+pShip.getResource(key); 
 		}
-		resourcesButton = new Button(xRightListOffset-2*rightListWidth,yRightListOffset-50,2*rightListWidth,bs.getGraphics().getFontMetrics().getHeight()*3,ButtonID.UI, 0,false,resources,bs,false);
+		resourcesButton = new Button(secondMonitorXOffset-2*rightListWidth,secondMonitorYOffset-50,2*rightListWidth,bs.getGraphics().getFontMetrics().getHeight()*3,ButtonID.UI, 0,false,resources,bs,false);
 
 		Button graph =new Button(0,0,pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,pShip.getGenerator().getEfficiencyGraph(),bs);
 		graph.setDraggable(true);
@@ -115,7 +125,7 @@ public class BattleUI extends UI{
 		graphEnd.add(graph);
 		//GO BUTTON
 		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), bs));
-		graphList = new ScrollableList(graphEnd,xRightListOffset+rightListWidth-pShip.getGenerator().getEfficiencyGraph().getWidth(),yRightListOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2*pShip.getGenerator().getEfficiencyGraph().getHeight());
+		graphList = new ScrollableList(graphEnd,graphMonitorXOffset,graphMonitorYOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2*pShip.getGenerator().getEfficiencyGraph().getHeight());
 
 	}
 
@@ -146,15 +156,16 @@ public class BattleUI extends UI{
 				BattleUI.generateActionList(generator, room);
 				
 				ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true, EntityID.UI);
-				miscButtons.add(new Button(xListOffset+halfListWidth-img1.getWidth(),yListOffset                 ,50,50,ButtonID.Manoeuvres,0,true,img1,bs));
+				miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset,50,50,ButtonID.Manoeuvres,0,true,img1,bs));
 				
 				ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true, EntityID.UI);
-				miscButtons.add(new Button(xListOffset+halfListWidth-img2.getWidth(),yListOffset+img2.getHeight(),50,50,ButtonID.SpeedInput,0,true,img2,bs));
+				miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset+img2.getHeight(),50,50,ButtonID.SpeedInput,0,true,img2,bs));
 			
 				generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
 
 			}	
 			else if(crew.isCaptain()) {
+				StaffRoom room =  playerShip.getStaffRoom();
 				generateCrewMovementList(playerShip);
 			}
 			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
@@ -168,13 +179,13 @@ public class BattleUI extends UI{
 			//clearTooltip();
 			
 			// setup scrollable lists
-			tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
+			tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset,mainMonitorYOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
 			
 			if(rightTooltipButtons.size()>0) {
-				rightHandList  = new ScrollableList(rightTooltipButtons,xListOffset+tooltipButtonWidth+13,yListOffset+2,listWidth,listHeight);
+				rightHandList  = new ScrollableList(rightTooltipButtons,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
 			}
 			else {
-				rightHandList = new ScrollableList(flavourTexts,xListOffset+tooltipButtonWidth+13,yListOffset+2,listWidth,listHeight);
+				rightHandList = new ScrollableList(flavourTexts,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
 			}
 
 	}
@@ -202,8 +213,8 @@ public class BattleUI extends UI{
 			List<Crew> crew = room.getCrewInRoom();
 			row = -1;
 			column+=1.5;
-			x = (int) (xListOffset + (column * (portraitWidth+5)));
-			y = yListOffset + titleOffset;
+			x = (int) (mainMonitorXOffset + (column * (portraitWidth+5)));
+			y = mainMonitorYOffset + titleOffset;
 			
 			// set crew
 			for(int j = 0;j<crew.size();j++) {
@@ -211,7 +222,7 @@ public class BattleUI extends UI{
 				//update variables
 				ImageHandler portrait = crew.get(j).getPortrait();
 				portrait.setVisible(true);
-				portrait.start();
+				portrait.start(true);
 				portrait.setxCoordinate(500);
 				portrait.setyCoordinate(500);
 				
@@ -224,7 +235,7 @@ public class BattleUI extends UI{
 				
 				// set crew icons
 				DraggableIcon icon = new DraggableIcon(portrait, crew.get(j), portrait.getxCoordinate(),portrait.getyCoordinate());
-				ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBox.png"),(int) (xListOffset+(column*(5+portraitWidth))), (int) (yListOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs);
+				ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBox.png"),(int) (mainMonitorXOffset+(column*(5+portraitWidth))), (int) (mainMonitorYOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs);
 				icon.moveTo  (box.getX(), box.getY());
 				icon.setStartBox(box);
 				icon.setActionBox(box);
@@ -242,7 +253,7 @@ public class BattleUI extends UI{
 					if(row > 2) {row = 0; column++;}
 					
 					// set action box
-					ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBoxEmpty.png"),(int) (xListOffset+(column*(5+portraitWidth))),(int) (yListOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs,true);
+					ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBoxEmpty.png"),(int) (mainMonitorXOffset+(column*(5+portraitWidth))),(int) (mainMonitorYOffset+titleToBoxGap+(row*(portraitHeight+5))),ResourceLoader.getCrewAction("move"), room, bs,true);
 					actionBoxes.add(box);
 				}
 			}
@@ -272,18 +283,16 @@ public class BattleUI extends UI{
 		Text name;
 		int column;
 		int row;
-
-
 		
-		 // set crew pics
+		// set crew pics
 		for(int i = 0; i<crew.size();i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
-			portrait.start();
+			portrait.start(true);
 			column = (i % 3);
 			row    = (i / 3) +1;
 			portrait.setVisible(true);
-			portrait.setxCoordinate(xListOffset+listWidth-(portrait.getWidth()*(3-column)));
-			portrait.setyCoordinate(yListOffset+listHeight - (row*portrait.getHeight()));
+			portrait.setxCoordinate(mainMonitorXOffset+listWidth-(portrait.getWidth()*(3-column)));
+			portrait.setyCoordinate(mainMonitorYOffset+listHeight - (row*portrait.getHeight()));
 			DraggableIcon icon = new DraggableIcon(portrait,crew.get(i), portrait.getxCoordinate(), portrait.getyCoordinate());
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
@@ -295,53 +304,12 @@ public class BattleUI extends UI{
 		
 		// set Action Table
 		for(int j = 0; j<actionables.size();j++) {
-			// tick variables
-			column++;
+		
+			ShipItemCard card = new ShipItemCard(actionables.get(j), bs);
+			card.assembleCard(mainMonitorXOffset+(j*(card.getWidth()+20)), mainMonitorYOffset, crewToIcon);//+(j*(card.getWidth()+cardGap))
+			shipCards.add(card);
 			
-			// populate variables
-			row = -1;
-			actions = (actionables.get(j)).getActions();
-
-			name    = new Text(actionables.get(j).getName(), true, xListOffset+(column*tableColumnWidth), yListOffset,bs);
 			
-//			ButtonID infoID = null;
-//			if(room instanceof WeaponsRoom) {
-//				infoID = ButtonID.WeaponInfo;
-//			}
-//			else if(room instanceof StaffRoom) {
-//				infoID = ButtonID.RecreationalInfo;
-//			}
-//			else if(room instanceof GeneratorRoom) {
-//				infoID = ButtonID.GeneratorInfo;
-//			}
-//			Button infoButton = new Button(xListOffset+(j*tableColumnWidth)+10+name.getOnScreenWidth(), yListOffset+name.getOnScreenHeight()/2-ResourceLoader.getImage("res/info.png").getHeight()/2, 20, 20,infoID , j, true,new ImageHandler(0, 0, "res/info.png", true, EntityID.UI), bs);
-
-
-			// set column title
-			tableTitleText.add(name);
-			//set info text button
-			//actionTableTitleInfoButtons.add(infoButton);
-			
-			// set the action boxes
-			for(int i = 0; i<actions.size();i++) {
-				// tick variables
-				if(row == 1) {column++; row = -1;}
-				row++;
-
-				BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
-
-				ActionBox box = new ActionBox(img, xListOffset+(column*tableColumnWidth), yListOffset + titleGap +((img.getHeight()+ boxGap)*(row)), actions.get(i),room,bs);
-
-				actionBoxes.add(box);
-				
-				// put crew back into their old positions
-				if(box.getActor()!=null) {
-					DraggableIcon icon = crewToIcon.get(box.getActor());
-					icon.moveTo(box.getX(),box.getY());
-					icon.setActionBox(box);
-					box.setCrew(icon);
-				}
-			}
 		}
 	}
 	public static void generateSpeedInput() {
@@ -349,7 +317,7 @@ public class BattleUI extends UI{
 		clearRightBox();
 		Graph speed  = new Graph(MathFunctions.speedInput,300, 50,300f);
 		speed.setDraggable(true);
-		Button speedbtn = new Button(xListOffset+halfListWidth+20, yListOffset+50, 300, 50, ButtonID.Graph, true, speed, bs);
+		Button speedbtn = new Button(secondMonitorXOffset+20, secondMonitorYOffset+50, 300, 50, ButtonID.Graph, true, speed, bs);
 		speedbtn.setDraggable(true);
 		speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"),300f);
 		speedInput = (speedbtn);
@@ -365,10 +333,10 @@ public class BattleUI extends UI{
 		
 		// setup pilot pic
 		ImageHandler portrait = pilot.getPortrait();
-		portrait.start();
+		portrait.start(true);
 		portrait.setVisible(true);
-		portrait.setxCoordinate(xListOffset+fullListWidth);
-		portrait.setyCoordinate(yListOffset);
+		portrait.setxCoordinate(secondMonitorXOffset);
+		portrait.setyCoordinate(secondMonitorYOffset);
 		DraggableIcon icon = new DraggableIcon(portrait,pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
 		manoeuvreActionIcons.add(icon);
 		
@@ -379,7 +347,7 @@ public class BattleUI extends UI{
 
 			BufferedImage img  = ResourceLoader.getImage("res/actionBox.png");
 
-			ActionBox box = new ActionBox(img, xListOffset+lineWidth+halfListWidth+(column*tableColumnWidth), yListOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),room,bs);
+			ActionBox box = new ActionBox(img, secondMonitorXOffset+(column*tableColumnWidth), secondMonitorYOffset +((img.getHeight()+ boxGap)*(row)), manoeuvres.get(i),room,bs);
 
 
 
@@ -402,13 +370,14 @@ public class BattleUI extends UI{
 		clearAllBoxes();
 		List<Button> tooltipButtons = actionable.getInfoButtons(fullListWidth,tooltipButtonHeight,bs);
 		tooltipButtons.add(new Button(0,0,fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true,"Back",bs,true));
-		tooltipList = new ScrollableList(tooltipButtons, xListOffset,yListOffset, fullListWidth,listHeight,fullListWidth,tooltipButtonHeight,true);;
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset,mainMonitorYOffset, fullListWidth,listHeight,fullListWidth,tooltipButtonHeight,true);;
 	}
 
 	
 	public static void clearAllBoxes() {
 		clearLeftBox();
 		clearRightBox();
+		
 	}
 	public static void clearLeftBox() {
 		if(tooltipList  != null){tooltipList.clear();}
@@ -418,6 +387,7 @@ public class BattleUI extends UI{
 		for(Button        btn: miscButtons)           {Button.delete(btn);}
 		for(Text          txt: tableTitleText)  {Text.delete(txt);}
 		for(Button btn:actionTableTitleInfoButtons) {Button.delete(btn);}
+		for(ShipItemCard card: shipCards ) {ShipItemCard.delete(card);}
 
 		actionIcons.clear();
 		actionBoxes.clear();

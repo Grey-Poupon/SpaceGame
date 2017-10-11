@@ -9,6 +9,7 @@ import com.project.Animation;
 import com.project.Crew;
 import com.project.CrewAction;
 import com.project.Graph;
+import com.project.ImageHandler;
 import com.project.Slottable;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
@@ -22,13 +23,19 @@ public class Thruster implements Slottable,Actionable{
 	private List<CrewAction> actions;
 	private String name;
 	private Slot slot;
+	private ImageHandler thrusterImg;
+	private ImageHandler backgroundImg;
+
 	
-	public Thruster(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions,Slot slot) {
+	public Thruster(Animation engineBody,String name,Graph efficiencyGraph,List<CrewAction> actions,Slot slot, ImageHandler thrusterImg, ImageHandler backgroundImg) {
 		this.engineBody = engineBody.copy();
 		this.engineBody.start(false);
 		this.efficiencyGraph = efficiencyGraph;
 		this.actions = actions;
 		this.name = name;
+		this.thrusterImg   = thrusterImg;
+		this.backgroundImg = backgroundImg;
+
 	}
 
 
@@ -67,7 +74,7 @@ public class Thruster implements Slottable,Actionable{
 	}
 
 	public Thruster copy() {
-		return new Thruster(engineBody,name,efficiencyGraph,actions,slot);
+		return new Thruster(engineBody,name,efficiencyGraph,actions,slot,thrusterImg,backgroundImg);
 	}
 
 	
@@ -134,10 +141,21 @@ public class Thruster implements Slottable,Actionable{
 
 
 
-	@Override
+
 	public String getFlavorText() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public ImageHandler getCardBackground() {
+		// TODO Auto-generated method stub
+		return backgroundImg.copy();
+	}
+
+
+
+	@Override
+	public ImageHandler getCardImage() {
+		return thrusterImg.copy();
 	}
 
 

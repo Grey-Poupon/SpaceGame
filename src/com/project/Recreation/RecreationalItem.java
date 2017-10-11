@@ -8,6 +8,7 @@ import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
 import com.project.CrewActionID;
+import com.project.ImageHandler;
 import com.project.StatID;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
@@ -49,6 +50,17 @@ public class RecreationalItem implements Actionable{
 		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
 		buttons.add(new Button(0,0,width, height, ButtonID.Info, 1,false,"Relax:"+relaxation,bs,true));
 		return buttons;
+	}
+
+
+	public ImageHandler getCardBackground() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ImageHandler getCardImage() {
+		return null;
 	}
 
 	@Override
