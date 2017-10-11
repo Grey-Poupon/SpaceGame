@@ -90,7 +90,6 @@ public class ResourceLoader {
 
 		
 		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2,portrait,background));
-
 	}
 	
 

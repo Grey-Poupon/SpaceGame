@@ -96,6 +96,7 @@ public class Ship implements Handleable{
 		this.visibleCrew = visibleCrew;
 		this.entityID = id;
 		generateFlavourText();
+		this.generator = ResourceLoader.getShipGenerator("default");
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
 		for(DamageType dmg : DamageType.values()){
