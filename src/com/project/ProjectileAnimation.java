@@ -3,6 +3,7 @@ package com.project;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Random;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
@@ -23,10 +24,11 @@ public class ProjectileAnimation implements Handleable{
 	private boolean isLeftToRight;
 	private boolean isCrossScreen;
 	private Slot fromSlot;
-	private Object[] damageDealt;
+	private Object[][] damageInfo;
+	private Object[] effects;
 	private Animation animations[];
-	private boolean running;
-	public ProjectileAnimation(Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
+	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Point click,Slot slot) {
+
 		this.primary       = primary;
 		this.secondary     = secondary;
 		this.isCrossScreen = isCrossScreen;
@@ -36,17 +38,27 @@ public class ProjectileAnimation implements Handleable{
 		this.isLeftToRight = click.x > slot.getX();
 		this.weapon        = (Weapon)  slot.getSlotItem();
 		this.projectileGap = weapon.getProjectileGap();
-		//effect handler; this only works if there's 1 instance of destructive
-		for(Object effect: effects) {
+		this.effects  = weapon.fire(); 
+		
+		//effect handler; 
+		for(int i = 0;i<effects.length;i++) {
+			Object effect = effects[i];
+			
+			/**Process Weapon Damage Info**/
 			if(effect instanceof Destructive) {
-				//rateOfFire,accuracy,weaponSwayMod,DamagePerShot,damageType
-				this.damageDealt = ((Destructive) effect).fire();
-				float[] accuracy = (float[])damageDealt[1];
-				for(float i : accuracy) {
-					if(i==1.0) {
+
+				this.damageInfo[i] = ((Destructive) effect).fire();
+				//rateOfFire,accuracy,DamagePerShot,isPhysical,areaOfEffectRadius
+				float[] accuracy = (float[])damageInfo[i][1];
+				/**Check shots that hit**/
+				for(float f : accuracy) {
+					if(f==1.0) {
 						this.noOfProjectiles++;
 					}
 				}
+			}
+			else{
+				this.damageInfo[i][0] = effect;
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
@@ -132,7 +144,7 @@ public class ProjectileAnimation implements Handleable{
 			animationsRunning--;
 			Handler.entitiesHighPriority.remove(this);
 		}
-		setRunning(stillRunning);
+		
 	}
 	// start function for the group of animation
 	public void start() {
@@ -140,23 +152,14 @@ public class ProjectileAnimation implements Handleable{
 		animations[0].start();
 	}
 	private void doDamage() {
-		float[] accuracy = (float[]) damageDealt[1];
-		int newX,newY,dmg;
-		Weapon fireWeapon =  weapon;
-		for(int j=0;j<(int)damageDealt[0];j++) {
-			if(accuracy[j]!=0) {
-				// add weaponSway
-				newX = (int) (rand.nextBoolean() ? click.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.x-((int)damageDealt[2]*(1/accuracy[j])));
-				newY = (int) (rand.nextBoolean() ? click.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.y-((int)damageDealt[2]*(1/accuracy[j])));
-				// dmg here
-				if(!weapon.isTargetSelf()){
-					dmg = secondary.roomDamage(newX, newY);
-					secondary.takeDamage(dmg,(boolean)damageDealt[3]);					
-				}else{
-					primary.apply(weapon);
-				}
 
-			}
+		
+		if(weapon.isTargetSelf()){
+			primary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
+		}
+		else{
+			secondary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
+
 		}
 	}
 
@@ -166,12 +169,5 @@ public class ProjectileAnimation implements Handleable{
 		return 0;
 	}
 
-	public boolean isRunning() {
-		return running;
-	}
 
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
-	
 }

@@ -15,8 +15,8 @@ public class StaffRoom extends Room {
 	public BufferedImage getIcon() {
 		return ResourceLoader.getImage("res/roomIcons/staffRoomIcon.png");
 	}
-	public StaffRoom(List<RecreationalItem> items,String name) {
-		super(name);
+	public StaffRoom(List<RecreationalItem> items,String name, int health) {
+		super(name,health);
 		this.items = items;
 		
 		// TODO Auto-generated constructor stub

@@ -159,10 +159,10 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 
 	public void render(Graphics g, Slot slot) {
 		if(!weaponBody.isRunning() && projAnim!=null) {
-			if(!projAnim.isRunning()) {
+			
 				projAnim.start();
 				projAnim =null;
-			}
+			
 			
 		}
 		weaponBody.setxCoordinate(slot.getX());

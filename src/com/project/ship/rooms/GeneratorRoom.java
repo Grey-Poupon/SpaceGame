@@ -14,8 +14,8 @@ public class GeneratorRoom extends Room{
 	private Generator generator;
 	
 	
-	public GeneratorRoom(Generator generator,String name) {
-		super(name);
+	public GeneratorRoom(Generator generator,String name, int health) {
+		super(name,health);
 		
 		this.generator = generator;
 		setSensorSphereRadius(100);

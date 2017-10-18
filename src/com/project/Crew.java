@@ -24,6 +24,7 @@ import com.project.ship.Room;
 import com.project.ship.Ship;
 
 public class Crew implements Observer{
+	private int health;
 	protected char gender;
 	protected static Random rand = new Random();
 	private ArrayList<Disease> diseases;
@@ -49,8 +50,9 @@ public class Crew implements Observer{
 	private boolean isCaptain=false;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender, RaceID race,boolean visible) {
+			char gender, RaceID race,boolean visible,int health) {
 		
+		this.health = health;
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
@@ -86,7 +88,8 @@ public class Crew implements Observer{
 		loadPortrait();
 	}	
 	
-	public Crew(RaceID race,boolean visible) {
+	public Crew(RaceID race,boolean visible, int health) {
+		this.health = health;
 		this.race = race;
 		stats = new HashMap<>();
 		statModifier = new HashMap<>();
@@ -245,26 +248,26 @@ public class Crew implements Observer{
 	public void setSpeechOptions(List<String> speechOptions) {
 		this.speechOptions = speechOptions;
 	}
-	
+	/**Magic number here for health**/
 	public static Crew generateRandomCrew(boolean visible) {
 		Crew crew;
 		int t = rand.nextInt(7);
 		switch (t) {
-		   case 0:  crew = new BlueLizard(visible);
+		   case 0:  crew = new BlueLizard(visible,100);
 					break;
-           case 1:  crew = new BugBitch(visible);
+           case 1:  crew = new BugBitch(visible,100);
                     break;
-           case 2:  crew = new Ent(visible);
+           case 2:  crew = new Ent(visible,100);
                     break;
-           case 3:  crew = new MoleBitch(visible);
+           case 3:  crew = new MoleBitch(visible,100);
                     break;
-           case 4:  crew = new OctoBitch(visible);
+           case 4:  crew = new OctoBitch(visible,100);
                     break;
-           case 5:  crew = new Robot(visible);
+           case 5:  crew = new Robot(visible,100);
                     break;
-           case 6:  crew = new YellowLizard(visible);
+           case 6:  crew = new YellowLizard(visible,100);
                     break;
-           default: crew = new BlueLizard(visible);
+           default: crew = new BlueLizard(visible,100);
                     break;
        }
 		return crew;
@@ -376,7 +379,7 @@ public class Crew implements Observer{
 	
 
 	public Crew copy() {
-		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible);
+		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible,health);
 	}
 
 	public boolean isCaptain() {
@@ -447,6 +450,11 @@ public class Crew implements Observer{
 
 	public void setRoomMovingTo(Room room) {
 		movingTo = room;
+		
+	}
+
+	public void takeDamage(int damagePerShot) {
+		// TODO Auto-generated method stub
 		
 	}
 

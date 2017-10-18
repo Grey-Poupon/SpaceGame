@@ -14,6 +14,7 @@ import com.project.Crew;
 import com.project.StatID;
 
 public abstract class Room {
+	private int health;
 	private String roomName;
 	private Point location;
 	private int damagableRadius;
@@ -25,8 +26,9 @@ public abstract class Room {
 	ArrayList<Ellipse2D> sensorSpheres = new ArrayList<>();
 	private int sensorSphereRadius = 50;
 	
-	public Room(String name) {
+	public Room(String name, int health) {
 		this.roomName = name;
+		this.health = health;
 	}
 	public Room() {
 
@@ -151,5 +153,8 @@ public abstract class Room {
 	}	
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
+	}
+	public void takeDamage(int damage) {
+		health-=damage;
 	}
 }

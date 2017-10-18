@@ -12,8 +12,8 @@ import com.project.ship.Room;
 
 public class Cockpit extends Room{
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
-	public Cockpit(List<CrewAction> manoeuvres,String name) {
-		super(name);
+	public Cockpit(List<CrewAction> manoeuvres,String name, int health) {
+		super(name,health);
 		this.manoeuvres = manoeuvres;
 	}
 	
