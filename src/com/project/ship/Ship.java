@@ -33,6 +33,7 @@ import com.project.ship.rooms.SensorRoom;
 import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
+import com.project.weapons.Buffer;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
 import com.project.weapons.weapon_types.FireableWeapon;
