@@ -397,7 +397,9 @@ public class BattleScreen extends Main {
 						
 						// intalise variables
 						Generator generator  = playerShip.getGenerator();
-						List<CrewAction> actions  = new ArrayList<CrewAction>();;
+						generator.setCanGenerate(true);
+						List<CrewAction> actions  = new ArrayList<CrewAction>();
+						playerShip.getGenerator().setCanGenerate(true);
 						List<CrewAction> refinedActions;
 						CrewAction action;
 						List<CrewAction> actionsNeeded;

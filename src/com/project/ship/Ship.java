@@ -46,7 +46,6 @@ public class Ship implements Handleable{
 	private int power = 0;
 	private Engine2 engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
-	private Generator generator;
 	private List<Room> rooms = new ArrayList<Room>();
 	private List<Slot>	   shipBackSlots       = new ArrayList<Slot>();
 	private List<Slot>	   shipFrontSlots      = new ArrayList<Slot>();
@@ -94,7 +93,6 @@ public class Ship implements Handleable{
 		this.visibleCrew = visibleCrew;
 		this.entityID = id;
 		generateFlavourText();
-		this.generator = ResourceLoader.getShipGenerator("default");
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
 		for(DamageType dmg : DamageType.values()){
@@ -172,13 +170,16 @@ public class Ship implements Handleable{
 	}
 	
 	
-	public Room getGeneratorRoom() {
+	public GeneratorRoom getGeneratorRoom() {
 		for(int i = 0; i<rooms.size();i++) {
 			if(rooms.get(i) instanceof GeneratorRoom) {
-				return rooms.get(i); 
+				return (GeneratorRoom) rooms.get(i); 
 			}
 		}
 		return null;
+	}
+	public Generator getGenerator() {
+		return getGeneratorRoom().getGenerator();
 	}
 	
 	private void sortSprites() {
@@ -219,7 +220,7 @@ public class Ship implements Handleable{
 	}
 	
 	public void generatePower(int amountOfFuel) {
-		double power = generator.getPower(amountOfFuel);
+		double power = getGenerator().getPower(amountOfFuel);
 		if(power<0) {System.out.println("your generator exploded, gg boyo");}//engine exploded
 		power = (int) power;
 	}
@@ -618,14 +619,9 @@ public class Ship implements Handleable{
 
 	
 	
-	public Generator getGenerator() {
-		return ((GeneratorRoom) getGeneratorRoom()).getGenerator();
-	}
+	
 
 
-	public void setGenerator(Generator generator) {
-		this.generator = generator;
-	}
 
 
 	public void accelerate() {

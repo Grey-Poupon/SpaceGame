@@ -106,23 +106,26 @@ public class BattleUI extends UI{
 
 
 
+	@SuppressWarnings("static-access")
 	public BattleUI (BattleScreen battleScreen, Ship pShip, Ship eShip){
 
-		bs = battleScreen;
-
-		 flavourTexts = new ArrayList<Button>();
-//		for(int i =0;i<eShip.getFlavourTexts().size();i++) {
-//			flavourTexts.add(new Button(0,0,tooltipButtonWidth,5*tooltipBoxHeight,ButtonID.EnemyShip,i,true,eShip.getFlavourTexts().get(i),fontName,fontStyle,fontSize,fontColour,bs,false));
+		this.bs = battleScreen;
+		flavourTexts = new ArrayList<Button>();
+		
+		
+		// Resources
 		String resources = "Resources:";
 		for(String key: pShip.getResources().keySet()) {
 			resources= resources +" "+key+":"+pShip.getResource(key); 
 		}
 		resourcesButton = new Button(secondMonitorXOffset-2*rightListWidth,secondMonitorYOffset-50,2*rightListWidth,bs.getGraphics().getFontMetrics().getHeight()*3,ButtonID.UI, 0,false,resources,bs,false);
 
+		//Graph
 		Button graph =new Button(0,0,pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,pShip.getGenerator().getEfficiencyGraph(),bs);
 		graph.setDraggable(true);
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
+		
 		//GO BUTTON
 		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(), pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(),true,"GO","sevensegies",Font.PLAIN,30,Color.WHITE,new ImageHandler(0,0,"res/appIcon.png",true,EntityID.UI), bs));
 		graphList = new ScrollableList(graphEnd,graphMonitorXOffset,graphMonitorYOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2*pShip.getGenerator().getEfficiencyGraph().getHeight());
@@ -131,62 +134,58 @@ public class BattleUI extends UI{
 
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option){
 		boolean clickable = true;
-		if(bs.playerIsChaser()) {
-			playerShip = bs.getChaserShip();
-		}else {playerShip = bs.getChasedShip();}
+		playerShip = bs.playerIsChaser() ? bs.getChaserShip():bs.getChasedShip();
 		
-			List<Button> tooltipButtons = new ArrayList<Button>();
-			List<Button> rightTooltipButtons = new ArrayList<Button>();
+		List<Button> tooltipButtons = new ArrayList<Button>();
+		List<Button> rightTooltipButtons = new ArrayList<Button>();
 			
-			if(crew.getRoomLeading() instanceof WeaponsRoom) {	
-				
-//				generateCrewMovementList(playerShip);
-				
-				List<Weapon> weapons = playerShip.getFrontWeapons();
-				Room         room    = crew.getRoomIn();
-				
-				BattleUI.generateActionList(weapons, room);
-			}
-			else if(crew.getRoomLeading() instanceof GeneratorRoom) {
-				
-				GeneratorRoom room = (GeneratorRoom) playerShip.getGeneratorRoom();
-				List<Generator> generator = new ArrayList<Generator>();
-				generator.add(room.getGenerator());
-				
-				BattleUI.generateActionList(generator, room);
-				
-				ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true, EntityID.UI);
-				miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset,50,50,ButtonID.Manoeuvres,0,true,img1,bs));
-				
-				ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true, EntityID.UI);
-				miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset+img2.getHeight(),50,50,ButtonID.SpeedInput,0,true,img2,bs));
+		if(crew.getRoomLeading() instanceof WeaponsRoom) {	
 			
-				generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
+			List<Weapon> weapons = playerShip.getFrontWeapons();
+			Room         room    = crew.getRoomIn();
+			
+			BattleUI.generateActionList(weapons, room);
+		}
+		else if(crew.getRoomLeading() instanceof GeneratorRoom) {
+			
+			GeneratorRoom room = (GeneratorRoom) playerShip.getGeneratorRoom();
+			List<Generator> generator = new ArrayList<Generator>();
+			generator.add(room.getGenerator());
+			
+			BattleUI.generateActionList(generator, room);
+			
+			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true, EntityID.UI);
+			miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset,50,50,ButtonID.Manoeuvres,0,true,img1,bs));
+			
+			ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true, EntityID.UI);
+			miscButtons.add(new Button(secondMonitorXOffset-img1.getWidth(),secondMonitorYOffset+img2.getHeight(),50,50,ButtonID.SpeedInput,0,true,img2,bs));
+		
+			generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
 
-			}	
-			else if(crew.isCaptain()) {
-				StaffRoom room =  playerShip.getStaffRoom();
-				generateCrewMovementList(playerShip);
+		}	
+		else if(crew.isCaptain()) {
+			StaffRoom room =  playerShip.getStaffRoom();
+			generateCrewMovementList(playerShip);
+		}
+		if(tooltipMenuSelection == TooltipSelectionID.Stats) {
+			for(int i = 0;i<crew.getStats().size();i++) {
+				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
 			}
-			if(tooltipMenuSelection == TooltipSelectionID.Stats) {
-				for(int i = 0;i<crew.getStats().size();i++) {
-					tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false, Crew.statNames[i]+": "+Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle, fontSize, fontColour, bs,true));
-				}
-				clickable = false;
-			}
+			clickable = false;
+		}
 
-			//clear 
-			//clearTooltip();
-			
-			// setup scrollable lists
-			tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset,mainMonitorYOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
-			
-			if(rightTooltipButtons.size()>0) {
-				rightHandList  = new ScrollableList(rightTooltipButtons,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
-			}
-			else {
-				rightHandList = new ScrollableList(flavourTexts,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
-			}
+		//clear 
+		//clearTooltip();
+		
+		// setup scrollable lists
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset,mainMonitorYOffset, listWidth,listHeight,tooltipButtonWidth,tooltipButtonHeight,clickable);
+		
+		if(rightTooltipButtons.size()>0) {
+			rightHandList  = new ScrollableList(rightTooltipButtons,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
+		}
+		else {
+			rightHandList = new ScrollableList(flavourTexts,mainMonitorXOffset+tooltipButtonWidth+13,mainMonitorYOffset+2,listWidth,listHeight);
+		}
 
 	}
 	public static void generateCrewMovementList(Ship ship) {
