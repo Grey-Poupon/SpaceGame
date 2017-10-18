@@ -35,19 +35,14 @@ public class Thruster implements Slottable,Actionable{
 		this.name = name;
 		this.thrusterImg   = thrusterImg;
 		this.backgroundImg = backgroundImg;
-
 	}
-
-
 
 	public void render(Graphics g, Slot slot) {
 		engineBody.setxCoordinate(slot.getX());
 		engineBody.setyCoordinate(slot.getY()+slot.getHeight()/2-engineBody.getTileHeight());
 		if(!slot.isFront()) {
-			engineBody.setxCoordinate(slot.getX()-slot.getWidth()/2);
-			//wb.setxScale(-1);
+			engineBody.setxCoordinate((float)(slot.getX()-slot.getWidth()/2));
 		}
-
 		engineBody.render(g);
 	}
 

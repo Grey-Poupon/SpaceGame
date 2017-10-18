@@ -418,26 +418,6 @@ public class Ship implements Handleable{
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
 		}
 		
-		
-//		Graphics2D g2d = (Graphics2D)g.create();
-//		for(int i=0;i<shipBackSlots.size();i++) {
-//			Slot s = shipBackSlots.get(i);
-////			System.out.print(s.getX());
-////			System.out.print(",");
-////			System.out.print(s.getY());
-////			System.out.println();
-//			g2d.setColor(Color.white);
-//			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
-//		}
-//		for(int i=0;i<shipFrontSlots.size();i++) {
-//			Slot s = shipFrontSlots.get(i);
-////			System.out.print(s.getX());
-////			System.out.print(",");
-////			System.out.print(s.getY());
-////			System.out.println();
-//			g2d.setColor(Color.white);
-//			g2d.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
-//		}
 	}
 
 
@@ -467,7 +447,6 @@ public class Ship implements Handleable{
 	
 	public void updatePowerConsumption() {
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
-		//setResource("power",(int)getGenerator().getEfficiencyGraph().getyInput());
 		getGenerator().getEfficiencyGraph().setGraphPoint(0);
 		if(isPlayer) {BattleUI.updateResources(this);}	
 	}
@@ -475,7 +454,7 @@ public class Ship implements Handleable{
 	public void tempUpdatePowerConsumption(int cost) {
 		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+cost);
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
-		//if(isPlayer) {BattleUI.updateResources(this);}
+
 	}
 
 
@@ -630,7 +609,6 @@ public class Ship implements Handleable{
 		//formula to decide how much power turns into how speed 
 	}
 	public void setEndSpeed(int speed) {
-		//updatePowerConsumption(new CrewAction(null, null, null, null, speed, speed, mass*speed));
 		endSpeed = speed;
 		//formula to decide how much power turns into how speed 
 	}
@@ -763,10 +741,5 @@ public class Ship implements Handleable{
 	public Shape getClip() {
 		return lImage.getClip();
 	}
-	
-
-
-
-
 	
 }
