@@ -9,7 +9,6 @@ import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ProjectileAnimation implements Handleable{
 	private static int animationsRunning;
@@ -28,8 +27,8 @@ public class ProjectileAnimation implements Handleable{
 	private Object[][] damageInfo;
 	private Object[] effects;
 	private Animation animations[];
-	
 	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Point click,Slot slot) {
+
 		this.primary       = primary;
 		this.secondary     = secondary;
 		this.isCrossScreen = isCrossScreen;
@@ -56,15 +55,14 @@ public class ProjectileAnimation implements Handleable{
 					if(f==1.0) {
 						this.noOfProjectiles++;
 					}
-				}		
+				}
 			}
 			else{
 				this.damageInfo[i][0] = effect;
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
-	
-		Handler.addHighPriorityEntity(this);
+		
 		animationsRunning++;
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
 		AdjustmentID align = AdjustmentID.None;
@@ -103,7 +101,6 @@ public class ProjectileAnimation implements Handleable{
 		return (animationsRunning != 0);
 	}
 	
-	
 	public void render(Graphics g) {
 		
 	}
@@ -141,26 +138,28 @@ public class ProjectileAnimation implements Handleable{
 				doDamage();
 				// delete self
 				 Animation.delete(animations[i]);
-			}
-			
+			}		
 		}
 		if(!stillRunning) {
 			animationsRunning--;
 			Handler.entitiesHighPriority.remove(this);
-		}	
+		}
+		
 	}
-	
 	// start function for the group of animation
 	public void start() {
+		Handler.addHighPriorityEntity(this);
 		animations[0].start();
 	}
 	private void doDamage() {
+
 		
 		if(weapon.isTargetSelf()){
 			primary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
 		}
 		else{
 			secondary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
+
 		}
 	}
 
@@ -169,5 +168,6 @@ public class ProjectileAnimation implements Handleable{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
+
 }

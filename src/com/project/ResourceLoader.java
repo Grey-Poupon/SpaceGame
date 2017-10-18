@@ -20,7 +20,6 @@ import com.project.ship.Generator;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ResourceLoader {
 	
@@ -111,14 +110,14 @@ public class ResourceLoader {
 	}
 
 	private void loadShipWeapons() {
+		
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		actions.add(crewActions.get("basicReload"));
 		actions.add(crewActions.get("basicFire"));
-
-		
 		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
-		shipWeapons.put("default",new FireableWeapon(1, 1, 3, 1f, "Laser Mark I",DamageType.Laser, 0, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));		
+		shipWeapons.put("default",new Weapon(1,1, 1, 3, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
+		
 	}
 
 
@@ -126,11 +125,11 @@ public class ResourceLoader {
 		//moving
 		
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGap, int xGap, int yGap, int frameRate, float scale, float xStart, float xEnd, float yStart, float yEnd, float xVel, Rectangle2D mask, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
-		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,1,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,5,1,1,0.75f,1, false,AdjustmentID.None));
+		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,10,1,1,0.75f,1, false,AdjustmentID.None));
 		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
 		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,0.75f,-1,false,AdjustmentID.None));
 		//combined

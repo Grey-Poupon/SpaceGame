@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
@@ -26,11 +25,8 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
-import com.project.ship.Generator;
-import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
-import com.project.ship.rooms.GeneratorRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
@@ -101,7 +97,7 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(chaserShip);
 		Handler.addLowPriorityEntity(chasedShip);
 		// place ships
-		chaserShip.setX(-100);
+		chaserShip.setX(-200);
 		chaserShip.setY(0);
 		chasedShip.setX(WIDTH/2);
 		chasedShip.setY(0);
@@ -202,13 +198,11 @@ public class BattleScreen extends Main {
 			if (currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
 				// apply speed setting parameters for end of turn based on remain power or
-				// assigned power
-				
+				// assigned power				
 				chaserShip.generate();
 				chasedShip.generate();
 				chaserShip.accelerate();
 				chasedShip.accelerate();
-		
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocation);
@@ -253,7 +247,9 @@ public class BattleScreen extends Main {
 
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,Point shot){
 		for(Weapon weapon:weapons) {
-			new ProjectileAnimation(primary, secondary, 200, true, shot,weapon.getSlot()).start();
+			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot,weapon.getSlot());
+			weapon.setProjAnim(a);
+
 		}
 	}
 	public void emptyTurnWarning(){
@@ -398,8 +394,6 @@ public class BattleScreen extends Main {
 				emptyTurnWarning();
 			}	
 	}
-	
-	
 	
 	public boolean checkShipClick(int x, int y) {
 		if (playerIsChaser) {
