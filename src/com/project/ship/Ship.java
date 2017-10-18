@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,9 +33,12 @@ import com.project.ship.rooms.SensorRoom;
 import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
+import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
+import com.project.weapons.weapon_types.FireableWeapon;
 
 public class Ship implements Handleable{
+	private BattleScreen bs;
 	private LayeredImage lImage;
 	private int health;
 	private int maxHealth;
@@ -46,7 +50,7 @@ public class Ship implements Handleable{
 	private int power = 0;
 	private Engine2 engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
-	private List<Room> rooms = new ArrayList<Room>();
+	private List<Room> shipRooms = new ArrayList<Room>();
 	private List<Slot>	   shipBackSlots       = new ArrayList<Slot>();
 	private List<Slot>	   shipFrontSlots      = new ArrayList<Slot>();
 	private List<Crew>     allCrew             = new ArrayList<Crew>();
@@ -119,7 +123,76 @@ public class Ship implements Handleable{
 		randomlyFillRooms();
 
 	}
+	public void doDamage(Object[] effects, Object[][] damageInfo,boolean targetSelf,Point click){
+		/**get targeted ship**/
+		Ship ship;
+		if(targetSelf){
+			ship = this;
+		}
+		else{
+			ship = isPlayer? bs.getPlayerShip():bs.getEnemyShip();	
+		}
+		
+		int rateOfFire         = (int)     damageInfo[effects.length-1][0];
+		float[] accuracy       = (float[]) damageInfo[effects.length-1][1];
+		int damagePerShot      = (int)     damageInfo[effects.length-1][2];
+		boolean isPhysical     = (boolean) damageInfo[effects.length-1][3];
+		int areaOfEffectRadius = (int)     damageInfo[effects.length-1][4];
+		
+		/**loop through each weapon shot**/
+		for(int j = 0;j<accuracy.length;j++){
+			if(accuracy[j]!=0){
+				
+				/**loop through the different effects**/
+				for(int i = 0;i<effects.length;i++){
+					
+					/**Do destructive effects**/
+					if(effects[i] instanceof Destructive){
+						//rateOfFire,accuracy,DamagePerShot,isPhysical,areaOfEffectRadius
+							List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
+							for(int k = 0;k < rooms.size();k++){
+								rooms.get(k).takeDamage(damagePerShot);
 	
+								if(isPhysical){
+									for(Crew crew: rooms.get(k).crewInRoom){
+										crew.takeDamage(damagePerShot);
+									}
+								}
+							}
+						}
+					if(effects[i] instanceof Buffer){
+						// do buffer effect
+					}
+					
+				}
+				
+			}
+		}
+	}
+	
+	
+	private List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
+		List<Room> returnableRooms = new ArrayList<Room>();
+		/**Make coordinates relative to ship**/
+		float xRelToShip = (float) (click.getX() - lImage.getX());
+		float yRelToShip = (float) (click.getY() - lImage.getY());
+		/**Make coordinates original scale**/
+		float xScaled = xRelToShip/lImage.getLargestLayer().getxScale();
+		float yScaled = yRelToShip/lImage.getLargestLayer().getyScale();
+		
+		/**create circle of damage**/
+		Ellipse2D damageCircle = new Ellipse2D.Float(xScaled,yScaled,areaOfEffectRadius,areaOfEffectRadius);
+		
+		/**check room intersection with damaged area**/
+		for(int i = 0;i<shipRooms.size();i++){
+			Room room = shipRooms.get(i);
+			if(damageCircle.intersects(room.getLocation().x, room.getLocation().y, room.getDamagableRadius(), room.getDamagableRadius())){
+				returnableRooms.add(room);
+			}
+		}
+		return returnableRooms;
+	}
+
 	private void generateResources() {
 		resources.put("fuel", 500);
 		resources.put("missiles", 500);
@@ -129,41 +202,41 @@ public class Ship implements Handleable{
 	private void randomlyFillRooms() {
 		Random rand = new Random();
 		int index;
-		for(Room room : rooms) {			
+		for(Room room : shipRooms) {			
 			index = rand.nextInt(unassignedCrew.size());
 			room.setRoomLeader(unassignedCrew.get(index));
 			unassignedCrew.get(index).setRoomIn(room);
 			unassignedCrew.remove(index);
 		}
 		for(Crew crew:unassignedCrew) {
-			index = rand.nextInt(rooms.size());
-			rooms.get(index).addCrew(crew);
+			index = rand.nextInt(shipRooms.size());
+			shipRooms.get(index).addCrew(crew);
 		}
 		unassignedCrew.clear();	
 	}
 
 
 	private void generateRooms() {
+		/**Magic numbers here for room health**/
+		shipRooms.add(new SensorRoom(new Sensor(0.8f)));
 
-		rooms.add(new SensorRoom(new Sensor(0.8f)));
-
-		rooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room"));
+		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",100));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		rooms.add(new Cockpit(manoeuvres,"Cockpit"));
-		rooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room"));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",100));
+		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",100));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
-		rooms.add(new StaffRoom(items,"Staff Room"));
+		shipRooms.add(new StaffRoom(items,"Staff Room",100));
 		setRoomPositions();
 	}
 	
 	
 	
 	public Room getCockpit() {
-		for(int i = 0; i<rooms.size();i++) {
-			if(rooms.get(i) instanceof Cockpit) {
-				return rooms.get(i); 
+		for(int i = 0; i<shipRooms.size();i++) {
+			if(shipRooms.get(i) instanceof Cockpit) {
+				return shipRooms.get(i); 
 			}
 		}
 		return null;
@@ -171,9 +244,9 @@ public class Ship implements Handleable{
 	
 	
 	public GeneratorRoom getGeneratorRoom() {
-		for(int i = 0; i<rooms.size();i++) {
-			if(rooms.get(i) instanceof GeneratorRoom) {
-				return (GeneratorRoom) rooms.get(i); 
+		for(int i = 0; i<shipRooms.size();i++) {
+			if(shipRooms.get(i) instanceof GeneratorRoom) {
+				return (GeneratorRoom) shipRooms.get(i); 
 			}
 		}
 		return null;
@@ -245,10 +318,10 @@ public class Ship implements Handleable{
 		return dmg;
 	}
 	public Room getClosestRoom(int x, int y) {
-		if(rooms.size()<1) {return null;}
-		Room closestRoom = rooms.get(0);
+		if(shipRooms.size()<1) {return null;}
+		Room closestRoom = shipRooms.get(0);
 		Point closest = closestRoom.getLocation();
-		for(Room r :rooms) {
+		for(Room r :shipRooms) {
 			Point n=r.getLocation();
 			if(closest.x+closest.y>n.x+n.y && closest.x*closest.y > n.x*n.y) {
 				closest = n;
@@ -258,11 +331,11 @@ public class Ship implements Handleable{
 		return closestRoom;
 	}
 	public List<Room> getRooms() {
-		return rooms;
+		return shipRooms;
 	}
 	public List<Crew> getRoomLeaders(){
 		List<Crew> leaders = new ArrayList<Crew>();
-		for(Room room: rooms) {
+		for(Room room: shipRooms) {
 			leaders.add(room.getRoomLeader());
 		}
 		return leaders;
@@ -283,14 +356,14 @@ public class Ship implements Handleable{
 
 
 	public void setRooms(List<Room> rooms) {
-		this.rooms = rooms;
+		this.shipRooms = rooms;
 	}
 
 
 	public Sensor getSensor() {
-		for(int i = 0;i<rooms.size();i++){
-			if(rooms.get(i) instanceof SensorRoom) {
-				return ((SensorRoom)rooms.get(i)).getSensor();
+		for(int i = 0;i<shipRooms.size();i++){
+			if(shipRooms.get(i) instanceof SensorRoom) {
+				return ((SensorRoom)shipRooms.get(i)).getSensor();
 			}
 		}
 		return null;
@@ -299,9 +372,9 @@ public class Ship implements Handleable{
 
 
 	public void setSensor(Sensor sensor) {
-		for(int i = 0;i<rooms.size();i++){
-			if(rooms.get(i) instanceof SensorRoom) {
-				((SensorRoom)rooms.get(i)).setSensor(sensor);
+		for(int i = 0;i<shipRooms.size();i++){
+			if(shipRooms.get(i) instanceof SensorRoom) {
+				((SensorRoom)shipRooms.get(i)).setSensor(sensor);
 				break;
 			}
 		}
@@ -411,8 +484,8 @@ public class Ship implements Handleable{
 		
 		//Render the rooms square
 		Graphics2D g2d = (Graphics2D)g.create();
-		for(int i = 0;i<rooms.size();i++) {
-			Room r= rooms.get(i);
+		for(int i = 0;i<shipRooms.size();i++) {
+			Room r= shipRooms.get(i);
 			g2d.setColor(Color.red);
 			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
@@ -422,8 +495,8 @@ public class Ship implements Handleable{
 
 
 	public void generateSensorSpheres(Sensor sensor) {
-		for(int i = 0; i<rooms.size();i++) {
-			rooms.get(i).generateSensorSpheres(sensor);
+		for(int i = 0; i<shipRooms.size();i++) {
+			shipRooms.get(i).generateSensorSpheres(sensor);
 		}
 	}
 	
@@ -466,9 +539,9 @@ public class Ship implements Handleable{
 
 	
 	public StaffRoom getStaffRoom() {
-		for(int i=0;i<rooms.size();i++) {
-			if(rooms.get(i) instanceof StaffRoom) {
-				return (StaffRoom) rooms.get(i);
+		for(int i=0;i<shipRooms.size();i++) {
+			if(shipRooms.get(i) instanceof StaffRoom) {
+				return (StaffRoom) shipRooms.get(i);
 			}
 		}
 		return null;
@@ -587,7 +660,7 @@ public class Ship implements Handleable{
 
 
 	public Room getWeaponRoom() {
-		for(Room room: rooms) {
+		for(Room room: shipRooms) {
 			if(room instanceof WeaponsRoom) {
 				return room;
 			}
@@ -683,10 +756,10 @@ public class Ship implements Handleable{
 		while(!complete) {
 			num = 0;
 			ArrayList<Rectangle> roomRects = new ArrayList<>();
-			for(int i = 0; i<rooms.size();i++) {
-				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rectTolerance*2-rooms.get(i).getSize());
-				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rectTolerance*2-rooms.get(i).getSize());
-				Rectangle roomRect = new Rectangle(rectX,rectY,rooms.get(i).getSize()+rectTolerance*2,rooms.get(i).getSize()+rectTolerance*2);
+			for(int i = 0; i<shipRooms.size();i++) {
+				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rectTolerance*2-shipRooms.get(i).getSize());
+				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rectTolerance*2-shipRooms.get(i).getSize());
+				Rectangle roomRect = new Rectangle(rectX,rectY,shipRooms.get(i).getSize()+rectTolerance*2,shipRooms.get(i).getSize()+rectTolerance*2);
 				boolean rectFits = true;
 				for(int k =0;k<roomRects.size();k++) {
 						if(roomRects.get(k).intersects(roomRect)) {
@@ -713,11 +786,11 @@ public class Ship implements Handleable{
 				}
 				if(rectFits) {
 					num++;
-					rooms.get(i).setLocation(new Point(rectX+rectTolerance,rectY+rectTolerance));
+					shipRooms.get(i).setLocation(new Point(rectX+rectTolerance,rectY+rectTolerance));
 					roomRects.add(roomRect);
 				}
 			}
-			if(num==rooms.size()) {complete = true;}	
+			if(num==shipRooms.size()) {complete = true;}	
 		}
 		
 	}
@@ -741,5 +814,7 @@ public class Ship implements Handleable{
 	public Shape getClip() {
 		return lImage.getClip();
 	}
-	
+	public void setBs(BattleScreen bs) {
+		this.bs = bs;
+	}
 }

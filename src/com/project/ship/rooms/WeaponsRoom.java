@@ -23,13 +23,13 @@ public class WeaponsRoom extends Room {
 		this.weapons = weapons;
 	}
 
-	public WeaponsRoom(Weapon[] we,String name) {
-		super(name);
+	public WeaponsRoom(Weapon[] we,String name,int health) {
+		super(name,health);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
-	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name) {
-		super(name);
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int health) {
+		super(name,health);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		weapons.addAll(backWeapons);

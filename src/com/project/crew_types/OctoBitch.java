@@ -11,19 +11,19 @@ public class OctoBitch extends Crew{
 	private static float raceRelationVariance = 0.2f;
 	
 	public OctoBitch(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender,boolean visible) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.octoBitch,visible);
+			char gender,boolean visible,int health) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.octoBitch,visible,health);
 		
 	}
-	public OctoBitch(boolean random,boolean visible) {
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.octoBitch, visible);
+	public OctoBitch(boolean random,boolean visible,int health) {
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, getRandomStat(statVariance), getRandomGender(), RaceID.octoBitch, visible,health);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public OctoBitch(boolean visible) {
+	public OctoBitch(boolean visible,int health) {
 		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)15),
 				getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)20), 
-				getRandomWeightedStat(statVariance,(byte)25), 0, 0, getRandomWeightedStat(statVariance,(byte)50), getRandomGender(), RaceID.octoBitch, visible);
+				getRandomWeightedStat(statVariance,(byte)25), 0, 0, getRandomWeightedStat(statVariance,(byte)50), getRandomGender(), RaceID.octoBitch, visible,health);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}

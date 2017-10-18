@@ -87,6 +87,8 @@ public class BattleScreen extends Main {
 		}
 		chaserShip.setChased(false);
 		chasedShip.setChased(true);
+		chaserShip.setBs(this);
+		chasedShip.setBs(this);
 
 		for (int i = 0; i < 40; i++) {
 			Star starp = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), "res/star.png", true, 0, Main.WIDTH / 2, 0,
@@ -251,7 +253,7 @@ public class BattleScreen extends Main {
 
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,Point shot){
 		for(Weapon weapon:weapons) {
-			new ProjectileAnimation(primary, secondary, 200, true, weapon.fire(), shot,weapon.getSlot()).start();
+			new ProjectileAnimation(primary, secondary, 200, true, shot,weapon.getSlot()).start();
 		}
 	}
 	public void emptyTurnWarning(){
@@ -472,6 +474,10 @@ public class BattleScreen extends Main {
 	public Ship getPlayerShip() {
 		if(playerIsChaser){return chaserShip;}
 		return chasedShip;
+	}
+	public Ship getEnemyShip() {
+		if(playerIsChaser){return chasedShip;}
+		return chaserShip;
 	}
 
 	
