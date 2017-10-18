@@ -8,10 +8,9 @@ import com.project.DamageType;
 public class Destructive implements WeaponEffect {
 	private int rateOfFire;
 	private int damagePerShot;
-	private DamageType damageType;
 	private double accuracy;
-	private int weaponSwayMod;
-	
+	private boolean isPhysical;
+	private int radiusOfHit;
 	public int getRateOfFire() {
 		return rateOfFire;
 	}
@@ -20,21 +19,6 @@ public class Destructive implements WeaponEffect {
 		return damagePerShot;
 	}
 
-	public DamageType getDamageType() {
-		return damageType;
-	}
-
-	public void setDamageType(DamageType damageType) {
-		this.damageType = damageType;
-	}
-
-	public int getWeaponSwayMod() {
-		return weaponSwayMod;
-	}
-
-	public void setWeaponSwayMod(int weaponSwayMod) {
-		this.weaponSwayMod = weaponSwayMod;
-	}
 
 	public void setRateOfFire(int rateOfFire) {
 		this.rateOfFire = rateOfFire;
@@ -53,12 +37,12 @@ public class Destructive implements WeaponEffect {
 	}
 
 	
-	public Destructive(int rateOfFire, int damagePerShot, float accuracy, DamageType damageType,int weaponSwayMod){
+	public Destructive(int rateOfFire, int damagePerShot, float accuracy, boolean isPhysical, int radiusOfHit){
 		this.rateOfFire=rateOfFire;
 		this.damagePerShot =damagePerShot;
 		this.accuracy=accuracy;
-		this.damageType = damageType;
-		this.weaponSwayMod = weaponSwayMod;
+		this.isPhysical = isPhysical;
+		this.radiusOfHit = radiusOfHit;
 		
 	}
 	public Object[] fire(){
@@ -70,7 +54,7 @@ public class Destructive implements WeaponEffect {
 				accuracy[i]=0;
 			}
 		}
-		Object[] damageDealt = {rateOfFire,accuracy,weaponSwayMod,getDamagePerShot(),damageType}; // to return, holds the shots hit and dmg per shot
+		Object[] damageDealt = {rateOfFire,accuracy,getDamagePerShot(),isPhysical,radiusOfHit}; // to return, holds the shots hit and dmg per shot
 		return damageDealt;
 	}
 }

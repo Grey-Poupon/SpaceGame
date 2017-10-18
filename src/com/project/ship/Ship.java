@@ -56,32 +56,31 @@ public class Ship implements Handleable{
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
 	private int endSpeed;
-	private boolean visible;	
+	private boolean visible;
 	private boolean visibleCrew;
 	private EntityID entityID;
 	private Crew captain;
 	private boolean isPlayer=false;
+
 	public boolean isChased() {
 		return isChased;
 	}
-	
+
 	public void generate() {
 		if(getGenerator().canGenerate()) {
 			updatePowerConsumption();
 			getGenerator().generate();
-		}	
+		}
 	}
 
-	
 	public void setChased(boolean isChased) {
 		this.isChased = isChased;
 	}
 
-	Map<DamageType,Double> damageTakenModifier = new HashMap<DamageType,Double>();
-	Map<DamageType,Double> damageDealtModifier = new HashMap<DamageType,Double>();
+	Map<Boolean,Double> damageTakenModifier = new HashMap<Boolean,Double>();
+	Map<Boolean,Double> damageDealtModifier = new HashMap<Boolean,Double>();
 	private boolean beingSensed=false;
-	
-	
+
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
 		this.currHealth = health; 
@@ -95,10 +94,11 @@ public class Ship implements Handleable{
 		generateFlavourText();
 		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
-		for(DamageType dmg : DamageType.values()){
-			damageTakenModifier.put(dmg, 1d);
-			damageDealtModifier.put(dmg, 1d);
-		}
+		damageTakenModifier.put(true, 1d);
+		damageTakenModifier.put(false, 1d);
+		damageDealtModifier.put(true, 1d);
+		damageDealtModifier.put(false, 1d);
+		
 		shipBackSlots.get(0).setSlotItem(defaultWeapon.copy());
 		for(int i=1;i<shipBackSlots.size();i++){
 			shipBackSlots.get(i).setSlotItem(defaultEngine.copy());
@@ -117,7 +117,6 @@ public class Ship implements Handleable{
 			unassignedCrew.add(crewie);
 		}	
 		randomlyFillRooms();
-
 	}
 	
 	private void generateResources() {
@@ -125,7 +124,10 @@ public class Ship implements Handleable{
 		resources.put("missiles", 500);
 	}
 
-
+	public void apply(Weapon w) {
+		
+	}
+	
 	private void randomlyFillRooms() {
 		Random rand = new Random();
 		int index;
@@ -135,13 +137,14 @@ public class Ship implements Handleable{
 			unassignedCrew.get(index).setRoomIn(room);
 			unassignedCrew.remove(index);
 		}
+		getWeaponRoom().addCrew(unassignedCrew.get(0));
+		unassignedCrew.remove(0);
 		for(Crew crew:unassignedCrew) {
 			index = rand.nextInt(rooms.size());
 			rooms.get(index).addCrew(crew);
 		}
 		unassignedCrew.clear();	
 	}
-
 
 	private void generateRooms() {
 
@@ -337,19 +340,19 @@ public class Ship implements Handleable{
 	public int getCurrHealth(){
 		return currHealth;
 	}
-	public void takeDamage(int damage, DamageType type){
-		this.currHealth-=damage*damageTakenModifier.get(type);
+	public void takeDamage(int damage, boolean isPhysical){
+		this.currHealth-=damage*damageTakenModifier.get(isPhysical);
 	}
-	public Double getDamageTakenModifier(DamageType dt) {
+	public Double getDamageTakenModifier(boolean dt) {
 		return damageTakenModifier.get(dt);
 	}
-	public void setDamageTakenModifier(DamageType dt, Double double1) {
+	public void setDamageTakenModifier(boolean dt, Double double1) {
 		damageDealtModifier.put(dt, Double.valueOf(double1));
 	}
-	public Double getDamageDealtModifier(DamageType dt) {
+	public Double getDamageDealtModifier(boolean dt) {
 		return damageDealtModifier.get(dt);
 	}
-	public void setDamageDealtModifier(DamageType dt, int mod) {
+	public void setDamageDealtModifier(boolean dt, int mod) {
 		damageDealtModifier.put(dt, Double.valueOf(mod));
 	}
 	

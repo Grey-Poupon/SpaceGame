@@ -8,7 +8,6 @@ import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
-import com.project.weapons.weapon_types.FireableWeapon;
 
 public class ProjectileAnimation implements Handleable{
 	private static int animationsRunning;
@@ -26,8 +25,8 @@ public class ProjectileAnimation implements Handleable{
 	private Slot fromSlot;
 	private Object[] damageDealt;
 	private Animation animations[];
-	
-	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
+	private boolean running;
+	public ProjectileAnimation(Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Object[] effects,Point click,Slot slot) {
 		this.primary       = primary;
 		this.secondary     = secondary;
 		this.isCrossScreen = isCrossScreen;
@@ -47,12 +46,11 @@ public class ProjectileAnimation implements Handleable{
 					if(i==1.0) {
 						this.noOfProjectiles++;
 					}
-				}		
+				}
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
-	
-		Handler.addHighPriorityEntity(this);
+		
 		animationsRunning++;
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
 		AdjustmentID align = AdjustmentID.None;
@@ -91,7 +89,6 @@ public class ProjectileAnimation implements Handleable{
 		return (animationsRunning != 0);
 	}
 	
-	
 	public void render(Graphics g) {
 		
 	}
@@ -129,31 +126,36 @@ public class ProjectileAnimation implements Handleable{
 				doDamage();
 				// delete self
 				 Animation.delete(animations[i]);
-			}
-			
+			}		
 		}
 		if(!stillRunning) {
 			animationsRunning--;
 			Handler.entitiesHighPriority.remove(this);
-		}	
+		}
+		setRunning(stillRunning);
 	}
-	
 	// start function for the group of animation
 	public void start() {
+		Handler.addHighPriorityEntity(this);
 		animations[0].start();
 	}
 	private void doDamage() {
 		float[] accuracy = (float[]) damageDealt[1];
 		int newX,newY,dmg;
-		FireableWeapon fireWeapon = (FireableWeapon) weapon;
+		Weapon fireWeapon =  weapon;
 		for(int j=0;j<(int)damageDealt[0];j++) {
 			if(accuracy[j]!=0) {
 				// add weaponSway
 				newX = (int) (rand.nextBoolean() ? click.x+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.x-((int)damageDealt[2]*(1/accuracy[j])));
 				newY = (int) (rand.nextBoolean() ? click.y+((int)damageDealt[2]*(1/fireWeapon.getAccuracy())):click.y-((int)damageDealt[2]*(1/accuracy[j])));
 				// dmg here
-				dmg = secondary.roomDamage(newX, newY) + (Integer) damageDealt[3];
-				secondary.takeDamage(dmg,(DamageType)damageDealt[4]);
+				if(!weapon.isTargetSelf()){
+					dmg = secondary.roomDamage(newX, newY);
+					secondary.takeDamage(dmg,(boolean)damageDealt[3]);					
+				}else{
+					primary.apply(weapon);
+				}
+
 			}
 		}
 	}
@@ -162,6 +164,14 @@ public class ProjectileAnimation implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 	
 }
