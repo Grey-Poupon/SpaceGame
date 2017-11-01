@@ -216,7 +216,7 @@ public class Animation implements Handleable {
 			tickCounter++;
 			// move
 			if(moving) {
-				System.out.println(xVel+" "+yVel);
+				//System.out.println(xVel+" "+yVel);
 				xCoordinate   += xVel;
 				xPixelsToMove -= Math.abs(xVel);
 				yCoordinate   += yVel;

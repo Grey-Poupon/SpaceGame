@@ -61,6 +61,7 @@ public class BattleScreen extends Main {
 	private Player player;
 	private Ship playerShip;
 	private Ship enemyShip;
+	
 	public BattleScreen() {
 		player = new Player(100);
 		handler = new BattleHandler(this);
@@ -113,8 +114,8 @@ public class BattleScreen extends Main {
 
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
 
-		ui = new BattleUI(this, chaserShip, chasedShip);
-		keyIn = new BattleKeyInput(this);
+		ui      = new BattleUI(this, chaserShip, chasedShip);
+		keyIn   = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		chasedHealthbar = new ImageHandler(797, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
@@ -145,22 +146,24 @@ public class BattleScreen extends Main {
 		// set phase ,next turn
 		currentPhase = BattlePhases.phases[currentPhasePointer];
 		isPlayersTurn = !isPlayersTurn;
+		
 		// Turn Textual output
 		String phase = "";
-		if (currentPhase == BattlePhases.WeaponsButton) {
-			phase = "Weapons Button";
+		if (currentPhase == BattlePhases.WeaponActions) {
+			phase = "Weapons Action";
 		}
 		if (currentPhase == BattlePhases.WeaponsClick) {
 			phase = "Weapons Click";
 		}
-		if (currentPhase == BattlePhases.Engine) {
-			phase = "Engine";
+		if (currentPhase == BattlePhases.GeneratorActions) {
+			phase = "Generator Actions";
 		}
 		if (currentPhase == BattlePhases.Final) {
 			phase = "final";
 		}
 		String turn = isPlayersTurn ? "Players" : "Enemys";
 		System.out.println("\nIts the " + phase + " phase and the " + turn + " turn");
+	
 	}
 
 	public void tick() {
@@ -170,12 +173,24 @@ public class BattleScreen extends Main {
 
 			if(!isPlayersTurn) {
 		
-				if(currentPhase == BattlePhases.WeaponsButton) {
+				if(currentPhase == BattlePhases.WeaponActions) {
 					if(playerIsChaser) {
-						chasedWeaponChoice.add(enemyShip.getBackWeapons().get(0));
+						List<Weapon> weapons = chasedShip.getBackWeapons();
+						if(weapons.size() > 0){
+							chasedWeaponChoice.add(weapons.get(0));
+						}
+						else{
+							System.out.println("Enemy Weapon Choice Error - 001");
+						}
 					}
 					else {
-						chaserWeaponChoice.add(enemyShip.getBackWeapons().get(0));
+						List<Weapon> weapons = chaserShip.getBackWeapons();
+						if(weapons.size() > 0){
+							chaserWeaponChoice.add(weapons.get(0));
+						}	
+						else{
+							System.out.println("Enemy Weapon Choice Error - 002");
+						}
 					}
 					System.out.println("Enemy Weapon Reveal");
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
@@ -185,9 +200,9 @@ public class BattleScreen extends Main {
 						chaserShotLocation = new Point(1000, 450);
 					}
 					System.out.println("Enemy Click (not revealed)");
-				} else if (currentPhase == BattlePhases.Cockpit) {
+				} else if (currentPhase == BattlePhases.GeneratorActions) {
 					if (playerIsChaser) {
-						chasedSpeedChoice = 200;
+						chasedSpeedChoice = 100;
 						enemyShip.setEndSpeed(chasedSpeedChoice);
 					}
 				}
@@ -198,13 +213,20 @@ public class BattleScreen extends Main {
 			if (currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
 				// apply speed setting parameters for end of turn based on remain power or
-				// assigned power				
+				// assigned power	
+				
+				/**Move Crew**/
+				moveCrew();
+				
+				/**Set Speed**/
 				chaserShip.generate();
 				chasedShip.generate();
 				chaserShip.accelerate();
 				chasedShip.accelerate();
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
+				
+				/**Fire Weapons**/
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocation);
 				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, chaserShotLocation);
 				chasedWeaponChoice.clear();
@@ -227,6 +249,7 @@ public class BattleScreen extends Main {
 				chaserShip.tickLayers();
 				chasedShip.tickLayers();
 			}
+			/**Update Healthbars**/
 			if (chaserHealthbar != null && chasedHealthbar != null) {
 				float scale = ((float) chaserShip.getCurrHealth() / (float) chaserShip.getMaxHealth()) * 1.2f;
 				if (scale < 0) {
@@ -243,8 +266,6 @@ public class BattleScreen extends Main {
 		}
 	}
 
-
-
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,Point shot){
 		for(Weapon weapon:weapons) {
 			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot,weapon.getSlot());
@@ -252,9 +273,11 @@ public class BattleScreen extends Main {
 
 		}
 	}
+
 	public void emptyTurnWarning(){
 		System.out.println("You've not selected any actions this turn, thats inadvisable");
 	}
+
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
 		if(button ==70) {
 			if(currentPhase == BattlePhases.GeneratorActions) {
@@ -278,23 +301,9 @@ public class BattleScreen extends Main {
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
 			}
-			if(ID == ButtonID.EndPhase) {
-				
-					//move people 
-					if(isPlayersTurn && currentPhase==BattlePhases.getFinalPlayableStage()){
-						List<Crew> crewList = playerShip.getAllCrew();
-
-						for(int i = 0;i<crewList.size();i++){
-							Crew crew = crewList.get(i);
-							if(crew.isMoving()){
-								crew.getRoomMovingFrom().removeCrew(crew);
-								crew.getRoomMovingTo().addCrew(crew);
-								crew.setMoving(false);
-							}				
-						}
-					}
+			if(ID == ButtonID.EndPhase) {			
 					
-					// fire weapons
+					// add weapons to fire list
 					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
@@ -322,7 +331,7 @@ public class BattleScreen extends Main {
 
 					}		
 				// next turn
-				if(isPlayersTurn){
+				if(isPlayersTurn && currentPhase != BattlePhases.WeaponsClick){
 					nextTurn();
 				}
 			}	
@@ -460,6 +469,7 @@ public class BattleScreen extends Main {
 		chaserWeaponChoice.add(weapon);
 		
 	}
+	
 	public void addChasedWeaponChoice(Weapon weapon) {
 		chasedWeaponChoice.add(weapon);
 		
@@ -469,11 +479,24 @@ public class BattleScreen extends Main {
 		if(playerIsChaser){return chaserShip;}
 		return chasedShip;
 	}
+
 	public Ship getEnemyShip() {
 		if(playerIsChaser){return chasedShip;}
 		return chaserShip;
 	}
+	
+	public void moveCrew(){
+		List<Crew> crewList = playerShip.getAllCrew();
 
+		for(int i = 0;i<crewList.size();i++){
+			Crew crew = crewList.get(i);
+			if(crew.isMoving()){
+				crew.getRoomMovingFrom().removeCrew(crew);
+				crew.getRoomMovingTo().addCrew(crew);
+				crew.setMoving(false);
+			}				
+		}
+	}
 	
 
 }

@@ -116,7 +116,7 @@ public class ResourceLoader {
 		actions.add(crewActions.get("basicFire"));
 		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
-		shipWeapons.put("default",new Weapon(1,1, 1, 3, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
+		shipWeapons.put("default",new Weapon(50,1, 1, 30, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
 		
 	}
 
@@ -130,7 +130,7 @@ public class ResourceLoader {
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
 		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,10,1,1,0.75f,1, false,AdjustmentID.None));
-		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp));
+		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp_MidLeft));
 		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,0.75f,-1,false,AdjustmentID.None));
 		//combined
 		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	

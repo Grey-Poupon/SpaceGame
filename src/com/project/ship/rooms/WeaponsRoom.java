@@ -23,8 +23,9 @@ public class WeaponsRoom extends Room {
 		this.weapons = weapons;
 	}
 
-	public WeaponsRoom(Weapon[] we,String name,int health) {
+	public WeaponsRoom(Weapon[] we,String name,int health, int damageableRadius) {
 		super(name,health);
+		this.setDamageableRadius(damageableRadius);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
