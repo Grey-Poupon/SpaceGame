@@ -1,2 +1,6 @@
-/com/
 /res/
+/.classpath
+/.project
+/.settings/
+/README.md
+/com/

@@ -473,7 +473,4 @@ public class BattleScreen extends Main {
 		if(playerIsChaser){return chasedShip;}
 		return chaserShip;
 	}
-
-	
-
 }

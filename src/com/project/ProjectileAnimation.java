@@ -39,7 +39,7 @@ public class ProjectileAnimation implements Handleable{
 		this.weapon        = (Weapon)  slot.getSlotItem();
 		this.projectileGap = weapon.getProjectileGap();
 		this.effects  = weapon.fire(); 
-		
+		this.damageInfo = new Object[effects.length][];
 		//effect handler; 
 		for(int i = 0;i<effects.length;i++) {
 			Object effect = effects[i];
