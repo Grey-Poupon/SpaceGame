@@ -106,6 +106,7 @@ public class Slot implements Handleable{
 
 	@Override
 	public void tick() {
+		slotItem.tick();
 		slotItem.getSlotItemBody().tick();
 		
 	}

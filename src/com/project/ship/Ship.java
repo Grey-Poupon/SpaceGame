@@ -42,19 +42,19 @@ public class Ship implements Handleable{
 	private int health;
 	private int maxHealth;
 	private int currHealth;
-	private int speed = 200;
-	private int tempSpeed =0;
+	private int speed         = 200;
+	private int tempSpeed     = 0;
 	private int distanceToEnd = 250; // for distance system
+	private int power         = 0;
 	private int speedChange;
-	private int power = 0;
 	private Engine2 engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
-	private List<Room> shipRooms = new ArrayList<Room>();
-	private List<Slot>	   shipBackSlots       = new ArrayList<Slot>();
-	private List<Slot>	   shipFrontSlots      = new ArrayList<Slot>();
-	private List<Crew>     allCrew             = new ArrayList<Crew>();
-	private List<Crew>     unassignedCrew      = new ArrayList<Crew>();
-	private List<Handleable> sprites = new ArrayList<Handleable>();
+	private List<Room> shipRooms 		   = new ArrayList<Room>();
+	private List<Slot> shipBackSlots       = new ArrayList<Slot>();
+	private List<Slot> shipFrontSlots      = new ArrayList<Slot>();
+	private List<Crew> allCrew             = new ArrayList<Crew>();
+	private List<Crew> unassignedCrew      = new ArrayList<Crew>();
+	private List<Handleable> sprites 	   = new ArrayList<Handleable>();
 	private boolean isChased;
 	private HashMap<String,Integer> resources = new HashMap<>();
 	private int mass=200;
@@ -86,32 +86,37 @@ public class Ship implements Handleable{
 
 	public Ship(int x,int y,float z, float zPerLayer, String path, boolean visible, EntityID id, int health,float scale, boolean visibleCrew,boolean isChased){
 		lImage = new LayeredImage(x, y, path,  z,zPerLayer,scale);
-		this.currHealth = health; 
-		this.maxHealth = health;
-		shipBackSlots= lImage.getBackSlots();
-		shipFrontSlots= lImage.getFrontSlots();
-		this.isChased = isChased;
-		this.visible = visible;
+		this.currHealth  = health; 
+		shipBackSlots    = lImage.getBackSlots();
+		shipFrontSlots   = lImage.getFrontSlots();
+		this.isChased    = isChased;
+		this.visible     = visible;
 		this.visibleCrew = visibleCrew;
-		this.entityID = id;
+		this.entityID    = id;
+		
 		generateFlavourText();
-		Weapon defaultWeapon = ResourceLoader.getShipWeapon("default");
+		Weapon   defaultWeapon = ResourceLoader.getShipWeapon("default");
 		Thruster defaultEngine = ResourceLoader.getShipEngine("octoidEngine");
-		damageTakenModifier.put(true, 1d);
+		damageTakenModifier.put(true,  1d);
 		damageTakenModifier.put(false, 1d);
-		damageDealtModifier.put(true, 1d);
+		damageDealtModifier.put(true,  1d);
 		damageDealtModifier.put(false, 1d);
 		
-		shipBackSlots.get(0).setSlotItem(defaultWeapon.copy());
-		for(int i=1;i<shipBackSlots.size();i++){
-			shipBackSlots.get(i).setSlotItem(defaultEngine.copy());
+		
+		for(int i=0;i<shipBackSlots.size();i++){
+			if(i==0){shipBackSlots.get(i).setSlotItem(defaultEngine.copy());}
+			else{
+				shipBackSlots.get(i).setSlotItem(defaultWeapon.copy());
+			}
 		}
 		for(int i=0;i<shipFrontSlots.size();i++){
 			shipFrontSlots.get(i).setSlotItem(defaultWeapon.copy());
 		}
 		generateRooms();
+		setMaxHealth();
 		generateResources();
 		sortSprites();
+		
 		for(int i =0; i<10;i++) {
 			Crew crewie = Crew.generateRandomCrew(visibleCrew);
 			crewie.setShip(this);
@@ -128,7 +133,7 @@ public class Ship implements Handleable{
 			ship = this;
 		}
 		else{
-			ship = isPlayer? bs.getPlayerShip():bs.getEnemyShip();	
+			ship = isPlayer? bs.getEnemyShip():bs.getPlayerShip();	
 		}
 		
 		int rateOfFire         = (int)     damageInfo[effects.length-1][0];
@@ -137,38 +142,50 @@ public class Ship implements Handleable{
 		boolean isPhysical     = (boolean) damageInfo[effects.length-1][3];
 		int areaOfEffectRadius = (int)     damageInfo[effects.length-1][4];
 		
-		/**loop through each weapon shot**/
-		for(int j = 0;j<accuracy.length;j++){
-			if(accuracy[j]!=0){
-				
-				/**loop through the different effects**/
-				for(int i = 0;i<effects.length;i++){
 					
-					/**Do destructive effects**/
-					if(effects[i] instanceof Destructive){
-						//rateOfFire,accuracy,DamagePerShot,isPhysical,areaOfEffectRadius
-							List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
-							for(int k = 0;k < rooms.size();k++){
-								rooms.get(k).takeDamage(damagePerShot);
-	
-								if(isPhysical){
-									for(Crew crew: rooms.get(k).crewInRoom){
-										crew.takeDamage(damagePerShot);
-									}
-								}
+		/**loop through the different effects**/
+		for(int i = 0;i<effects.length;i++){
+			
+			/**Do destructive effects**/
+			if(effects[i] instanceof Destructive){
+					List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
+					
+					/**loop through rooms that get hit**/
+					for(int k = 0;k < rooms.size();k++){
+						
+						/**Room takes damage**/
+						int roomTableRoll = rooms.get(k).takeDamage(damagePerShot);
+						/**Rooms Roll Table**/
+						doRollTableEffect(roomTableRoll,rooms.get(k));//Unimplemented
+
+						/**If its physical, damage crew in room**/
+						if(isPhysical){
+							for(Crew crew: rooms.get(k).crewInRoom){
+								/**Crew takes damage**/
+								int crewTableRoll = crew.takeDamage(damagePerShot);
+								/**Crews Roll Table**/
+								doRollTableEffect(crewTableRoll, crew);//Unimplemented
 							}
 						}
-					if(effects[i] instanceof Buffer){
-						// do buffer effect
 					}
-					
 				}
-				
-			}
+			/**Do buffer effects**/
+			if(effects[i] instanceof Buffer){
+				// do buffer effect
+			}	
 		}
 	}
 	
-	
+	private void doRollTableEffect(int rollTableRoll, Crew crew) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void doRollTableEffect(int rollTableroll, Room room) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
 		List<Room> returnableRooms = new ArrayList<Room>();
 		/**Make coordinates relative to ship**/
@@ -178,17 +195,25 @@ public class Ship implements Handleable{
 		float xScaled = xRelToShip/lImage.getLargestLayer().getxScale();
 		float yScaled = yRelToShip/lImage.getLargestLayer().getyScale();
 		
-		/**create circle of damage**/
-		Ellipse2D damageCircle = new Ellipse2D.Float(xScaled,yScaled,areaOfEffectRadius,areaOfEffectRadius);
-		
+	
 		/**check room intersection with damaged area**/
 		for(int i = 0;i<shipRooms.size();i++){
 			Room room = shipRooms.get(i);
-			if(damageCircle.intersects(room.getLocation().x, room.getLocation().y, room.getDamagableRadius(), room.getDamagableRadius())){
+			if(checkIfCirclesTouch(xScaled,yScaled,areaOfEffectRadius,room.getLocation().x,room.getLocation().y,room.getDamageableRadius())){
 				returnableRooms.add(room);
 			}
 		}
 		return returnableRooms;
+	}
+
+	private boolean checkIfCirclesTouch(float x1, float y1, float r1, float x2, float y2, float r2) {
+		double xSquare = Math.pow(x1-x2, 2);
+		double ySquare = Math.pow(y1-y2, 2);
+		double gap     = Math.sqrt(xSquare+ySquare);
+		if(gap > r1+r2){
+			return false;
+		}
+		return true;
 	}
 
 	private void generateResources() {
@@ -225,8 +250,8 @@ public class Ship implements Handleable{
 		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",100));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",100));
-		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",100));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",100,100));
+		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",100,100));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
 		shipRooms.add(new StaffRoom(items,"Staff Room",100));
@@ -313,7 +338,7 @@ public class Ship implements Handleable{
 			Room room = getClosestRoom(x, y);
 			if(room==null) {return 0;}
 			int distanceToRoom = (int) (Math.pow(room.getLocation().getX(),2) + Math.pow(room.getLocation().getY(),2));
-			if (distanceToRoom < room.getDamagableRadius()) {
+			if (distanceToRoom < room.getDamageableRadius()) {
 				dmg  = (1/distanceToRoom) * room.getDamageMod();
 			}
 		}
@@ -403,13 +428,22 @@ public class Ship implements Handleable{
 	public List<Crew> getAllCrew() {
 		return allCrew;
 	}
-	public int getHealth() {
-		return health;
+
+	public void setMaxHealth(){
+		int maxHealth = 0;
+		for(Room room:shipRooms){
+			maxHealth+= room.getMaxHealth();
+		}
+		this.maxHealth = maxHealth;
 	}
 	public int getMaxHealth(){
 		return maxHealth;
 	}
 	public int getCurrHealth(){
+		int currHealth = 0;
+		for(Room room:shipRooms){
+			currHealth+= room.getHealth();
+		}
 		return currHealth;
 	}
 	public void takeDamage(int damage, boolean isPhysical){

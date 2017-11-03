@@ -259,6 +259,8 @@ public class Animation implements Handleable {
 					// kill self
 					if(!monitored) {Animation.delete(this);}
 					running = false;
+					framesLeft = noHorizTiles*noVertTiles;
+					tickCounter=0;
 				}
 			}
 		}

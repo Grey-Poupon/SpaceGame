@@ -453,9 +453,12 @@ public class Crew implements Observer{
 		
 	}
 
-	public void takeDamage(int damagePerShot) {
-		// TODO Auto-generated method stub
-		
+	public int takeDamage(int damage) {
+		this.health-=damage;
+		//
+		// Do Roll Table stuff
+		//
+		return 1;
 	}
 
 

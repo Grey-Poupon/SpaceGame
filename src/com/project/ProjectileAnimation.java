@@ -34,12 +34,15 @@ public class ProjectileAnimation implements Handleable{
 		this.isCrossScreen = isCrossScreen;
 		this.pushBack	   = pushBack;
 		this.click         = click;
-		this.fromSlot = slot;
+		this.fromSlot      = slot;
 		this.isLeftToRight = click.x > slot.getX();
 		this.weapon        = (Weapon)  slot.getSlotItem();
 		this.projectileGap = weapon.getProjectileGap();
-		this.effects  = weapon.fire(); 
-		this.damageInfo = new Object[effects.length][];
+		this.effects       = weapon.fire(); 
+
+		// size - effects.Length(), size of largest Fire returned array;
+		this.damageInfo = new Object[effects.length][5];
+	
 		//effect handler; 
 		for(int i = 0;i<effects.length;i++) {
 			Object effect = effects[i];
@@ -64,8 +67,11 @@ public class ProjectileAnimation implements Handleable{
 		this.animations    = new Animation[noOfProjectiles];
 		
 		animationsRunning++;
+		
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
 		AdjustmentID align = AdjustmentID.None;
+		
+		// set mask and alignment based off of direction
 		if(isCrossScreen) {
 			if(isLeftToRight) {
 				mask = new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT); 
@@ -152,15 +158,7 @@ public class ProjectileAnimation implements Handleable{
 		animations[0].start();
 	}
 	private void doDamage() {
-
-		
-		if(weapon.isTargetSelf()){
 			primary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
-		}
-		else{
-			secondary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
-
-		}
 	}
 
 	@Override

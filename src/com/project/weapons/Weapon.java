@@ -55,6 +55,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		this.targetSelf = targetSelf;
 		this.projectileGap = projectileGap;
 		this.weaponBody = weaponBody.copy();
+		this.weaponBody.setMonitored(true);
 		if(we!=null) {
 			this.effects =we;
 		}
@@ -159,12 +160,10 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 
 	public void render(Graphics g, Slot slot) {
 		if(!weaponBody.isRunning() && projAnim!=null) {
-			
 				projAnim.start();
 				projAnim =null;
-			
-			
 		}
+		
 		weaponBody.setxCoordinate(slot.getX());
 		weaponBody.setyCoordinate(slot.getY()+slot.getHeight()/2-weaponBody.getTileHeight());
 		if(!slot.isFront()) {
@@ -230,6 +229,12 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	
 	public void setProjAnim(ProjectileAnimation pro) {
 		projAnim = pro;
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

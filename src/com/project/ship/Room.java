@@ -15,9 +15,10 @@ import com.project.StatID;
 
 public abstract class Room {
 	private int health;
+	private int maxHealth;
 	private String roomName;
 	private Point location;
-	private int damagableRadius;
+	private int damageableRadius;
 	private int damageMod;
 	private int efficiency;
 	private Crew roomLeader;
@@ -29,6 +30,7 @@ public abstract class Room {
 	public Room(String name, int health) {
 		this.roomName = name;
 		this.health = health;
+		this.maxHealth = health;
 	}
 	public Room() {
 
@@ -86,11 +88,11 @@ public abstract class Room {
 	public Point getLocation() {
 		return location;
 	}
-	public int getDamagableRadius() {
-		return damagableRadius;
+	public int getDamageableRadius() {
+		return damageableRadius;
 	}
-	public void setDamagableRadius(int damagableRadius) {
-		this.damagableRadius = damagableRadius;
+	public void setDamageableRadius(int damagableRadius) {
+		this.damageableRadius = damagableRadius;
 	}
 	public int getDamageMod() {
 		return damageMod;
@@ -154,7 +156,17 @@ public abstract class Room {
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
-	public void takeDamage(int damage) {
+	public int takeDamage(int damage) {
 		health-=damage;
+		//
+		//Do Roll table stuff here
+		//
+		return 1;
+	}
+	public int getHealth() {
+		return health;
+	}
+	public int getMaxHealth() {
+		return maxHealth;
 	}
 }
