@@ -29,6 +29,7 @@ import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
+import sun.audio.*;
 
 public class BattleScreen extends Main {
 
@@ -63,6 +64,9 @@ public class BattleScreen extends Main {
 	private Ship enemyShip;
 	
 	public BattleScreen() {
+		
+	
+		
 		player = new Player(100);
 		handler = new BattleHandler(this);
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
@@ -97,12 +101,12 @@ public class BattleScreen extends Main {
 		}
 		Handler.addLowPriorityEntity(chaserShip);
 		Handler.addLowPriorityEntity(chasedShip);
-		// place ships
+		//Place ships
 		chaserShip.setX(-200);
 		chaserShip.setY(0);
 		chasedShip.setX(WIDTH/2);
 		chasedShip.setY(0);
-		phase 				 = new Text    ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
+		phase 				 = new Text          ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		

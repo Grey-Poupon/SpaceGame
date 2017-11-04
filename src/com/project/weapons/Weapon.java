@@ -135,7 +135,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 
 	public Object[] fire(){
 		resetCooldown();
-		weaponBody.start(false);
+		weaponBody.start(true);
 		Object[] returnableEffects = new Object[effects.size()];
 		
 		for(int i = 0;i < returnableEffects.length;i++) {
@@ -159,7 +159,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 
 	public void render(Graphics g, Slot slot) {
 		if(!weaponBody.isRunning() && projAnim!=null) {
-			
 				projAnim.start();
 				projAnim =null;
 			
