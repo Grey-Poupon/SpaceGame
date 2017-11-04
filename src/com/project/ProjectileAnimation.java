@@ -42,8 +42,7 @@ public class ProjectileAnimation implements Handleable{
 
 		// size - effects.Length(), size of largest Fire returned array;
 		this.damageInfo = new Object[effects.length][5];
-		
-		
+	
 		//effect handler; 
 		for(int i = 0;i<effects.length;i++) {
 			Object effect = effects[i];
