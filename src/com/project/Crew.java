@@ -1,6 +1,7 @@
 package com.project;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class Crew implements Observer{
 	private Ship ship;
 	private boolean roomLeader;
 	private Room roomLeading;
-
+	private Point locationInRoom = new Point(0,0);
 	public static String[] statNames = {"social","combat","gunner","engineering","science","pilot","stress","hunger"};
 	protected ImageHandler portrait;
 	protected ImageHandler cleanPortrait;
@@ -459,6 +460,18 @@ public class Crew implements Observer{
 		// Do Roll Table stuff
 		//
 		return 1;
+	}
+
+	public Point getLocationInRoom() {
+		return locationInRoom;
+	}
+
+	public void setLocationInRoom(Point locationInRoom) {
+		this.locationInRoom = locationInRoom;
+	}
+	public void incLocationInRoom(Point inc) {
+		this.locationInRoom.x+=inc.x;
+		this.locationInRoom.y+=inc.y;
 	}
 
 

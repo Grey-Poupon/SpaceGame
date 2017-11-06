@@ -518,6 +518,7 @@ public class Ship implements Handleable{
 			g2d.setColor(Color.red);
 			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
+			r.renderCrewOnShip(g2d, this);
 		}
 		
 	}
@@ -531,6 +532,9 @@ public class Ship implements Handleable{
 	
 	public void tick() {
 		lImage.tick();
+		for(int i=0;i<shipRooms.size();i++) {
+			shipRooms.get(i).tick();
+		}
 		for(int i = 0;i<shipBackSlots.size();i++) {
 			shipBackSlots.get(i).tick();
 			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());
