@@ -225,6 +225,9 @@ public class BattleScreen extends Main {
 				
 				/**Move Crew**/
 				moveCrew();
+				/**Refresh room UI**/
+				BattleUI.refreshRoomUI();
+				
 				
 				/**Set Speed**/
 				chaserShip.generate();
@@ -542,7 +545,4 @@ public class BattleScreen extends Main {
 			}				
 		}
 	}
-	
-
-
 }
