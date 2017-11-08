@@ -10,4 +10,5 @@ public interface Slottable {
 	public Slot getSlot();
 	public void setSlot(Slot slot);
 	Animation getSlotItemBody();
+	public void tick();
 }

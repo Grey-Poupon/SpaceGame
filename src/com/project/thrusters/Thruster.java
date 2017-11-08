@@ -153,6 +153,12 @@ public class Thruster implements Slottable,Actionable{
 		return thrusterImg.copy();
 	}
 
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 

@@ -68,8 +68,10 @@ public abstract class Room {
 	}
 	
 	public void addCrew(Crew crew) {
+		Random rand = new Random();
 		crew.setRoomIn(this);
 		crewInRoom.add(crew);
+		crew.setLocationInRoom(new Point(rand.nextInt(size),rand.nextInt(size)));
 	}
 	public void removeCrew(Crew crew) {
 		crewInRoom.remove(crew);
@@ -150,6 +152,30 @@ public abstract class Room {
 		}
 		g2d.fill(composite);
 	}
+	
+	public void renderCrewOnShip(Graphics g, Ship ship) {
+		Graphics2D g2d = (Graphics2D)g.create();
+		g2d.setColor(Color.blue);
+		for(int i = 0;i<crewInRoom.size();i++) {
+			g2d.fillOval((int)(ship.getLayeredImage().getLargestLayer().getxCoordinate()+ship.getLayeredImage().getLargestLayer().getxScale()*(crewInRoom.get(i).getLocationInRoom().x+location.x))
+					,(int) (ship.getLayeredImage().getLargestLayer().getyCoordinate()+ship.getLayeredImage().getLargestLayer().getyScale()*(crewInRoom.get(i).getLocationInRoom().y+location.y)), size/2, size/2);
+		}
+	}
+	
+	public void tick() {
+		Random rand =new Random();
+		for(int i =0;i<crewInRoom.size();i++) {
+			if(rand.nextInt(40) == 1) {
+				Crew c = crewInRoom.get(i);
+				int x = rand.nextInt(6)-3;
+				int y = rand.nextInt(6)-3;
+				if(c.getLocationInRoom().x+x<size && c.getLocationInRoom().x+x>0&&c.getLocationInRoom().y+y<size && c.getLocationInRoom().y+y>0)
+				c.incLocationInRoom(new Point(x,y));
+			}
+			
+		}
+	}
+	
 	public String getRoomName() {
 		return roomName;
 	}	

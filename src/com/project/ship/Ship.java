@@ -172,18 +172,16 @@ public class Ship implements Handleable{
 			/**Do buffer effects**/
 			if(effects[i] instanceof Buffer){
 				// do buffer effect
-			}	
+			}
 		}
 	}
 	
 	private void doRollTableEffect(int rollTableRoll, Crew crew) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	private void doRollTableEffect(int rollTableroll, Room room) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	private List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
@@ -380,8 +378,6 @@ public class Ship implements Handleable{
 		return buttons;
 	}
 
-
-
 	public void setRooms(List<Room> rooms) {
 		this.shipRooms = rooms;
 	}
@@ -501,9 +497,6 @@ public class Ship implements Handleable{
 		lImage.setY(y);
 	}
 
-
-
-
 	public void render(Graphics g) {
 		
 		for(int i = 0; i<sprites.size();i++) {
@@ -525,6 +518,7 @@ public class Ship implements Handleable{
 			g2d.setColor(Color.red);
 			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
+			r.renderCrewOnShip(g2d, this);
 		}
 		
 	}
@@ -538,6 +532,9 @@ public class Ship implements Handleable{
 	
 	public void tick() {
 		lImage.tick();
+		for(int i=0;i<shipRooms.size();i++) {
+			shipRooms.get(i).tick();
+		}
 		for(int i = 0;i<shipBackSlots.size();i++) {
 			shipBackSlots.get(i).tick();
 			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());
@@ -563,7 +560,6 @@ public class Ship implements Handleable{
 	public void tempUpdatePowerConsumption(int cost) {
 		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+cost);
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
-
 	}
 
 
@@ -604,10 +600,10 @@ public class Ship implements Handleable{
 		return shipFrontSlots;
 	}
 
-
 	public void setShipFrontSlots(List<Slot> shipFrontSlots) {
 		this.shipFrontSlots = shipFrontSlots;
 	}
+	
 	public void setTempSpeed(int speed) {
 		if(tempSpeed !=speed) {
 			tempUpdatePowerConsumption((speed-tempSpeed)*mass);
@@ -615,9 +611,6 @@ public class Ship implements Handleable{
 		}
 		
 	}
-
-
-
 
 	public List<Weapon> getFrontWeapons() {
 		List<Weapon> weapons = new ArrayList<Weapon>();
@@ -827,8 +820,7 @@ public class Ship implements Handleable{
 				}
 			}
 			if(num==shipRooms.size()) {complete = true;}	
-		}
-		
+		}	
 	}
 
 	public int getMass() {
