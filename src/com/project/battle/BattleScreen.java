@@ -61,6 +61,7 @@ public class BattleScreen extends Main {
 	private Button graphButton;
 	private Player player;
 	private int numWeaponClicks;
+	private int currentWeaponClick = 1;
 	private Ship playerShip;
 	private Ship enemyShip;
 	
@@ -159,6 +160,7 @@ public class BattleScreen extends Main {
 		}
 		if (currentPhase == BattlePhases.WeaponsClick) {
 			phase = "Weapons Click";
+			loadAimingMouseIcon();
 		}
 		if (currentPhase == BattlePhases.GeneratorActions) {
 			phase = "Generator Actions";
@@ -422,20 +424,51 @@ public class BattleScreen extends Main {
 		}
 	}
 
-	public boolean clickShip(int x, int y) {
+	public boolean clickShip(int x, int y) {   
 		if (currentPhase == BattlePhases.WeaponsClick) {
+			
 			if (playerIsChaser) {
 				chaserShotLocations.add(new Point(x, y)) ;
 			} else {
 				chasedShotLocations.add(new Point(x,y));
 			}
+			
 			if(chasedShotLocations.size()==numWeaponClicks || chaserShotLocations.size()==numWeaponClicks) {
 				nextTurn();
+				currentWeaponClick = 0;
+				/**Should reset mouse icon if currentWeaponClick is 0**/
+				loadAimingMouseIcon();
 			}
-			
+			else{
+				/**To keep track of which weapon click the player is on**/
+				currentWeaponClick++;
+				
+				/**next mouse icon**/
+				loadAimingMouseIcon();
+			}
 			return true;
 		}
 		return false;
+	}
+
+	/**Uses the global variable currentWeaponClick**/
+	private void loadAimingMouseIcon() {		
+		/**Reset mouse icon**/
+		if (currentWeaponClick<1){
+			handler.changeMouseIcon("res/mousePointer.png");   
+			
+			/**reset the current mouse click to 1**/
+			currentWeaponClick = 1;
+			
+		}
+		/**change to aiming icon**/
+		else{
+			int i = currentWeaponClick;
+			if(i>3){i=i%3+1;}
+			handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
+		}
+		
+		
 	}
 
 	public int getLayerClicked(int x, int y) {

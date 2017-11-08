@@ -54,12 +54,12 @@ public class ResourceLoader {
 	}
 	
 	public void loadAudio() {
-		try {
-			AudioStream as = new AudioStream(getClass().getResourceAsStream("/res/audio/music.wav"));
-			AudioPlayer.player.start(as);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			AudioStream as = new AudioStream(getClass().getResourceAsStream("/res/audio/music.wav"));
+//			AudioPlayer.player.start(as);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void loadCrewActions(){
@@ -170,6 +170,9 @@ public class ResourceLoader {
 		put(images,"res/tooltipSeparation4Sections.png");
 		put(images,"res/octiodLazer1Anim.png");
 		put(images,"res/mousePointer.png");
+		put(images,"res/mouseAimingIcon1.png");
+		put(images,"res/mouseAimingIcon2.png");
+		put(images,"res/mouseAimingIcon3.png");
 		put(images,"res/missileSpritesheet.png");
 		put(images,"res/octoidMissileLauncher.png");
 		put(images,"res/octoidMissileProjectile.png");
@@ -177,7 +180,6 @@ public class ResourceLoader {
 		put(images,"res/healthUncertainty.png");
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
-		put(images,"res/attackMousePointer.png");
 		put(images,"res/actionBox.png");
 		put(images,"res/actionBoxEmpty.png");
 		put(images,"res/walkingIcon.png");
