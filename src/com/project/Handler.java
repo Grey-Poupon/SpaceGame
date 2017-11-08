@@ -94,6 +94,9 @@ public class Handler {
 		anims.add(anim);
 		
 	}
+	public static void changeMouseIcon(String path){
+		mousePointer.changeImage(path, true);
+	}
 
 	
 

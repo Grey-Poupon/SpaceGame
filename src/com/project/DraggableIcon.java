@@ -85,13 +85,15 @@ public class DraggableIcon {
 				
 				// for room swapping
 				if(box.getMoveCrew() && (crew.getRoomIn() != box.getRoom() || crew.isMoving()) ) {
+					// if you put them back in the room they started in
 					if(box.getRoom()==crew.getRoomMovingFrom()) {
 						crew.setMoving(false);
 					}
 					else {
+					// if you're moving them to a new room
 						crew.setMoving(true);
 						crew.setRoomMovingTo(box.getRoom());
-					}
+					}					
 				}
 				
 				// set new actionbox

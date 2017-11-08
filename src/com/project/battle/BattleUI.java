@@ -116,9 +116,8 @@ public class BattleUI extends UI {
 				bs, false);
 
 
-		Button graph = new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),
-				pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
-				pShip.getGenerator().getEfficiencyGraph(), bs);
+		Button graph = new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
+		pShip.getGenerator().getEfficiencyGraph(), bs);
 		graph.setDraggable(true);
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
@@ -148,24 +147,22 @@ public class BattleUI extends UI {
 		if (crew.getRoomLeading() instanceof WeaponsRoom) {
 			List<Weapon> weapons = playerShip.getFrontWeapons();
 			Room room = crew.getRoomIn();
-			BattleUI.generateActionList(weapons, room);
+			BattleUI.generateRoomCards(weapons, room);
+			
 		} else if (crew.getRoomLeading() instanceof GeneratorRoom) {
 
 			GeneratorRoom room = (GeneratorRoom) playerShip.getGeneratorRoom();
 			List<Generator> generator = new ArrayList<Generator>();
 			generator.add(room.getGenerator());
 
-			BattleUI.generateActionList(generator, room);
+			BattleUI.generateRoomCards(generator, room);
+			
+			/**Images for side bar tabs - manoeuvre and speedometer**/
+			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
+			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
 
-			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,
-					EntityID.UI);
-			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50,
-					ButtonID.Manoeuvres, 0, true, img1, bs));
-
-			ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true,
-					EntityID.UI);
-			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset + img2.getHeight(),
-					50, 50, ButtonID.SpeedInput, 0, true, img2, bs));
+			ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true,	EntityID.UI);
+			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset + img2.getHeight(),	50, 50, ButtonID.SpeedInput, 0, true, img2, bs));
 
 			generateManoeuvreActionList((Cockpit) playerShip.getCockpit());
 
@@ -289,7 +286,7 @@ public class BattleUI extends UI {
 		}
 	}
 
-	public static void generateActionList(List<? extends Actionable> actionables, Room room) {
+	public static void generateRoomCards(List<? extends Actionable> actionables, Room room) {
 
 		// wipe tooltip
 		clearAllBoxes();
@@ -387,8 +384,7 @@ public class BattleUI extends UI {
 	}
 
 	public static void back() {
-		generateActionList(lastActionables, lastRoom);
-
+		generateRoomCards(lastActionables, lastRoom);
 	}
 
 	public static void generateInfo(Actionable actionable) {
@@ -398,7 +394,7 @@ public class BattleUI extends UI {
 				true, "Back", bs, true));
 		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,
 				listHeight, fullListWidth, tooltipButtonHeight, true);
-		;
+		
 	}
 
 	public static void clearAllBoxes() {
@@ -462,5 +458,18 @@ public class BattleUI extends UI {
 			resources = resources + " " + key + ":" + pShip.getResource(key);
 		}
 		resourcesButton.getText().setText(resources);
+	}
+	public static void refreshRoomUI(){
+		Crew crew;
+		if(lastRoom instanceof WeaponsRoom){
+			crew = bs.getPlayerShip().getWeaponRoom().getRoomLeader();
+		}
+		else if(lastRoom instanceof GeneratorRoom){
+			crew = bs.getPlayerShip().getGeneratorRoom().getRoomLeader();
+		}
+		else{
+			 crew = bs.getPlayerShip().getCockpit().getRoomLeader();
+		}
+		generateRoomButtons(crew, TooltipSelectionID.Room);
 	}
 }
