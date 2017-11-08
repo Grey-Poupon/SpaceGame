@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.imageio.ImageIO;
+
 import com.project.ship.Generator;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
-import sun.audio.*;
 
 public class ResourceLoader {
 	
@@ -54,12 +54,10 @@ public class ResourceLoader {
 	}
 	
 	public void loadAudio() {
-		try {
-			AudioStream as = new AudioStream(getClass().getResourceAsStream("/res/audio/music.wav"));
-			//AudioPlayer.player.start(as);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Sound music = new Sound("res/audio/music.wav") ;
+		music.loop();	
+			
+		
 	}
 	
 	private void loadCrewActions(){
