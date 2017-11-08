@@ -56,7 +56,7 @@ public class ResourceLoader {
 	public void loadAudio() {
 		try {
 			AudioStream as = new AudioStream(getClass().getResourceAsStream("/res/audio/music.wav"));
-			AudioPlayer.player.start(as);
+			//AudioPlayer.player.start(as);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

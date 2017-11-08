@@ -54,9 +54,8 @@ public class ShipItemCard {
 		
 			// loop to place
 		for(int i = 0; i < actions.size(); i++){
-			
 			// make box
-			ActionBox actionBox = new ActionBox(ResourceLoader.getImage("res/actionBox.png"), x+marginWidth , lastY, actions.get(i), room, bs);
+			ActionBox actionBox = new ActionBox(ResourceLoader.getImage("res/actionBox.png"), x+marginWidth , lastY, actions.get(actions.size()-i-1), room, bs);
 		    boxes.add(actionBox);
 		    BattleUI.actionBoxes.add(actionBox);
 	

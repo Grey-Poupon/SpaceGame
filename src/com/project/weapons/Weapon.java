@@ -87,7 +87,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return isPhysical;
 	}
 
-
 	public void setPhysical(boolean isPhysical) {
 		this.isPhysical = isPhysical;
 	}
@@ -136,13 +135,13 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 
 	public Object[] fire(){
 		resetCooldown();
-		weaponBody.start(true);
+		weaponBody.start(false);
 		Object[] returnableEffects = new Object[effects.size()];
 		
 		for(int i = 0;i < returnableEffects.length;i++) {
 			returnableEffects[i] = effects.get(i);
 		}
-		return returnableEffects;	
+		return returnableEffects;
 	}
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
