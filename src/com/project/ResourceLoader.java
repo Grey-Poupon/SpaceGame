@@ -54,9 +54,8 @@ public class ResourceLoader {
 	}
 	
 	public void loadAudio() {
-
-		Sound music = new Sound("res/audio/music.wav") ;
-		music.loop();	
+		//Sound music = new Sound("res/audio/music.wav") ;
+		//music.loop();	
 	}
 	
 	private void loadCrewActions(){
@@ -91,7 +90,7 @@ public class ResourceLoader {
 		actions2.add(crewActions.get("basicOverclock"));
 		actions2.add(crewActions.get("basicFix"));
 		
-		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
+		ImageHandler background = new ImageHandler(0, 0, "res/ui/engineCard.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
 
 		
@@ -114,17 +113,16 @@ public class ResourceLoader {
 
 	private void loadCrew() {
 		// TODO Auto-generated method stub
+		
 	}
 
-	private void loadShipWeapons() {
-		
+	private void loadShipWeapons(){
 		List<CrewAction> actions = new ArrayList<CrewAction>();
 		actions.add(crewActions.get("basicReload"));
 		actions.add(crewActions.get("basicFire"));
-		ImageHandler background = new ImageHandler(0, 0, "res/moleCardBackground.png", true, null);
-		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
+		ImageHandler background = new ImageHandler(0, 0, "res/ui/physicalCard.png", true, null);
+		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/missileArt.png", true, null);
 		shipWeapons.put("default",new Weapon(50,1, 1, 30, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
-		
 	}
 
 
@@ -144,6 +142,18 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/ui/graphBox.png");
+		put(images,"res/ui/ui.png");
+		put(images,"res/ui/laserArt.png");
+		put(images,"res/ui/missileArt.png");
+		put(images,"res/ui/monitor1.png");
+		put(images,"res/ui/monitor2.png");
+		put(images,"res/ui/piloting.png");
+		put(images,"res/ui/reload.png");
+		put(images,"res/ui/engineCard.png");
+		put(images,"res/ui/energyCard.png");
+		put(images,"res/ui/physicalCard.png");
+		put(images,"res/ui/concept.png");
 		put(images,"res/portraitFrameEngines.png");
 		put(images,"res/portraitFrameWeapons.png");
 		put(images,"res/portraitFrameCockpit.png");

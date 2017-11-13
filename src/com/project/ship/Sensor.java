@@ -1,13 +1,12 @@
 package com.project.ship;
 
 public class Sensor {
-
 	
 	private float efficiency;
 	private float healthEfficiency =0.5f;
+	
 	public Sensor(float efficiency) {
 		this.setEfficiency(efficiency);
-	
 	}
 	public float getHealthEfficiency() {
 		return healthEfficiency;
@@ -19,5 +18,4 @@ public class Sensor {
 		this.efficiency = efficiency;
 	}
 	
-
 }
