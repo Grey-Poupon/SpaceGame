@@ -6,47 +6,95 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.project.CrewAction;
 import com.project.ResourceLoader;
 import com.project.ship.Room;
 import com.project.weapons.Weapon;
 
 public class WeaponsRoom extends Room {
 
+	/*back and front in one list*/
 	private List<Weapon> weapons = new ArrayList<>();
+	
 	private List<Weapon> frontWeapons = new ArrayList<>();
 	private List<Weapon> backWeapons = new ArrayList<>();
-	public List<Weapon> getWeapons() {
-		return weapons;
-	}
 
-	public void setWeapons(ArrayList<Weapon> weapons) {
-		this.weapons = weapons;
-	}
-
-	public WeaponsRoom(Weapon[] we,String name,int health, int damageableRadius) {
-		super(name,health);
+	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int noOfActions, int damageableRadius) {
+		super(name, actionHealth, noOfActions);
 		this.setDamageableRadius(damageableRadius);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
-	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int health) {
-		super(name,health);
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions) {
+		super(name, actionHealth, noOfActions);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		weapons.addAll(backWeapons);
 		weapons.addAll(frontWeapons);
 
-
-		
-	}
-	public BufferedImage getIcon() {
-		return ResourceLoader.getImage("res/roomIcons/weaponsRoomIcon.png");
 	}
 	
+	@Override
+	protected CrewAction getLeastDependantAction() {
+		
+		/*consolidate all actions*/
+		List<CrewAction> allActions = new ArrayList<CrewAction>();
+		
+		for(int i = 0;i<weapons.size();i++){
+			for(CrewAction action : weapons.get(i).getActions()){
+				if(!action.isBroken()){
+					allActions.add(action);
+				}
+			}
+		}
+		
+		/*Set smallest as null*/
+		int smallest = Integer.MAX_VALUE; 
+		CrewAction leastDependant = null;
+		
+		/*Loop through and search for the smallest*/
+		for(CrewAction action : allActions){
+			
+			/*Update smallest value*/
+			if(action.getActionsNeededAfterUse().size() < smallest){
+				smallest = action.getActionsNeededAfterUse().size();
+				leastDependant = action;
+				
+				/*Break on 0 as you can't get smaller than it*/
+				if(action.getActionsNeededAfterUse().size() == 0){
+					break;
+				}
+			}
+			
+		}
+		
+		return leastDependant;
+	}
+	
+	@Override
+	protected boolean ActionsLeft() {
+		for(Weapon weapon : weapons){
+			for(CrewAction action : weapon.getActions()){
+				
+				if(!action.isBroken()){
+					return true;
+				}
+			}
+			
+		}
+		return false;
+	}
 	
 	public void UseRoom() {
 		
 	}
+	
+	
+	
+	public BufferedImage getIcon() {
+		return ResourceLoader.getImage("res/roomIcons/weaponsRoomIcon.png");
+	}
+	
 	public ArrayList<String> getOptions() {
 		for(int i = 0;i<weapons.size();i++) {
 			
@@ -54,6 +102,14 @@ public class WeaponsRoom extends Room {
 		return null;
 		
 		
+	}
+	
+	public List<Weapon> getWeapons() {
+		return weapons;
+	}
+
+	public void setWeapons(ArrayList<Weapon> weapons) {
+		this.weapons = weapons;
 	}
 
 	public List<Weapon> getFrontWeapons() {

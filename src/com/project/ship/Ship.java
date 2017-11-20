@@ -243,16 +243,16 @@ public class Ship implements Handleable{
 
 	private void generateRooms() {
 		/**Magic numbers here for room health**/
-		shipRooms.add(new SensorRoom(new Sensor(0.8f)));
+		shipRooms.add(new SensorRoom(new Sensor(0.8f), "Sensor Room", 20, 3));
 
-		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",100));
+		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",20,9));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",100,100));
-		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",100,100));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20,9, 100));
+		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",20,9, 100));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
-		shipRooms.add(new StaffRoom(items,"Staff Room",100));
+		shipRooms.add(new StaffRoom(items,"Staff Room", 20, 9));
 		setRoomPositions();
 	}
 	
@@ -562,13 +562,9 @@ public class Ship implements Handleable{
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
 	}
 
-
-
-
 	public int getPower() {
 		return power;
 	}
-
 	
 	public StaffRoom getStaffRoom() {
 		for(int i=0;i<shipRooms.size();i++) {
@@ -578,8 +574,6 @@ public class Ship implements Handleable{
 		}
 		return null;
 	}
-
-
 
 	public void setPower(int power) {
 		this.power = power;

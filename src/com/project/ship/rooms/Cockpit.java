@@ -12,8 +12,8 @@ import com.project.ship.Room;
 
 public class Cockpit extends Room{
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
-	public Cockpit(List<CrewAction> manoeuvres,String name, int health, int damageableRadius) {
-		super(name,health);
+	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int noOfActions, int damageableRadius) {
+		super(name,actionHealth,noOfActions);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
 	}
@@ -24,6 +24,42 @@ public class Cockpit extends Room{
 
 	public List<CrewAction> getManoeuvres() {
 		return manoeuvres;
+	}
+
+	@Override
+	public CrewAction getLeastDependantAction() {
+		
+		/*Set smallest as null*/
+		int smallest = Integer.MAX_VALUE; 
+		CrewAction leastDependant = null;
+		
+		/*Loop through and search for the smallest*/
+		for(CrewAction action : manoeuvres){
+			
+			/*Update smallest value*/
+			if(!action.isBroken() && action.getActionsNeededAfterUse().size() < smallest){
+				smallest = action.getActionsNeededAfterUse().size();
+				leastDependant = action;
+				
+				/*Break on 0 as you can't get smaller than it*/
+				if(action.getActionsNeededAfterUse().size() == 0){
+					break;
+				}
+			}
+		}
+		
+		return leastDependant;
+	}
+
+	@Override
+	protected boolean ActionsLeft() {
+		
+		for(CrewAction action : manoeuvres){
+			if(!action.isBroken()){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

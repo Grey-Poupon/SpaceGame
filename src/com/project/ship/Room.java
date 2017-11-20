@@ -8,9 +8,12 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import com.project.Actionable;
 import com.project.Crew;
+import com.project.CrewAction;
 import com.project.StatID;
 
 public abstract class Room {
@@ -22,15 +25,23 @@ public abstract class Room {
 	private int damageMod;
 	private int efficiency;
 	private Crew roomLeader;
+	private int actionHealth;
+	private int noOfActions;
+	private int damageStack = 0; 
 	private int size = 9;
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
+	List<CrewAction> allActions = new ArrayList<CrewAction>();
 	ArrayList<Ellipse2D> sensorSpheres = new ArrayList<>();
 	private int sensorSphereRadius = 50;
 	
-	public Room(String name, int health) {
-		this.roomName = name;
-		this.health = health;
-		this.maxHealth = health;
+	public Room(String name, int ActionHealth, int noOfActions) {
+		
+		this.roomName     = name;
+		this.actionHealth = ActionHealth;
+		this.noOfActions  = noOfActions;
+		this.maxHealth    = noOfActions;
+		this.health       = maxHealth;
+		
 	}
 	public Room() {
 
@@ -182,13 +193,32 @@ public abstract class Room {
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
-	public int takeDamage(int damage) {
-		health-=damage;
+	/**Deals damage returns roll table roll**/
+	protected int takeDamage(int damage) {
+		damageStack+=damage;
+		while(damageStack>=actionHealth){
+			damageStack-=actionHealth;
+			if(ActionsLeft()){
+				CrewAction actionToBeBroken = getLeastDependantAction();
+				actionToBeBroken.setBroken(true);
+				health--;
+			}
+			else{
+				// room.makeLikeAdamsWillToLiveAndDie();
+				break;
+			}
+			
+			
+		}
 		//
 		//Do Roll table stuff here
 		//
 		return 1;
 	}
+
+	protected abstract CrewAction getLeastDependantAction() ;
+	protected abstract boolean ActionsLeft() ;
+	
 	public int getHealth() {
 		return health;
 	}

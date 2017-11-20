@@ -42,6 +42,8 @@ public class BattleScreen extends Main {
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
 	private ImageHandler loadingScreen;
+	
+	
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private ArrayList<Point> chaserShotLocations = new ArrayList<Point>();
@@ -247,6 +249,8 @@ public class BattleScreen extends Main {
 				numWeaponClicks =0;
 				currentPhase = BattlePhases.Wait;
 			}
+			
+			/*Do Animations*/
 			if (currentPhase == BattlePhases.Wait) {
 				if (!ProjectileAnimation.areAnimationsRunning()) {
 					currentPhase = BattlePhases.Final;
@@ -255,6 +259,7 @@ public class BattleScreen extends Main {
 					currentPhase = BattlePhases.phases[0];
 				}
 			}
+			
 			if (chaserShip != null && chasedShip != null) {
 				if (currentPhase != null && phase != null) {
 					phase.setText("Current Phase: " + currentPhase.toString());
@@ -270,6 +275,7 @@ public class BattleScreen extends Main {
 					scale = 0;
 				}
 				chaserHealthbar.setXScale(scale);
+				
 				scale = ((float) chasedShip.getCurrHealth() / (float) chasedShip.getMaxHealth()) * 1.2f;
 				if (scale < 0) {
 					scale = 0;
