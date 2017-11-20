@@ -66,8 +66,11 @@ public class BattleScreen extends Main {
 	private int currentWeaponClick = 1;
 	private Ship playerShip;
 	private Ship enemyShip;
+	private ImageHandler newUI;
+	private ImageHandler uiGraphBox;
 	
 	public BattleScreen() {
+		
 		setPaused(true);
 
 		player = new Player(100);
@@ -105,10 +108,10 @@ public class BattleScreen extends Main {
 		Handler.addLowPriorityEntity(chaserShip);
 		Handler.addLowPriorityEntity(chasedShip);
 		//Place ships
-		chaserShip.setX(-200);
-		chaserShip.setY(0);
-		chasedShip.setX(WIDTH/2);
-		chasedShip.setY(0);
+		chaserShip.setX(-150);
+		chaserShip.setY(-50);
+		chasedShip.setX(WIDTH/2-50);
+		chasedShip.setY(-50);
 		phase 				 = new Text          ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
@@ -117,18 +120,24 @@ public class BattleScreen extends Main {
 		chaserShip.setCaptain(player.getPlayerCrew());
 		
 		//Set Room Leader Tabs 
-		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
-
-		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
-
 		ui      = new BattleUI(this, chaserShip, chasedShip);
 		keyIn   = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		chasedHealthbar = new ImageHandler(797, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
-		Handler.addLowPriorityEntity(overlay);
-		Handler.addLowPriorityEntity(chaserHealthbar);
-		Handler.addLowPriorityEntity(chasedHealthbar);
+		//Biggest UI element
+		newUI = new ImageHandler(0,0,"res/ui/ui.png",true,1,1,EntityID.UI);
+		Handler.addLowPriorityEntity(newUI);
+		//Graph Box Element
+		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
+		Handler.addHighPriorityEntity(uiGraphBox);
+		
+		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
+		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
+		//Handler.addLowPriorityEntity(overlay);
+		//Handler.addLowPriorityEntity(chaserHealthbar);
+		//Handler.addLowPriorityEntity(chasedHealthbar);
+		
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
