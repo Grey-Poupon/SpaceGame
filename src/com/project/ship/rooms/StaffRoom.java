@@ -8,6 +8,7 @@ import java.util.List;
 import com.project.Crew;
 import com.project.CrewAction;
 import com.project.ResourceLoader;
+import com.project.RoomSize;
 import com.project.Recreation.RecreationalItem;
 import com.project.ship.Room;
 
@@ -18,9 +19,10 @@ public class StaffRoom extends Room {
 	private List<CrewAction> dummyActions = new ArrayList<CrewAction>();
 	
 	
-	public StaffRoom(List<RecreationalItem> items,String name, int actionHealth, int noOfActions) {
-		super(name, actionHealth, noOfActions);
-		this.items = items;
+	public StaffRoom(List<RecreationalItem> items,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,noOfActions,size);
+		this.setDamageableRadius(damageableRadius);
+
 		
 		/*Set up health/dummy actions*/
 		for(int i = 0;i<noOfActions;i++){

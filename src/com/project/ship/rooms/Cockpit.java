@@ -8,12 +8,13 @@ import java.util.List;
 import com.project.Crew;
 import com.project.CrewAction;
 import com.project.ResourceLoader;
+import com.project.RoomSize;
 import com.project.ship.Room;
 
 public class Cockpit extends Room{
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
-	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int noOfActions, int damageableRadius) {
-		super(name,actionHealth,noOfActions);
+	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,noOfActions,size);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
 	}

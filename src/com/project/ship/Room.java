@@ -14,6 +14,8 @@ import java.util.Random;
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
+import com.project.ImageHandler;
+import com.project.RoomSize;
 import com.project.StatID;
 
 public abstract class Room {
@@ -28,19 +30,20 @@ public abstract class Room {
 	private int actionHealth;
 	private int noOfActions;
 	private int damageStack = 0; 
-	private int size = 9;
+	private RoomSize size = RoomSize.Medium;
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	List<CrewAction> allActions = new ArrayList<CrewAction>();
 	ArrayList<Ellipse2D> sensorSpheres = new ArrayList<>();
 	private int sensorSphereRadius = 50;
 	
-	public Room(String name, int ActionHealth, int noOfActions) {
+	public Room(String name, int ActionHealth, int noOfActions, RoomSize size) {
 		
 		this.roomName     = name;
 		this.actionHealth = ActionHealth;
 		this.noOfActions  = noOfActions;
 		this.maxHealth    = noOfActions;
 		this.health       = maxHealth;
+		this.size		  = size;
 		
 	}
 	public Room() {
@@ -79,10 +82,11 @@ public abstract class Room {
 	}
 	
 	public void addCrew(Crew crew) {
+		int sizeOfCrew = 9;
 		Random rand = new Random();
 		crew.setRoomIn(this);
 		crewInRoom.add(crew);
-		crew.setLocationInRoom(new Point(rand.nextInt(size),rand.nextInt(size)));
+		crew.setLocationInRoom(new Point(rand.nextInt(size.getLength()-sizeOfCrew),rand.nextInt(size.getLength()-sizeOfCrew)));
 	}
 	public void removeCrew(Crew crew) {
 		crewInRoom.remove(crew);
@@ -138,10 +142,10 @@ public abstract class Room {
 		// TODO Auto-generated method stub
 		
 	}
-	public int getSize() {
+	public RoomSize getSize() {
 		return size;
 	}
-	public void setSize(int size) {
+	public void setSize(RoomSize size) {
 		this.size = size;
 	}
 	public int getSensorSphereRadius() {
@@ -157,7 +161,7 @@ public abstract class Room {
 		g2d.setClip(ship.getClip());
 		for(int i =0; i<sensorSpheres.size();i++) {
 			Ellipse2D e = sensorSpheres.get(i);
-			Ellipse2D e1 = new Ellipse2D.Float((float) (ship.getLayeredImage().getLargestLayer().getxCoordinate()+ship.getLayeredImage().getLargestLayer().getxScale()*(e.getCenterX()+getSize()/2-e.getWidth())),(int)(ship.getLayeredImage().getLargestLayer().getyCoordinate()+ship.getLayeredImage().getLargestLayer().getyScale()*(e.getCenterY()+getSize()/2-e.getHeight())),(int)(ship.getLayeredImage().getLargestLayer().getxScale()*e.getWidth()),(int)(ship.getLayeredImage().getLargestLayer().getyScale()*e.getHeight()));
+			Ellipse2D e1 = new Ellipse2D.Float((float) (ship.getLayeredImage().getLargestLayer().getxCoordinate()+ship.getLayeredImage().getLargestLayer().getxScale()*(e.getCenterX()+getSize().getLength()/2-e.getWidth())),(int)(ship.getLayeredImage().getLargestLayer().getyCoordinate()+ship.getLayeredImage().getLargestLayer().getyScale()*(e.getCenterY()+getSize().getMaxPopulation()/2-e.getHeight())),(int)(ship.getLayeredImage().getLargestLayer().getxScale()*e.getWidth()),(int)(ship.getLayeredImage().getLargestLayer().getyScale()*e.getHeight()));
 			Area temp = new Area(e1);
 			composite.add(temp);
 		}
@@ -168,22 +172,28 @@ public abstract class Room {
 		Graphics2D g2d = (Graphics2D)g.create();
 		g2d.setColor(Color.blue);
 		for(int i = 0;i<crewInRoom.size();i++) {
-			g2d.fillOval((int)(ship.getLayeredImage().getLargestLayer().getxCoordinate()+ship.getLayeredImage().getLargestLayer().getxScale()*(crewInRoom.get(i).getLocationInRoom().x+location.x))
-					,(int) (ship.getLayeredImage().getLargestLayer().getyCoordinate()+ship.getLayeredImage().getLargestLayer().getyScale()*(crewInRoom.get(i).getLocationInRoom().y+location.y)), size/2, size/2);
+			
+			ImageHandler largestLayer = ship.getLayeredImage().getLargestLayer();
+			g2d.fillOval(
+/*X*/				(int) (largestLayer.getxCoordinate()+(crewInRoom.get(i).getLocationInRoom().x+largestLayer.getxScale()*location.x)),
+/*Y*/				(int) (largestLayer.getyCoordinate() +(crewInRoom.get(i).getLocationInRoom().y+largestLayer.getyScale()*location.y)),
+/*Width*/			9,
+/*Height*/			9);
 		}
 	}
 	
 	public void tick() {
 		Random rand =new Random();
+		int lengthRelToShip = size.getLength();
+		int sizeOfCrew = 9;
 		for(int i =0;i<crewInRoom.size();i++) {
 			if(rand.nextInt(40) == 1) {
 				Crew c = crewInRoom.get(i);
-				int x = rand.nextInt(6)-3;
-				int y = rand.nextInt(6)-3;
-				if(c.getLocationInRoom().x+x<size && c.getLocationInRoom().x+x>0&&c.getLocationInRoom().y+y<size && c.getLocationInRoom().y+y>0)
+				int x = rand.nextInt(RoomSize.getCrewStep()*2)-RoomSize.getCrewStep();
+				int y = rand.nextInt(RoomSize.getCrewStep()*2)-RoomSize.getCrewStep();
+				if(c.getLocationInRoom().x+x+sizeOfCrew<size.getLength() && c.getLocationInRoom().x+x>0&&c.getLocationInRoom().y+y+sizeOfCrew<size.getLength() && c.getLocationInRoom().y+y>0)
 				c.incLocationInRoom(new Point(x,y));
 			}
-			
 		}
 	}
 	

@@ -123,20 +123,25 @@ public class BattleScreen extends Main {
 		ui      = new BattleUI(this, chaserShip, chasedShip);
 		keyIn   = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
+		
+		// Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		chasedHealthbar = new ImageHandler(797, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
+		
 		//Biggest UI element
 		newUI = new ImageHandler(0,0,"res/ui/ui.png",true,1,1,EntityID.UI);
 		Handler.addLowPriorityEntity(newUI);
+		
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(uiGraphBox);
 		
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
+		
 		//Handler.addLowPriorityEntity(overlay);
-		//Handler.addLowPriorityEntity(chaserHealthbar);
-		//Handler.addLowPriorityEntity(chasedHealthbar);
+		Handler.addLowPriorityEntity(chaserHealthbar);
+		Handler.addLowPriorityEntity(chasedHealthbar);
 		
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);

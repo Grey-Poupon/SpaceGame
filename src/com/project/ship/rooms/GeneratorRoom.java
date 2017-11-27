@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import com.project.CrewAction;
 import com.project.ResourceLoader;
+import com.project.RoomSize;
 import com.project.ship.Generator;
 import com.project.ship.Room;
 
@@ -15,8 +16,8 @@ public class GeneratorRoom extends Room{
 	private Generator generator;
 	
 	
-	public GeneratorRoom(Generator generator,String name, int actionHealth, int noOfActions, int damageableRadius) {
-		super(name, actionHealth, noOfActions);
+	public GeneratorRoom(Generator generator,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,noOfActions,size);
 		this.setDamageableRadius(damageableRadius);
 
 		this.generator = generator;

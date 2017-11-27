@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.project.CrewAction;
 import com.project.ResourceLoader;
+import com.project.RoomSize;
 import com.project.ship.Room;
 import com.project.weapons.Weapon;
 
@@ -19,14 +20,14 @@ public class WeaponsRoom extends Room {
 	private List<Weapon> frontWeapons = new ArrayList<>();
 	private List<Weapon> backWeapons = new ArrayList<>();
 
-	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int noOfActions, int damageableRadius) {
-		super(name, actionHealth, noOfActions);
+	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,noOfActions,size);
 		this.setDamageableRadius(damageableRadius);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
-	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions) {
-		super(name, actionHealth, noOfActions);
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,noOfActions,size);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		weapons.addAll(backWeapons);

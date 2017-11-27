@@ -260,8 +260,8 @@ public class BattleUI extends UI {
 				actionBoxes.add(box);
 			}
 			// set empty positions
-			if (room.getSize() > crew.size()) {
-				for (int j = 0; j < room.getSize() - crew.size(); j++) {
+			if (room.getSize().getMaxPopulation() > crew.size()) {
+				for (int j = 0; j < room.getSize().getMaxPopulation() - crew.size(); j++) {
 
 					// update variables
 					row++;
