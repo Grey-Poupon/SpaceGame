@@ -507,7 +507,7 @@ public class Ship implements Handleable{
 	}
 
 	public void render(Graphics g) {
-		
+		//render the weapons/engines
 		for(int i = 0; i<sprites.size();i++) {
 			if(sprites.get(i) instanceof Slot) {
 				((Slot) sprites.get(i)).getSlotItem().render(g,(Slot) sprites.get(i));
@@ -545,6 +545,7 @@ public class Ship implements Handleable{
 		for(int i=0;i<shipRooms.size();i++) {
 			shipRooms.get(i).tick();
 		}
+		//update slots
 		for(int i = 0;i<shipBackSlots.size();i++) {
 			shipBackSlots.get(i).tick();
 			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());

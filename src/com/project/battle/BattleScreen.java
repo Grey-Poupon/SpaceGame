@@ -327,10 +327,10 @@ public class BattleScreen extends Main {
 				BattleUI.back();
 			}
 			if(ID == ButtonID.Manoeuvres) {
-				BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
+				//BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
 			}
 			if(ID == ButtonID.SpeedInput) {
-				BattleUI.generateSpeedInput();
+				//BattleUI.generateSpeedInput();
 			}
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
