@@ -326,9 +326,8 @@ public class BattleUI extends UI {
 
 		// set Action Table
 		for (int j = 0; j < actionables.size(); j++) {
-
 			ShipItemCard card = new ShipItemCard(actionables.get(j), bs);
-			card.assembleCard(mainMonitorXOffset + (j * (card.getWidth() + 20)), mainMonitorYOffset, crewToIcon);// +(j*(card.getWidth()+cardGap))
+			card.assembleCard(mainMonitorXOffset + (j * (card.getWidth() + 20)), mainMonitorYOffset+5, crewToIcon);// +(j*(card.getWidth()+cardGap))
 			shipCards.add(card);
 
 		}

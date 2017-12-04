@@ -42,8 +42,6 @@ public class BattleScreen extends Main {
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
 	private ImageHandler loadingScreen;
-	
-	
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private ArrayList<Point> chaserShotLocations = new ArrayList<Point>();
@@ -72,7 +70,6 @@ public class BattleScreen extends Main {
 	public BattleScreen() {
 		
 		setPaused(true);
-
 		player = new Player(100);
 		handler = new BattleHandler(this);
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
@@ -85,7 +82,7 @@ public class BattleScreen extends Main {
 			chasedShip = ResourceLoader.getShip("defaultEnemy");
 			enemyShip = chasedShip;
 			chaserShip.setPlayer(true);
-		} else {
+		}else {
 			chasedShip = ResourceLoader.getShip("defaultPlayer");
 			chasedShip.setPlayer(true);
 			chaserShip = ResourceLoader.getShip("defaultEnemy");
@@ -98,10 +95,10 @@ public class BattleScreen extends Main {
 		chasedShip.setBs(this);
 
 		for (int i = 0; i < 40; i++) {
-			Star starp = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), "res/star.png", true, 0, Main.WIDTH / 2, 0,
-					Main.HEIGHT, chaserShip);
-			Star stare = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), "res/star.png", true, Main.WIDTH / 2,
-					Main.WIDTH, 0, Main.HEIGHT, chasedShip);
+			Star starp = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT/2), "res/star.png", true, 50, Main.WIDTH / 2-50, 50,
+					446, chaserShip);
+			Star stare = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), "res/star.png", true,50+Main.WIDTH / 2,
+					Main.WIDTH-50, 50, 446, chasedShip);
 			Handler.addLowPriorityEntity(starp);
 			Handler.addLowPriorityEntity(stare);
 		}
@@ -119,12 +116,12 @@ public class BattleScreen extends Main {
 		//Set Captain
 		chaserShip.setCaptain(player.getPlayerCrew());
 		
-		//Set Room Leader Tabs 
+		//Set Room Leader Tabs
 		ui      = new BattleUI(this, chaserShip, chasedShip);
 		keyIn   = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
 		
-		// Health bars
+		//Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		chasedHealthbar = new ImageHandler(797, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		
@@ -142,8 +139,6 @@ public class BattleScreen extends Main {
 		//Handler.addLowPriorityEntity(overlay);
 		//Handler.addLowPriorityEntity(chaserHealthbar);
 		//Handler.addLowPriorityEntity(chasedHealthbar);
-		
-
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -196,7 +191,6 @@ public class BattleScreen extends Main {
 			// AI turns
 
 			if(!isPlayersTurn) {
-		
 				if(currentPhase == BattlePhases.WeaponActions) {
 					if(playerIsChaser) {
 						List<Weapon> weapons = chasedShip.getBackWeapons();

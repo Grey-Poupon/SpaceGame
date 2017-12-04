@@ -1,5 +1,6 @@
 package com.project;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,9 @@ public class ShipItemCard {
 	private ImageHandler background;
 	private Ship ship;
 	private BattleScreen bs;
+	private List<Point> actionPlacement = new ArrayList<Point>();
 	private ImageHandler itemImage;
+	private Point imagePosition;
 	// Item image dimensions should always be 150,50
 	
 	private final int marginWidth            = 5;
@@ -33,6 +36,29 @@ public class ShipItemCard {
 		this.itemImage  = item.getCardImage();
 		this.bs         = bs;
 		this.ship       = bs.getPlayerShip();;
+		boolean notInBox = true;
+		for(int x =0;x<item.getCardBackground().getWidth();x++) {
+			for(int y = 0; y<item.getCardBackground().getHeight();y++) {
+				if(imagePosition == null) {
+					if(item.getCardBackground().getImg().getRGB(x, y)==-5552961) {
+						imagePosition = new Point(x,y);
+					}
+				}
+				if(item.getCardBackground().getImg().getRGB(x, y)==-12009650) {
+					notInBox= true;
+					for(int i=0;i<actionPlacement.size();i++) {
+						Point p = actionPlacement.get(i);
+						if(x>=p.x&&x<=p.x+50&&y>=p.y&&y<=p.y+50) {
+							notInBox =false;
+						}
+					}
+					if(notInBox) {
+						actionPlacement.add(new Point(x,y));
+						y+=50;
+					}	
+				}
+			}
+		}
 	}
 	public void assembleCard(int x, int y, HashMap<Crew,DraggableIcon> crewToIcon){
 		// place background
@@ -41,8 +67,8 @@ public class ShipItemCard {
 		background.start(false);
 		
 		// place item image
-		itemImage.setxCoordinate(x+marginWidth);
-		itemImage.setyCoordinate(y+marginWidth);
+		itemImage.setxCoordinate(background.xCoordinate+imagePosition.x);
+		itemImage.setyCoordinate(background.yCoordinate+imagePosition.y);
 		itemImage.start(false);
 		// create & place action boxes with text
 			// create variables
@@ -55,7 +81,8 @@ public class ShipItemCard {
 			// loop to place
 		for(int i = 0; i < actions.size(); i++){
 			// make box
-			ActionBox actionBox = new ActionBox(ResourceLoader.getImage("res/actionBox.png"), x+marginWidth , lastY, actions.get(actions.size()-i-1), room, bs);
+			CrewAction a = actions.get(actions.size()-i-1);
+			ActionBox actionBox = new ActionBox(a.getActionImg(), background.xCoordinate+actionPlacement.get(i).x , background.yCoordinate+actionPlacement.get(i).y, a, room, bs);
 		    boxes.add(actionBox);
 		    BattleUI.actionBoxes.add(actionBox);
 	

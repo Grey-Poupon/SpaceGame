@@ -1,5 +1,6 @@
 package com.project;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -170,6 +171,10 @@ public class LayeredImage {
 	}
 	
 	public void tick() {
+
+	}
+	
+	public void preRender() {
 		//moves the camera angle
 		if(cameraZ>=1.5||cameraZ<=-1.25) {
 			tickerZ*=-1;
@@ -183,7 +188,6 @@ public class LayeredImage {
 		//cameraY+=0.03*tickerY;
 		cameraX+=0.03*tickerX;
 		//cameraZ+=0.03*tickerZ;
-		
 		if(!destroyed) {
 			//applying the parallax scaling
 			for(int i = 0; i<layers.size();i++) {
@@ -210,8 +214,8 @@ public class LayeredImage {
 				s.setHeight((int) (layers.get(s.getLayerIndex()).getYScale()*layers.get(s.getLayerIndex()).getImg().getHeight()));
 			}
 		}
-		
 	}
+	
 	
 	public void destruct() {
 		if(!destroyed) {

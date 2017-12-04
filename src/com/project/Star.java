@@ -36,6 +36,10 @@ public class Star extends ImageHandler{
 	
 	public void tick(){
 		super.tick();
+		
+	}
+	
+	private void preRender() {
 		if(this.xCoordinate+this.rad<boundaryLeft-getWidth()) {
 			this.setxCoordinate(boundaryRight);
 			this.setyCoordinate(boundaryTop+rand.nextInt(boundaryBottom-rad-boundaryTop));
@@ -59,6 +63,7 @@ public class Star extends ImageHandler{
 	
 	public void render(Graphics g1)
 	{
+		preRender();
 		Graphics g = g1.create();
 		if(isVisible()){
 			

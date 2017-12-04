@@ -43,6 +43,7 @@ public class Ship implements Handleable{
 	private int health;
 	private int maxHealth;
 	private int currHealth;
+	private Rectangle clip;
 	private int speed         = 200;
 	private int tempSpeed     = 0;
 	private int distanceToEnd = 250; // for distance system
@@ -102,7 +103,13 @@ public class Ship implements Handleable{
 		damageTakenModifier.put(false, 1d);
 		damageDealtModifier.put(true,  1d);
 		damageDealtModifier.put(false, 1d);
-		
+		//locks the ships in their respective screen.
+		if(isChased) {
+			this.clip = new Rectangle(660,15,590,435);
+		}
+		else {
+			this.clip = new Rectangle(29,8,603,449);
+		}
 		
 		for(int i=0;i<shipBackSlots.size();i++){
 			if(i==0){shipBackSlots.get(i).setSlotItem(defaultEngine.copy());}
@@ -506,7 +513,11 @@ public class Ship implements Handleable{
 		lImage.setY(y);
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics g1) {
+		Graphics g = g1.create();
+		g.setClip(clip);
+		//perform graphics calculations
+		lImage.preRender();
 		//render the weapons/engines
 		for(int i = 0; i<sprites.size();i++) {
 			if(sprites.get(i) instanceof Slot) {
