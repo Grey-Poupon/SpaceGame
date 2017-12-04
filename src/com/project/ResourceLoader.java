@@ -67,8 +67,10 @@ public class ResourceLoader {
 		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,1  ,10,10000));
 		crewActions.put("basicManoeuvre",new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty ,1  ,10,10000));
 		crewActions.put("basicReload"   ,new CrewAction("Reload"    ,CrewActionID.Reload   ,StatID.gunner     ,empty ,1  ,10,10));
+		crewActions.get("basicReload").setActionImg(images.get("res/ui/reload.png"));
 		fireActions.add(crewActions.get("basicReload"));
 		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10));
+		crewActions.get("basicFire").setActionImg(images.get("res/ui/fire.png"));
 		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0));
 		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0));
 		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0));
@@ -91,7 +93,7 @@ public class ResourceLoader {
 		actions2.add(crewActions.get("basicFix"));
 		
 		ImageHandler background = new ImageHandler(0, 0, "res/ui/engineCard.png", true, null);
-		ImageHandler portrait   = new ImageHandler(0, 0, "res/genericItemPortrait.png", true, null);
+		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/generatorImage.png", true, null);
 
 		
 		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2,portrait,background));
@@ -142,6 +144,8 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/ui/fire.png");
+		put(images,"res/ui/generatorImage.png");
 		put(images,"res/ui/graphBox.png");
 		put(images,"res/ui/ui.png");
 		put(images,"res/ui/laserArt.png");
