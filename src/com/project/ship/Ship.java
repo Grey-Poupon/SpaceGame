@@ -21,6 +21,7 @@ import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
+import com.project.RoomSize;
 import com.project.Recreation.RecreationalItem;
 import com.project.battle.BattleScreen;
 import com.project.battle.BattleUI;
@@ -149,20 +150,24 @@ public class Ship implements Handleable{
 			/**Do destructive effects**/
 			if(effects[i] instanceof Destructive){
 					List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
+					System.out.println("Number of hit rooms: "+rooms.size());
 					
 					/**loop through rooms that get hit**/
 					for(int k = 0;k < rooms.size();k++){
 						
 						/**Room takes damage**/
 						int roomTableRoll = rooms.get(k).takeDamage(damagePerShot);
+						
 						/**Rooms Roll Table**/
 						doRollTableEffect(roomTableRoll,rooms.get(k));//Unimplemented
 
 						/**If its physical, damage crew in room**/
 						if(isPhysical){
 							for(Crew crew: rooms.get(k).crewInRoom){
+								
 								/**Crew takes damage**/
 								int crewTableRoll = crew.takeDamage(damagePerShot);
+								
 								/**Crews Roll Table**/
 								doRollTableEffect(crewTableRoll, crew);//Unimplemented
 							}
@@ -187,8 +192,8 @@ public class Ship implements Handleable{
 	private List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
 		List<Room> returnableRooms = new ArrayList<Room>();
 		/**Make coordinates relative to ship**/
-		float xRelToShip = (float) (click.getX() - lImage.getX());
-		float yRelToShip = (float) (click.getY() - lImage.getY());
+		float xRelToShip = (float) (click.getX() - lImage.getLargestLayer().getxCoordinate());
+		float yRelToShip = (float) (click.getY() - lImage.getLargestLayer().getyCoordinate());
 		/**Make coordinates original scale**/
 		float xScaled = xRelToShip/lImage.getLargestLayer().getxScale();
 		float yScaled = yRelToShip/lImage.getLargestLayer().getyScale();
@@ -199,15 +204,19 @@ public class Ship implements Handleable{
 			Room room = shipRooms.get(i);
 			if(checkIfCirclesTouch(xScaled,yScaled,areaOfEffectRadius,room.getLocation().x,room.getLocation().y,room.getDamageableRadius())){
 				returnableRooms.add(room);
+				System.out.println(room.getRoomName());
 			}
 		}
+		
 		return returnableRooms;
 	}
 
 	private boolean checkIfCirclesTouch(float x1, float y1, float r1, float x2, float y2, float r2) {
+		
 		double xSquare = Math.pow(x1-x2, 2);
 		double ySquare = Math.pow(y1-y2, 2);
 		double gap     = Math.sqrt(xSquare+ySquare);
+		
 		if(gap > r1+r2){
 			return false;
 		}
@@ -242,17 +251,17 @@ public class Ship implements Handleable{
 	}
 
 	private void generateRooms() {
-		/**Magic numbers here for room health**/
-		shipRooms.add(new SensorRoom(new Sensor(0.8f)));
+		/**Magic numbers here for room stats**/
+		shipRooms.add(new SensorRoom(new Sensor(0.8f), "Sensor Room", 20, 3,10,RoomSize.Small));
 
-		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",100));
+		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",20, 8,10,RoomSize.Large));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",100,100));
-		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",100,100));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20,9, 10,RoomSize.Medium));
+		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",20,9, 10,RoomSize.Large));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
-		shipRooms.add(new StaffRoom(items,"Staff Room",100));
+		shipRooms.add(new StaffRoom(items,"Staff Room", 20, 9, 10,RoomSize.Medium));
 		setRoomPositions();
 	}
 	
@@ -498,7 +507,7 @@ public class Ship implements Handleable{
 	}
 
 	public void render(Graphics g) {
-		
+		//render the weapons/engines
 		for(int i = 0; i<sprites.size();i++) {
 			if(sprites.get(i) instanceof Slot) {
 				((Slot) sprites.get(i)).getSlotItem().render(g,(Slot) sprites.get(i));
@@ -514,9 +523,10 @@ public class Ship implements Handleable{
 		//Render the rooms square
 		Graphics2D g2d = (Graphics2D)g.create();
 		for(int i = 0;i<shipRooms.size();i++) {
-			Room r= shipRooms.get(i);
+			Room r = shipRooms.get(i);
 			g2d.setColor(Color.red);
-			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), (int)(lImage.getLargestLayer().getxScale()*r.getSize()), (int)(lImage.getLargestLayer().getyScale()*r.getSize()));
+			int rectangleSize = r.getSize().getLength();
+			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), rectangleSize, rectangleSize);
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
 			r.renderCrewOnShip(g2d, this);
 		}
@@ -535,6 +545,7 @@ public class Ship implements Handleable{
 		for(int i=0;i<shipRooms.size();i++) {
 			shipRooms.get(i).tick();
 		}
+		//update slots
 		for(int i = 0;i<shipBackSlots.size();i++) {
 			shipBackSlots.get(i).tick();
 			shipBackSlots.get(i).setX(lImage.getBackSlots().get(i).getX());
@@ -562,13 +573,9 @@ public class Ship implements Handleable{
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
 	}
 
-
-
-
 	public int getPower() {
 		return power;
 	}
-
 	
 	public StaffRoom getStaffRoom() {
 		for(int i=0;i<shipRooms.size();i++) {
@@ -578,8 +585,6 @@ public class Ship implements Handleable{
 		}
 		return null;
 	}
-
-
 
 	public void setPower(int power) {
 		this.power = power;
@@ -786,9 +791,14 @@ public class Ship implements Handleable{
 			num = 0;
 			ArrayList<Rectangle> roomRects = new ArrayList<>();
 			for(int i = 0; i<shipRooms.size();i++) {
-				int rectX = rand.nextInt((int)image.getOnScreenWidth()-rectTolerance*2-shipRooms.get(i).getSize());
-				int rectY = rand.nextInt((int)image.getOnScreenHeight()-rectTolerance*2-shipRooms.get(i).getSize());
-				Rectangle roomRect = new Rectangle(rectX,rectY,shipRooms.get(i).getSize()+rectTolerance*2,shipRooms.get(i).getSize()+rectTolerance*2);
+				// Create randomly placed Room
+				int rectX  = rand.nextInt((int) (image.getOnScreenWidth()-rectTolerance*2-shipRooms.get(i).getSize().getLength()/lImage.getScale()));
+				int rectY  = rand.nextInt((int) (image.getOnScreenHeight()-rectTolerance*2-shipRooms.get(i).getSize().getLength()/lImage.getScale()));
+				int length = (int) (shipRooms.get(i).getSize().getLength()/lImage.getScale())+rectTolerance*2;
+				
+				Rectangle roomRect = new Rectangle(rectX,rectY,length,length);
+				
+				// If it intersects wipe all rooms and start again
 				boolean rectFits = true;
 				for(int k =0;k<roomRects.size();k++) {
 						if(roomRects.get(k).intersects(roomRect)) {
@@ -797,7 +807,9 @@ public class Ship implements Handleable{
 						}
 				}
 				if(!rectFits) {break;}
-				int numFails = 0;
+				
+				// Check if room sits on transparent pixel
+				int numFails = 0;			
 				for(int x = 0;x<roomRect.width;x++) {
 					for(int y= 0;y<roomRect.height;y++) {
 						if((new Color(image.getImg().getRGB(rectX+x, rectY+y),true)).getAlpha()==0) {
@@ -808,15 +820,18 @@ public class Ship implements Handleable{
 							}
 						}
 					}
-					if(numFails>tolerance) {
-						rectFits =false;
+					if(!rectFits){
 						break;
 					}
 				}
+				// if rectangle fits make it else, start again
 				if(rectFits) {
 					num++;
 					shipRooms.get(i).setLocation(new Point(rectX+rectTolerance,rectY+rectTolerance));
 					roomRects.add(roomRect);
+				}
+				else{
+					break;
 				}
 			}
 			if(num==shipRooms.size()) {complete = true;}	

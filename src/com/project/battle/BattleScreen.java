@@ -42,6 +42,8 @@ public class BattleScreen extends Main {
 	private ImageHandler chaserHealthbar;
 	private ImageHandler chasedHealthbar;
 	private ImageHandler loadingScreen;
+	
+	
 	private DistanceSystem ds;
 	private ScrollableList sl;
 	private ArrayList<Point> chaserShotLocations = new ArrayList<Point>();
@@ -121,20 +123,27 @@ public class BattleScreen extends Main {
 		ui      = new BattleUI(this, chaserShip, chasedShip);
 		keyIn   = new BattleKeyInput(this);
 		mouseIn = new BattleMouseInput(handler);
+		
+		// Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
 		chasedHealthbar = new ImageHandler(797, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
+		
 		//Biggest UI element
 		newUI = new ImageHandler(0,0,"res/ui/ui.png",true,1,1,EntityID.UI);
 		Handler.addLowPriorityEntity(newUI);
+		
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(uiGraphBox);
 		
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
+		
 		//Handler.addLowPriorityEntity(overlay);
 		//Handler.addLowPriorityEntity(chaserHealthbar);
 		//Handler.addLowPriorityEntity(chasedHealthbar);
+		
+
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -255,6 +264,8 @@ public class BattleScreen extends Main {
 				numWeaponClicks =0;
 				currentPhase = BattlePhases.Wait;
 			}
+			
+			/*Do Animations*/
 			if (currentPhase == BattlePhases.Wait) {
 				if (!ProjectileAnimation.areAnimationsRunning()) {
 					currentPhase = BattlePhases.Final;
@@ -263,6 +274,7 @@ public class BattleScreen extends Main {
 					currentPhase = BattlePhases.phases[0];
 				}
 			}
+			
 			if (chaserShip != null && chasedShip != null) {
 				if (currentPhase != null && phase != null) {
 					phase.setText("Current Phase: " + currentPhase.toString());
@@ -278,6 +290,7 @@ public class BattleScreen extends Main {
 					scale = 0;
 				}
 				chaserHealthbar.setXScale(scale);
+				
 				scale = ((float) chasedShip.getCurrHealth() / (float) chasedShip.getMaxHealth()) * 1.2f;
 				if (scale < 0) {
 					scale = 0;
@@ -315,10 +328,10 @@ public class BattleScreen extends Main {
 				BattleUI.back();
 			}
 			if(ID == ButtonID.Manoeuvres) {
-				BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
+				//BattleUI.generateManoeuvreActionList((Cockpit)playerShip.getCockpit());
 			}
 			if(ID == ButtonID.SpeedInput) {
-				BattleUI.generateSpeedInput();
+				//BattleUI.generateSpeedInput();
 			}
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);

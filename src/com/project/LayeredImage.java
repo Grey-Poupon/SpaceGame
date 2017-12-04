@@ -148,6 +148,7 @@ public class LayeredImage {
 		this.y =y;
 		this.z = z;
 		this.scale = scale;
+		//timer for increasing camera values
 		tickerX =1;
 		tickerY =1;
 		tickerZ =1;
@@ -155,6 +156,7 @@ public class LayeredImage {
 		loadLayers();
 		largestWidth = getLargestWidth();
 		largestHeight = getLargestHeight();
+		//sets camera start position
 		cameraZ = -0.3f;
 		cameraX = 0;
 		cameraY = 0;
@@ -168,6 +170,7 @@ public class LayeredImage {
 	}
 	
 	public void tick() {
+		//moves the camera angle
 		if(cameraZ>=1.5||cameraZ<=-1.25) {
 			tickerZ*=-1;
 		}
@@ -180,13 +183,16 @@ public class LayeredImage {
 		//cameraY+=0.03*tickerY;
 		cameraX+=0.03*tickerX;
 		//cameraZ+=0.03*tickerZ;
+		
 		if(!destroyed) {
+			//applying the parallax scaling
 			for(int i = 0; i<layers.size();i++) {
 				setScaling(layers.get(i),i);
 				if(layers.get(i).isVisible()) {
 					setLayersShading(layers.get(i));
 				}
 			}
+			//sets the slots position to new updated position post parallax scaling
 			for(int i=0;i<backSlots.size();i++) {
 				Slot s =backSlots.get(i);
 				setScaling(s);
@@ -221,6 +227,7 @@ public class LayeredImage {
 	}
 	
 	private void setScaling(Slot s) {
+		//parallax scaling equations
 		float f = Math.abs((float)s.getZ()/(float)(s.getZ()-cameraZ));
 		double d1 =Math.atan2(cameraX, s.getZ());
 		double d = (Math.cos(d1)*scale*(f));
@@ -241,6 +248,7 @@ public class LayeredImage {
 	}
 	
 	private void setScaling(ImageHandler e,int index) {
+		//parallax scaling equations
 		float f = Math.abs((float)e.getZ()/(float)(e.getZ()-cameraZ));
 		double d1 =Math.atan2(cameraX, e.getZ());
 		double d = (Math.cos(d1)*scale*(f));
@@ -282,8 +290,11 @@ public class LayeredImage {
 	}
 	
 	private void loadLayers() {
+		//scrubs the text file for coords
 		getLayerCoords();
+		//gets size of list of coords
 		setNoLayers();
+		//loads the layers of the ship using the loaded coords
 		for(int i =0; i<noLayers;i++) {
 			
 				ImageHandler layer = new ImageHandler(x+layersX.get(layersX.size()-i-1),y+layersY.get(layersY.size()-i-1),this.path+"/data/layer"+Integer.toString(i)+".png",true,EntityID.shipLayer);
@@ -315,6 +326,7 @@ public class LayeredImage {
 	}
 	
 	public void getLayerCoords() {
+		//scrubs txt file
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/"+this.path+"/info.txt")))) {
 		    StringBuilder sb = new StringBuilder();
 		    String line = br.readLine();
@@ -428,6 +440,7 @@ public class LayeredImage {
 		this.frontSlots = frontSlots;
 	}
 	public void setLayersShading(ImageHandler e){
+		//applies a darkening based on how far the image is from the camera
 		BufferedImage img = new BufferedImage(e.getImg().getWidth(), e.getImg().getHeight(), BufferedImage.TRANSLUCENT);
 		img  = e.getImg();
 			for(int x =0;x< e.getImg().getWidth();x++) {
@@ -452,6 +465,7 @@ public class LayeredImage {
 			e.setImg(img);
 	}
 	public ImageHandler getLargestLayer() {
+		//largest area
 		if(largestLayer==null) {
 			int largestArea = 0;
 			for(int i =0;i<layers.size();i++) {

@@ -14,10 +14,12 @@ public class CrewAction implements Comparable {
 	private Crew actor;
 	private int powerCost;
 	private static Graph PowerGraph;
+	private boolean isBroken;
 	private List<CrewAction> actionsNeeded = new ArrayList<CrewAction>();
 	private List<CrewAction> actionsNeededAfterUse = new ArrayList<CrewAction>();
 
 
+	/** Constructor for non-dummy crewAction**/
 	public CrewAction(String name,CrewActionID actionType,StatID statType,List<CrewAction> actionsNeededToUse, int levelRequirement, int xpReward,int powerCost) {
 		this.name             = name;
 		this.actionType       = actionType;
@@ -25,8 +27,16 @@ public class CrewAction implements Comparable {
 		this.xpReward         = xpReward;
 		this.statType         = statType;
 		this.powerCost        = powerCost;	
+		this.isBroken         = false;
 		this.actionsNeeded.addAll(actionsNeededToUse);
 		this.actionsNeededAfterUse = actionsNeededToUse;
+	}
+	
+	/** Constructor for dummy crew action**/
+	public CrewAction(){
+		this.name = "Dummy Action";
+		this.actionType = CrewActionID.Dummy;
+		
 	}
 
 	public Crew getActor() {
@@ -41,7 +51,6 @@ public class CrewAction implements Comparable {
 	public void removeActor() {
 		actor.getShip().tempUpdatePowerConsumption(-powerCost);
 		this.actor = null;
-		
 	}
 	
 	public String getName() {
@@ -114,6 +123,10 @@ public class CrewAction implements Comparable {
 
 	public CrewAction copy() {
 		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement);
+		
+		// set broken
+		action.setBroken(isBroken);
+		
 		// remove actions that have been completed
 		if(actionsNeeded.size() == actionsNeededAfterUse.size()) {
 			for(CrewAction a:actionsNeededAfterUse) {
@@ -131,6 +144,14 @@ public class CrewAction implements Comparable {
 
 	public static void setPowerGraph(Graph powerGraph) {
 		PowerGraph = powerGraph;
+	}
+
+	public boolean isBroken() {
+		return isBroken;
+	}
+
+	public void setBroken(boolean isBroken) {
+		this.isBroken = isBroken;
 	}
 
 }

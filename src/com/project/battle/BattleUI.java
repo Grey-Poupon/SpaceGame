@@ -158,13 +158,13 @@ public class BattleUI extends UI {
 			BattleUI.generateRoomCards(generator, room);
 			
 			/**Images for side bar tabs - manoeuvre and speedometer**/
-			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
-			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
+//			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
+//			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
+//
+//			ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true,	EntityID.UI);
+//			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset + img2.getHeight(),	50, 50, ButtonID.SpeedInput, 0, true, img2, bs));
 
-			ImageHandler img2 = new ImageHandler(0, 0, ResourceLoader.getImage("res/speedometerTab.png"), true,	EntityID.UI);
-			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset + img2.getHeight(),	50, 50, ButtonID.SpeedInput, 0, true, img2, bs));
-
-			generateManoeuvreActionList((Cockpit) playerShip.getCockpit());
+			//generateManoeuvreActionList((Cockpit) playerShip.getCockpit());
 
 		} else if (crew.isCaptain()) {
 			StaffRoom room = playerShip.getStaffRoom();
@@ -206,7 +206,7 @@ public class BattleUI extends UI {
 		int x;
 		int y;
 		float row;
-		float column = -1.5f;
+		float column = -1.2f;
 		int portraitWidth = 0;
 		int portraitHeight = 0;
 		int titleOffset = 5;
@@ -220,7 +220,7 @@ public class BattleUI extends UI {
 			Room room = rooms.get(i);
 			List<Crew> crew = room.getCrewInRoom();
 			row = -1;
-			column += 1.5;
+			column += 1.3;
 			x = (int) (mainMonitorXOffset + (column * (portraitWidth + 5)));
 			y = mainMonitorYOffset + titleOffset;
 
@@ -260,8 +260,8 @@ public class BattleUI extends UI {
 				actionBoxes.add(box);
 			}
 			// set empty positions
-			if (room.getSize() > crew.size()) {
-				for (int j = 0; j < room.getSize() - crew.size(); j++) {
+			if (room.getSize().getMaxPopulation() > crew.size()) {
+				for (int j = 0; j < room.getSize().getMaxPopulation() - crew.size(); j++) {
 
 					// update variables
 					row++;
@@ -294,7 +294,7 @@ public class BattleUI extends UI {
 		lastRoom = room;
 		// initalise variables
 		if (actionables.get(0) instanceof Weapon) {
-			listWidth = fullListWidth;
+			listWidth = halfListWidth;
 		} else {
 			listWidth = halfListWidth;
 		}

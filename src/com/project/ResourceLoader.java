@@ -122,7 +122,7 @@ public class ResourceLoader {
 		actions.add(crewActions.get("basicFire"));
 		ImageHandler background = new ImageHandler(0, 0, "res/ui/physicalCard.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/missileArt.png", true, null);
-		shipWeapons.put("default",new Weapon(50,1, 1, 30, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
+		shipWeapons.put("default",new Weapon(10,1, 1, 30, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
 	}
 
 
