@@ -135,7 +135,6 @@ public class BattleScreen extends Main {
 		//Handler.addLowPriorityEntity(overlay);
 		//Handler.addLowPriorityEntity(chaserHealthbar);
 		//Handler.addLowPriorityEntity(chasedHealthbar);
-		
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -324,15 +323,14 @@ public class BattleScreen extends Main {
 			if (ID == ButtonID.Crew) {
 				BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
 			}
-			if(ID == ButtonID.EndPhase) {			
-					
+			if(ID == ButtonID.EndPhase) {
 					// add weapons to fire list
 					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
 						for(int i = 0;i<weapons.size();i++) {
 							doActions(playerShip,weapons.get(i));
-						}									
+						}
 					}
 					
 					//Do actions for generator phase
