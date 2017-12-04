@@ -1,9 +1,7 @@
  package com.project;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
-
 import com.project.battle.BattleUI;
 
 public class DraggableIcon {
@@ -16,13 +14,12 @@ public class DraggableIcon {
 	private ActionBox startingBox;
 	private int width;
 	private int height;
-	
 	private ActionBox actionBox = null;
 	private Point mouse;
 	private boolean snapped = false;;
 	private static final int snapToRange = 30;
-	private static final int boxLineWidth = 2;
-
+	private static final int boxLineWidth = 0;
+	
 	public DraggableIcon(ImageHandler img,Crew crew, int xCoordinate, int yCoordinate) {
 		this.img         = img;
 		this.crew		 = crew;
@@ -99,7 +96,6 @@ public class DraggableIcon {
 				// set new actionbox
 				box.setCrew(this);
 				
-				
 				actionBox = box;				
 				mouse                = null;
 				this.xCoordinate     = box.getX() + boxLineWidth;
@@ -160,7 +156,7 @@ public class DraggableIcon {
 					}
 				}
 				if(!placed) {
-					// throw error;
+					System.out.println("this is spooky");
 				}
 			}
 		}
@@ -174,10 +170,4 @@ public class DraggableIcon {
 	public void setStartBox(ActionBox box) {
 		this.startingBox = box;
 	}
-
-
-	
-
-
-	
 }

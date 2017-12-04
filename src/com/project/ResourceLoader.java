@@ -144,6 +144,9 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/ui/enginesTab.png");
+		put(images,"res/ui/weaponsTab.png");
+		put(images,"res/ui/movementTab.png");
 		put(images,"res/ui/fire.png");
 		put(images,"res/ui/generatorImage.png");
 		put(images,"res/ui/graphBox.png");

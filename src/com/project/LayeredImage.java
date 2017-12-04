@@ -161,7 +161,6 @@ public class LayeredImage {
 		cameraZ = -0.3f;
 		cameraX = 0;
 		cameraY = 0;
-		
 	}
 	
 	public Shape getClip() {

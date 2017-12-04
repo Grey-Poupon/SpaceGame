@@ -46,7 +46,7 @@ public class Ship implements Handleable{
 	private Rectangle clip;
 	private int speed         = 200;
 	private int tempSpeed     = 0;
-	private int distanceToEnd = 250; // for distance system
+	private int distanceToEnd = 250;//for distance system
 	private int power         = 0;
 	private int speedChange;
 	private Engine2 engine;
@@ -125,7 +125,7 @@ public class Ship implements Handleable{
 		generateResources();
 		sortSprites();
 		
-		for(int i =0; i<10;i++) {
+		for(int i =0; i<15;i++) {
 			Crew crewie = Crew.generateRandomCrew(visibleCrew);
 			crewie.setShip(this);
 			//crewie.setRoomIn(rooms.get(Crew.getRand().nextInt(rooms.size())));
@@ -235,8 +235,7 @@ public class Ship implements Handleable{
 		resources.put("missiles", 500);
 	}
 
-	public void apply(Weapon w) {
-		
+	public void apply(Weapon w) {	
 	}
 	
 	private void randomlyFillRooms() {
@@ -252,6 +251,10 @@ public class Ship implements Handleable{
 		unassignedCrew.remove(0);
 		for(Crew crew:unassignedCrew) {
 			index = rand.nextInt(shipRooms.size());
+			if(shipRooms.get(index).getCrewInRoom().size()>=shipRooms.get(index).getSize().getMaxPopulation()) {
+				if(index==shipRooms.size()-1) index--;
+				else index++;
+			}
 			shipRooms.get(index).addCrew(crew);
 		}
 		unassignedCrew.clear();	
@@ -573,6 +576,8 @@ public class Ship implements Handleable{
 		}
 	}
 	
+	
+	
 	public void updatePowerConsumption() {
 		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
 		getGenerator().getEfficiencyGraph().setGraphPoint(0);
@@ -713,14 +718,6 @@ public class Ship implements Handleable{
 		return null;
 	}
 
-
-	
-	
-	
-
-
-
-
 	public void accelerate() {
 		incSpeed(endSpeed);
 		endSpeed =0;
@@ -734,9 +731,7 @@ public class Ship implements Handleable{
 
 	private void incSpeed(int speed) {
 		setSpeed(speed+getSpeed());
-		
 	}
-
 
 	public Ship copy() {
 		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , maxHealth, lImage.getScale(), this.visibleCrew, isChased);
@@ -752,16 +747,16 @@ public class Ship implements Handleable{
 			Crew crew = leaders.get(i);
 			
 			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
-			if(crew.getRoomLeading() == this.getWeaponRoom()){
-				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameWeapons.png"),6,6);
-			}
-			else if(crew.getRoomLeading() == this.getGeneratorRoom()){
-				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameEngines.png"),6,6);
-
-			}
-			else {
-				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameCockpit.png"),6,6);
-			}
+//			if(crew.getRoomLeading() == this.getWeaponRoom()){
+//				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameWeapons.png"),6,6);
+//			}
+//			else if(crew.getRoomLeading() == this.getGeneratorRoom()){
+//				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameEngines.png"),6,6);
+//
+//			}
+//			else {
+//				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameCockpit.png"),6,6);
+//			}
 			leaderPortrait.setVisible(true);
 			leaderPortrait.start(false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
