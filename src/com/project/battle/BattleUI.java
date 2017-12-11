@@ -314,8 +314,7 @@ public class BattleUI extends UI {
 			portrait.setVisible(true);
 			portrait.setxCoordinate(mainMonitorXOffset + listWidth - (portrait.getWidth() * (3 - column)));
 			portrait.setyCoordinate(mainMonitorYOffset + listHeight - (row * portrait.getHeight()));
-			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),
-					portrait.getyCoordinate());
+			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
 		}

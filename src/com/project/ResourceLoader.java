@@ -192,6 +192,7 @@ public class ResourceLoader {
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/actionBox.png");
+		put(images,"res/brokenActionBox.png");
 		put(images,"res/actionBoxEmpty.png");
 		put(images,"res/walkingIcon.png");
 		for(RaceID race : RaceID.values()) {

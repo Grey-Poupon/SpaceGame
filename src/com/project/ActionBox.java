@@ -25,6 +25,8 @@ public class ActionBox {
 		this.y 		    = y;
 		this.action     = action;
 		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+		this.action.setActionBox(this);
+
 	}
 	
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
@@ -36,6 +38,10 @@ public class ActionBox {
 		this.y 		    = y;
 		this.action     = action;
 		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+		this.action.setActionBox(this);
+		if(getName()=="Reload"){
+			System.out.print("");
+		}
 	}
 	
 	public void setCrew(DraggableIcon crew) {
@@ -54,6 +60,15 @@ public class ActionBox {
 		removeActor();
 	}
 	
+	public void removeActor() {
+		action.removeActor();
+	}
+	/*Remove crew from box, and place them back*/
+	public void resetBox(){
+		if(crew != null){
+			crew.reset();
+		}
+	}
 	public static void delete(ActionBox box) {
 		//box.removeCrew();
 		if(box.img       !=null) {ImageHandler .delete(box.img );}
@@ -106,9 +121,7 @@ public class ActionBox {
 		return action.getLevelRequirement();
 	}
 
-	public void removeActor() {
-		action.removeActor();
-	}
+
 
 	public StatID getStatType() {
 		return action.getStatType();

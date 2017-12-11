@@ -142,26 +142,24 @@ public class DraggableIcon {
 		if(startingBox==null){
 			moveTo(startX,startY);
 		}
-		else {
-			if(startingBox.isOpen()) {
+		else if(startingBox.isOpen()) {
 				moveTo(startingBox.getX(),startingBox.getY());
 				startingBox.setCrew(this);
 				actionBox = startingBox;
 				
+		}
+		else {
+			boolean placed = false;
+			for(ActionBox box:BattleUI.actionBoxes) {
+				if(box.getRoom() == startingBox.getRoom() && box.isOpen()) {
+					box.setCrew(this);
+					moveTo(box.getX(), box.getY());
+					placed = true;
+					break;
+				}
 			}
-			else {
-				boolean placed = false;
-				for(ActionBox box:BattleUI.actionBoxes) {
-					if(box.getRoom() == startingBox.getRoom() && box.isOpen()) {
-						box.setCrew(this);
-						moveTo(box.getX(), box.getY());
-						placed = true;
-						break;
-					}
-				}
-				if(!placed) {
-					// throw error;
-				}
+			if(!placed) {
+			//	throw new Exception();
 			}
 		}
 		crew.setMoving(false);

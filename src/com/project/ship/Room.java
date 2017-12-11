@@ -210,15 +210,19 @@ public abstract class Room {
 	/**Deals damage returns roll table roll**/
 	protected int takeDamage(int damage) {
 		damageStack+=damage;
+		/*While damage is greater than damage needed to break a room*/
 		while(damageStack>=actionHealth){
+			/*Update damagestack*/
 			damageStack-=actionHealth;
+			
+			/*Break action*/
 			if(ActionsLeft()){
 				CrewAction actionToBeBroken = getLeastDependantAction();
 				actionToBeBroken.setBroken(true);
 				health--;
 			}
 			else{
-				// room.makeLikeAdamsWillToLiveAndDie();
+				/*Destroy ship*/ 
 				break;
 			}
 			

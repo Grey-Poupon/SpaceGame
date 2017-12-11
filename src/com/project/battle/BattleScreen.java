@@ -137,8 +137,8 @@ public class BattleScreen extends Main {
 		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
 		
 		//Handler.addLowPriorityEntity(overlay);
-		//Handler.addLowPriorityEntity(chaserHealthbar);
-		//Handler.addLowPriorityEntity(chasedHealthbar);
+		Handler.addLowPriorityEntity(chaserHealthbar);
+		Handler.addLowPriorityEntity(chasedHealthbar);
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -410,7 +410,7 @@ public class BattleScreen extends Main {
 				for(int j = 0; j<refinedActions.size(); j++) {
 					action = refinedActions.get(j);
 					
-					// if this actions doesnt need anymore actions to be completed
+					// if this actions doesn't need anymore actions to be completed
 					if(refinedActions.get(j).getActionsNeeded().size()==0) {
 						actions = actionMap.get(action.getActionType());
 						

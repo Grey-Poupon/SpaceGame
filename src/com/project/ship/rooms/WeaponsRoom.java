@@ -30,6 +30,7 @@ public class WeaponsRoom extends Room {
 		super(name,actionHealth,noOfActions,size);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
+		this.setDamageableRadius(damageableRadius);
 		weapons.addAll(backWeapons);
 		weapons.addAll(frontWeapons);
 

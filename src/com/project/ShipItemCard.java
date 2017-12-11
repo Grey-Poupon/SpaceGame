@@ -89,6 +89,8 @@ public class ShipItemCard {
 			// update variables
 			lastY+=ActionBox_ActionBoxGap+actionBox.getHeight();
 			
+
+			
 			if(actionBox.getActor()!=null) {
 				DraggableIcon icon = crewToIcon.get(actionBox.getActor());
 				icon.moveTo(actionBox.getX(),actionBox.getY());
