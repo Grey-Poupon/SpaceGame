@@ -143,17 +143,7 @@ public class DraggableIcon {
 				startingBox.setCrew(this);
 				actionBox = startingBox;
 				
-<<<<<<< HEAD
-		}
-		else {
-			boolean placed = false;
-			for(ActionBox box:BattleUI.actionBoxes) {
-				if(box.getRoom() == startingBox.getRoom() && box.isOpen()) {
-					box.setCrew(this);
-					moveTo(box.getX(), box.getY());
-					placed = true;
-					break;
-=======
+
 			}
 			else {
 				boolean placed = false;
@@ -167,12 +157,8 @@ public class DraggableIcon {
 				}
 				if(!placed) {
 					System.out.println("this is spooky");
->>>>>>> d09a8553ac7f2d726da48513f2f6b817a0be0011
 				}
-			}
-			if(!placed) {
-			//	throw new Exception();
-			}
+
 		}
 		crew.setMoving(false);
 		

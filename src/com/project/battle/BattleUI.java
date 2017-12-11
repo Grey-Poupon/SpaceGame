@@ -320,8 +320,7 @@ public class BattleUI extends UI {
 
 			portrait.setxCoordinate(mainMonitorXOffset + listWidth -26 - (portrait.getWidth() * (1-column))+column*3);
 			portrait.setyCoordinate(mainMonitorYOffset + 12+ row*3+((row-1) * (portrait.getHeight())));
-			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),
-					portrait.getyCoordinate());
+			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
 			
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
