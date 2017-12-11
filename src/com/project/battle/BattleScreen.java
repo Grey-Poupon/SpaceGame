@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
@@ -26,10 +27,10 @@ import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
-import com.project.ship.rooms.Cockpit;
+import com.project.ship.rooms.GeneratorRoom;
+import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
-import sun.audio.*;
 
 public class BattleScreen extends Main {
 
@@ -66,9 +67,11 @@ public class BattleScreen extends Main {
 	private Ship enemyShip;
 	private ImageHandler newUI;
 	private ImageHandler uiGraphBox;
+	private ImageHandler weaponsTab;
+	private ImageHandler enginesTab;
+	private ImageHandler movementTab;
 	
 	public BattleScreen() {
-		
 		setPaused(true);
 		player = new Player(100);
 		handler = new BattleHandler(this);
@@ -111,7 +114,6 @@ public class BattleScreen extends Main {
 		chasedShip.setY(-50);
 		phase 				 = new Text          ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
-		overlay 			 = new ImageHandler  (0,0,"res/drawnUi2.png",true,EntityID.UI);
 		
 		//Set Captain
 		chaserShip.setCaptain(player.getPlayerCrew());
@@ -129,12 +131,22 @@ public class BattleScreen extends Main {
 		newUI = new ImageHandler(0,0,"res/ui/ui.png",true,1,1,EntityID.UI);
 		Handler.addLowPriorityEntity(newUI);
 		
+		//Add Tabs
+		enginesTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/enginesTab.png"),true,EntityID.UI);
+		enginesTab.start(false);
+		enginesTab.setVisible(true);
+		weaponsTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/weaponsTab.png"),true,EntityID.UI);
+		weaponsTab.start(false);
+		weaponsTab.setVisible(false);
+		movementTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/movementTab.png"),true,EntityID.UI);
+		movementTab.start(false);
+		movementTab.setVisible(false);
+		
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(uiGraphBox);
-		
 		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
-		sl = new ScrollableList(temp, 0, Main.HEIGHT - (temp.size() * 85), 85, (temp.size() * 85), 85, 85, true);
+		sl = new ScrollableList(temp, 6, Main.HEIGHT - (temp.size() * 85)+6, 85, (temp.size() * 85), 85, 85, true);
 		
 		//Handler.addLowPriorityEntity(overlay);
 		Handler.addLowPriorityEntity(chaserHealthbar);
@@ -143,6 +155,7 @@ public class BattleScreen extends Main {
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
 		this.addMouseWheelListener(mouseIn);
+		BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(0), TooltipSelectionID.Room);
 		setPaused(false);
 	}
 
@@ -189,7 +202,6 @@ public class BattleScreen extends Main {
 		if (!isPaused()) {
 			super.tick();
 			// AI turns
-
 			if(!isPlayersTurn) {
 				if(currentPhase == BattlePhases.WeaponActions) {
 					if(playerIsChaser) {
@@ -227,7 +239,6 @@ public class BattleScreen extends Main {
 				}
 				nextTurn();
 			}
-
 			// Final phase aka do stuff
 			if (currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
@@ -328,7 +339,14 @@ public class BattleScreen extends Main {
 				//BattleUI.generateSpeedInput();
 			}
 			if (ID == ButtonID.Crew) {
+				movementTab.setVisible(false);
+				weaponsTab.setVisible(false);
+				enginesTab.setVisible(false);
+				if(playerShip.getPhaseLeaders().get(index).getRoomLeading() instanceof WeaponsRoom) { weaponsTab.setVisible(true);}
+				else if(playerShip.getPhaseLeaders().get(index).getRoomLeading() instanceof GeneratorRoom) { enginesTab.setVisible(true);}
+				else if(playerShip.getPhaseLeaders().get(index).isCaptain()) {movementTab.setVisible(true);}
 				BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(index), TooltipSelectionID.Room);
+				
 			}
 			if(ID == ButtonID.EndPhase) {
 					// add weapons to fire list

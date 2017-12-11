@@ -57,6 +57,7 @@ public class ImageHandler implements Handleable {
 		return zCoordinate;
 	}
 	
+	
 
 
 
