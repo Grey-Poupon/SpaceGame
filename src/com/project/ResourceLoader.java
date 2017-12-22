@@ -54,8 +54,8 @@ public class ResourceLoader {
 	}
 	
 	public void loadAudio() {
-		//Sound music = new Sound("res/audio/music.wav") ;
-		//music.loop();	
+		Sound music = new Sound("res/audio/music.wav") ;
+		music.loop();	
 	}
 	
 	private void loadCrewActions(){
