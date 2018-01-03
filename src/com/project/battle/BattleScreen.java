@@ -226,7 +226,7 @@ public class BattleScreen extends Main {
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
-						chasedShotLocations.add(new Point(350, 350)) ;
+						chasedShotLocations.add(new Point(350,250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}

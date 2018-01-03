@@ -5,18 +5,26 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
+import com.project.ImageHandler;
 import com.project.ResourceLoader;
 import com.project.RoomSize;
+import com.project.battle.BattleScreen;
+import com.project.button.Button;
 import com.project.ship.Room;
 
-public class Cockpit extends Room{
+public class Cockpit extends Room implements Actionable{
+	private ImageHandler background;
+	private ImageHandler card;
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
 	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
 		super(name,actionHealth,noOfActions,size);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
+		this.background = new ImageHandler(0, 0, "res/ui/piloting.png", true, null);
+		this.card = new ImageHandler(0,0,"res/ui/piloting.png",true,null);
 	}
 	
 	public BufferedImage getIcon() {
@@ -61,6 +69,48 @@ public class Cockpit extends Room{
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<CrewAction> getActions() {
+		// TODO Auto-generated method stub
+		return manoeuvres;
+	}
+
+	@Override
+	public String getFlavorText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void doAction(Crew crew, CrewAction action, BattleScreen bs) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ImageHandler getCardBackground() {
+		// TODO Auto-generated method stub
+		return background;
+	}
+
+	@Override
+	public ImageHandler getCardImage() {
+		// TODO Auto-generated method stub
+		return getCrewInRoom().get(0).getPortrait().copy();
 	}
 
 }
