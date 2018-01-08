@@ -1,9 +1,8 @@
 package com.project;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.project.ship.Room;
 
 public class CrewAction implements Comparable {
 	private String name;
@@ -11,6 +10,8 @@ public class CrewAction implements Comparable {
 	private int xpReward;
 	private StatID statType;
 	private CrewActionID actionType;
+	private BufferedImage actionImg;
+	private ActionBox actionBox;
 	private Crew actor;
 	private int powerCost;
 	private static Graph PowerGraph;
@@ -26,7 +27,8 @@ public class CrewAction implements Comparable {
 		this.levelRequirement = levelRequirement;
 		this.xpReward         = xpReward;
 		this.statType         = statType;
-		this.powerCost        = powerCost;	
+		this.powerCost        = powerCost;
+		this.setActionImg(ResourceLoader.getImage("res/actionBox.png"));
 		this.isBroken         = false;
 		this.actionsNeeded.addAll(actionsNeededToUse);
 		this.actionsNeededAfterUse = actionsNeededToUse;
@@ -35,6 +37,7 @@ public class CrewAction implements Comparable {
 	/** Constructor for dummy crew action**/
 	public CrewAction(){
 		this.name = "Dummy Action";
+		this.setActionImg(ResourceLoader.getImage("res/actionBox.png"));
 		this.actionType = CrewActionID.Dummy;
 		
 	}
@@ -152,6 +155,29 @@ public class CrewAction implements Comparable {
 
 	public void setBroken(boolean isBroken) {
 		this.isBroken = isBroken;
+		if(isBroken){
+			setActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
+			if(actionBox != null){
+				actionBox.resetBox();
+			}
+		}
+		else{
+			setActionImg(ResourceLoader.getImage("res/actionBox.png"));
+		}
 	}
+
+	public BufferedImage getActionImg() {
+		return actionImg;
+	}
+
+	public void setActionImg(BufferedImage actionImg) {
+		this.actionImg = actionImg;
+	}
+
+	public void setActionBox(ActionBox actionBox) {
+		this.actionBox = actionBox;		
+	}
+
+
 
 }

@@ -51,6 +51,7 @@ public abstract class Room {
 	}
 	
 	public void generateSensorSpheres(Sensor sensor) {
+		//generates the sensorSpheres
 		if(sensorSpheres.size()>0) {return;}
 		Random rand = new Random();		
 		
@@ -58,6 +59,7 @@ public abstract class Room {
 			
 			 
 			int index = 0;
+			//randomises the positions of the spheres
 			if(rand.nextBoolean()&&i!=0) {
 				if(rand.nextBoolean()) {
 				index =rand.nextInt(i);
@@ -155,8 +157,10 @@ public abstract class Room {
 		this.sensorSphereRadius = sensorSphereRadius;
 	}
 	public void renderSensorSpheres(Graphics g,Ship ship) {
+		//renders spheres
 		Graphics2D g2d  = (Graphics2D)g.create();
 		g2d.setColor(new Color(1f,0f,0f,0.5f));
+		//made into a composite to stop alpha channels adding up
 		Area composite = new Area();
 		g2d.setClip(ship.getClip());
 		for(int i =0; i<sensorSpheres.size();i++) {
@@ -206,15 +210,19 @@ public abstract class Room {
 	/**Deals damage returns roll table roll**/
 	protected int takeDamage(int damage) {
 		damageStack+=damage;
+		/*While damage is greater than damage needed to break a room*/
 		while(damageStack>=actionHealth){
+			/*Update damagestack*/
 			damageStack-=actionHealth;
+			
+			/*Break action*/
 			if(ActionsLeft()){
 				CrewAction actionToBeBroken = getLeastDependantAction();
 				actionToBeBroken.setBroken(true);
 				health--;
 			}
 			else{
-				// room.makeLikeAdamsWillToLiveAndDie();
+				/*Destroy ship*/ 
 				break;
 			}
 			

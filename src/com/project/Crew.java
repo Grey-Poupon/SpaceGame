@@ -57,6 +57,7 @@ public class Crew implements Observer{
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
+		//starts the stats for the crew
 		stats.put(StatID.social, (byte)social);
 		stats.put(StatID.combat, (byte)combat);
 		stats.put(StatID.gunner, (byte)gunner);
@@ -302,6 +303,7 @@ public class Crew implements Observer{
 	}
 	
 	private void randomisePortrait() {
+		//changes the colour of the portraits
 		BufferedImage img = new BufferedImage(this.getPortrait().getImg().getWidth(),this.portrait.getImg().getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
 		float shader  = (float)(rand.nextGaussian()*0.5 +1);
 		float shadeg  = (float)(rand.nextGaussian()*0.5 +1);
