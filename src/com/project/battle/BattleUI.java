@@ -16,6 +16,7 @@ import com.project.Graph;
 import com.project.ImageHandler;
 import com.project.Main;
 import com.project.MathFunctions;
+import com.project.PilotCard;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.ShipItemCard;
@@ -140,7 +141,7 @@ public class BattleUI extends UI {
 			generator.add(room.getGenerator());
 
 			BattleUI.generateRoomCards(generator, room);
-			
+			generatePilotCard();
 			/**Images for side bar tabs - manoeuvre and speedometer**/
 //			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
 //			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
@@ -300,10 +301,11 @@ public class BattleUI extends UI {
 			column = (i % 3);
 			row = (i / 3) + 1;
 			portrait.setVisible(true);
+
 			portrait.setxCoordinate(mainMonitorXOffset + listWidth -26 - (portrait.getWidth() * (1-column))+column*3);
 			portrait.setyCoordinate(mainMonitorYOffset + 12+ row*3+((row-1) * (portrait.getHeight())));
-			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),
-					portrait.getyCoordinate());
+			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
+			
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
 		}
@@ -320,6 +322,15 @@ public class BattleUI extends UI {
 		}
 	}
 
+	public static void generatePilotCard(){
+		
+		PilotCard card = new PilotCard((Cockpit) playerShip.getCockpit(),bs);
+		card.assembleCard(mainMonitorXOffset+22+shipCards.get(0).getWidth(),mainMonitorYOffset+5);
+		shipCards.add(card);
+	}
+	
+	
+	
 	public static void generateSpeedInput() {
 		// clear
 		clearRightBox();

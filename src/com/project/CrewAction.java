@@ -11,6 +11,7 @@ public class CrewAction implements Comparable {
 	private StatID statType;
 	private CrewActionID actionType;
 	private BufferedImage actionImg;
+	private ActionBox actionBox;
 	private Crew actor;
 	private int powerCost;
 	private static Graph PowerGraph;
@@ -154,6 +155,15 @@ public class CrewAction implements Comparable {
 
 	public void setBroken(boolean isBroken) {
 		this.isBroken = isBroken;
+		if(isBroken){
+			setActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
+			if(actionBox != null){
+				actionBox.resetBox();
+			}
+		}
+		else{
+			setActionImg(ResourceLoader.getImage("res/actionBox.png"));
+		}
 	}
 
 	public BufferedImage getActionImg() {
@@ -163,5 +173,11 @@ public class CrewAction implements Comparable {
 	public void setActionImg(BufferedImage actionImg) {
 		this.actionImg = actionImg;
 	}
+
+	public void setActionBox(ActionBox actionBox) {
+		this.actionBox = actionBox;		
+	}
+
+
 
 }

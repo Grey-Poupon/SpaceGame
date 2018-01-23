@@ -28,6 +28,7 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.phase2.Map;
 import com.project.ship.Ship;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
@@ -164,8 +165,8 @@ public class BattleScreen extends Main {
 		sl = new ScrollableList(temp, 6, Main.HEIGHT - (temp.size() * 85)+6, 85, (temp.size() * 85), 85, 85, true);
 		
 		//Handler.addLowPriorityEntity(overlay);
-		//Handler.addLowPriorityEntity(chaserHealthbar);
-		//Handler.addLowPriorityEntity(chasedHealthbar);
+		Handler.addLowPriorityEntity(chaserHealthbar);
+		Handler.addLowPriorityEntity(chasedHealthbar);
 		this.addKeyListener(keyIn);
 		this.addMouseListener(mouseIn);
 		this.addMouseMotionListener(mouseIn);
@@ -241,7 +242,7 @@ public class BattleScreen extends Main {
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
-						chasedShotLocations.add(new Point(350, 350)) ;
+						chasedShotLocations.add(new Point(350,250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}
@@ -443,7 +444,7 @@ public class BattleScreen extends Main {
 				for(int j = 0; j<refinedActions.size(); j++) {
 					action = refinedActions.get(j);
 					
-					// if this actions doesnt need anymore actions to be completed
+					// if this actions doesn't need anymore actions to be completed
 					if(refinedActions.get(j).getActionsNeeded().size()==0) {
 						actions = actionMap.get(action.getActionType());
 						

@@ -138,12 +138,12 @@ public class DraggableIcon {
 		if(startingBox==null){
 			moveTo(startX,startY);
 		}
-		else {
-			if(startingBox.isOpen()) {
+		else if(startingBox.isOpen()) {
 				moveTo(startingBox.getX(),startingBox.getY());
 				startingBox.setCrew(this);
 				actionBox = startingBox;
 				
+
 			}
 			else {
 				boolean placed = false;
@@ -158,7 +158,7 @@ public class DraggableIcon {
 				if(!placed) {
 					System.out.println("this is spooky");
 				}
-			}
+
 		}
 		crew.setMoving(false);
 		

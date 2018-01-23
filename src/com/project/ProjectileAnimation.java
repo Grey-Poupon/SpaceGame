@@ -129,13 +129,13 @@ public class ProjectileAnimation implements Handleable{
 				if(isLeftToRight) {
 					if(!animations[i].isPushed() && animations[i].getxCoordinate()>Main.WIDTH/2) {
 						animations[i].pushBack(pushBack);
-						System.out.println("PushBack");
+					//	System.out.println("PushBack");
 						animations[i].setMask(new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH/2,Main.HEIGHT));
 					}
 				}
 				else if(!animations[i].isPushed() && (animations[i].getxCoordinate()+animations[i].getTileWidth())<Main.WIDTH/2) {
 					animations[i].pushBack(pushBack);
-					System.out.println("PushBack");
+					//System.out.println("PushBack");
 					animations[i].setMask(new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT));
 				}
 			}

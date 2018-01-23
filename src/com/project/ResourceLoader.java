@@ -144,6 +144,7 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/ui/slider.png");
 		put(images,"res/ui/enginesTab.png");
 		put(images,"res/ui/weaponsTab.png");
 		put(images,"res/ui/movementTab.png");
@@ -195,6 +196,7 @@ public class ResourceLoader {
 		put(images,"res/appIcon.png");
 		put(images,"res/explosionSpritesheet.png");
 		put(images,"res/actionBox.png");
+		put(images,"res/brokenActionBox.png");
 		put(images,"res/actionBoxEmpty.png");
 		put(images,"res/walkingIcon.png");
 		for(RaceID race : RaceID.values()) {
