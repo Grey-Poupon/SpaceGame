@@ -96,7 +96,7 @@ public class ResourceLoader {
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/generatorImage.png", true, null);
 
 		
-		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2,portrait,background));
+		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.gaussian,actions2,portrait,background));
 	}
 	
 

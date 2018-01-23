@@ -151,10 +151,10 @@ public class BattleScreen extends Main {
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
 		// GO BUTTON
-		graphEnd.add(new Button(0, 0, playerShip.getGenerator().getEfficiencyGraph().getWidth(),
-				playerShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO",
+		Button go = new Button(1165, 605, 100,100, ButtonID.EndPhase, graphEnd.size(), true, "GO",
 				"sevensegies", Font.PLAIN, 30, Color.WHITE,
-				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), this));
+				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), this);
+		Handler.addLowPriorityEntity(go);
 		BattleUI.graphList = new ScrollableList(graphEnd, BattleUI.graphMonitorXOffset, BattleUI.graphMonitorYOffset,
 				playerShip.getGenerator().getEfficiencyGraph().getWidth(),
 				2 * playerShip.getGenerator().getEfficiencyGraph().getHeight());
