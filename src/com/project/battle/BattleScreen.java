@@ -1,5 +1,7 @@
 package com.project.battle;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -142,6 +144,19 @@ public class BattleScreen extends Main {
 		movementTab.start(false);
 		movementTab.setVisible(false);
 		
+		Button graph = new Button(0, 0, playerShip.getGenerator().getEfficiencyGraph().getWidth(),playerShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
+		playerShip.getGenerator().getEfficiencyGraph(), this);
+		graph.setDraggable(true);
+		List<Button> graphEnd = new ArrayList<Button>();
+		graphEnd.add(graph);
+		// GO BUTTON
+		graphEnd.add(new Button(0, 0, playerShip.getGenerator().getEfficiencyGraph().getWidth(),
+				playerShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO",
+				"sevensegies", Font.PLAIN, 30, Color.WHITE,
+				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), this));
+		BattleUI.graphList = new ScrollableList(graphEnd, BattleUI.graphMonitorXOffset, BattleUI.graphMonitorYOffset,
+				playerShip.getGenerator().getEfficiencyGraph().getWidth(),
+				2 * playerShip.getGenerator().getEfficiencyGraph().getHeight());
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		Handler.addHighPriorityEntity(uiGraphBox);

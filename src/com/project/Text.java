@@ -56,8 +56,8 @@ public class Text implements Handleable{
 		}
 		Handler.texts.add(this);
 	}
-	public void render(Graphics g)
-	{
+	
+	public void render(Graphics g){
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -87,8 +87,6 @@ public class Text implements Handleable{
 								words = "";
 							}
 							
-							
-							
 						}
 						newText+=lines;
 						if(metrics.stringWidth(newText+words)>=clip.getBounds().getWidth()) {
@@ -98,7 +96,6 @@ public class Text implements Handleable{
 						justOnce +=1;
 						leftAlign =true;
 					}
-			
 				}
 					for(int i= 0 ; i<text.split("\n").length;i++) {
 						if(leftAlign) {g2d.drawString(text.split("\n")[i], xCoordinate, yCoordinate+(i)*metrics.getHeight());}

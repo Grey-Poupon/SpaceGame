@@ -1,7 +1,6 @@
 package com.project.battle;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -12,9 +11,7 @@ import com.project.ActionBox;
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
-import com.project.CrewActionID;
 import com.project.DraggableIcon;
-import com.project.EntityID;
 import com.project.Graph;
 import com.project.ImageHandler;
 import com.project.Main;
@@ -26,7 +23,6 @@ import com.project.StatID;
 import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.UI;
-import com.project.Recreation.RecreationalItem;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Generator;
@@ -36,7 +32,6 @@ import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
-import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
 public class BattleUI extends UI {
@@ -66,8 +61,8 @@ public class BattleUI extends UI {
 	private static final int mainMonitorYOffset = Main.HEIGHT - 255;
 	private static final int secondMonitorXOffset = Main.WIDTH - 513;
 	private static final int secondMonitorYOffset = Main.HEIGHT - 230;
-	private static final int graphMonitorXOffset = Main.WIDTH - 194;
-	private static final int graphMonitorYOffset = Main.HEIGHT - 329;
+	public static final int graphMonitorXOffset = Main.WIDTH - 185;
+	public static final int graphMonitorYOffset = Main.HEIGHT - 310;
 	
 	private static final int tableTitleHeight = 40;
 	private static final int tableColumnWidth = 965 / 6;
@@ -84,7 +79,7 @@ public class BattleUI extends UI {
 	private static ScrollableList rightHandList;
 	private static BattleScreen bs;
 	private static ScrollableList tooltipList;
-	private static ScrollableList graphList;
+	public static ScrollableList graphList;
 
 	private static List<Button> flavourTexts;
 
@@ -117,19 +112,7 @@ public class BattleUI extends UI {
 				bs, false);
 
 
-		Button graph = new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
-		pShip.getGenerator().getEfficiencyGraph(), bs);
-		graph.setDraggable(true);
-		List<Button> graphEnd = new ArrayList<Button>();
-		graphEnd.add(graph);
-		// GO BUTTON
-		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),
-				pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO",
-				"sevensegies", Font.PLAIN, 30, Color.WHITE,
-				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), bs));
-		graphList = new ScrollableList(graphEnd, graphMonitorXOffset, graphMonitorYOffset,
-				pShip.getGenerator().getEfficiencyGraph().getWidth(),
-				2 * pShip.getGenerator().getEfficiencyGraph().getHeight());
+
 
 	}
 
