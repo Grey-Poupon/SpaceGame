@@ -102,8 +102,8 @@ public class Main  extends Canvas implements Runnable{
 	
 	public static void main(String[] args){
 		new ResourceLoader();
-		new BattleScreen();
-//		new Phase2();
+//		new BattleScreen();
+		new Phase2();
 	}
 	
 	
