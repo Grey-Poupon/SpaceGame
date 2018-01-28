@@ -13,21 +13,21 @@ import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
 public class ShipItemCard {
-	private Actionable item;
-	private List<CrewAction> actions = new ArrayList<CrewAction>();
-	private List<ActionBox > boxes   = new ArrayList<ActionBox >();
-	private ImageHandler background;
-	private Ship ship;
-	private BattleScreen bs;
-	private List<Point> actionPlacement = new ArrayList<Point>();
-	private ImageHandler itemImage;
-	private Point imagePosition;
+	protected Actionable item;
+	protected List<CrewAction> actions = new ArrayList<CrewAction>();
+	protected List<ActionBox > boxes   = new ArrayList<ActionBox >();
+	protected ImageHandler background;
+	protected Ship ship;
+	protected BattleScreen bs;
+	protected List<Point> actionPlacement = new ArrayList<Point>();
+	protected ImageHandler itemImage;
+	protected Point imagePosition;
 	// Item image dimensions should always be 150,50
 	
-	private final int marginWidth            = 5;
-	private final int image_ActionBoxGap     = 10;
-	private final int ActionBox_ActionBoxGap = 10;
-	private final int ActionBox_TextGap      = 5;
+	protected final int marginWidth            = 5;
+	protected final int image_ActionBoxGap     = 10;
+	protected final int ActionBox_ActionBoxGap = 10;
+	protected final int ActionBox_TextGap      = 5;
 
 	public ShipItemCard(Actionable item, BattleScreen bs){
 		this.item       = item;
@@ -35,7 +35,7 @@ public class ShipItemCard {
 		this.background = item.getCardBackground();
 		this.itemImage  = item.getCardImage();
 		this.bs         = bs;
-		this.ship       = bs.getPlayerShip();;
+		this.ship       = bs.getPlayerShip();
 		boolean notInBox = true;
 		
 		for(int x =0;x<item.getCardBackground().getWidth();x++) {
@@ -106,6 +106,10 @@ public class ShipItemCard {
 		return background.getWidth();
 	}
 	public static void delete(ShipItemCard card) {
+		if(card instanceof PilotCard) {
+			PilotCard.delete((PilotCard)card);
+			return;
+		}
 		ImageHandler.delete(card.itemImage);
 		ImageHandler.delete(card.background);
 		for(ActionBox box: card.boxes ){ ActionBox.delete(box); BattleUI.actionBoxes.remove(box);}

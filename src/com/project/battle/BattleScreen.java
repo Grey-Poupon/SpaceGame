@@ -26,6 +26,7 @@ import com.project.Text;
 import com.project.TooltipSelectionID;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.phase2.Map;
 import com.project.ship.Ship;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;

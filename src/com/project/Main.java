@@ -8,7 +8,7 @@ import java.util.Random;
 
 import com.project.battle.BattleScreen;
 import com.project.button.ButtonID;
-import com.project.ship.Ship;
+import com.project.phase2.Phase2;
 
 
 
@@ -102,8 +102,11 @@ public class Main  extends Canvas implements Runnable{
 	
 	public static void main(String[] args){
 		new ResourceLoader();
-		new BattleScreen();
+		//new BattleScreen();
+		new Phase2();
 	}
+	
+	
 
 	public boolean isPaused() {
 		return paused;
