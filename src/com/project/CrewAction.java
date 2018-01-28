@@ -127,8 +127,9 @@ public class CrewAction implements Comparable {
 	public CrewAction copy() {
 		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement);
 		
-		// set broken
-		action.setBroken(isBroken);
+		// set extra variables
+		action.actionBox = this.actionBox;
+		action.isBroken = isBroken;
 		
 		// remove actions that have been completed
 		if(actionsNeeded.size() == actionsNeededAfterUse.size()) {
@@ -156,13 +157,13 @@ public class CrewAction implements Comparable {
 	public void setBroken(boolean isBroken) {
 		this.isBroken = isBroken;
 		if(isBroken){
-			setActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
+			changeActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
 			if(actionBox != null){
 				actionBox.resetBox();
 			}
 		}
 		else{
-			setActionImg(ResourceLoader.getImage("res/actionBox.png"));
+			changeActionImg(ResourceLoader.getImage("res/actionBox.png"));
 		}
 	}
 
@@ -172,6 +173,10 @@ public class CrewAction implements Comparable {
 
 	public void setActionImg(BufferedImage actionImg) {
 		this.actionImg = actionImg;
+	}
+	public void changeActionImg(BufferedImage actionImg){
+		this.actionImg = actionImg;
+		this.actionBox.setImg(actionImg);
 	}
 
 	public void setActionBox(ActionBox actionBox) {

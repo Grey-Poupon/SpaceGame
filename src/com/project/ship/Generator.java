@@ -92,20 +92,16 @@ public class Generator implements Actionable {
 
 	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
-		Ship ship = bs.playerIsChaser() ? bs.chaserShip:bs.chasedShip;
-		//System.out.println(action.getActionType().toString());
-		if(action.getActionType() == CrewActionID.Generate) {
-			setCanGenerate(true);
-		}
-		if(action.getActionType()==CrewActionID.Fix) {
-			
-		}
-		if(action.getActionType()==CrewActionID.Overclock) {
-			
-		}
-		if(action.getActionType()==CrewActionID.Cooling) {
-			
-		}
+	if(action.getActionType() == CrewActionID.Generate) {
+		setCanGenerate(true);
+	}
+	if(action.getActionType()==CrewActionID.Overclock) {
+		
+	}
+	if(action.getActionType()==CrewActionID.Cooling) {
+		
+	}
+
 		
 		
 	}

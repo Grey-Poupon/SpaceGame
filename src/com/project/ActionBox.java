@@ -20,7 +20,7 @@ public class ActionBox {
 	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
 		this.img.start(false);
-		this.room =room;
+		this.room       = room;
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
@@ -39,9 +39,7 @@ public class ActionBox {
 		this.action     = action;
 		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
 		this.action.setActionBox(this);
-		if(getName()=="Reload"){
-			System.out.print("");
-		}
+
 	}
 	
 	public void setCrew(DraggableIcon crew) {
@@ -154,6 +152,8 @@ public class ActionBox {
 	public boolean getMoveCrew() {
 		return moveCrew;
 	}
-
+	public void setImg(BufferedImage actionImg) {
+		this.img.setImg(actionImg);
+	}
 	
 }

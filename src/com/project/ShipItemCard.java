@@ -37,8 +37,10 @@ public class ShipItemCard {
 		this.bs         = bs;
 		this.ship       = bs.getPlayerShip();;
 		boolean notInBox = true;
+		
 		for(int x =0;x<item.getCardBackground().getWidth();x++) {
 			for(int y = 0; y<item.getCardBackground().getHeight();y++) {
+				
 				if(imagePosition == null) {
 					if(item.getCardBackground().getImg().getRGB(x, y)==-5552961) {
 						imagePosition = new Point(x,y);
@@ -78,7 +80,7 @@ public class ShipItemCard {
 		if     (item instanceof Weapon)  {room = ship.getWeaponRoom();}
 		else if(item instanceof Thruster){room = ship.getGeneratorRoom();}
 		
-			// loop to place
+		// loop to place
 		for(int i = 0; i < actions.size(); i++){
 			// make box
 			CrewAction a = actions.get(actions.size()-i-1);

@@ -217,8 +217,7 @@ public abstract class Room {
 			
 			/*Break action*/
 			if(ActionsLeft()){
-				CrewAction actionToBeBroken = getLeastDependantAction();
-				actionToBeBroken.setBroken(true);
+				getLeastDependantAction().setBroken(true);
 				health--;
 			}
 			else{

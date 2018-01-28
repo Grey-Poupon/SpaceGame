@@ -102,7 +102,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return cooldownDuration;
 	}
 	
-	public Buffer getBuff(){ // ^^
+	public Buffer getBuff(){ 
 		return null;
 	}
 	

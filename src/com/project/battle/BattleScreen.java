@@ -226,7 +226,7 @@ public class BattleScreen extends Main {
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
-						chasedShotLocations.add(new Point(350, 350)) ;
+						chasedShotLocations.add(new Point(350, 250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}
@@ -439,10 +439,15 @@ public class BattleScreen extends Main {
 							}
 						}									
 						// do action
-						actionable.doAction(action.getActor(),action, this);
-						if(actionable instanceof Weapon && action.getActionType()== CrewActionID.Fire) {numWeaponClicks++;}
-						action.resetActions();
-						//action.removeActor();
+						if(action.isBroken()){
+							action.setBroken(false);
+						}
+						else{
+							actionable.doAction(action.getActor(),action, this);
+							if(actionable instanceof Weapon && action.getActionType()== CrewActionID.Fire) {numWeaponClicks++;}
+							action.resetActions();
+							//action.removeActor();
+						}
 					}
 				}
 			}

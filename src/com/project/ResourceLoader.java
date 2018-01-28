@@ -220,7 +220,7 @@ public class ResourceLoader {
 		} 
 		catch (IOException e){
 			e.printStackTrace();
-		};
+		}
 		return img;
 	}
 	
