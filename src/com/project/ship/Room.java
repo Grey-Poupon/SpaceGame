@@ -31,12 +31,14 @@ public abstract class Room {
 	private int noOfActions;
 	private int damageStack = 0; 
 	private RoomSize size = RoomSize.Medium;
+	protected Ship ship;
+	
 	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	List<CrewAction> allActions = new ArrayList<CrewAction>();
 	ArrayList<Ellipse2D> sensorSpheres = new ArrayList<>();
 	private int sensorSphereRadius = 50;
 	
-	public Room(String name, int ActionHealth, int noOfActions, RoomSize size) {
+	public Room(String name, int ActionHealth, int noOfActions, RoomSize size, Ship ship) {
 		
 		this.roomName     = name;
 		this.actionHealth = ActionHealth;
@@ -44,6 +46,7 @@ public abstract class Room {
 		this.maxHealth    = noOfActions;
 		this.health       = maxHealth;
 		this.size		  = size;
+		this.ship         = ship;
 		
 	}
 	public Room() {

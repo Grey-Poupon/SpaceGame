@@ -13,6 +13,7 @@ import com.project.ImageHandler;
 import com.project.Slottable;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
+import com.project.ship.ResourcesID;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 
@@ -102,7 +103,7 @@ public class Thruster implements Slottable,Actionable{
 		CrewAction action = actions.get(index);
 		//ship.updatePowerConsumption(action);
 		if(actions.get(index).getName()=="Generate") {
-			ship.incResource("power", action.getPowerCost());
+			ship.incResource(ResourcesID.Power, action.getPowerCost());
 		}
 		
 	}
@@ -158,6 +159,8 @@ public class Thruster implements Slottable,Actionable{
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 
 

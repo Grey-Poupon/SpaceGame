@@ -14,6 +14,7 @@ import com.project.ImageHandler;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.rooms.GeneratorRoom;
 
 public class Generator implements Actionable {
 	private List<CrewAction> actions;
@@ -26,7 +27,7 @@ public class Generator implements Actionable {
 	private Graph efficiencyGraph; 
 	private ImageHandler generatorImg;
 	private ImageHandler backgroundImg;
-
+	private GeneratorRoom room;
 	
 	public Generator(String name,Function<Double,Double> function,List<CrewAction> actions,ImageHandler generatorImg,ImageHandler backgroundImg) {
 		this.name = name;
@@ -40,7 +41,7 @@ public class Generator implements Actionable {
 	}
 
 	public double getPower(double amountOfFuel) {
-		double effiency = overclock.getEffiency(amountOfFuel);
+		double effiency = efficiencyFunction.apply(amountOfFuel);
 		if (effiency<0) {
 			explode();
 			return -1;
@@ -67,9 +68,9 @@ public class Generator implements Actionable {
 
 
 	public void generate() {
-		if(efficiencyGraph.inDangerZone()) {
-			dangerRollTable();
-		}
+		setCanGenerate(true);
+		this.room.ship.incResource(ResourcesID.Fuel, -50);
+		this.room.ship.incResource(ResourcesID.Power, (int)getPower(50));
 	}
 
 	private void dangerRollTable() {
@@ -93,7 +94,7 @@ public class Generator implements Actionable {
 	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 	if(action.getActionType() == CrewActionID.Generate) {
-		setCanGenerate(true);
+		generate();
 	}
 	if(action.getActionType()==CrewActionID.Overclock) {
 		
@@ -121,8 +122,8 @@ public class Generator implements Actionable {
 		return canGenerate;
 	}
 
-	public void setCanGenerate(boolean canGenerate) {
-		this.canGenerate = canGenerate;
+	public void setCanGenerate(boolean bool) {
+		this.canGenerate = bool;
 	}
 
 	public ImageHandler getCardBackground() {
@@ -138,5 +139,9 @@ public class Generator implements Actionable {
 	public String getFlavorText() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setRoom(GeneratorRoom room) {
+		this.room = room;
 	}
 }

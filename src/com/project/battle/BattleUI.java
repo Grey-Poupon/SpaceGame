@@ -31,6 +31,7 @@ import com.project.Recreation.RecreationalItem;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Generator;
+import com.project.ship.ResourcesID;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
@@ -110,8 +111,8 @@ public class BattleUI extends UI {
 		
 		flavourTexts = new ArrayList<Button>();
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources += " " + key.toString() + ":" + pShip.getResource(key);
 		}
 
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
@@ -459,8 +460,8 @@ public class BattleUI extends UI {
 
 	public static void updateResources(Ship pShip) {
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources = resources + " " + key.toString() + ":" + pShip.getResource(key);
 		}
 		resourcesButton.getText().setText(resources);
 	}

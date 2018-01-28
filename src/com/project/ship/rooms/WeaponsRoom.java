@@ -10,6 +10,7 @@ import com.project.CrewAction;
 import com.project.ResourceLoader;
 import com.project.RoomSize;
 import com.project.ship.Room;
+import com.project.ship.Ship;
 import com.project.weapons.Weapon;
 
 public class WeaponsRoom extends Room {
@@ -20,14 +21,14 @@ public class WeaponsRoom extends Room {
 	private List<Weapon> frontWeapons = new ArrayList<>();
 	private List<Weapon> backWeapons = new ArrayList<>();
 
-	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,getNoOfActions(we),size);
+	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int damageableRadius, RoomSize size, Ship ship) {
+		super(name,actionHealth,getNoOfActions(we),size,ship);
 		this.setDamageableRadius(damageableRadius);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
-	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,getNoOfActions(frontWeapons)+getNoOfActions(backWeapons),size);
+	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size, Ship ship) {
+		super(name,actionHealth,getNoOfActions(frontWeapons)+getNoOfActions(backWeapons),size, ship);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		this.setDamageableRadius(damageableRadius);
