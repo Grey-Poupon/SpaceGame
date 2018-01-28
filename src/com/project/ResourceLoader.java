@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 
 import javax.imageio.ImageIO;
 
+import com.project.battle.BattleHandler;
+import com.project.battle.BattleScreen;
 import com.project.ship.Generator;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
@@ -42,6 +44,7 @@ public class ResourceLoader {
 		shipGenerators = new HashMap<String, Generator>();
 		crewActions    = new HashMap<String, CrewAction>();
 		loadImages();
+		BattleScreen.handler = new BattleHandler();
 		loadFont();
 		loadAnimations();
 		loadCrewActions();
@@ -50,12 +53,12 @@ public class ResourceLoader {
 		loadThrusters();
 		loadGenerators();
 		loadShip();
-		loadAudio();
+//		loadAudio();
 	}
 	
 	public void loadAudio() {
-		//Sound music = new Sound("res/audio/music.wav") ;
-		//music.loop();	
+		Sound music = new Sound("res/audio/music.wav") ;
+		music.loop();	
 	}
 	
 	private void loadCrewActions(){
@@ -132,19 +135,21 @@ public class ResourceLoader {
 		//moving
 		
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGap, int xGap, int yGap, int frameRate, float scale, float xStart, float xEnd, float yStart, float yEnd, float xVel, Rectangle2D mask, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("missile", new Animation("res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
-		animations.put("octoidMissileProjectile", new Animation("res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		animations.put("missile", new Animation(BattleScreen.handler,"res/missileSpritesheet.png"           , 87,14,2,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
+		animations.put("octoidMissileProjectile", new Animation(BattleScreen.handler,"res/octoidMissileProjectile.png", 19,11,3,2,0,0,0,0,5,2.5f,0,0,0,0,0,new Rectangle2D.Double(0,0,0,0), false,AdjustmentID.None));
 		//stationary
 		//String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles, int xStartGap, int yStartGp, int xGap, int yGap, int frameRate, float xCoordinate, float yCoordinate, float scale, int NoOfloops, boolean firstAnimation, AdjustmentID align, List<Animation> followingAnims
-		animations.put("octoidMissileLauncher", new Animation("res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,10,1,1,0.75f,1, false,AdjustmentID.None));
-		animations.put("missileExplosion", new Animation("res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp_MidLeft));
-		animations.put("octoidEngine", new Animation("res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,0.75f,-1,false,AdjustmentID.None));
+		animations.put("octoidMissileLauncher", new Animation(BattleScreen.handler,"res/octoidMissileLauncher.png", 64,20,3,2,0,0,0,0,10,1,1,0.75f,1, false,AdjustmentID.None));
+		animations.put("missileExplosion", new Animation(BattleScreen.handler,"res/explosionSpritesheet.png", 18,20,3,3,0,0,0,0,5,1,1,5,1, false,AdjustmentID.MidUp_MidLeft));
+		animations.put("octoidEngine", new Animation(BattleScreen.handler,"res/octoidEngine.png",48,26,5,2,0,0,0,0,5,0,0,0.75f,-1,false,AdjustmentID.None));
 		//combined
-		animations.put("missileWithExplosion",new Animation(animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
+		animations.put("missileWithExplosion",new Animation(BattleScreen.handler,animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
 	}
 
 	public void loadImages() {
 		put(images,"res/ui/slider.png");
+		put(images,"res/planet.png");
+		put(images,"res/ship.png");
 		put(images,"res/ui/enginesTab.png");
 		put(images,"res/ui/weaponsTab.png");
 		put(images,"res/ui/movementTab.png");

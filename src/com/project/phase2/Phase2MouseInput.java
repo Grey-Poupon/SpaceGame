@@ -32,6 +32,11 @@ public class Phase2MouseInput extends MouseInput{
 		movePlayerShip();
 	}
 	
+	public void mouseMoved(MouseEvent arg0) {
+		super.mouseMoved(arg0);
+		map.highlightTile(mousePosition);
+	}
+	
 	
 	
 

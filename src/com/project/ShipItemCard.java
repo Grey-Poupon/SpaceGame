@@ -64,12 +64,12 @@ public class ShipItemCard {
 		// place background
 		background.setxCoordinate(x);
 		background.setyCoordinate(y);
-		background.start(false);
+		background.start(BattleScreen.handler,false);
 		
 		// place item image
 		itemImage.setxCoordinate(background.xCoordinate+imagePosition.x);
 		itemImage.setyCoordinate(background.yCoordinate+imagePosition.y);
-		itemImage.start(false);
+		itemImage.start(BattleScreen.handler,false);
 		// create & place action boxes with text
 			// create variables
 		int lastY = y+marginWidth+itemImage.getHeight()+image_ActionBoxGap;
@@ -82,7 +82,7 @@ public class ShipItemCard {
 		for(int i = 0; i < actions.size(); i++){
 			// make box
 			CrewAction a = actions.get(actions.size()-i-1);
-			ActionBox actionBox = new ActionBox(a.getActionImg(), background.xCoordinate+actionPlacement.get(i).x , background.yCoordinate+actionPlacement.get(i).y, a, room, bs);
+			ActionBox actionBox = new ActionBox(BattleScreen.handler,a.getActionImg(), background.xCoordinate+actionPlacement.get(i).x , background.yCoordinate+actionPlacement.get(i).y, a, room, bs);
 		    boxes.add(actionBox);
 		    BattleUI.actionBoxes.add(actionBox);
 	
@@ -108,8 +108,8 @@ public class ShipItemCard {
 			PilotCard.delete((PilotCard)card);
 			return;
 		}
-		ImageHandler.delete(card.itemImage);
-		ImageHandler.delete(card.background);
+		ImageHandler.delete(BattleScreen.handler,card.itemImage);
+		ImageHandler.delete(BattleScreen.handler,card.background);
 		for(ActionBox box: card.boxes ){ ActionBox.delete(box); BattleUI.actionBoxes.remove(box);}
 		card.boxes.clear();
 

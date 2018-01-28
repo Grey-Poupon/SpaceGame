@@ -46,7 +46,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		Handler.addButton(this);
+		BattleScreen.handler.addButton(this);
 	}
 
 		
@@ -64,8 +64,8 @@ public class Button extends Observable  implements Handleable{
 			img.setxCoordinate(x);
 			img.setyCoordinate(y);
 			this.img = img;
-			img.start(false);
-			Handler.addButton(this);
+			img.start(BattleScreen.handler,false);
+			BattleScreen.handler.addButton(this);
 		}
 	//14 Text
 	public Button(int x,int y,int width,int height,ButtonID buttonID,int index,boolean clickable,String text,String fontName, int style, int size, Color colour, BattleScreen bs,boolean bottomAlign){
@@ -79,8 +79,8 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, true, x, y, fontName, style, size, colour,bs);
-		Handler.addButton(this);
+		this.text = new Text(BattleScreen.handler,text, true, x, y, fontName, style, size, colour,bs);
+		BattleScreen.handler.addButton(this);
 	}
 	
 	//14 Text default
@@ -95,9 +95,9 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, true, x, y,bs);
+		this.text = new Text(BattleScreen.handler,text, true, x, y,bs);
 		this.text.changeMask(x, y, width, height);
-		Handler.addButton(this);
+		BattleScreen.handler.addButton(this);
 	}
 	
 	//14 Text + Image
@@ -111,12 +111,12 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(text, clickable, x, y, fontName, style, size, colour,bs);
+		this.text = new Text(BattleScreen.handler,text, clickable, x, y, fontName, style, size, colour,bs);
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;
-		img.start(false);
-		Handler.addButton(this);
+		img.start(BattleScreen.handler,false);
+		BattleScreen.handler.addButton(this);
 	}
 	
 	// 8 graph
@@ -133,8 +133,8 @@ public class Button extends Observable  implements Handleable{
 		graph.setY(graph.getY()+y);
 		this.graph = graph;
 		if(graph.getText()!=null) {graph.getText().setVisible(true);}
-		Handler.addLowPriorityEntity(this.graph);
-		Handler.addButton(this);
+		BattleScreen.handler.addLowPriorityEntity(this.graph);
+		BattleScreen.handler.addButton(this);
 	}
 	
 	
@@ -283,10 +283,10 @@ public class Button extends Observable  implements Handleable{
 		
 	}
 	public static void delete(Button b) {
-		Handler.buttons.remove(b);
+		BattleScreen.handler.buttons.remove(b);
 		if(b.text!=null) {Text.delete(b.text);}
-		if(b.img!=null) {ImageHandler.delete(b.img);}
-		if(b.graph!=null) { Handler.entitiesLowPriority.remove(b.graph);Text.delete(b.graph.getText());}
+		if(b.img!=null) {ImageHandler.delete(BattleScreen.handler,b.img);}
+		if(b.graph!=null) { BattleScreen.handler.entitiesLowPriority.remove(b.graph);Text.delete(b.graph.getText());}
 		
 	}
 	public void setIsButton(boolean clickable) {
@@ -318,7 +318,7 @@ public class Button extends Observable  implements Handleable{
 		// box = 50 img = 25 scale = 2
 		img.setXScale((float)img.getWidth()/(maxSpeed*2));
 		setImgMask(xCoordinate, yCoordinate, width, height);
-		img.start(false);
+		img.start(BattleScreen.handler,false);
 		img.setxCoordinate(xCoordinate);
 		img.setyCoordinate(yCoordinate);
 	}

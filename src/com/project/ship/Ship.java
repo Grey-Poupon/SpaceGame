@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import com.project.Crew;
 import com.project.CrewAction;
 import com.project.EntityID;
 import com.project.Handleable;
+import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
@@ -384,14 +384,14 @@ public class Ship implements Handleable{
 		}
 		return leaders;
 	}
-	public List<Button> getLeaderButtons(BattleScreen bs){
+	public List<Button> getLeaderButtons(Handler handler,BattleScreen bs){
 		List<Crew> leaders = getRoomLeaders();
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<leaders.size();i++) {
 			Crew crew = leaders.get(i);
 			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start(false);
+			leaderPortrait.start(handler,false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;
@@ -737,7 +737,7 @@ public class Ship implements Handleable{
 		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , maxHealth, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
-	public List<Button> getPhaseLeaderButtons(BattleScreen bs) {
+	public List<Button> getPhaseLeaderButtons(Handler handler,BattleScreen bs) {
 		List<Crew> leaders = new ArrayList<>();
 		leaders.add(getGeneratorRoom().getRoomLeader());
 		leaders.add(getWeaponRoom().getRoomLeader());
@@ -758,7 +758,7 @@ public class Ship implements Handleable{
 //				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameCockpit.png"),6,6);
 //			}
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start(false);
+			leaderPortrait.start(handler, false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;

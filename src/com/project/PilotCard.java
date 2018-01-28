@@ -18,27 +18,27 @@ public class PilotCard extends ShipItemCard {
 		// place background
 		background.setxCoordinate(x);
 		background.setyCoordinate(y);
-		background.start(false);
+		background.start(BattleScreen.handler,false);
 
 		// place item image
 		itemImage.setxCoordinate(background.xCoordinate+actionPlacement.get(0).x);
 		itemImage.setyCoordinate(background.yCoordinate+actionPlacement.get(0).y);
 		itemImage.setVisible(true);
-		itemImage.start(false);
+		itemImage.start(BattleScreen.handler,false);
 
 		//place slider
 		slider.setxCoordinate(background.xCoordinate+17);
 		slider.setyCoordinate(background.yCoordinate+43);
 		slider.setVisible(true);
-		slider.start(false);
+		slider.start(BattleScreen.handler,false);
 	}
 	
 	
 	
 	public static void delete(PilotCard card) {
-		ImageHandler.delete(card.itemImage);
-		ImageHandler.delete(card.background);
-		ImageHandler.delete(card.slider);
+		ImageHandler.delete(BattleScreen.handler,card.itemImage);
+		ImageHandler.delete(BattleScreen.handler,card.background);
+		ImageHandler.delete(BattleScreen.handler,card.slider);
 		
 	}
 	
