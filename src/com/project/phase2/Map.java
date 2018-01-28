@@ -6,12 +6,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.project.Handleable;
+import com.project.Main;
 
 public class Map implements Handleable {
 	
@@ -19,16 +20,18 @@ public class Map implements Handleable {
 		
 	}
 	
-	public Point mapOffSet = new Point(50,50); 
-	public int height = 10;
+	public int height = 12;
 	public int width  = 10;
-	public int hexSide = 40;
+	public static int hexSide = 65;
 	public Point hexSize;
 	public Point mapSize;
 	public Area mapComposite;
+	public Point mapOffSet = new Point((int) ((Main.WIDTH -Math.sqrt(3)*hexSide*(width-0.5))/2),(int)((Main.HEIGHT -hexSide*(height-2.75))/2));
 	public ArrayList<ArrayList<MapTile>> hexes = new ArrayList<ArrayList<MapTile>>();
 	public ArrayList<Ellipse2D> rings = new ArrayList<Ellipse2D>();
-	public void generateHexMap(MapShip ship) {
+	
+	
+	public void generateHexMap() {
 		//getDimensions for polygon used
 		Polygon h = hexagonIso(0,0);
 		hexSize = new Point(h.getBounds().width,h.getBounds().height);
@@ -38,11 +41,13 @@ public class Map implements Handleable {
 		//generates a HEX based map of dim: height, width
 		for(int y=0;y<height;y++) {
 			ArrayList<MapTile> m1 = new ArrayList<MapTile>();
+			
 			for(int x = 0; x<width;x++) {
 			
 			
 				MapTile m;
 				if(y%2==0) {
+					
 					m= new MapTile( hexagonIso(x*hexSize.x,(float) ((0.75)*y*hexSize.y)));
 				}
 				else {
@@ -54,12 +59,17 @@ public class Map implements Handleable {
 			hexes.add(m1);
 		}
 		//place the player ship.
-		hexes.get(2).get(2).addObject(ship);
+		
 		//place an emeny
 		hexes.get(8).get(8).addObject(new MapShip(hexes.get(5).get(5)));
 		mapSize = new Point(mapComposite.getBounds().width,mapComposite.getBounds().height);
 		addOrbits();
 	}
+	
+	public void randomlyPlaceShip(MapShip ship) {
+		ship.moveTile(this.hexes.get(0).get(0));
+	}
+	
 	//generates a hexagon at position x, y
 	public Polygon hexagon(float x,float y) {
 		Polygon h = new Polygon();
@@ -74,7 +84,7 @@ public class Map implements Handleable {
 	public void addOrbits() {
 		Rectangle r= mapComposite.getBounds();
 		Polygon h1 = hexes.get(4).get(4).hex;
-		Point ringSize = new Point(6*hexSize.x+5,4*hexSize.y+10);
+		Point ringSize = new Point(6*hexSize.x,4*hexSize.y);
 		Ellipse2D ring = new Ellipse2D.Float((float)h1.getBounds().getCenterX()-(float)ringSize.x/2,(float)h1.getBounds().getCenterY()-(float)ringSize.y/2,(float)ringSize.x,(float)ringSize.y);
 //		Ellipse2D ring1 = new Ellipse2D.Float((float)r.getX()+3f,(float)r.getY()+3f,(float)r.width/4-6f,(float)r.height/4-6f);
 		rings.add(ring);
@@ -108,12 +118,22 @@ public class Map implements Handleable {
 		return h;
 	}
 	
+	
+	
+	
+	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g.create();
 		//loops through a list and renders the objects in the list
 		for(int i =0 ;i <hexes.size();i++) {
 			for(int j= 0 ; j<hexes.get(i).size();j++) {
-				hexes.get(i).get(j).render(g);
+//				hexes.get(i).get(j).render(g);
+				hexes.get(i).get(j).renderTile(g);
+			}
+		}
+		for(int i =0 ;i <hexes.size();i++) {
+			for(int j= 0 ; j<hexes.get(i).size();j++) {
+				hexes.get(i).get(j).renderObjects(g);
 			}
 		}
 		for(int i =0;i<rings.size();i++) {
@@ -125,7 +145,7 @@ public class Map implements Handleable {
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
-		
+		if(this.hexes.get(0).get(0).objects.size()!=0)System.out.println(this.hexes.get(0).get(0).objects.get(0).objImg);
 	}
 	@Override
 	public float getZ() {
@@ -135,7 +155,7 @@ public class Map implements Handleable {
 	public void highlightTile(Point mousePosition) {
 		for(int x = 0; x<width;x++) {
 			for(int y= 0; y<height;y++) {
-				MapTile t =hexes.get(x).get(y);
+				MapTile t =hexes.get(y).get(x);
 				if(t.hex.contains(mousePosition)) {
 					t.setHovered(true);
 				}
@@ -144,6 +164,41 @@ public class Map implements Handleable {
 		}
 		
 	}
+	
+	public static Map generateRandomMap() {
+		Map m = new Map();
+		m.generateHexMap();
+		Random rand = new Random();
+		int numObjects = 10;
+		for(int i=0; i<numObjects;i++) {
+			int randX = 0;
+			int randY = 0;
+			
+			boolean isFilled = true;
+			while(isFilled) {
+				randX = rand.nextInt(m.hexes.size());
+				randY = rand.nextInt(m.hexes.get(randX).size());
+				if(m.hexes.get(randX).get(randY).isEmpty()) {
+					isFilled =false;
+				}
+			}
+			if(i!=0) {
+				m.hexes.get(randX).get(randY).addObject();
+			}
+			else {
+				m.hexes.get(randX).get(randY).addObject(new Portal(m.hexes.get(randX).get(randY),m));
+			}
+			
+		}
+
+		
+		return m;
+		
+		
+		
+		
+	}
+	
 	
 	
 	

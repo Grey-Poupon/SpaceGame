@@ -21,41 +21,54 @@ public class MapTile {
 	}
 	
 	public void addObject() {
-		objects.add(new MapObject(this));
+		objects.add(MapObject.generateRandomObject(this));
 	}
 	
-	public void render(Graphics g) {
+	
+	public void renderTile(Graphics g) {
 		g.setColor(col);
-		g.drawPolygon(hex);
+		
 		if(containsPlayer()) {
 			g.setColor(Color.BLUE);
 			g.fillPolygon(hex);
 			
 		}
 		if(!isEmpty()) {
-			if(!containsPlayer())g.setColor(Color.GREEN);
-			for(int i =0;i<objects.size();i++) {
-				if(objects.get(i) instanceof MapShip &&!containsPlayer()) g.setColor(Color.red);
-				objects.get(i).objImg.render(g);
-			}
 			g.fillPolygon(hex);
+			
+			if(!containsPlayer())g.setColor(Color.GREEN);
+			
 		}
 		if(isHovered) {
 			g.setColor(new Color(0,0,0.5f,0.5f));
 			g.fillPolygon(hex);
 		}
+		g.drawPolygon(hex);
+		
 		
 		
 	}
+
+	public void renderObjects(Graphics g) {
+		for(int i =0;i<objects.size();i++) {
+			if(objects.get(i) instanceof MapShip &&!containsPlayer()) g.setColor(Color.red);
+			objects.get(i).objImg.render(g);
+			if(containsPlayer()) {
+				System.out.println(hex.getBounds().getX()+" "+hex.getBounds().getY() );
+			}
+		}
+	}
+	
 	
 	public void setObjectPos(MapObject ob ) {
-		ob.objImg.setxCoordinate(hex.getBounds().x);
-		ob.objImg.setyCoordinate((int) (hex.getBounds().y -hex.getBounds().getHeight()));
+		ob.objImg.setxCoordinate((int) (hex.getBounds().x+hex.getBounds().getWidth()/2-ob.objImg.getWidth()/2));
+		ob.objImg.setyCoordinate((int) (hex.getBounds().y +hex.getBounds().getHeight()/2-ob.objImg.getHeight()/2));
 	}
 	
 	public boolean isEmpty() {
 		return(objects.size()==0);
 	}
+	
 	public boolean containsPlayer() {
 		for(int i = 0;i<objects.size();i++) {
 			if(objects.get(i) instanceof MapShip) {
