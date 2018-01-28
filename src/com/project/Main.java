@@ -8,7 +8,7 @@ import java.util.Random;
 
 import com.project.battle.BattleScreen;
 import com.project.button.ButtonID;
-import com.project.ship.Ship;
+import com.project.phase2.Phase2;
 
 
 
@@ -20,20 +20,24 @@ public class Main  extends Canvas implements Runnable{
 	public Handler handler;
 	Random r;
 	protected Window window;
+	protected Phase currentPhase;
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public Player player;
 	
 	public UI ui;
-	protected MouseInput mouseIn;
-	protected KeyInput keyIn;
+	public MouseInput mouseIn;
+	public KeyInput keyIn;
 	private boolean paused=false;
 	
 	public Main(){
+		new ResourceLoader();
+		currentPhase = new Phase2(this);
 		r = new Random();
 		handler = new Handler();
 		player = new Player(100);
 		window = new Window(WIDTH,HEIGHT,"Space Game",this);
+//		currentPhase = new BattleScreen(this);
 		}
 
 	protected void render(){
@@ -46,7 +50,8 @@ public class Main  extends Canvas implements Runnable{
 		if(!isPaused()) {
 			g.setColor(Color.BLACK);
 			g.fillRect(0,0,WIDTH,HEIGHT);
-			handler.render(g);
+//			handler.render(g);
+			currentPhase.render(g);
 			window.update();
 		}
 		Toolkit.getDefaultToolkit().sync();
@@ -89,6 +94,7 @@ public class Main  extends Canvas implements Runnable{
 			frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
+				System.out.println(frames);
 				timer +=1000;
 				frames = 0;
 				
@@ -97,13 +103,23 @@ public class Main  extends Canvas implements Runnable{
 		stop();
 	}
 	public void tick() {
-		handler.tick(ui);
+		if(currentPhase!=null) {
+			currentPhase.tick();
+		}
 	}
 	
 	public static void main(String[] args){
-		new ResourceLoader();
-		new BattleScreen();
+		new Main();
 	}
+	
+	public void setPhase(Phase phase) {
+		
+			currentPhase = phase;
+		
+		
+	}
+	
+	
 
 	public boolean isPaused() {
 		return paused;

@@ -25,10 +25,11 @@ public class Text implements Handleable{
 	private boolean leftAlign=false;
 	private int onScreenHeight =0;
 	private int onScreenWidth = 0;
+	public Handler handler;
 	
 	
-	public Text(String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour,BattleScreen bs){
-
+	public Text(Handler handler,String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour,BattleScreen bs){
+		this.handler = handler;
 		this.xCoordinate = x;
 		this.yCoordinate = y+(int)(size*textRatio);
 		this.text        = text;
@@ -36,14 +37,15 @@ public class Text implements Handleable{
 		this.font        = new Font(fontName, style, size);
 		this.colour      = colour;
 		if(bs!=null) {
-			onScreenWidth = bs.getGraphics().getFontMetrics(font).stringWidth(text);
-			onScreenHeight = bs.getGraphics().getFontMetrics(font).getHeight();
+			onScreenWidth = bs.main.getGraphics().getFontMetrics(font).stringWidth(text);
+			onScreenHeight = bs.main.getGraphics().getFontMetrics(font).getHeight();
 		}
-		Handler.texts.add(this);
+		handler.texts.add(this);
 	}
 	
 
-	public Text(String text,boolean visible,int x, int y,BattleScreen bs){
+	public Text(Handler handler,String text,boolean visible,int x, int y,BattleScreen bs){
+		this.handler = handler;
 		this.xCoordinate = x;
 		this.yCoordinate = y+32;
 		this.visible     = visible;
@@ -51,10 +53,10 @@ public class Text implements Handleable{
 		this.font        = new Font("Sevensegies", Font.PLAIN, 36);
 		this.colour      = Color.WHITE;
 		if(bs!=null) {
-			onScreenWidth = bs.getGraphics().getFontMetrics(font).stringWidth(text);
-			onScreenHeight = bs.getGraphics().getFontMetrics(font).getHeight();
+			onScreenWidth = bs.main.getGraphics().getFontMetrics(font).stringWidth(text);
+			onScreenHeight = bs.main.getGraphics().getFontMetrics(font).getHeight();
 		}
-		Handler.texts.add(this);
+		handler.texts.add(this);
 	}
 	public void render(Graphics g)
 	{
@@ -108,7 +110,7 @@ public class Text implements Handleable{
 		}
 	};
 	public static void delete(Text t) {
-		Handler.texts.remove(t);
+		t.handler.texts.remove(t);
 		t = null;
 	}
 	public void setFont(Font font) {

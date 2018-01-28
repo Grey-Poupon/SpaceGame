@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import com.project.button.Button;
 
 public class Handler {
-	public static ArrayList<Handleable> stars = new ArrayList<Handleable>();
-	public static ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
-	public static ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
+	public  ArrayList<Handleable> stars = new ArrayList<Handleable>();
+	public  ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
+	public  ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
 	protected static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousePointer.png",true, EntityID.UI,"high");
-	public static ArrayList<Button> buttons = new ArrayList<Button>(); 
-	public static ArrayList<Animation> anims = new ArrayList<Animation>();
-	public static ArrayList<Text> texts = new ArrayList<Text>();
-	public static ArrayList<DraggableIcon> icons = new ArrayList<DraggableIcon>();
+	public  ArrayList<Button> buttons = new ArrayList<Button>(); 
+	public  ArrayList<Animation> anims = new ArrayList<Animation>();
+	public  ArrayList<Text> texts = new ArrayList<Text>();
+	public  ArrayList<DraggableIcon> icons = new ArrayList<DraggableIcon>();
 	protected Object dragging = null;
 
 	public void tick(UI ui){
@@ -70,32 +70,37 @@ public class Handler {
 		return checkButtons(x, y,button);
 	}
 	public void updateMouse(int x, int y){
-		mousePointer.setxCoordinate(x);
-		mousePointer.setyCoordinate(y);
+		mousePointer.setxCoordinate(x-5);
+		mousePointer.setyCoordinate(y-5);
 	}
-	public static void addLowPriorityEntity(Handleable entity) {
+	public  void addLowPriorityEntity(Handleable entity) {
 		entitiesLowPriority.add(entity);
 		
 	}
-	public static void addHighPriorityEntity(Handleable entity) {
+	public void addHighPriorityEntity(Handleable entity) {
 		entitiesHighPriority.add(entity);
 	}
-	public static void addStarEntity(Handleable entity) {
+	public void addStarEntity(Handleable entity) {
 		stars.add(entity);
 	}
-	public static void addButton(Button btn) {
+	public void addButton(Button btn) {
 		buttons.add(btn);
 	}
-	public static void addText(Text text) {
+	public void addText(Text text) {
 		texts.add(text);
 		
 	}
-	public static void addAnimation(Animation anim) {
+	public void addAnimation(Animation anim) {
 		anims.add(anim);
 		
 	}
 	public static void changeMouseIcon(String path){
 		mousePointer.changeImage(path, true);
+	}
+	
+	public void clear() {
+		entitiesHighPriority.clear();
+		entitiesLowPriority.clear();
 	}
 
 	

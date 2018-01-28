@@ -19,6 +19,7 @@ import com.project.Graph;
 import com.project.ImageHandler;
 import com.project.Main;
 import com.project.MathFunctions;
+import com.project.PilotCard;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.ShipItemCard;
@@ -113,7 +114,7 @@ public class BattleUI extends UI {
 			resources = resources + " " + key + ":" + pShip.getResource(key);
 		}
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
-				2 * rightListWidth, bs.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
+				2 * rightListWidth, bs.main.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
 				bs, false);
 
 
@@ -157,7 +158,7 @@ public class BattleUI extends UI {
 			generator.add(room.getGenerator());
 
 			BattleUI.generateRoomCards(generator, room);
-			
+			generatePilotCard();
 			/**Images for side bar tabs - manoeuvre and speedometer**/
 //			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
 //			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
@@ -232,7 +233,7 @@ public class BattleUI extends UI {
 				// update variables
 				ImageHandler portrait = crew.get(j).getPortrait();
 				portrait.setVisible(true);
-				portrait.start(true);
+				portrait.start(BattleScreen.handler,true);
 				portrait.setxCoordinate(500);
 				portrait.setyCoordinate(500);
 
@@ -247,9 +248,9 @@ public class BattleUI extends UI {
 				}
 
 				// set crew icons
-				DraggableIcon icon = new DraggableIcon(portrait, crew.get(j), portrait.getxCoordinate(),
+				DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(j), portrait.getxCoordinate(),
 						portrait.getyCoordinate());
-				ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBox.png"),
+				ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBox.png"),
 						(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 						(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 						ResourceLoader.getCrewAction("move"), room, bs);
@@ -273,7 +274,7 @@ public class BattleUI extends UI {
 					}
 
 					// set action box
-					ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBoxEmpty.png"),
+					ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBoxEmpty.png"),
 							(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 							(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 							ResourceLoader.getCrewAction("move"), room, bs, true);
@@ -282,7 +283,7 @@ public class BattleUI extends UI {
 			}
 
 			// setup room title
-			Text title = new Text(room.getRoomName(), true, x, y, bs);
+			Text title = new Text(BattleScreen.handler,room.getRoomName(), true, x, y, bs);
 			tableTitleText.add(title);
 
 		}
@@ -313,14 +314,14 @@ public class BattleUI extends UI {
 		// set crew pics
 		for (int i = 0; i < crew.size(); i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
-			portrait.start(true);
+			portrait.start(BattleScreen.handler,true);
 			column = (i % 3);
 			row = (i / 3) + 1;
 			portrait.setVisible(true);
 
 			portrait.setxCoordinate(mainMonitorXOffset + listWidth -26 - (portrait.getWidth() * (1-column))+column*3);
 			portrait.setyCoordinate(mainMonitorYOffset + 12+ row*3+((row-1) * (portrait.getHeight())));
-			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
+			DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
 			
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
@@ -338,6 +339,15 @@ public class BattleUI extends UI {
 		}
 	}
 
+	public static void generatePilotCard(){
+		
+		PilotCard card = new PilotCard((Cockpit) playerShip.getCockpit(),bs);
+		card.assembleCard(mainMonitorXOffset+22+shipCards.get(0).getWidth(),mainMonitorYOffset+5);
+		shipCards.add(card);
+	}
+	
+	
+	
 	public static void generateSpeedInput() {
 		// clear
 		clearRightBox();
@@ -361,11 +371,11 @@ public class BattleUI extends UI {
 
 		// setup pilot pic
 		ImageHandler portrait = pilot.getPortrait();
-		portrait.start(true);
+		portrait.start(BattleScreen.handler,true);
 		portrait.setVisible(true);
 		portrait.setxCoordinate(secondMonitorXOffset);
 		portrait.setyCoordinate(secondMonitorYOffset);
-		DraggableIcon icon = new DraggableIcon(portrait, pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
+		DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
 		manoeuvreActionIcons.add(icon);
 
 		// setup manoeuvre actions
@@ -378,7 +388,7 @@ public class BattleUI extends UI {
 
 			BufferedImage img = ResourceLoader.getImage("res/actionBox.png");
 
-			ActionBox box = new ActionBox(img, secondMonitorXOffset + (column * tableColumnWidth),
+			ActionBox box = new ActionBox(BattleScreen.handler,img, secondMonitorXOffset + (column * tableColumnWidth),
 					secondMonitorYOffset + ((img.getHeight() + boxGap) * (row)), manoeuvres.get(i), room, bs);
 
 			manoeuvreActionBoxes.add(box);

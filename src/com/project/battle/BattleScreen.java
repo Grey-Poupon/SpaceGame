@@ -1,5 +1,6 @@
 package com.project.battle;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import com.project.EntityID;
 import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
+import com.project.Phase;
 import com.project.Player;
 import com.project.ProjectileAnimation;
 import com.project.ResourceLoader;
@@ -32,7 +34,7 @@ import com.project.ship.rooms.WeaponsRoom;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
-public class BattleScreen extends Main {
+public class BattleScreen implements Phase {
 
 	private static final long serialVersionUID = -6523236697457665386L;
 
@@ -45,6 +47,7 @@ public class BattleScreen extends Main {
 	private ImageHandler loadingScreen;
 	private DistanceSystem ds;
 	private ScrollableList sl;
+	public Main main;
 	private ArrayList<Point> chaserShotLocations = new ArrayList<Point>();
 	private ArrayList<Point> chasedShotLocations = new ArrayList<Point>();
 	private int currentPhasePointer = 0;
@@ -70,13 +73,16 @@ public class BattleScreen extends Main {
 	private ImageHandler weaponsTab;
 	private ImageHandler enginesTab;
 	private ImageHandler movementTab;
+	public static BattleHandler handler; 
 	
-	public BattleScreen() {
-		setPaused(true);
+	public BattleScreen(Main main) {
+		this.main = main;
+		this.handler.setBs(this);
+		main.setPaused(true);
 		player = new Player(100);
-		handler = new BattleHandler(this);
+
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
-		Handler.addHighPriorityEntity(loadingScreen);
+		handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		// grab ships
 		if (playerIsChaser) {
@@ -98,30 +104,30 @@ public class BattleScreen extends Main {
 		chasedShip.setBs(this);
 
 		for (int i = 0; i < 40; i++) {
-			Star starp = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT/2), "res/star.png", true, 50, Main.WIDTH / 2-50, 50,
+			Star starp = new Star(rand.nextInt(main.WIDTH), rand.nextInt(main.HEIGHT/2), "res/star.png", true, 50, Main.WIDTH / 2-50, 50,
 					446, chaserShip);
-			Star stare = new Star(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), "res/star.png", true,50+Main.WIDTH / 2,
+			Star stare = new Star(rand.nextInt(main.WIDTH), rand.nextInt(main.HEIGHT), "res/star.png", true,50+Main.WIDTH / 2,
 					Main.WIDTH-50, 50, 446, chasedShip);
-			Handler.addLowPriorityEntity(starp);
-			Handler.addLowPriorityEntity(stare);
+			handler.addLowPriorityEntity(starp);
+			handler.addLowPriorityEntity(stare);
 		}
-		Handler.addLowPriorityEntity(chaserShip);
-		Handler.addLowPriorityEntity(chasedShip);
+		handler.addLowPriorityEntity(chaserShip);
+		handler.addLowPriorityEntity(chasedShip);
 		//Place ships
 		chaserShip.setX(-150);
 		chaserShip.setY(-50);
-		chasedShip.setX(WIDTH/2-50);
+		chasedShip.setX(main.WIDTH/2-50);
 		chasedShip.setY(-50);
-		phase 				 = new Text          ("Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
-		ds 					 = new DistanceSystem(500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
+		phase 				 = new Text          (handler,"Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
+		ds 					 = new DistanceSystem(handler,500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		
 		//Set Captain
 		chaserShip.setCaptain(player.getPlayerCrew());
 		
 		//Set Room Leader Tabs
-		ui      = new BattleUI(this, chaserShip, chasedShip);
-		keyIn   = new BattleKeyInput(this);
-		mouseIn = new BattleMouseInput(handler);
+		main.ui      = new BattleUI(this, chaserShip, chasedShip);
+		main.keyIn   = new BattleKeyInput(this);
+		main.mouseIn = new BattleMouseInput(handler);
 		
 		//Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
@@ -129,34 +135,34 @@ public class BattleScreen extends Main {
 		
 		//Biggest UI element
 		newUI = new ImageHandler(0,0,"res/ui/ui.png",true,1,1,EntityID.UI);
-		Handler.addLowPriorityEntity(newUI);
+		handler.addLowPriorityEntity(newUI);
 		
 		//Add Tabs
 		enginesTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/enginesTab.png"),true,EntityID.UI);
-		enginesTab.start(false);
+		enginesTab.start(handler,false);
 		enginesTab.setVisible(true);
 		weaponsTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/weaponsTab.png"),true,EntityID.UI);
-		weaponsTab.start(false);
+		weaponsTab.start(handler,false);
 		weaponsTab.setVisible(false);
 		movementTab = new ImageHandler(0, Main.HEIGHT-85*3,ResourceLoader.getImage("res/ui/movementTab.png"),true,EntityID.UI);
-		movementTab.start(false);
+		movementTab.start(handler,false);
 		movementTab.setVisible(false);
 		
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
-		Handler.addHighPriorityEntity(uiGraphBox);
-		List<Button> temp = chaserShip.getPhaseLeaderButtons(this);
+		handler.addHighPriorityEntity(uiGraphBox);
+		List<Button> temp = chaserShip.getPhaseLeaderButtons(handler,this);
 		sl = new ScrollableList(temp, 6, Main.HEIGHT - (temp.size() * 85)+6, 85, (temp.size() * 85), 85, 85, true);
 		
 		//Handler.addLowPriorityEntity(overlay);
-		Handler.addLowPriorityEntity(chaserHealthbar);
-		Handler.addLowPriorityEntity(chasedHealthbar);
-		this.addKeyListener(keyIn);
-		this.addMouseListener(mouseIn);
-		this.addMouseMotionListener(mouseIn);
-		this.addMouseWheelListener(mouseIn);
+		handler.addLowPriorityEntity(chaserHealthbar);
+		handler.addLowPriorityEntity(chasedHealthbar);
+		main.addKeyListener(main.keyIn);
+		main.addMouseListener(main.mouseIn);
+		main.addMouseMotionListener(main.mouseIn);
+		main.addMouseWheelListener(main.mouseIn);
 		BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(0), TooltipSelectionID.Room);
-		setPaused(false);
+		main.setPaused(false);
 	}
 
 	public void selectRoom(String room) {
@@ -199,8 +205,8 @@ public class BattleScreen extends Main {
 	}
 
 	public void tick() {
-		if (!isPaused()) {
-			super.tick();
+		handler.tick(main.ui);
+		if (!main.isPaused()) {
 			// AI turns
 			if(!isPlayersTurn) {
 				if(currentPhase == BattlePhases.WeaponActions) {
@@ -226,7 +232,7 @@ public class BattleScreen extends Main {
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
-						chasedShotLocations.add(new Point(350, 350)) ;
+						chasedShotLocations.add(new Point(350,250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}
@@ -490,7 +496,7 @@ public class BattleScreen extends Main {
 	private void loadAimingMouseIcon() {		
 		/**Reset mouse icon**/
 		if (currentWeaponClick<1){
-			handler.changeMouseIcon("res/mousePointer.png");   
+			main.handler.changeMouseIcon("res/mousePointer.png");   
 			
 			/**reset the current mouse click to 1**/
 			currentWeaponClick = 1;
@@ -500,7 +506,7 @@ public class BattleScreen extends Main {
 		else{
 			int i = currentWeaponClick;
 			if(i>3){i=i%3+1;}
-			handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
+			main.handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
 		}
 		
 		
@@ -576,5 +582,9 @@ public class BattleScreen extends Main {
 				crew.setMoving(false);
 			}				
 		}
+	}
+
+	public void render(Graphics g) {
+		handler.render(g);
 	}
 }

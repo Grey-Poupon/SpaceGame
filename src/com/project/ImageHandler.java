@@ -306,10 +306,10 @@ public class ImageHandler implements Handleable {
 		}
 		return false;
 	}
-	public static void delete(ImageHandler img){
-		Handler.stars.remove(img);
-		Handler.entitiesLowPriority.remove(img);
-		Handler.entitiesHighPriority.remove(img);
+	public static void delete(Handler handler,ImageHandler img){
+		handler.stars.remove(img);
+		handler.entitiesLowPriority.remove(img);
+		handler.entitiesHighPriority.remove(img);
 	}
 
 	public int getHeight() {
@@ -319,11 +319,11 @@ public class ImageHandler implements Handleable {
 	public int getWidth() {
 		return img.getWidth();
 	}
-	public void start(boolean high) {
+	public void start(Handler handler,boolean high) {
 		if(high){
-			Handler.addHighPriorityEntity(this);
+			handler.addHighPriorityEntity(this);
 		}
-		else{Handler.addLowPriorityEntity(this);}
+		else{handler.addLowPriorityEntity(this);}
 	}
 	public void addImageFrame(BufferedImage bf,int xOffset,int yOffset){
 		
