@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
-
-import com.project.battle.BattleScreen;
 import com.project.button.ButtonID;
 import com.project.phase2.Phase2;
 
