@@ -31,6 +31,7 @@ import com.project.Recreation.RecreationalItem;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Generator;
+import com.project.ship.ResourcesID;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
@@ -110,9 +111,10 @@ public class BattleUI extends UI {
 		
 		flavourTexts = new ArrayList<Button>();
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources += " " + key.toString() + ":" + pShip.getResource(key);
 		}
+
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
 				2 * rightListWidth, bs.main.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
 				bs, false);
@@ -124,13 +126,8 @@ public class BattleUI extends UI {
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
 		// GO BUTTON
-		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),
-				pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO",
-				"sevensegies", Font.PLAIN, 30, Color.WHITE,
-				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), bs));
-		graphList = new ScrollableList(graphEnd, graphMonitorXOffset, graphMonitorYOffset,
-				pShip.getGenerator().getEfficiencyGraph().getWidth(),
-				2 * pShip.getGenerator().getEfficiencyGraph().getHeight());
+		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO","sevensegies", Font.PLAIN, 30, Color.WHITE,new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), bs));
+		graphList = new ScrollableList(graphEnd, graphMonitorXOffset, graphMonitorYOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2 * pShip.getGenerator().getEfficiencyGraph().getHeight());
 
 	}
 
@@ -159,6 +156,7 @@ public class BattleUI extends UI {
 
 			BattleUI.generateRoomCards(generator, room);
 			generatePilotCard();
+			
 			/**Images for side bar tabs - manoeuvre and speedometer**/
 //			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
 //			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
@@ -174,9 +172,7 @@ public class BattleUI extends UI {
 		}
 		if (tooltipMenuSelection == TooltipSelectionID.Stats) {
 			for (int i = 0; i < crew.getStats().size(); i++) {
-				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false,
-						Crew.statNames[i] + ": " + Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle,
-						fontSize, fontColour, bs, true));
+				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false,Crew.statNames[i] + ": " + Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle,fontSize, fontColour, bs, true));
 			}
 			clickable = false;
 		}
@@ -186,15 +182,12 @@ public class BattleUI extends UI {
 		// clearTooltip();
 
 		// setup scrollable lists
-		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, listWidth, listHeight,
-				tooltipButtonWidth, tooltipButtonHeight, clickable);
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, listWidth, listHeight,tooltipButtonWidth, tooltipButtonHeight, clickable);
 
 		if (rightTooltipButtons.size() > 0) {
-			rightHandList = new ScrollableList(rightTooltipButtons, mainMonitorXOffset + tooltipButtonWidth + 13,
-					mainMonitorYOffset + 2, listWidth, listHeight);
+			rightHandList = new ScrollableList(rightTooltipButtons, mainMonitorXOffset + tooltipButtonWidth + 13,mainMonitorYOffset + 2, listWidth, listHeight);
 		} else {
-			rightHandList = new ScrollableList(flavourTexts, mainMonitorXOffset + tooltipButtonWidth + 13,
-					mainMonitorYOffset + 2, listWidth, listHeight);
+			rightHandList = new ScrollableList(flavourTexts, mainMonitorXOffset + tooltipButtonWidth + 13,mainMonitorYOffset + 2, listWidth, listHeight);
 		}
 
 	}
@@ -248,12 +241,14 @@ public class BattleUI extends UI {
 				}
 
 				// set crew icons
+
 				DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(j), portrait.getxCoordinate(),
 						portrait.getyCoordinate());
 				ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBox.png"),
 						(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 						(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 						ResourceLoader.getCrewAction("move"), room, bs);
+				
 				icon.moveTo(box.getX(), box.getY());
 				icon.setStartBox(box);
 				icon.setActionBox(box);
@@ -278,6 +273,7 @@ public class BattleUI extends UI {
 							(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 							(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 							ResourceLoader.getCrewAction("move"), room, bs, true);
+
 					actionBoxes.add(box);
 				}
 			}
@@ -329,7 +325,7 @@ public class BattleUI extends UI {
 
 		// wipe shared variables
 		column = -1;
-		row = -1;
+		row    = -1;
 
 		// set Action Table
 		for (int j = 0; j < actionables.size(); j++) {
@@ -353,8 +349,7 @@ public class BattleUI extends UI {
 		clearRightBox();
 		Graph speed = new Graph(MathFunctions.speedInput, 300, 50, 300f);
 		speed.setDraggable(true);
-		Button speedbtn = new Button(secondMonitorXOffset + 20, secondMonitorYOffset + 50, 300, 50, ButtonID.Graph,
-				true, speed, bs);
+		Button speedbtn = new Button(secondMonitorXOffset + 20, secondMonitorYOffset + 50, 300, 50, ButtonID.Graph,true, speed, bs);
 		speedbtn.setDraggable(true);
 		speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"), 300f);
 		speedInput = (speedbtn);
@@ -388,6 +383,7 @@ public class BattleUI extends UI {
 
 			BufferedImage img = ResourceLoader.getImage("res/actionBox.png");
 
+
 			ActionBox box = new ActionBox(BattleScreen.handler,img, secondMonitorXOffset + (column * tableColumnWidth),
 					secondMonitorYOffset + ((img.getHeight() + boxGap) * (row)), manoeuvres.get(i), room, bs);
 
@@ -402,10 +398,8 @@ public class BattleUI extends UI {
 	public static void generateInfo(Actionable actionable) {
 		clearAllBoxes();
 		List<Button> tooltipButtons = actionable.getInfoButtons(fullListWidth, tooltipButtonHeight, bs);
-		tooltipButtons.add(new Button(0, 0, fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),
-				true, "Back", bs, true));
-		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,
-				listHeight, fullListWidth, tooltipButtonHeight, true);
+		tooltipButtons.add(new Button(0, 0, fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true, "Back", bs, true));
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,listHeight, fullListWidth, tooltipButtonHeight, true);
 		
 	}	
 
@@ -466,8 +460,8 @@ public class BattleUI extends UI {
 
 	public static void updateResources(Ship pShip) {
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources = resources + " " + key.toString() + ":" + pShip.getResource(key);
 		}
 		resourcesButton.getText().setText(resources);
 	}

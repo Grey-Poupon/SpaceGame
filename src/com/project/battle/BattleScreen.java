@@ -232,7 +232,7 @@ public class BattleScreen implements Phase {
 				} else if (currentPhase == BattlePhases.WeaponsClick) {
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
-						chasedShotLocations.add(new Point(350,250)) ;
+						chasedShotLocations.add(new Point(350, 250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}
@@ -245,6 +245,9 @@ public class BattleScreen implements Phase {
 				}
 				nextTurn();
 			}
+		
+			
+			
 			// Final phase aka do stuff
 			if (currentPhase == BattlePhases.Final) {
 				System.out.println("Weapons Firing");
@@ -273,6 +276,12 @@ public class BattleScreen implements Phase {
 				chaserShotLocations.clear();
 				chasedShotLocations.clear();
 				numWeaponClicks =0;
+
+				/**Reset Generators**/
+				getPlayerShip().getGenerator().setCanGenerate(false);
+				getEnemyShip() .getGenerator().setCanGenerate(false);
+				
+				/**Next Phase**/
 				currentPhase = BattlePhases.Wait;
 			}
 			
@@ -355,8 +364,8 @@ public class BattleScreen implements Phase {
 				
 			}
 			if(ID == ButtonID.EndPhase) {
-					// add weapons to fire list
-					if(playerShip.getGenerator().canGenerate()&&isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
+					// fire weapons
+					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
 						// intalise variables
 						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
 						for(int i = 0;i<weapons.size();i++) {
@@ -386,6 +395,7 @@ public class BattleScreen implements Phase {
 				if(isPlayersTurn && currentPhase != BattlePhases.WeaponsClick){
 					nextTurn();
 				}
+			
 			}	
 		}
 	}
@@ -399,7 +409,7 @@ public class BattleScreen implements Phase {
 		List<CrewAction> actionsNeeded;
 		HashMap<CrewActionID,List<CrewAction>> actionMap;
 		boolean complete;
-		// check which weapons are fired
+		// check which actions have been completed
 		
 			// initalise variables
 			refinedActions = new ArrayList<CrewAction>();
@@ -445,10 +455,16 @@ public class BattleScreen implements Phase {
 							}
 						}									
 						// do action
-						actionable.doAction(action.getActor(),action, this);
-						if(actionable instanceof Weapon && action.getActionType()== CrewActionID.Fire) {numWeaponClicks++;}
-						action.resetActions();
-						//action.removeActor();
+						if(action.isBroken()){
+							action.setBroken(false);
+						}
+						else if(playerShip.getGenerator().canGenerate() || action.getName()=="Generate"){
+							
+							actionable.doAction(action.getActor(),action, this);
+							if(actionable instanceof Weapon && action.getActionType()== CrewActionID.Fire) {numWeaponClicks++;}
+							action.resetActions();
+							//action.removeActor();
+						}
 					}
 				}
 			}

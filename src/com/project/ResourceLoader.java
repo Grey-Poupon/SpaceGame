@@ -90,16 +90,16 @@ public class ResourceLoader {
 	}
 	
 	private void loadGenerators() {		
-		List<CrewAction> actions2 = new ArrayList<CrewAction>();
-		actions2.add(crewActions.get("basicGenerate"));
-		actions2.add(crewActions.get("basicOverclock"));
-		actions2.add(crewActions.get("basicFix"));
+		List<CrewAction> actions = new ArrayList<CrewAction>();
+		actions.add(crewActions.get("basicGenerate"));
+		actions.add(crewActions.get("basicOverclock"));
+		actions.add(crewActions.get("basicFix"));
 		
 		ImageHandler background = new ImageHandler(0, 0, "res/ui/engineCard.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/generatorImage.png", true, null);
 
 		
-		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions2,portrait,background));
+		shipGenerators.put("default", new Generator("Octoid Generator",MathFunctions.square,actions,portrait,background));
 	}
 	
 
@@ -230,7 +230,7 @@ public class ResourceLoader {
 		} 
 		catch (IOException e){
 			e.printStackTrace();
-		};
+		}
 		return img;
 	}
 	

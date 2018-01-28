@@ -72,7 +72,7 @@ public class DraggableIcon {
 			boolean walls      = Math.abs(xCoordinate - box.getX()) < snapToRange;
 			boolean ceiling    = Math.abs(yCoordinate - box.getY()) < snapToRange;
 			boolean xp         = box.getLevelRequirement() <= getLevel(box.getStatType()) ;
-			boolean boxEmpty   = ((box.isOpen()||box.getActor()==crew) && !box.getAction().isBroken());
+			boolean boxEmpty   = ((box.isOpen()||box.getActor()==crew));
 			
 			if(walls && ceiling && boxEmpty && xp) {
 				snapped = true;

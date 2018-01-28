@@ -58,7 +58,7 @@ public class Ship implements Handleable{
 	private List<Crew> unassignedCrew      = new ArrayList<Crew>();
 	private List<Handleable> sprites 	   = new ArrayList<Handleable>();
 	private boolean isChased;
-	private HashMap<String,Integer> resources = new HashMap<>();
+	private HashMap<ResourcesID,Integer> resources = new HashMap<>();
 	private int mass=200;
 	private int endSpeed;
 	private boolean visible;
@@ -231,8 +231,9 @@ public class Ship implements Handleable{
 	}
 
 	private void generateResources() {
-		resources.put("fuel", 500);
-		resources.put("missiles", 500);
+		resources.put(ResourcesID.Fuel, 500);
+		resources.put(ResourcesID.Missiles, 500);
+		resources.put(ResourcesID.Power, 0);
 	}
 
 	public void apply(Weapon w) {	
@@ -262,16 +263,16 @@ public class Ship implements Handleable{
 
 	private void generateRooms() {
 		/**Magic numbers here for room stats**/
-		shipRooms.add(new SensorRoom(new Sensor(0.8f), "Sensor Room", 20, 3,10,RoomSize.Small));
+		shipRooms.add(new SensorRoom(new Sensor(0.8f), "Sensor Room", 20, 3,10,RoomSize.Small,this));
 
-		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",20, 8,10,RoomSize.Large));
+		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",20, 8,10,RoomSize.Large,this));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20,9, 10,RoomSize.Medium));
-		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",20,9, 10,RoomSize.Large));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20, 10,RoomSize.Medium,this));
+		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",20,9, 10,RoomSize.Large,this));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
-		shipRooms.add(new StaffRoom(items,"Staff Room", 20, 9, 10,RoomSize.Medium));
+		shipRooms.add(new StaffRoom(items,"Staff Room", 20, 9, 10,RoomSize.Medium,this));
 		setRoomPositions();
 	}
 	
@@ -537,11 +538,16 @@ public class Ship implements Handleable{
 		//Render the rooms square
 		Graphics2D g2d = (Graphics2D)g.create();
 		for(int i = 0;i<shipRooms.size();i++) {
+			
 			Room r = shipRooms.get(i);
 			g2d.setColor(Color.red);
 			int rectangleSize = r.getSize().getLength();
-			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), rectangleSize, rectangleSize);
+			int recX = (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x);
+			int recY = (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y);
+			g2d.drawRect(recX,recY, rectangleSize, rectangleSize);
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
+			
+			r.renderHealthBars(recX,recY,rectangleSize,g2d);
 			r.renderCrewOnShip(g2d, this);
 		}
 		
@@ -579,7 +585,7 @@ public class Ship implements Handleable{
 	
 	
 	public void updatePowerConsumption() {
-		incResource("fuel", -(int)getGenerator().getEfficiencyGraph().getxInput());
+		incResource(ResourcesID.Fuel, -(int)getGenerator().getEfficiencyGraph().getxInput());
 		getGenerator().getEfficiencyGraph().setGraphPoint(0);
 		if(isPlayer) {BattleUI.updateResources(this);}	
 	}
@@ -689,22 +695,22 @@ public class Ship implements Handleable{
 	}
 
 
-	public HashMap<String,Integer> getResources() {
+	public HashMap<ResourcesID,Integer> getResources() {
 		return resources;
 	}
 
 
-	public void setResources(HashMap<String,Integer> resources) {
+	public void setResources(HashMap<ResourcesID,Integer> resources) {
 		this.resources = resources;
 	}
 	
-	public int  getResource(String key) {
+	public int  getResource(ResourcesID key) {
 		return resources.get(key);
 	}
-	public void setResource(String key,int val) {
+	public void setResource(ResourcesID key,int val) {
 		resources.replace(key, val);
 	}
-	public void incResource(String key,int inc) {
+	public void incResource(ResourcesID key,int inc) {
 		resources.replace(key, resources.get(key)+inc);
 	}
 
@@ -793,6 +799,7 @@ public class Ship implements Handleable{
 		int rectTolerance = 2;
 		Random rand = new Random();
 		ImageHandler image  = lImage.getLargestLayer();
+		
 		while(!complete) {
 			num = 0;
 			ArrayList<Rectangle> roomRects = new ArrayList<>();
@@ -865,5 +872,10 @@ public class Ship implements Handleable{
 	}
 	public void setBs(BattleScreen bs) {
 		this.bs = bs;
+	}
+
+	public void removeFuel(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 }
