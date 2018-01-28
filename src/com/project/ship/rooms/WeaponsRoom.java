@@ -20,20 +20,35 @@ public class WeaponsRoom extends Room {
 	private List<Weapon> frontWeapons = new ArrayList<>();
 	private List<Weapon> backWeapons = new ArrayList<>();
 
-	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+	public WeaponsRoom(Weapon[] we,String name,int actionHealth, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,getNoOfActions(we),size);
 		this.setDamageableRadius(damageableRadius);
 		weapons = (ArrayList<Weapon>) Arrays.asList(we);
 		
 	}
 	public WeaponsRoom(List<Weapon> frontWeapons,List<Weapon> backWeapons,String name,int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+		super(name,actionHealth,getNoOfActions(frontWeapons)+getNoOfActions(backWeapons),size);
 		this.frontWeapons=frontWeapons;
 		this.backWeapons =backWeapons ;
 		this.setDamageableRadius(damageableRadius);
 		weapons.addAll(backWeapons);
 		weapons.addAll(frontWeapons);
 
+	}
+	public static int getNoOfActions(Weapon[]  weapons){
+		int noOfActions = 0;
+		for(int i = 0;i<weapons.length;i++){
+			noOfActions+=weapons[i].getActions().size();
+		}
+		return noOfActions;
+	}
+	
+	public static int getNoOfActions(List<Weapon> weapons){
+		int noOfActions = 0;
+		for(int i = 0;i<weapons.size();i++){
+			noOfActions+=weapons.get(i).getActions().size();
+		}
+		return noOfActions;
 	}
 	
 	@Override
@@ -63,7 +78,7 @@ public class WeaponsRoom extends Room {
 				leastDependant = action;
 				
 				/*Break on 0 as you can't get smaller than it*/
-				if(action.getActionsNeededAfterUse().size() == 0){
+				if(smallest == 0){
 					break;
 				}
 			}

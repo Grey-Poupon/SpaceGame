@@ -15,29 +15,33 @@ public class ActionBox {
 	private DraggableIcon crew = null;
 	private Room room;
 	private boolean moveCrew = false;
+	private Handler handler;
 	
 	
-	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
+	public ActionBox(Handler handler,BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs) {
+		this.handler = handler;
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
-		this.img.start(false);
-		this.room       = room;
+
+		this.img.start(handler,false);
+		this.room =room;
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
-		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+		actionText      = new Text(handler,getName(), true, x+getWidth(), y,bs);
 		this.action.setActionBox(this);
 
 	}
 	
-	public ActionBox(BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
+	public ActionBox(Handler handler,BufferedImage img, int x, int y, CrewAction action,Room room,BattleScreen bs,boolean moveCrew) {
+		this.handler = handler;
 		this.img = new ImageHandler(x, y, img, true, EntityID.UI);
-		this.img.start(false);
+		this.img.start(handler,false);
 		this.room       = room;
 		this.moveCrew   = moveCrew;
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
-		actionText      = new Text(getName(), true, x+getWidth(), y,bs);
+		actionText      = new Text(handler,getName(), true, x+getWidth(), y,bs);
 		this.action.setActionBox(this);
 
 	}
@@ -69,7 +73,7 @@ public class ActionBox {
 	}
 	public static void delete(ActionBox box) {
 		//box.removeCrew();
-		if(box.img       !=null) {ImageHandler .delete(box.img );}
+		if(box.img       !=null) {ImageHandler .delete(box.handler,box.img );}
 		if(box.crew      !=null) {DraggableIcon.delete(box.crew);}
 		if(box.actionText!=null) {Text         .delete(box.actionText);}
 		box = null;

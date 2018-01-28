@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import com.project.Crew;
 import com.project.CrewAction;
 import com.project.EntityID;
 import com.project.Handleable;
+import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.LayeredImage;
 import com.project.ResourceLoader;
@@ -267,7 +267,7 @@ public class Ship implements Handleable{
 		shipRooms.add(new WeaponsRoom(getFrontWeapons(),getBackWeapons(),"Weapons Room",20, 8,10,RoomSize.Large));
 
 		List<CrewAction> manoeuvres = Arrays.asList(new CrewAction[] {ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge"),ResourceLoader.getCrewAction("basicSwitch"),ResourceLoader.getCrewAction("basicDodge")});
-		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20,9, 10,RoomSize.Medium));
+		shipRooms.add(new Cockpit(manoeuvres,"Cockpit",20, 10,RoomSize.Medium));
 		shipRooms.add(new GeneratorRoom(ResourceLoader.getShipGenerator("default").copy(),"Generator Room",20,9, 10,RoomSize.Large));
 		ArrayList<RecreationalItem> items = new ArrayList<>();
 		items.add(new RecreationalItem("ArmChair",4));
@@ -384,14 +384,14 @@ public class Ship implements Handleable{
 		}
 		return leaders;
 	}
-	public List<Button> getLeaderButtons(BattleScreen bs){
+	public List<Button> getLeaderButtons(Handler handler,BattleScreen bs){
 		List<Crew> leaders = getRoomLeaders();
 		List<Button> buttons = new ArrayList<Button>();
 		for(int i = 0;i<leaders.size();i++) {
 			Crew crew = leaders.get(i);
 			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start(false);
+			leaderPortrait.start(handler,false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;
@@ -537,11 +537,16 @@ public class Ship implements Handleable{
 		//Render the rooms square
 		Graphics2D g2d = (Graphics2D)g.create();
 		for(int i = 0;i<shipRooms.size();i++) {
+			
 			Room r = shipRooms.get(i);
 			g2d.setColor(Color.red);
 			int rectangleSize = r.getSize().getLength();
-			g2d.drawRect((int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x),(int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), rectangleSize, rectangleSize);
+			int recX = (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x);
+			int recY = (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y);
+			g2d.drawRect(recX,recY, rectangleSize, rectangleSize);
 			g2d.drawImage(r.getIcon(), (int)(lImage.getLargestLayer().getxCoordinate()+lImage.getLargestLayer().getxScale()*r.getLocation().x), (int)(lImage.getLargestLayer().getyCoordinate()+ lImage.getLargestLayer().getyScale()*r.getLocation().y), null);
+			
+			r.renderHealthBars(recX,recY,rectangleSize,g2d);
 			r.renderCrewOnShip(g2d, this);
 		}
 		
@@ -737,7 +742,7 @@ public class Ship implements Handleable{
 		return new Ship(lImage.getX(), lImage.getY(), lImage.getZ(), lImage.getzPerLayer(), lImage.getPath(), this.visible,this.entityID , maxHealth, lImage.getScale(), this.visibleCrew, isChased);
 	}
 
-	public List<Button> getPhaseLeaderButtons(BattleScreen bs) {
+	public List<Button> getPhaseLeaderButtons(Handler handler,BattleScreen bs) {
 		List<Crew> leaders = new ArrayList<>();
 		leaders.add(getGeneratorRoom().getRoomLeader());
 		leaders.add(getWeaponRoom().getRoomLeader());
@@ -758,7 +763,7 @@ public class Ship implements Handleable{
 //				leaderPortrait.addImageFrame(ResourceLoader.getImage("res/portraitFrameCockpit.png"),6,6);
 //			}
 			leaderPortrait.setVisible(true);
-			leaderPortrait.start(false);
+			leaderPortrait.start(handler, false);
 			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
 		}
 		return buttons;
@@ -793,6 +798,7 @@ public class Ship implements Handleable{
 		int rectTolerance = 2;
 		Random rand = new Random();
 		ImageHandler image  = lImage.getLargestLayer();
+		
 		while(!complete) {
 			num = 0;
 			ArrayList<Rectangle> roomRects = new ArrayList<>();

@@ -10,11 +10,15 @@ import com.project.Handler;
 import com.project.button.Button;
 
 public class BattleHandler extends Handler {
+	
 	private BattleScreen bs;
 
 	
 	public BattleHandler(BattleScreen bs) {
 		this.bs=bs;
+		
+	}
+	public BattleHandler() {
 		
 	}
 	public boolean clickShip(int x , int y) {
@@ -95,5 +99,11 @@ public class BattleHandler extends Handler {
 	}
 	public static void changeMouseIcon(String path){
 		changeMouseIcon(path);
+	}
+	public BattleScreen getBs() {
+		return bs;
+	}
+	public void setBs(BattleScreen bs) {
+		this.bs = bs;
 	}
 }

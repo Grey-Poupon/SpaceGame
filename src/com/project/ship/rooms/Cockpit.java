@@ -19,8 +19,8 @@ public class Cockpit extends Room implements Actionable{
 	private ImageHandler background;
 	private ImageHandler card;
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
-	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int damageableRadius, RoomSize size) {
+		super(name,actionHealth,manoeuvres.size(),size);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
 		this.background = new ImageHandler(0, 0, "res/ui/piloting.png", true, null);

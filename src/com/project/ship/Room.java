@@ -242,4 +242,11 @@ public abstract class Room {
 	public int getMaxHealth() {
 		return maxHealth;
 	}
+	public void renderHealthBars(int recX, int recY, int rectangleSize, Graphics2D g2d) {
+		float barLeft = ((float)health/(float)maxHealth) * rectangleSize;
+		
+		g2d.setColor(Color.GREEN);
+		g2d.fillRect(recX, recY-5, (int) barLeft, 5);	
+		
+	}
 }

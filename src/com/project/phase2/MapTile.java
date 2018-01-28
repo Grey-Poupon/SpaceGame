@@ -10,26 +10,47 @@ public class MapTile {
 	public Polygon hex; 
 	public ArrayList<MapObject> objects = new ArrayList<MapObject>();
 	Random rand = new Random();
-	
+	public boolean isHovered =false;
+	public Color col = Color.RED;
 	public MapTile(Polygon hex) {
 		super();
 		this.hex = hex;
-		if(rand.nextInt(10)==5) {
-			objects.add(new MapObject());
-		}
+//		if(rand.nextInt(10)==5) {
+//			objects.add(new MapObject(this));
+//		}
+	}
+	
+	public void addObject() {
+		objects.add(new MapObject(this));
 	}
 	
 	public void render(Graphics g) {
-		if(!isEmpty()) {
-			g.setColor(Color.GREEN);
-			g.fillPolygon(hex);
-		}
+		g.setColor(col);
+		g.drawPolygon(hex);
 		if(containsPlayer()) {
 			g.setColor(Color.BLUE);
 			g.fillPolygon(hex);
+			
 		}
-		g.setColor(Color.RED);
-		g.drawPolygon(hex);
+		if(!isEmpty()) {
+			if(!containsPlayer())g.setColor(Color.GREEN);
+			for(int i =0;i<objects.size();i++) {
+				if(objects.get(i) instanceof MapShip &&!containsPlayer()) g.setColor(Color.red);
+				objects.get(i).objImg.render(g);
+			}
+			g.fillPolygon(hex);
+		}
+		if(isHovered) {
+			g.setColor(new Color(0,0,0.5f,0.5f));
+			g.fillPolygon(hex);
+		}
+		
+		
+	}
+	
+	public void setObjectPos(MapObject ob ) {
+		ob.objImg.setxCoordinate(hex.getBounds().x);
+		ob.objImg.setyCoordinate((int) (hex.getBounds().y -hex.getBounds().getHeight()));
 	}
 	
 	public boolean isEmpty() {
@@ -49,10 +70,19 @@ public class MapTile {
 	public void addObject(MapObject object) {
 		objects.add(object);
 		object.setTileContained(this);
+		setObjectPos(object);
 	}
 	
 	public void removeObject(MapObject object){
 		objects.remove(object);
+	}
+
+	public boolean isHovered() {
+		return isHovered;
+	}
+
+	public void setHovered(boolean isHovered) {
+		this.isHovered = isHovered;
 	}
 	
 	

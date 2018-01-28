@@ -17,7 +17,7 @@ public class GeneratorRoom extends Room{
 	
 	
 	public GeneratorRoom(Generator generator,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+		super(name,actionHealth,generator.getActions().size(),size);
 		this.setDamageableRadius(damageableRadius);
 
 		this.generator = generator;

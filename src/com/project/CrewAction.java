@@ -157,13 +157,15 @@ public class CrewAction implements Comparable {
 	public void setBroken(boolean isBroken) {
 		this.isBroken = isBroken;
 		if(isBroken){
-			changeActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
 			if(actionBox != null){
+				changeActionImg(ResourceLoader.getImage("res/brokenActionBox.png"));
 				actionBox.resetBox();
 			}
 		}
 		else{
-			changeActionImg(ResourceLoader.getImage("res/actionBox.png"));
+			if(actionBox != null){
+				changeActionImg(ResourceLoader.getImage("res/actionBox.png"));
+			}
 		}
 	}
 
