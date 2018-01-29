@@ -27,6 +27,7 @@ import com.project.UI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Generator;
+import com.project.ship.ResourcesID;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 import com.project.ship.rooms.Cockpit;
@@ -105,15 +106,27 @@ public class BattleUI extends UI {
 		
 		flavourTexts = new ArrayList<Button>();
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources += " " + key.toString() + ":" + pShip.getResource(key);
 		}
+
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
-				2 * rightListWidth, bs.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
+				2 * rightListWidth, bs.main.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
 				bs, false);
 
 
-
+//<<<<<<< HEAD
+//
+//=======
+//		Button graph = new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
+//		pShip.getGenerator().getEfficiencyGraph(), bs);
+//		graph.setDraggable(true);
+//		List<Button> graphEnd = new ArrayList<Button>();
+//		graphEnd.add(graph);
+//		// GO BUTTON
+//		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO","sevensegies", Font.PLAIN, 30, Color.WHITE,new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), bs));
+//		graphList = new ScrollableList(graphEnd, graphMonitorXOffset, graphMonitorYOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2 * pShip.getGenerator().getEfficiencyGraph().getHeight());
+//>>>>>>> 7f8cb1c3809e5990c3be40f3b138c08738d783ee
 
 	}
 
@@ -142,6 +155,7 @@ public class BattleUI extends UI {
 
 			BattleUI.generateRoomCards(generator, room);
 			generatePilotCard();
+			
 			/**Images for side bar tabs - manoeuvre and speedometer**/
 //			ImageHandler img1 = new ImageHandler(0, 0, ResourceLoader.getImage("res/manoeuvreTab.png"), true,EntityID.UI);
 //			miscButtons.add(new Button(secondMonitorXOffset - img1.getWidth(), secondMonitorYOffset, 50, 50, ButtonID.Manoeuvres, 0, true, img1, bs));
@@ -157,9 +171,7 @@ public class BattleUI extends UI {
 		}
 		if (tooltipMenuSelection == TooltipSelectionID.Stats) {
 			for (int i = 0; i < crew.getStats().size(); i++) {
-				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false,
-						Crew.statNames[i] + ": " + Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle,
-						fontSize, fontColour, bs, true));
+				tooltipButtons.add(new Button(0, 0, tooltipButtonWidth, tooltipButtonHeight, ButtonID.Crew, i, false,Crew.statNames[i] + ": " + Byte.toString(crew.getStat(StatID.values()[i])), fontName, fontStyle,fontSize, fontColour, bs, true));
 			}
 			clickable = false;
 		}
@@ -169,15 +181,12 @@ public class BattleUI extends UI {
 		// clearTooltip();
 
 		// setup scrollable lists
-		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, listWidth, listHeight,
-				tooltipButtonWidth, tooltipButtonHeight, clickable);
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, listWidth, listHeight,tooltipButtonWidth, tooltipButtonHeight, clickable);
 
 		if (rightTooltipButtons.size() > 0) {
-			rightHandList = new ScrollableList(rightTooltipButtons, mainMonitorXOffset + tooltipButtonWidth + 13,
-					mainMonitorYOffset + 2, listWidth, listHeight);
+			rightHandList = new ScrollableList(rightTooltipButtons, mainMonitorXOffset + tooltipButtonWidth + 13,mainMonitorYOffset + 2, listWidth, listHeight);
 		} else {
-			rightHandList = new ScrollableList(flavourTexts, mainMonitorXOffset + tooltipButtonWidth + 13,
-					mainMonitorYOffset + 2, listWidth, listHeight);
+			rightHandList = new ScrollableList(flavourTexts, mainMonitorXOffset + tooltipButtonWidth + 13,mainMonitorYOffset + 2, listWidth, listHeight);
 		}
 
 	}
@@ -216,7 +225,7 @@ public class BattleUI extends UI {
 				// update variables
 				ImageHandler portrait = crew.get(j).getPortrait();
 				portrait.setVisible(true);
-				portrait.start(true);
+				portrait.start(BattleScreen.handler,true);
 				portrait.setxCoordinate(500);
 				portrait.setyCoordinate(500);
 
@@ -231,12 +240,14 @@ public class BattleUI extends UI {
 				}
 
 				// set crew icons
-				DraggableIcon icon = new DraggableIcon(portrait, crew.get(j), portrait.getxCoordinate(),
+
+				DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(j), portrait.getxCoordinate(),
 						portrait.getyCoordinate());
-				ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBox.png"),
+				ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBox.png"),
 						(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 						(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 						ResourceLoader.getCrewAction("move"), room, bs);
+				
 				icon.moveTo(box.getX(), box.getY());
 				icon.setStartBox(box);
 				icon.setActionBox(box);
@@ -257,16 +268,17 @@ public class BattleUI extends UI {
 					}
 
 					// set action box
-					ActionBox box = new ActionBox(ResourceLoader.getImage("res/actionBoxEmpty.png"),
+					ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBoxEmpty.png"),
 							(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
 							(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
 							ResourceLoader.getCrewAction("move"), room, bs, true);
+
 					actionBoxes.add(box);
 				}
 			}
 
 			// setup room title
-			Text title = new Text(room.getRoomName(), true, x, y, bs);
+			Text title = new Text(BattleScreen.handler,room.getRoomName(), true, x, y, bs);
 			tableTitleText.add(title);
 
 		}
@@ -297,14 +309,14 @@ public class BattleUI extends UI {
 		// set crew pics
 		for (int i = 0; i < crew.size(); i++) {
 			ImageHandler portrait = crew.get(i).getPortrait();
-			portrait.start(true);
+			portrait.start(BattleScreen.handler,true);
 			column = (i % 3);
 			row = (i / 3) + 1;
 			portrait.setVisible(true);
 
 			portrait.setxCoordinate(mainMonitorXOffset + listWidth -26 - (portrait.getWidth() * (1-column))+column*3);
 			portrait.setyCoordinate(mainMonitorYOffset + 12+ row*3+((row-1) * (portrait.getHeight())));
-			DraggableIcon icon = new DraggableIcon(portrait, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
+			DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(i), portrait.getxCoordinate(),portrait.getyCoordinate());
 			
 			actionIcons.add(icon);
 			crewToIcon.put(crew.get(i), icon);
@@ -312,7 +324,7 @@ public class BattleUI extends UI {
 
 		// wipe shared variables
 		column = -1;
-		row = -1;
+		row    = -1;
 
 		// set Action Table
 		for (int j = 0; j < actionables.size(); j++) {
@@ -336,8 +348,7 @@ public class BattleUI extends UI {
 		clearRightBox();
 		Graph speed = new Graph(MathFunctions.speedInput, 300, 50, 300f);
 		speed.setDraggable(true);
-		Button speedbtn = new Button(secondMonitorXOffset + 20, secondMonitorYOffset + 50, 300, 50, ButtonID.Graph,
-				true, speed, bs);
+		Button speedbtn = new Button(secondMonitorXOffset + 20, secondMonitorYOffset + 50, 300, 50, ButtonID.Graph,true, speed, bs);
 		speedbtn.setDraggable(true);
 		speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"), 300f);
 		speedInput = (speedbtn);
@@ -354,11 +365,11 @@ public class BattleUI extends UI {
 
 		// setup pilot pic
 		ImageHandler portrait = pilot.getPortrait();
-		portrait.start(true);
+		portrait.start(BattleScreen.handler,true);
 		portrait.setVisible(true);
 		portrait.setxCoordinate(secondMonitorXOffset);
 		portrait.setyCoordinate(secondMonitorYOffset);
-		DraggableIcon icon = new DraggableIcon(portrait, pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
+		DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
 		manoeuvreActionIcons.add(icon);
 
 		// setup manoeuvre actions
@@ -371,7 +382,8 @@ public class BattleUI extends UI {
 
 			BufferedImage img = ResourceLoader.getImage("res/actionBox.png");
 
-			ActionBox box = new ActionBox(img, secondMonitorXOffset + (column * tableColumnWidth),
+
+			ActionBox box = new ActionBox(BattleScreen.handler,img, secondMonitorXOffset + (column * tableColumnWidth),
 					secondMonitorYOffset + ((img.getHeight() + boxGap) * (row)), manoeuvres.get(i), room, bs);
 
 			manoeuvreActionBoxes.add(box);
@@ -385,10 +397,8 @@ public class BattleUI extends UI {
 	public static void generateInfo(Actionable actionable) {
 		clearAllBoxes();
 		List<Button> tooltipButtons = actionable.getInfoButtons(fullListWidth, tooltipButtonHeight, bs);
-		tooltipButtons.add(new Button(0, 0, fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),
-				true, "Back", bs, true));
-		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,
-				listHeight, fullListWidth, tooltipButtonHeight, true);
+		tooltipButtons.add(new Button(0, 0, fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true, "Back", bs, true));
+		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,listHeight, fullListWidth, tooltipButtonHeight, true);
 		
 	}	
 
@@ -449,8 +459,8 @@ public class BattleUI extends UI {
 
 	public static void updateResources(Ship pShip) {
 		String resources = "Resources:";
-		for (String key : pShip.getResources().keySet()) {
-			resources = resources + " " + key + ":" + pShip.getResource(key);
+		for (ResourcesID key : pShip.getResources().keySet()) {
+			resources = resources + " " + key.toString() + ":" + pShip.getResource(key);
 		}
 		resourcesButton.getText().setText(resources);
 	}

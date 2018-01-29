@@ -9,6 +9,7 @@ import com.project.ResourceLoader;
 import com.project.RoomSize;
 import com.project.ship.Room;
 import com.project.ship.Sensor;
+import com.project.ship.Ship;
 
 public class SensorRoom extends Room {
 
@@ -18,8 +19,8 @@ public class SensorRoom extends Room {
 	private List<CrewAction> dummyActions = new ArrayList<CrewAction>();
 	
 	
-	public SensorRoom(Sensor sensor, String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+	public SensorRoom(Sensor sensor, String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size, Ship ship) {
+		super(name,actionHealth,noOfActions,size,ship);
 		this.setDamageableRadius(damageableRadius);
 		setRoomName("Sensors");
 		

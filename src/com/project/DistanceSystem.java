@@ -21,16 +21,16 @@ public class DistanceSystem implements Handleable {
 	private int	chasedXCurrent   = 75;
 	private int	chaserXDest;
 	private int	chasedXDest;
+	private static Handler handler;
 	
-	
-	public DistanceSystem(int shipDistance, int chaserDist, int chasedDist) {
+	public DistanceSystem(Handler handler,int shipDistance, int chaserDist, int chasedDist) {
 		this.shipDistanceDest = shipDistance;
 		this.shipDistanceCurrent = shipDistance;
 		this.chaserXCurrent = (int) (chaserDist*pixelRatio);
 		this.chasedXCurrent = (int) (chasedDist*pixelRatio);
 		this.chasedXDest    =  this.chasedXCurrent;
 		this.chaserXDest    =  this.chaserXCurrent;
-		Handler.addHighPriorityEntity(this);
+		handler.addHighPriorityEntity(this);
 	}
 	public void calculateDistances(Ship chaser, Ship chased) {
 		Ship movingShip  = null;

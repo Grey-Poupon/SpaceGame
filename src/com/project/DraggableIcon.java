@@ -19,8 +19,10 @@ public class DraggableIcon {
 	private boolean snapped = false;;
 	private static final int snapToRange = 30;
 	private static final int boxLineWidth = 0;
+	private static Handler handler;
 	
-	public DraggableIcon(ImageHandler img,Crew crew, int xCoordinate, int yCoordinate) {
+	public DraggableIcon(ImageHandler img,Handler handler,Crew crew, int xCoordinate, int yCoordinate) {
+		this.handler = handler;
 		this.img         = img;
 		this.crew		 = crew;
 		this.xCoordinate = xCoordinate;
@@ -29,7 +31,7 @@ public class DraggableIcon {
 		this.startY      = yCoordinate;
 		this.width       = img.getWidth();
 		this.height      = img.getHeight();
-		Handler.icons.add(this);// fuk u adam
+		handler.icons.add(this);// fuk u adam
 	}
 
 	public boolean isInside(int x, int y) {
@@ -56,8 +58,8 @@ public class DraggableIcon {
 	}
 
 	public static void delete(DraggableIcon img2) {
-		ImageHandler.delete(img2.img);
-		Handler.icons.remove(img2);
+		ImageHandler.delete(handler,img2.img);
+		handler.icons.remove(img2);
 		img2 = null;		
 	}
 
@@ -70,7 +72,7 @@ public class DraggableIcon {
 			boolean walls      = Math.abs(xCoordinate - box.getX()) < snapToRange;
 			boolean ceiling    = Math.abs(yCoordinate - box.getY()) < snapToRange;
 			boolean xp         = box.getLevelRequirement() <= getLevel(box.getStatType()) ;
-			boolean boxEmpty   = ((box.isOpen()||box.getActor()==crew) && !box.getAction().isBroken());
+			boolean boxEmpty   = ((box.isOpen()||box.getActor()==crew));
 			
 			if(walls && ceiling && boxEmpty && xp) {
 				snapped = true;

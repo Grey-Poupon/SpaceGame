@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Objects;
 import java.util.Random;
+
+import com.project.battle.BattleScreen;
 import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
@@ -148,13 +150,13 @@ public class ProjectileAnimation implements Handleable{
 		}
 		if(!stillRunning) {
 			animationsRunning--;
-			Handler.entitiesHighPriority.remove(this);
+			BattleScreen.handler.entitiesHighPriority.remove(this);
 		}
 		
 	}
 	// start function for the group of animation
 	public void start() {
-		Handler.addHighPriorityEntity(this);
+		BattleScreen.handler.addHighPriorityEntity(this);
 		animations[0].start();
 	}
 	private void doDamage() {

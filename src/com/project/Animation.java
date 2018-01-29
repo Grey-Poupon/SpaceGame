@@ -47,14 +47,14 @@ public class Animation implements Handleable {
 	private float z;
 	private int xFlip=1;
 	private int yFlip = 1;
-	
+	private Handler handler;
 	public AdjustmentID getAlign() {
 		return align;
 	}
 
 	//16 stationary
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, float xCoordinate, float yCoordinate,float scale,int NoOfloops,boolean running,AdjustmentID align) {
-
+	public Animation(Handler handler,String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate, float xCoordinate, float yCoordinate,float scale,int NoOfloops,boolean running,AdjustmentID align) {
+		this.handler = handler;
 		this.path = path;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -78,7 +78,8 @@ public class Animation implements Handleable {
 		}
 	}
 	// 22 moving
-	public Animation(String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate,float scale,float xStart,float xEnd, float yStart, float yEnd,float xVel,Rectangle2D mask,boolean running,AdjustmentID align) {
+	public Animation(Handler handler,String path, int tileWidth, int tileHeight, int noVertTiles, int noHorizTiles,int xStartGap, int yStartGp,int xGap,int yGap, int frameRate,float scale,float xStart,float xEnd, float yStart, float yEnd,float xVel,Rectangle2D mask,boolean running,AdjustmentID align) {
+		this.handler = handler;
 		this.path          = path;
 		this.tileWidth     = tileWidth;
 		this.tileHeight    = tileHeight;
@@ -129,7 +130,8 @@ public class Animation implements Handleable {
 	public void setyCoordinate(float yCoordinate) {
 		this.yCoordinate = yCoordinate;
 	}
-	public Animation(Animation animation,Animation[] followingAnims,boolean running) {
+	public Animation(Handler handler,Animation animation,Animation[] followingAnims,boolean running) {
+		this.handler = handler;
 		this.path 		    = animation.path;
 		this.tileWidth 	    = animation.tileWidth;
 		this.tileHeight     = animation.tileHeight;
@@ -162,12 +164,12 @@ public class Animation implements Handleable {
 
 	public void start() {
 		running = true;
-		Handler.addAnimation(this);
+		handler.addAnimation(this);
 	}
 	public void start(boolean add) {
 		running = true;
 		if(add) {
-			Handler.addAnimation(this);
+			handler.addAnimation(this);
 		}
 	}
 	
@@ -207,7 +209,7 @@ public class Animation implements Handleable {
 
 	}
 	public static void delete(Animation anim) {
-		Handler.anims.remove(anim);
+		anim.handler.anims.remove(anim);
 		anim = null;
 		
 	}
@@ -291,12 +293,12 @@ public class Animation implements Handleable {
 			}
 		
 		if(moving) {
-			Animation temp = new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, scale ,xStart, xEnd, yStart,yEnd,xVel, mask				   ,false,align);
-			return new Animation(temp, anims, running);
+			Animation temp = new Animation(handler,path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, scale ,xStart, xEnd, yStart,yEnd,xVel, mask				   ,false,align);
+			return new Animation(handler,temp, anims, running);
 		}
 		else 	   {
-			Animation temp = new Animation(path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),false,align);
-			return new Animation(temp, anims, running);
+			Animation temp = new Animation(handler,path, tileWidth, tileHeight, noVertTiles, noHorizTiles, xStartGap, yStartGap, xGap, yGap, 60/ticksPerFrame, xCoordinate, yCoordinate, scale, framesLeft/(noHorizTiles*noVertTiles),false,align);
+			return new Animation(handler,temp, anims, running);
 		}      
 		
 	}

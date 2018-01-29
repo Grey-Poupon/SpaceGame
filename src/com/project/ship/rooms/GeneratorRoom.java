@@ -8,6 +8,7 @@ import com.project.ResourceLoader;
 import com.project.RoomSize;
 import com.project.ship.Generator;
 import com.project.ship.Room;
+import com.project.ship.Ship;
 
 public class GeneratorRoom extends Room{
 
@@ -16,11 +17,13 @@ public class GeneratorRoom extends Room{
 	private Generator generator;
 	
 	
-	public GeneratorRoom(Generator generator,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+	public GeneratorRoom(Generator generator,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size, Ship ship) {
+		super(name,actionHealth,generator.getActions().size(),size,ship);
 		this.setDamageableRadius(damageableRadius);
 
 		this.generator = generator;
+		generator.setRoom(this);
+		
 		setSensorSphereRadius(100);
 	}
 	public BufferedImage getIcon() {

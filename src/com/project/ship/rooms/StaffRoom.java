@@ -11,6 +11,7 @@ import com.project.ResourceLoader;
 import com.project.RoomSize;
 import com.project.Recreation.RecreationalItem;
 import com.project.ship.Room;
+import com.project.ship.Ship;
 
 public class StaffRoom extends Room {
 	List<RecreationalItem> items = new ArrayList<>();
@@ -19,8 +20,8 @@ public class StaffRoom extends Room {
 	private List<CrewAction> dummyActions = new ArrayList<CrewAction>();
 	
 	
-	public StaffRoom(List<RecreationalItem> items,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size) {
-		super(name,actionHealth,noOfActions,size);
+	public StaffRoom(List<RecreationalItem> items,String name, int actionHealth, int noOfActions, int damageableRadius, RoomSize size, Ship ship) {
+		super(name,actionHealth,noOfActions,size,ship);
 		this.setDamageableRadius(damageableRadius);
 
 		
