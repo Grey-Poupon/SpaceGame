@@ -66,7 +66,7 @@ public class BattleScreen implements Phase {
 	private Text phase;
 	private Button graphButton;
 	private Player player;
-	private int numWeaponClicks;
+	private int numWeaponClicks=0;
 	private int currentWeaponClick = 1;
 	private Ship playerShip;
 	private Ship enemyShip;
@@ -222,6 +222,14 @@ public class BattleScreen implements Phase {
 	public void tick() {
 		handler.tick(main.ui);
 		if (!main.isPaused()) {
+			
+			
+			if (currentPhase == BattlePhases.WeaponsClick && numWeaponClicks==0 && isPlayersTurn ) {
+				loadAimingMouseIcon();
+				nextTurn();
+				
+			}
+			
 			// AI turns
 			if(!isPlayersTurn) {
 				if(currentPhase == BattlePhases.WeaponActions) {
@@ -356,6 +364,8 @@ public class BattleScreen implements Phase {
 				}
 			}
 		}
+		
+		
 		
 		if(button == MouseEvent.BUTTON1) {
 
@@ -526,7 +536,7 @@ public class BattleScreen implements Phase {
 	/**Uses the global variable currentWeaponClick**/
 	private void loadAimingMouseIcon() {		
 		/**Reset mouse icon**/
-		if (currentWeaponClick<1){
+		if (currentWeaponClick<1 || numWeaponClicks ==0){
 			main.handler.changeMouseIcon("res/mousePointer.png");   
 			
 			/**reset the current mouse click to 1**/
