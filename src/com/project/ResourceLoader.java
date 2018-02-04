@@ -147,7 +147,7 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
-		
+		put(images,"res/star_field.png");
 		put(images,"res/portalGate.png");
 		put(images,"res/ships/insectoid.png");
 		put(images,"res/matron3/mergedimage.png");

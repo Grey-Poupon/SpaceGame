@@ -2,6 +2,7 @@ package com.project.phase2;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,9 +13,11 @@ public class MapTile {
 	Random rand = new Random();
 	public boolean isHovered =false;
 	public Color col = Color.RED;
-	public MapTile(Polygon hex) {
+	public Point mapPos;
+	public MapTile(Polygon hex,int x,int y) {
 		super();
 		this.hex = hex;
+		this.mapPos = new Point(x,y);
 //		if(rand.nextInt(10)==5) {
 //			objects.add(new MapObject(this));
 //		}
@@ -27,6 +30,7 @@ public class MapTile {
 	
 	public void renderTile(Graphics g) {
 		g.setColor(col);
+		g.drawString(mapPos.x+":"+mapPos.y, hex.getBounds().x+hex.getBounds().width/2, hex.getBounds().y+hex.getBounds().height/2);
 		
 		if(containsPlayer()) {
 			g.setColor(Color.BLUE);

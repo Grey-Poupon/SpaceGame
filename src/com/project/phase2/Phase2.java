@@ -26,14 +26,11 @@ public class Phase2 implements Phase{
 	
 	public Phase2(Main main) {
 		this.main = main;
-		
-		
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon()),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70),true);
 		
 //		Map map = new Map();
 		Map map = Map.generateRandomMap();
-		
 		
 		map.randomlyPlaceShip(ship);
 		
@@ -58,8 +55,7 @@ public class Phase2 implements Phase{
 		
 	}
 	public void render(Graphics g) {
-		handler.render(g);
-		
+		handler.render(g);		
 	}
 
 	public Map getCurrentMap() {
@@ -69,9 +65,8 @@ public class Phase2 implements Phase{
 	public void setCurrentMap(Map currentMap) {
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon()),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70),true);
 		this.currentMap.randomlyPlaceShip(ship);
-		
 		handler.addLowPriorityEntity(this.currentMap);
 	}
 
@@ -82,7 +77,5 @@ public class Phase2 implements Phase{
 	public static void setP(Phase2 p) {
 		Phase2.p = p;
 	}
-	
-	
 	
 }

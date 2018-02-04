@@ -23,6 +23,7 @@ public class MapShip extends MapObject{
 	}
 	public void moveTile(MapTile mt) {
 		if(this.isPlayerShip()){
+			
 			for(int i =0;i<mt.objects.size();i++) {
 				if(!mt.objects.get(i).tileContained.containsPlayer())mt.objects.get(i).interact(this);
 			}
