@@ -1,5 +1,8 @@
 package com.project.battle;
 
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -15,7 +18,6 @@ import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.DistanceSystem;
 import com.project.EntityID;
-import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.Main;
 import com.project.Phase;
@@ -64,7 +66,7 @@ public class BattleScreen implements Phase {
 	private Text phase;
 	private Button graphButton;
 	private Player player;
-	private int numWeaponClicks;
+	private int numWeaponClicks=0;
 	private int currentWeaponClick = 1;
 	private Ship playerShip;
 	private Ship enemyShip;
@@ -148,6 +150,19 @@ public class BattleScreen implements Phase {
 		movementTab.start(handler,false);
 		movementTab.setVisible(false);
 		
+		Button graph = new Button(0, 0, playerShip.getGenerator().getEfficiencyGraph().getWidth(),playerShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
+		playerShip.getGenerator().getEfficiencyGraph(), this);
+		graph.setDraggable(true);
+		List<Button> graphEnd = new ArrayList<Button>();
+		graphEnd.add(graph);
+		// GO BUTTON
+		Button go = new Button(1165, 605, 100,100, ButtonID.EndPhase, graphEnd.size(), true, "GO",
+				"sevensegies", Font.PLAIN, 30, Color.WHITE,
+				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), this);
+		handler.addLowPriorityEntity(go);
+		BattleUI.graphList = new ScrollableList(graphEnd, BattleUI.graphMonitorXOffset, BattleUI.graphMonitorYOffset,
+				playerShip.getGenerator().getEfficiencyGraph().getWidth(),
+				2 * playerShip.getGenerator().getEfficiencyGraph().getHeight());
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		handler.addHighPriorityEntity(uiGraphBox);
@@ -207,6 +222,14 @@ public class BattleScreen implements Phase {
 	public void tick() {
 		handler.tick(main.ui);
 		if (!main.isPaused()) {
+			
+			
+			if (currentPhase == BattlePhases.WeaponsClick && numWeaponClicks==0 && isPlayersTurn ) {
+				loadAimingMouseIcon();
+				nextTurn();
+				
+			}
+			
 			// AI turns
 			if(!isPlayersTurn) {
 				if(currentPhase == BattlePhases.WeaponActions) {
@@ -341,6 +364,8 @@ public class BattleScreen implements Phase {
 				}
 			}
 		}
+		
+		
 		
 		if(button == MouseEvent.BUTTON1) {
 
@@ -511,7 +536,7 @@ public class BattleScreen implements Phase {
 	/**Uses the global variable currentWeaponClick**/
 	private void loadAimingMouseIcon() {		
 		/**Reset mouse icon**/
-		if (currentWeaponClick<1){
+		if (currentWeaponClick<1 || numWeaponClicks ==0){
 			main.handler.changeMouseIcon("res/mousePointer.png");   
 			
 			/**reset the current mouse click to 1**/

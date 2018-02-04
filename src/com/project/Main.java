@@ -92,8 +92,8 @@ public class Main  extends Canvas implements Runnable{
 			frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
-				System.out.println(frames);
 				timer +=1000;
+				System.out.println("FPS: "+frames);
 				frames = 0;
 				
 			}
@@ -107,6 +107,7 @@ public class Main  extends Canvas implements Runnable{
 	}
 	
 	public static void main(String[] args){
+
 		
 		new Main();
 	}
@@ -117,8 +118,6 @@ public class Main  extends Canvas implements Runnable{
 		
 	}	
 
-	
-	
 	
 
 	public boolean isPaused() {

@@ -2,9 +2,6 @@
 /.project
 /.settings/
 /README.md
-/com/
-/SpaceGameUML.uml
-/SpaceGameUML.umlcd
-/UML.ucls
 /UML/
-/shipUML/
+/com/
+/res/
