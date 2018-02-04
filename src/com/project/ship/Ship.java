@@ -49,7 +49,7 @@ public class Ship implements Handleable{
 	private int distanceToEnd = 250;//for distance system
 	private int power         = 0;
 	private int speedChange;
-	private Engine2 engine;
+	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private List<Room> shipRooms 		   = new ArrayList<Room>();
 	private List<Slot> shipBackSlots       = new ArrayList<Slot>();
