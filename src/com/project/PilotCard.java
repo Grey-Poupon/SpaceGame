@@ -39,7 +39,6 @@ public class PilotCard extends ShipItemCard {
 	public static void delete(PilotCard card) {
 		ImageHandler.delete(BattleScreen.handler,card.itemImage);
 		ImageHandler.delete(BattleScreen.handler,card.background);
-		card.slider.deleteObservers();
 		VerticalSlider.delete(card.slider);
 	}
 	

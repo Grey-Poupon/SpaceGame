@@ -10,7 +10,7 @@ import com.project.battle.BattleHandler;
 import com.project.battle.BattleScreen;
 import com.project.slider.VerticalSliderHandle;
 
-public class VerticalSlider extends Observable{
+public class VerticalSlider {
 	private SliderID id;
 	private int maxStep;
 	private Observer obs;
@@ -24,7 +24,7 @@ public class VerticalSlider extends Observable{
 		this.obs = obs;
 		this.x = x;
 		this.y = y;
-		this.handle = new VerticalSliderHandle(x, y, stepLen, maxStep, curStep, handleImg);
+		this.handle = new VerticalSliderHandle(x, y, stepLen, maxStep, curStep, handleImg, obs, id);
 		this.panelImg = new ImageHandler(x, y, panelImg, true, EntityID.UI);
 		hans.addLowPriorityEntity(this.panelImg);
 		hans.addLowPriorityEntity(handle.getImg());
@@ -33,7 +33,6 @@ public class VerticalSlider extends Observable{
 	public void moveSliderTo(int step){
 		if(step>0 && step<maxStep+1 && step!=handle.getStep()){
 			handle.moveTo(step);
-			obs.update(this, id);
 		}
 	}
 	public int getStep(){
@@ -54,6 +53,8 @@ public class VerticalSlider extends Observable{
 	public static void delete(VerticalSlider s) {
 		ImageHandler.delete(BattleScreen.handler, s.panelImg);
 		VerticalSliderHandle.delete(s.handle);
+		s.handle.deleteObservers();
+
 		
 	}
 

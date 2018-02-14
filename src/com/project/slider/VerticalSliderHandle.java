@@ -1,43 +1,39 @@
 package com.project.slider;
 
 import java.awt.image.BufferedImage;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.project.EntityID;
 import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.battle.BattleScreen;
 
-public class VerticalSliderHandle {
+public class VerticalSliderHandle extends Observable{
 
 	private int x,y,startX,startY;
 	private int stepLen;
 	private int maxStep; // 0 based indexing
 	private int curStep;
+	private Observer obs;
+	private SliderID id;
 	private ImageHandler handleImg;
 	private int mouseOffset= 0;
 	
 	/** curStep & maxStep use 0-based indexing */
-	public VerticalSliderHandle(int x, int y, int stepLen, int maxStep, int curStep, BufferedImage handleImg) {
+	public VerticalSliderHandle(int x, int y, int stepLen, int maxStep, int curStep, BufferedImage handleImg, Observer obs,SliderID id) {
 		this.x = x;
 		this.startX = x;
 		this.y = y;
 		this.startY = y;
+		this.obs = obs;
+		this.id = id;
 		
 		this.stepLen = stepLen;
 		this.maxStep = maxStep;
 		this.curStep = curStep;
 		this.handleImg = new ImageHandler(x, y, handleImg, true, EntityID.UI);
 		
-	}
-	
-	public void moveTo(int step) {
-		
-		if(step>0 && step<maxStep+1 && curStep!=step){
-			// update Y pos of handle
-			y = y+((curStep-step)*stepLen);
-			curStep = step;	
-			handleImg.setyCoordinate(y);
-		}
 	}
 
 	public int getStep() {
@@ -91,16 +87,17 @@ public class VerticalSliderHandle {
 	public void drop() {
 		int middle =(y + handleImg.getHeight()/2) - startY;
 		int step = middle / stepLen;
-
-		// round up
-		if(middle % stepLen > stepLen/2){
-		//	step++;
-		}
-		System.out.println("Step: "+step+" Y: "+middle);
-		setY(startY + (stepLen*step));
-		
+		moveTo(step);
 	}
-
+	
+	public void moveTo(int step) {
+		
+		if(step>0 && step<maxStep+1 && curStep!=step){
+			// update Y pos of handle
+			setY(startY + (stepLen*step));
+			obs.update(this, id);
+		}
+	}
 
 
 }
