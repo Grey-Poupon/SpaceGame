@@ -50,8 +50,8 @@ public class VerticalSliderHandle {
 
 	public void drag(int x2, int y2) {
 		y2+=mouseOffset;
+		
 		if(y2 > startY && y2 < startY + (maxStep * stepLen)){
-			
 			handleImg.setyCoordinate(y2);
 			y=y2;
 		}
