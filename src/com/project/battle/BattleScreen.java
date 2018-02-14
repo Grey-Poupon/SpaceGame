@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import com.project.Actionable;
@@ -33,10 +35,12 @@ import com.project.button.ButtonID;
 import com.project.ship.Ship;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
+import com.project.slider.SliderID;
+import com.project.slider.VerticalSlider;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
-public class BattleScreen implements Phase {
+public class BattleScreen implements Phase, Observer {
 
 	private static final long serialVersionUID = -6523236697457665386L;
 
@@ -627,5 +631,18 @@ public class BattleScreen implements Phase {
 
 	public void render(Graphics g) {
 		handler.render(g);
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg1 instanceof SliderID){
+			SliderID id = (SliderID) arg1;
+			if (id == SliderID.speed){
+				// set speed choice
+				if(playerIsChaser){chaserSpeedChoice = ((VerticalSlider)arg0 ).getStep();}
+				else{chasedSpeedChoice = ((VerticalSlider)arg0 ).getStep();}
+			}
+		}
+		
 	}
 }

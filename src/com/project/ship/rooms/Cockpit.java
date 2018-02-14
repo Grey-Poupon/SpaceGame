@@ -18,14 +18,12 @@ import com.project.ship.Ship;
 
 public class Cockpit extends Room implements Actionable{
 	private ImageHandler background;
-	private ImageHandler card;
 	private List<CrewAction> manoeuvres = new ArrayList<CrewAction>();
 	public Cockpit(List<CrewAction> manoeuvres,String name, int actionHealth, int damageableRadius, RoomSize size, Ship ship) {
 		super(name,actionHealth,manoeuvres.size(),size,ship);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
-		this.background = new ImageHandler(0, 0, "res/ui/piloting.png", true, null);
-		this.card = new ImageHandler(0,0,"res/ui/piloting.png",true,null);
+		this.background = new ImageHandler(0, 0, "res/sliderPanel.png", true, null);
 	}
 	
 	public BufferedImage getIcon() {
@@ -103,15 +101,15 @@ public class Cockpit extends Room implements Actionable{
 	}
 
 	@Override
-	public ImageHandler getCardBackground() {
-		// TODO Auto-generated method stub
-		return background;
-	}
-
-	@Override
 	public ImageHandler getCardImage() {
 		// TODO Auto-generated method stub
 		return getCrewInRoom().get(0).getPortrait().copy();
+	}
+
+	@Override
+	public ImageHandler getCardBackground() {
+		// TODO Auto-generated method stub
+		return background;
 	}
 
 }

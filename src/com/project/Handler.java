@@ -3,16 +3,18 @@ package com.project;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import com.project.button.Button;
+import com.project.slider.VerticalSliderHandle;
 
 public class Handler {
-	public  ArrayList<Handleable> stars = new ArrayList<Handleable>();
-	public  ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
-	public  ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
+	public ArrayList<Handleable> stars = new ArrayList<Handleable>();
+	public ArrayList<Handleable> entitiesLowPriority = new ArrayList<Handleable>();// tick last, render on bottom
+	public ArrayList<Handleable> entitiesHighPriority = new ArrayList<Handleable>(); // tick first, render on top
 	protected static ImageHandler mousePointer = new ImageHandler(0,0, "res/mousePointer.png",true, EntityID.UI,"high");
-	public  ArrayList<Button> buttons = new ArrayList<Button>(); 
-	public  ArrayList<Animation> anims = new ArrayList<Animation>();
-	public  ArrayList<Text> texts = new ArrayList<Text>();
-	public  ArrayList<DraggableIcon> icons = new ArrayList<DraggableIcon>();
+	public ArrayList<Button> buttons = new ArrayList<Button>(); 
+	public ArrayList<Animation> anims = new ArrayList<Animation>();
+	public ArrayList<Text> texts = new ArrayList<Text>();
+	public ArrayList<DraggableIcon> icons = new ArrayList<DraggableIcon>();
+	public ArrayList<VerticalSliderHandle> handles = new ArrayList<VerticalSliderHandle>();
 	protected Object dragging = null;
 
 	public void tick(UI ui){
