@@ -13,9 +13,11 @@ public class MapTile {
 	Random rand = new Random();
 	public boolean isHovered =false;
 	public Color col = Color.RED;
+	public Map map;
 	public Point mapPos;
-	public MapTile(Polygon hex,int x,int y) {
+	public MapTile(Polygon hex,int x,int y,Map map) {
 		super();
+		this.map= map;
 		this.hex = hex;
 		this.mapPos = new Point(x,y);
 //		if(rand.nextInt(10)==5) {
@@ -59,17 +61,16 @@ public class MapTile {
 			objects.get(i).objImg.render(g);
 		}
 	}
-	
-	
+
 	public void setObjectPos(MapObject ob ) {
 		ob.objImg.setxCoordinate((int) (hex.getBounds().x+hex.getBounds().getWidth()/2-ob.objImg.getWidth()/2));
 		ob.objImg.setyCoordinate((int) (hex.getBounds().y +hex.getBounds().getHeight()/2-ob.objImg.getHeight()/2));
 	}
-	
+
 	public boolean isEmpty() {
 		return(objects.size()==0);
 	}
-	
+
 	public boolean containsPlayer() {
 		for(int i = 0;i<objects.size();i++) {
 			if(objects.get(i) instanceof MapShip) {
@@ -86,7 +87,7 @@ public class MapTile {
 		object.setTileContained(this);
 		setObjectPos(object);
 	}
-	
+
 	public void removeObject(MapObject object){
 		objects.remove(object);
 	}
@@ -99,7 +100,4 @@ public class MapTile {
 		this.isHovered = isHovered;
 	}
 	
-	
-	
-
 }

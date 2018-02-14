@@ -1,7 +1,6 @@
 package com.project.phase2;
 
 import java.awt.event.MouseEvent;
-
 import com.project.Handler;
 import com.project.MouseInput;
 
@@ -29,16 +28,33 @@ public class Phase2MouseInput extends MouseInput{
 	}
 	
 	public void mouseClicked(MouseEvent arg0){
-		movePlayerShip();
+		if(!p2.inShop) {
+			movePlayerShip();
+		}else {
+			mouseShopClick(arg0);
+		}
+		
 	}
 	
 	public void mouseMoved(MouseEvent arg0) {
-		Map map = Phase2.getP().getCurrentMap();
 		super.mouseMoved(arg0);
-		map.highlightTile(mousePosition);
+		if(p2.inShop) {
+			mouseShop(arg0);
+		}
+		else {
+			Phase2.getP().getCurrentMap().highlightTile(mousePosition);
+		}
 	}
 	
-	
+	private void mouseShop(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+	}
+
+	public void mouseShopClick(MouseEvent arg0) {
+		for(int i = 0; i<p2.shop.inventory.size();i++) {
+			
+		}
+	}
 	
 
 }

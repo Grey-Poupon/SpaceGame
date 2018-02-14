@@ -2,20 +2,20 @@ package com.project.ship;
 
 import java.util.Random;
 
-public class Engine2 {
+public class Engine {
 	private String name;
 	private Generator generator;
 	private boolean exploded = false;
 	private Overclockable overclock;
 	
 	
-	public Engine2(String name, Generator generator, boolean exploded, Overclockable overclock) {
+	public Engine(String name, Generator generator, boolean exploded, Overclockable overclock) {
 		this.name = name;
 		this.generator = generator;
 		this.exploded = exploded;
 		this.overclock = overclock;
 	}
-	public Engine2(String name, boolean exploded, Overclockable overclock) {
+	public Engine(String name, boolean exploded, Overclockable overclock) {
 		this.name = name;
 		this.exploded = exploded;
 		this.overclock = overclock;

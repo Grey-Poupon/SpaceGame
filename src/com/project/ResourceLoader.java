@@ -77,7 +77,6 @@ public class ResourceLoader {
 		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0));
 		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0));
 		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0));
-
 	}
 	private void loadThrusters() {
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
@@ -147,6 +146,8 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {
+		put(images,"res/shopFront.png");
+		put(images,"res/shop.png");
 		put(images,"res/star_field.png");
 		put(images,"res/portalGate.png");
 		put(images,"res/ships/insectoid.png");

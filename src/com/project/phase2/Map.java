@@ -50,10 +50,10 @@ public class Map implements Handleable {
 				MapTile m;
 				if(y%2==0) {
 					
-					m= new MapTile( hexagonIso(x*hexSize.x,(float) ((0.75)*y*hexSize.y)),x,y);
+					m= new MapTile( hexagonIso(x*hexSize.x,(float) ((0.75)*y*hexSize.y)),x,y,this);
 				}
 				else {
-					m = new MapTile(hexagonIso((float) ((x+0.5)*hexSize.x),(float) ((0.75)*(y)*hexSize.y)),x,y);
+					m = new MapTile(hexagonIso((float) ((x+0.5)*hexSize.x),(float) ((0.75)*(y)*hexSize.y)),x,y,this);
 				}
 				m1.add(m);
 				mapComposite.add(new Area(m.hex));
@@ -151,7 +151,7 @@ public class Map implements Handleable {
 	}
 	
 	public void renderShortestPath(Graphics g) {
-		if(shortestPathX == null || shortestPathY == null) {
+		if(shortestPathX == null || shortestPathY == null||shortestPathX.size()==0||shortestPathY.size()==0|| highLightedTile.containsPlayer()) {
 			return;
 		}
 		for(int i = 0; i<shortestPathX.size()-1;i++) {
@@ -299,13 +299,7 @@ public class Map implements Handleable {
 		
 		return m;
 		
-		
-		
-		
 	}
-	
-	
-	
 	
 }
 

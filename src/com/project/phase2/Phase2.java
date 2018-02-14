@@ -12,8 +12,8 @@ import com.project.battle.BattleScreen;
 
 public class Phase2 implements Phase{
 	/**
-	 * 
-	 */
+	 ** 
+	 **/
 	private static Phase2 p;
 	public static Main main;
 	private static final long serialVersionUID = 1L;
@@ -22,13 +22,13 @@ public class Phase2 implements Phase{
 	private MouseInput mouseIn;
 	private Map currentMap;
 	public MapShip ship;
-	
+	public boolean inShop = false;
+	public ShopMenu shop;
 	
 	public Phase2(Main main) {
-		this.main = main;
+		Phase2.main = main;
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70),true);
-		
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true);
 //		Map map = new Map();
 		Map map = Map.generateRandomMap();
 		
@@ -48,15 +48,17 @@ public class Phase2 implements Phase{
 	
 	public void tick() {
 		handler.tick(null);
-		
 	}
 	public static void battle() {
 		main.setPhase(new BattleScreen(main));
+	}
+	
+	public void render(Graphics g) {
+		handler.render(g);
 		
 	}
-	public void render(Graphics g) {
-		handler.render(g);		
-	}
+	
+	
 
 	public Map getCurrentMap() {
 		return currentMap;
@@ -65,7 +67,7 @@ public class Phase2 implements Phase{
 	public void setCurrentMap(Map currentMap) {
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true);
 		this.currentMap.randomlyPlaceShip(ship);
 		handler.addLowPriorityEntity(this.currentMap);
 	}
@@ -73,9 +75,33 @@ public class Phase2 implements Phase{
 	public static Phase2 getP() {
 		return p;
 	}
+	
+	public static void setShop(ShopMenu shop) {
+		Phase2.p.shop= shop;
+		Phase2.p.handler.addLowPriorityEntity(shop);
+		Phase2.p.inShop = true;
+	}
+	
+	public static void leaveShop() {
+		Phase2.p.inShop = false;
+		Phase2.p.handler.entitiesLowPriority.remove(Phase2.p.shop);
+	}
+	
 
 	public static void setP(Phase2 p) {
 		Phase2.p = p;
+	}
+
+	@Override
+	public MouseInput getMouseInput() {
+		// TODO Auto-generated method stub
+		return mouseIn;
+	}
+
+	@Override
+	public KeyInput getKeyInput() {
+		// TODO Auto-generated method stub
+		return keyIn;
 	}
 	
 }

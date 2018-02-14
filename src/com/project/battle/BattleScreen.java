@@ -19,7 +19,9 @@ import com.project.CrewActionID;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.ImageHandler;
+import com.project.KeyInput;
 import com.project.Main;
+import com.project.MouseInput;
 import com.project.Phase;
 import com.project.Player;
 import com.project.ProjectileAnimation;
@@ -76,6 +78,8 @@ public class BattleScreen implements Phase {
 	private ImageHandler enginesTab;
 	private ImageHandler movementTab;
 	public static BattleHandler handler; 
+	private BattleMouseInput mouseIn;
+	private BattleKeyInput keyIn;
 	
 	public BattleScreen(Main main) {
 		this.main = main;
@@ -128,8 +132,8 @@ public class BattleScreen implements Phase {
 		
 		//Set Room Leader Tabs
 		main.ui      = new BattleUI(this, chaserShip, chasedShip);
-		main.keyIn   = new BattleKeyInput(this);
-		main.mouseIn = new BattleMouseInput(handler);
+		keyIn   = new BattleKeyInput(this);
+		mouseIn = new BattleMouseInput(handler);
 		
 		//Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
@@ -172,10 +176,10 @@ public class BattleScreen implements Phase {
 		//Handler.addLowPriorityEntity(overlay);
 		handler.addLowPriorityEntity(chaserHealthbar);
 		handler.addLowPriorityEntity(chasedHealthbar);
-		main.addKeyListener(main.keyIn);
-		main.addMouseListener(main.mouseIn);
-		main.addMouseMotionListener(main.mouseIn);
-		main.addMouseWheelListener(main.mouseIn);
+		main.addKeyListener(keyIn);
+		main.addMouseListener(mouseIn);
+		main.addMouseMotionListener(mouseIn);
+		main.addMouseWheelListener(mouseIn);
 		BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(0), TooltipSelectionID.Room);
 		main.setPaused(false);
 	}
@@ -627,5 +631,17 @@ public class BattleScreen implements Phase {
 
 	public void render(Graphics g) {
 		handler.render(g);
+	}
+
+	@Override
+	public MouseInput getMouseInput() {
+		// TODO Auto-generated method stub
+		return mouseIn;
+	}
+
+	@Override
+	public KeyInput getKeyInput() {
+		// TODO Auto-generated method stub
+		return keyIn;
 	}
 }

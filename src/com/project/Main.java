@@ -113,9 +113,13 @@ public class Main  extends Canvas implements Runnable{
 	}
 	
 	public void setPhase(Phase phase) {
-		
-			currentPhase = phase;
-		
+			if(currentPhase != phase) {
+				this.removeKeyListener(currentPhase.getKeyInput());
+				this.removeMouseListener(currentPhase.getMouseInput());
+				this.removeMouseMotionListener(currentPhase.getMouseInput());
+				this.removeMouseWheelListener(currentPhase.getMouseInput());
+				currentPhase = phase;
+			}
 	}	
 
 	
