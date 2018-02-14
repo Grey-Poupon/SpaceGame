@@ -8,6 +8,7 @@ import com.project.ActionBox;
 import com.project.DraggableIcon;
 import com.project.Handler;
 import com.project.button.Button;
+import com.project.slider.VerticalSliderHandle;
 
 public class BattleHandler extends Handler {
 	
@@ -47,10 +48,14 @@ public class BattleHandler extends Handler {
 			if(dragging instanceof DraggableIcon) {
 				((DraggableIcon) dragging ).drag(x,y);
 			}
+			if(dragging instanceof VerticalSliderHandle){
+				((VerticalSliderHandle) dragging).drag(x,y);
+			}
 		
 	}
 	public boolean checkPress(int x, int y, int button) {
 			if(dragging == null) {
+				// check all draggable objects
 				for(int i = 0; i<buttons.size();i++) {
 					if(buttons.get(i).isDraggable()&&buttons.get(i)!=null && buttons.get(i).isInside(x, y)) {
 						dragging = buttons.get(i);
@@ -60,6 +65,14 @@ public class BattleHandler extends Handler {
 				for(int i = 0; i<icons.size();i++) {
 					if(icons.get(i).isInside(x, y)) {
 						dragging = icons.get(i);
+						return true;
+					}
+				}
+				
+				for(int i = 0; i<handles.size();i++) {
+					if(handles.get(i).isInside(x, y)) {
+						dragging = handles.get(i);
+						handles.get(i).grabbed(x, y);
 						return true;
 					}
 				}
@@ -78,6 +91,9 @@ public class BattleHandler extends Handler {
 			boxes.addAll(BattleUI.manoeuvreActionBoxes);
 			((DraggableIcon) dragging ).drop(boxes);
 			if(button == MouseEvent.BUTTON3) {((DraggableIcon)dragging).reset();}
+		}
+		if (dragging instanceof VerticalSliderHandle){
+			((VerticalSliderHandle) dragging).drop();
 		}
 		dragging = null;
 		return true;

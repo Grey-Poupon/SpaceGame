@@ -149,6 +149,8 @@ public class ResourceLoader {
 		put(images,"res/shopFront.png");
 		put(images,"res/shop.png");
 		put(images,"res/star_field.png");
+		put(images,"res/sliderHandle.png");
+		put(images,"res/sliderPanel.png");
 		put(images,"res/portalGate.png");
 		put(images,"res/ships/insectoid.png");
 		put(images,"res/matron3/mergedimage.png");

@@ -22,7 +22,7 @@ public class ImageHandler implements Handleable {
 	protected float xScale = 1;
 	protected float yScale = 1;
 	private EntityID ID;
-	private ImageObserver observer;// any observer that wants to be notified when the this terrain is rendered
+	private ImageObserver observer;
 	private BufferedImage img; 
 	private boolean visible = true;
 	private Shape clip;
@@ -57,10 +57,6 @@ public class ImageHandler implements Handleable {
 		return zCoordinate;
 	}
 	
-	
-
-
-
 	public  void generateOutline() {
         Area area = new Area();
         for (int y=0; y<img.getHeight(); y++) {
@@ -85,9 +81,6 @@ public class ImageHandler implements Handleable {
 	public Area getOutline() {
 		return this.outline;
 	}
-
-
-
 
 	public void setzCoordinate(float zCoordinate) {
 		this.zCoordinate = zCoordinate;

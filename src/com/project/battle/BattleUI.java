@@ -34,6 +34,8 @@ import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.StaffRoom;
 import com.project.ship.rooms.WeaponsRoom;
+import com.project.slider.SliderID;
+import com.project.slider.VerticalSlider;
 import com.project.weapons.Weapon;
 
 public class BattleUI extends UI {
@@ -113,21 +115,6 @@ public class BattleUI extends UI {
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
 				2 * rightListWidth, bs.main.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
 				bs, false);
-
-
-//<<<<<<< HEAD
-//
-//=======
-//		Button graph = new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
-//		pShip.getGenerator().getEfficiencyGraph(), bs);
-//		graph.setDraggable(true);
-//		List<Button> graphEnd = new ArrayList<Button>();
-//		graphEnd.add(graph);
-//		// GO BUTTON
-//		graphEnd.add(new Button(0, 0, pShip.getGenerator().getEfficiencyGraph().getWidth(),pShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.EndPhase, graphEnd.size(), true, "GO","sevensegies", Font.PLAIN, 30, Color.WHITE,new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), bs));
-//		graphList = new ScrollableList(graphEnd, graphMonitorXOffset, graphMonitorYOffset,pShip.getGenerator().getEfficiencyGraph().getWidth(),2 * pShip.getGenerator().getEfficiencyGraph().getHeight());
-//>>>>>>> 7f8cb1c3809e5990c3be40f3b138c08738d783ee
-
 	}
 
 	public static void generateRoomButtons(Crew crew, TooltipSelectionID option) {
@@ -341,7 +328,7 @@ public class BattleUI extends UI {
 		shipCards.add(card);
 	}
 	
-	
+
 	
 	public static void generateSpeedInput() {
 		// clear
