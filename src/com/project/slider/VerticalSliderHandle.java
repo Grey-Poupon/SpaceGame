@@ -92,7 +92,7 @@ public class VerticalSliderHandle extends Observable{
 	
 	public void moveTo(int step) {
 		
-		if(step>0 && step<maxStep+1 && curStep!=step){
+		if(step>=0 && step<maxStep+1){
 			// update Y pos of handle
 			setY(startY + (stepLen*step));
 			obs.update(this, id);
