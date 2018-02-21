@@ -134,7 +134,6 @@ public class DraggableIcon {
 	}
 
 	public void reset() {
-		System.out.println("RESET");
 		if(actionBox != null) {actionBox.removeCrew();}
 		actionBox = null;
 

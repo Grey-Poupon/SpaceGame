@@ -57,7 +57,6 @@ public class ActionBox {
 	}
 	
 	public void removeCrew() {
-		System.out.println("REMOVE CREW");
 		this.crew = null;
 		openCrewSlot = true;
 		removeActor();
