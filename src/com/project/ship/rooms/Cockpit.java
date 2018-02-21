@@ -84,7 +84,9 @@ public class Cockpit extends Room implements Actionable{
 
 	@Override
 	public void doAction(Crew crew, CrewAction action, BattleScreen bs) {
-		// TODO Auto-generated method stub
+		if(action.isOffCooldown()){
+			
+		}
 		
 	}
 
@@ -94,11 +96,6 @@ public class Cockpit extends Room implements Actionable{
 		return null;
 	}
 
-	@Override
-	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ImageHandler getCardImage() {

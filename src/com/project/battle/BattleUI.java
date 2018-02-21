@@ -381,13 +381,7 @@ public class BattleUI extends UI {
 		generateRoomCards(lastActionables, lastRoom);
 	}
 
-	public static void generateInfo(Actionable actionable) {
-		clearAllBoxes();
-		List<Button> tooltipButtons = actionable.getInfoButtons(fullListWidth, tooltipButtonHeight, bs);
-		tooltipButtons.add(new Button(0, 0, fullListWidth, tooltipButtonHeight, ButtonID.Back, tooltipButtons.size(),true, "Back", bs, true));
-		tooltipList = new ScrollableList(tooltipButtons, mainMonitorXOffset, mainMonitorYOffset, fullListWidth,listHeight, fullListWidth, tooltipButtonHeight, true);
-		
-	}	
+
 
 	public static void clearAllBoxes() {
 		clearLeftBox();

@@ -350,7 +350,8 @@ public class BattleScreen implements Phase, Observer {
 
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,List<Point> shot){
 		for(int i=0;i<weapons.size();i++) {
-			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot.get(i),weapons.get(i).getSlot());
+			int[] accuracy = weapons.get(i).fire(); 
+			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot.get(i),weapons.get(i).getSlot(),accuracy);
 			weapons.get(i).setProjAnim(a);
 		}
 		

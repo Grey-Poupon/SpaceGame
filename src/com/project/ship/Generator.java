@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.project.ActionCooldown;
 import com.project.Actionable;
 import com.project.Crew;
 import com.project.CrewAction;
@@ -37,7 +38,6 @@ public class Generator implements Actionable {
 		this.efficiencyGraph.setDraggable(false);
 		this.generatorImg  = generatorImg;
 		this.backgroundImg = backgroundImg;
-
 	}
 
 	public double getPower(double amountOfFuel) {
@@ -93,13 +93,13 @@ public class Generator implements Actionable {
 
 	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
-	if(action.getActionType() == CrewActionID.Generate) {
+	if(action.getActionType() == CrewActionID.Generate && action.isOffCooldown()) {
 		generate();
 	}
-	if(action.getActionType()==CrewActionID.Overclock) {
+	if(action.getActionType()==CrewActionID.Overclock && action.isOffCooldown()) {
 		
 	}
-	if(action.getActionType()==CrewActionID.Cooling) {
+	if(action.getActionType()==CrewActionID.Cooling && action.isOffCooldown()) {
 		
 	}
 
@@ -111,12 +111,7 @@ public class Generator implements Actionable {
 		return new Generator(name, efficiencyFunction, actions,generatorImg,backgroundImg);
 	}
 
-	@Override
-	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
-		List<Button> buttons = new ArrayList<>();
-		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
-		return buttons;
-	}
+
 
 	public boolean canGenerate() {
 		return canGenerate;

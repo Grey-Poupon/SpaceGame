@@ -3,6 +3,7 @@ package com.project;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ import com.project.ship.Ship;
 import com.project.ship.Slot;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
+import com.project.weapons.WeaponEffect;
 
 public class ProjectileAnimation implements Handleable{
 	private static int animationsRunning;
@@ -26,10 +28,10 @@ public class ProjectileAnimation implements Handleable{
 	private boolean isLeftToRight;
 	private boolean isCrossScreen;
 	private Slot fromSlot;
-	private Object[][] damageInfo;
-	private Object[] effects;
+	private Object[] damageInfo;
+	private List<WeaponEffect> effects;
 	private Animation animations[];
-	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Point click,Slot slot) {
+	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Point click,Slot slot, int[] accuracy) {
 
 		this.primary       = primary;
 		this.secondary     = secondary;
@@ -39,31 +41,22 @@ public class ProjectileAnimation implements Handleable{
 		this.fromSlot      = slot;
 		this.isLeftToRight = click.x > slot.getX();
 		this.weapon        = (Weapon)  slot.getSlotItem();
-		this.projectileGap = weapon.getProjectileGap();
-		this.effects       = weapon.fire(); 
+		this.projectileGap = weapon.getProjectileGap();// in pixels
+		this.effects       = weapon.getEffects(); 
 
-		// size - effects.Length(), size of largest Fire returned array;
-		this.damageInfo = new Object[effects.length][5];
 	
+		for(int i:accuracy){noOfProjectiles+=i;}
+		
 		//effect handler; 
-		for(int i = 0;i<effects.length;i++) {
-			Object effect = effects[i];
+		for(int i = 0;i<effects.size();i++) {
+			WeaponEffect effect = effects.get(i);
 			
 			/**Process Weapon Damage Info**/
 			if(effect instanceof Destructive) {
 
-				this.damageInfo[i] = ((Destructive) effect).fire();
-				//rateOfFire,accuracy,DamagePerShot,isPhysical,areaOfEffectRadius
-				float[] accuracy = (float[])damageInfo[i][1];
-				/**Check shots that hit**/
-				for(float f : accuracy) {
-					if(f==1.0) {
-						this.noOfProjectiles++;
-					}
-				}
-			}
-			else{
-				this.damageInfo[i][0] = effect;
+				this.damageInfo = ((Destructive) effect).getInfo();
+				// DPS , IsPhysical , Radius
+				
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
@@ -131,7 +124,7 @@ public class ProjectileAnimation implements Handleable{
 				if(isLeftToRight) {
 					if(!animations[i].isPushed() && animations[i].getxCoordinate()>Main.WIDTH/2) {
 						animations[i].pushBack(pushBack);
-					//	System.out.println("PushBack");
+						//System.out.println("PushBack");
 						animations[i].setMask(new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH/2,Main.HEIGHT));
 					}
 				}

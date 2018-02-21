@@ -3,6 +3,7 @@ package com.project.weapons;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.project.Actionable;
 import com.project.Animation;
@@ -21,8 +22,8 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	protected int cooldownDuration; // weapons will have a cooldown period?
 	protected int cooldownTurnsLeft; 
 	protected String name;
-	protected int projectileGap;
-	protected boolean targetSelf;
+	protected int projectileGap; //  this is in pixels for ProjAnim but for Ship-Weapon It will be used as if it were a Distance
+	protected Target target;
 	protected List<WeaponEffect> effects;	
 	protected Animation firingAnimation;
 	protected Animation weaponBody;
@@ -34,35 +35,29 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	protected int roundsTilHit;
 	protected List<CrewAction> actions = new ArrayList<CrewAction>();
 	protected ProjectileAnimation projAnim = null;
+	protected float accuracy;
+	protected int rateOfFire;
 	
 	
 	public Animation getSlotItemBody() {
 		return weaponBody;
 	}
 
-	public Weapon(int radiusOfHit,int cooldownDuration, int rateOfFire,int damagePerShot,float accuracy, String name,boolean isPhysical,Animation anim,boolean targetSelf,List<WeaponEffect> we,int projectileGap,Animation weaponBody,List<CrewAction>actions,Slot slot, ImageHandler backgroundImg, ImageHandler weaponImg){
+	public Weapon(List<WeaponEffect> effects, int rateOfFire,float accuracy, String name,Animation firingAnimation,int projectileGap,Animation weaponBody,List<CrewAction>actions, ImageHandler backgroundImg, ImageHandler weaponImg, Target target){
 		
 		this.roundsTilHit = 0;
-		this.radiusOfHit = radiusOfHit;
-		this.isPhysical = isPhysical;
 		this.backgroundImg = backgroundImg;
 		this.weaponImg = weaponImg;
-		this.slot = slot;
-		this.firingAnimation = anim;
+		this.firingAnimation = firingAnimation;
 		this.actions = actions;
-		this.cooldownDuration=cooldownDuration;
 		this.name = name;
-		this.targetSelf = targetSelf;
+		this.target = target;
 		this.projectileGap = projectileGap;
 		this.weaponBody = weaponBody.copy();
 		this.weaponBody.setMonitored(true);
-		if(we!=null) {
-			this.effects =we;
-		}
-		else {
-			this.effects = new ArrayList<WeaponEffect>();
-		}
-		this.effects.add(new Destructive(rateOfFire,  damagePerShot,  accuracy,  isPhysical, radiusOfHit));
+		this.accuracy = accuracy;
+		this.rateOfFire = rateOfFire;
+		this.effects = effects;
 	}
 	
 	public Animation getWeaponBody() {
@@ -70,9 +65,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	}
 	public void setWeaponBody(Animation weaponBody) {
 		this.weaponBody = weaponBody;
-	}
-	public List<WeaponEffect> getEffects() {
-		return effects;
 	}
 	public void setEffects(List<WeaponEffect> effects) {
 		this.effects = effects;
@@ -92,10 +84,10 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	}
 
 	public boolean isTargetSelf() {
-		return targetSelf;
+		return Target.Self == target;
 	}
-	public void setTargetSelf(boolean targetSelf) {
-		this.targetSelf = targetSelf;
+	public void setTargetSelf(Target target) {
+		this.target = target;
 	}
 
 	protected int getCooldownDuration() {
@@ -133,28 +125,18 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		this.slot = slot;
 	}
 
-	public Object[] fire(){
-		resetCooldown();
-		weaponBody.start(false);
-		Object[] returnableEffects = new Object[effects.size()];
-		
-		for(int i = 0;i < returnableEffects.length;i++) {
-			returnableEffects[i] = effects.get(i);
-		}
-		return returnableEffects;
+	public List<WeaponEffect> getEffects(){
+		return effects;
 	}
 	
 	private void resetCooldown(){ // made a function for it in case it got more complicated with buffs/debuffs
 		this.cooldownTurnsLeft = getCooldownDuration();
 	}
 	
-	public String getWeaponInfo(){
-		String info = this.name+" ( Dmg:"+effects.get(effects.size()-1).getDamagePerShot()+" Acc:"+effects.get(effects.size()-1).getAccuracy()+" RoF:"+effects.get(effects.size()-1).getRateOfFire()+")";
-		return info;
-	}
+	
 
 	public double getAccuracy() {
-		return effects.get(effects.size()-1).getAccuracy();
+		return accuracy;
 	}
 
 	public void render(Graphics g, Slot slot) {
@@ -179,35 +161,26 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 			newActions.add(actions.get(i).copy());
 		}
 		
-		if(effects.size()==1) {
-			return new Weapon(radiusOfHit,cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  isPhysical,  firingAnimation, targetSelf, null, projectileGap, weaponBody,newActions,slot,weaponImg,backgroundImg);
+		Weapon w = new Weapon(effects, rateOfFire, accuracy, name, firingAnimation, projectileGap, weaponBody, newActions, backgroundImg, weaponImg, target);
+		w.setSlot(slot);
+		return w;
 		}
-		List<WeaponEffect> temp = effects;
-		temp.remove(effects.size()-1);
-		return new Weapon(radiusOfHit,cooldownDuration,  effects.get(effects.size()-1).getRateOfFire(), effects.get(effects.size()-1).getDamagePerShot(), (float) effects.get(effects.size()-1).getAccuracy(),  name,  isPhysical, firingAnimation, targetSelf, temp, projectileGap, weaponBody,newActions,slot,weaponImg,backgroundImg);
-	}
 
+	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
-		if(action.getActionType() == CrewActionID.Fire) {
+		if(action.getActionType() == CrewActionID.Fire && action.isOffCooldown()) {
 			if(bs.playerIsChaser()) {
 				bs.addChaserWeaponChoice(this);
 				//bs.chaserShip.updatePowerConsumption(action);
 			}
-			else {
+			else if(action.isOffCooldown()){
 				bs.addChasedWeaponChoice(this);
 				//bs.chasedShip.updatePowerConsumption(action);
 			}
 		}
 	}
 	
-	public List<Button> getInfoButtons(int width,int height,BattleScreen bs){
-		List<Button> buttons = new ArrayList<>();
-		buttons.add(new Button(0,0,width, height, ButtonID.Info, 0,false,"Name: "+this.name,bs,true));
-		buttons.add(new Button(0,0,width, height, ButtonID.Info, 1,false,"Dmg:"+effects.get(effects.size()-1).getDamagePerShot(),bs,true));
-		buttons.add(new Button(0,0,width, height, ButtonID.Info, 1,false,"Acc:"+effects.get(effects.size()-1).getAccuracy(),bs,true));
-		buttons.add(new Button(0,0,width, height, ButtonID.Info, 1,false,"RoF:"+effects.get(effects.size()-1).getRateOfFire(),bs,true));
-		return buttons;
-	}
+
 
 	public String getFlavorText() {
 		return null;
@@ -234,6 +207,26 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	public void tick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Target getTarget() {
+		return target;
+	}
+
+	public int getRadiusOfHit() {
+		return radiusOfHit;
+	}
+
+	public int[] fire() {
+		int[] accuracies = new int[rateOfFire];
+		Random rand = new Random();
+		for(int i = 0;i<rateOfFire;i++){
+			if(rand.nextFloat() < accuracy){
+				accuracies[i] = 1;
+			}
+			else{accuracies[i] = 0;}
+		}
+		return accuracies;
 	}
 
 }
