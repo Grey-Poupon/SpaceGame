@@ -1,14 +1,17 @@
 package com.project;
 
+import com.project.ship.Ship;
+
 public class Player {
 	private int money;
 	private RaceID raceID;
 	private Crew playerCrew;
-	
+	private Ship ship;
 	public Player(int money){
 		this.money = money;
 		this.playerCrew = Crew.generateRandomCrew(false);
 		this.playerCrew.setCaptain();
+		ship=ResourceLoader.getShip("defaultPlayer");
 	}
 
 
@@ -31,6 +34,10 @@ public class Player {
 
 	public Crew getPlayerCrew() {
 		return playerCrew;
+	}
+	
+	public Ship getShip() {
+		return ship;
 	}
 
 

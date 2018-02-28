@@ -51,8 +51,11 @@ public class Phase2MouseInput extends MouseInput{
 	}
 
 	public void mouseShopClick(MouseEvent arg0) {
-		for(int i = 0; i<p2.shop.inventory.size();i++) {
-			
+		for(int i = 0; i<p2.shop.buttons.size();i++) {
+			if(p2.shop.buttons.get(i).contains(mousePosition)) {
+				p2.shop.mouseInteract(p2,i);
+				
+			}
 		}
 	}
 	

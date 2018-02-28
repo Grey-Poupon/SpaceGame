@@ -14,6 +14,7 @@ import java.util.Random;
 import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.Main;
+import com.project.ResourceLoader;
 
 public class Map implements Handleable {
 	
@@ -63,7 +64,7 @@ public class Map implements Handleable {
 		//place the player ship.
 		
 		//place an emeny
-		hexes.get(8).get(8).addObject(new MapShip(hexes.get(5).get(5)));
+		hexes.get(8).get(8).addObject(new MapShip(hexes.get(5).get(5),false,ResourceLoader.getShip("defaultEnemy")));
 		hexes.get(4).get(5).addObject(new Planet(hexes.get(4).get(5)));
 		mapSize = new Point(mapComposite.getBounds().width,mapComposite.getBounds().height);
 		//addOrbits();
@@ -120,9 +121,6 @@ public class Map implements Handleable {
 		}
 		return h;
 	}
-	
-	
-	
 	
 	
 	public void render(Graphics g) {
@@ -255,9 +253,6 @@ public class Map implements Handleable {
 				xMove=0;
 			}
 			
-			
-			
-			
 			temp.translate(xMove, yMove);
 			next = hexes.get(temp.y).get(temp.x);
 		
@@ -295,7 +290,6 @@ public class Map implements Handleable {
 			}
 			
 		}
-
 		
 		return m;
 		

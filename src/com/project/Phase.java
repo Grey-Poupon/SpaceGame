@@ -7,4 +7,5 @@ public interface Phase {
 		public void render(Graphics g);
 		public MouseInput getMouseInput();
 		public KeyInput  getKeyInput();
+		public void addListeners(Main main);
 }

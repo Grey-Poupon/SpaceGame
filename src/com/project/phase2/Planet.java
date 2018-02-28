@@ -6,6 +6,7 @@ public class Planet extends MapObject{
 
 	public Planet(MapTile tile) {
 		super(tile);
+		objImg.changeImage("res/shop.png", true);
 	}
 	
 	public void interact(MapShip ship) {

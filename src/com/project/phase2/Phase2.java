@@ -28,7 +28,7 @@ public class Phase2 implements Phase{
 	public Phase2(Main main) {
 		Phase2.main = main;
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
 //		Map map = new Map();
 		Map map = Map.generateRandomMap();
 		
@@ -39,18 +39,15 @@ public class Phase2 implements Phase{
 		currentMap = map;
 		keyIn   = new Phase2KeyInput();
 		mouseIn = new Phase2MouseInput(handler,this);
-		
-		main.addKeyListener(keyIn);
-		main.addMouseListener(mouseIn);
-		main.addMouseMotionListener(mouseIn);
-		main.addMouseWheelListener(mouseIn);
+		addListeners(main);
+
 	}
 	
 	public void tick() {
 		handler.tick(null);
 	}
-	public static void battle() {
-		main.setPhase(new BattleScreen(main));
+	public static void battle(MapShip chaser,MapShip chasee) {
+		main.setPhase(new BattleScreen(main,chaser.getShip(),chasee.getShip(),chaser.isPlayerShip));
 	}
 	
 	public void render(Graphics g) {
@@ -67,7 +64,7 @@ public class Phase2 implements Phase{
 	public void setCurrentMap(Map currentMap) {
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
 		this.currentMap.randomlyPlaceShip(ship);
 		handler.addLowPriorityEntity(this.currentMap);
 	}
@@ -82,9 +79,9 @@ public class Phase2 implements Phase{
 		Phase2.p.inShop = true;
 	}
 	
-	public static void leaveShop() {
-		Phase2.p.inShop = false;
-		Phase2.p.handler.entitiesLowPriority.remove(Phase2.p.shop);
+	public void leaveShop() {
+		inShop = false;
+		handler.entitiesLowPriority.remove(Phase2.p.shop);
 	}
 	
 
@@ -102,6 +99,15 @@ public class Phase2 implements Phase{
 	public KeyInput getKeyInput() {
 		// TODO Auto-generated method stub
 		return keyIn;
+	}
+
+	@Override
+	public void addListeners(Main main) {
+		main.addKeyListener(keyIn);
+		main.addMouseListener(mouseIn);
+		main.addMouseMotionListener(mouseIn);
+		main.addMouseWheelListener(mouseIn);
+		
 	}
 	
 }

@@ -27,7 +27,7 @@ public class ShopMenu implements Handleable{
 		shopKeepImg = new ImageHandler(x+20,y+20,shopKeep.getPortrait().getImg(),true,null);
 		buttons.add(new Rectangle(x+shopBack.getWidth()-40,y+20,20,20));
 		for(int i =0; i<inventory.size();i++) {
-			buttons.add(new Rectangle(x+100,y+50*(1+i),10,10));
+			buttons.add(new Rectangle(x+100,y+50*(1+i),20,20));
 			}
 	}
 	
@@ -53,6 +53,15 @@ public class ShopMenu implements Handleable{
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public void mouseInteract(Phase2 p2, int i) {
+		if(i == 0) {
+			p2.leaveShop();
+		}
+		else {
+			System.out.println("YOU PAID £"+inventory.get(i-1).cost+" for a "+inventory.get(i-1).name+" enjoy you gross man.");
+		}
 	}
 
 }
