@@ -34,20 +34,18 @@ public class Map implements Handleable {
 	public MapTile highLightedTile=null;
 	public ArrayList<Integer> shortestPathX = null;
 	public ArrayList<Integer> shortestPathY = null;
+	
 	public void generateHexMap() {
 		//getDimensions for polygon used
 		Polygon h = hexagonIso(0,0);
 		hexSize = new Point(h.getBounds().width,h.getBounds().height);
 		mapComposite = new Area();
 		
-		
 		//generates a HEX based map of dim: height, width
 		for(int y=0;y<height;y++) {
 			ArrayList<MapTile> m1 = new ArrayList<MapTile>();
 			
 			for(int x = 0; x<width;x++) {
-			
-			
 				MapTile m;
 				if(y%2==0) {
 					
@@ -64,8 +62,7 @@ public class Map implements Handleable {
 		//place the player ship.
 		
 		//place an emeny
-		hexes.get(8).get(8).addObject(new MapShip(hexes.get(5).get(5),false,ResourceLoader.getShip("defaultEnemy")));
-		hexes.get(4).get(5).addObject(new Planet(hexes.get(4).get(5)));
+
 		mapSize = new Point(mapComposite.getBounds().width,mapComposite.getBounds().height);
 		//addOrbits();
 	}
@@ -84,6 +81,7 @@ public class Map implements Handleable {
 		}
 		return h;
 	}
+	
 	
 	public void addOrbits() {
 		Rectangle r= mapComposite.getBounds();
@@ -152,11 +150,11 @@ public class Map implements Handleable {
 		if(shortestPathX == null || shortestPathY == null||shortestPathX.size()==0||shortestPathY.size()==0|| highLightedTile.containsPlayer()) {
 			return;
 		}
-		for(int i = 0; i<shortestPathX.size()-1;i++) {
-			g.drawLine(shortestPathX.get(i), shortestPathY.get(i), shortestPathX.get(i+1), shortestPathY.get(i+1));
+		else if(shortestPathX!=null) {
+			for(int i = 1; i<shortestPathX.size();i++) {
+				g.drawLine(shortestPathX.get(i-1), shortestPathY.get(i-1), shortestPathX.get(i), shortestPathY.get(i));
+			}
 		}
-		
-		
 	}
 	
 	@Override
@@ -182,7 +180,6 @@ public class Map implements Handleable {
 				else {t.setHovered(false);}
 			}
 		}
-		
 	}
 	
 	public void setShortestPath() {
@@ -269,6 +266,64 @@ public class Map implements Handleable {
 		Map m = new Map();
 		m.generateHexMap();
 		Random rand = new Random();
+		MapTile centreTile =m.hexes.get(m.hexes.size()/2).get(m.hexes.get(m.hexes.size()/2).size()/2);
+		centreTile.addObject(new Star(centreTile));
+		
+		int numObjects = 7;
+		for(int i=0; i<numObjects;i++) {
+			int randX = 0;
+			int randY = 0;
+			int xMod=0;
+			int yMod = 0;
+			if(rand.nextBoolean()) {xMod=-1;}
+			else {xMod = 1;}
+			if(rand.nextBoolean()) {yMod=-1;}
+			else {yMod = 1;}
+			boolean isFilled = true;
+			while(isFilled) {
+				randY =(int)(rand.nextGaussian()*m.hexes.size()/2+(m.hexes.size()/2*(1+(float)(yMod)/2)));
+				if(randY>m.hexes.size()-2||randY<1) {continue;}
+				randX = (int)(rand.nextGaussian()*(m.hexes.get(randY).size()/2)+(m.hexes.get(randY).size()/2*(1+(float)(xMod)/2)));
+				if(randX>m.hexes.get(randY).size()-2||randX<1){continue;}
+				
+				isFilled = !m.checkSurroundingEmpty(randX,randY);
+				
+			}
+			if(i==1){
+				m.hexes.get(randY).get(randX).addObject(new MapShip(m.hexes.get(randY).get(randX),false,ResourceLoader.getShip("defaultEnemy")));
+			}
+			else if(i==2) {
+				m.hexes.get(randY).get(randX).addObject(new Planet(m.hexes.get(randY).get(randX)));
+			}
+			else if(i!=0) {
+				m.hexes.get(randY).get(randX).addObject();
+			}
+			
+			else{
+				m.hexes.get(randY).get(randX).addObject(new Portal(m.hexes.get(randY).get(randX),m));
+			}
+			
+		}		
+		return m;
+	}
+	
+	public boolean checkSurroundingEmpty(int x,int y) {
+		if(y%2==0&&hexes.get(y).get(x).isEmpty()&&hexes.get(y).get(x+1).isEmpty()&& hexes.get(y).get(x-1).isEmpty() &&
+				hexes.get(y+1).get(x).isEmpty()&&hexes.get(y-1).get(x).isEmpty()&&hexes.get(y+1).get(x-1).isEmpty()&&
+				hexes.get(y-1).get(x-1).isEmpty()){
+					return true;
+				}
+		if(y%2==1&&hexes.get(y).get(x).isEmpty()&&hexes.get(y).get(x+1).isEmpty()&&hexes.get(y).get(x-1).isEmpty()&&hexes.get(y-1).get(x+1).isEmpty()
+				&&hexes.get(y+1).get(x+1).isEmpty()&&hexes.get(y+1).get(x).isEmpty()&&hexes.get(y-1).get(x).isEmpty()) {
+					return true;
+				}
+		return false;
+	}
+	
+	public static Map generateRandomMap1() {
+		Map m = new Map();
+		m.generateHexMap();
+		Random rand = new Random();
 		int numObjects = 10;
 		for(int i=0; i<numObjects;i++) {
 			int randX = 0;
@@ -288,7 +343,6 @@ public class Map implements Handleable {
 			else {
 				m.hexes.get(randX).get(randY).addObject(new Portal(m.hexes.get(randX).get(randY),m));
 			}
-			
 		}
 		
 		return m;

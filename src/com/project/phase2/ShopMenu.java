@@ -17,6 +17,7 @@ public class ShopMenu implements Handleable{
 	Crew shopKeep;
 	ImageHandler shopKeepImg;
 	ArrayList<Rectangle> buttons ;
+	MapShip playerShip;
 	
 	public ShopMenu() {
 		buttons = new ArrayList<Rectangle>();
@@ -30,6 +31,11 @@ public class ShopMenu implements Handleable{
 			buttons.add(new Rectangle(x+100,y+50*(1+i),20,20));
 			}
 	}
+	public void setShip(MapShip playerShip) {
+		this.playerShip = playerShip;
+	}
+	
+	
 	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g.create();
@@ -38,6 +44,7 @@ public class ShopMenu implements Handleable{
 		for(int i = 0; i <inventory.size();i++) {
 			g.drawString("Name: "+inventory.get(i).name + " Cost: "+inventory.get(i).cost,(int)( buttons.get(i+1).x+buttons.get(i+1).getWidth()),(int)(buttons.get(i+1).y+buttons.get(i+1).getHeight()));
 		}
+		g.drawString("Money: "+playerShip.getMoney(),x+shopBack.getWidth()-150,y+40);
 		for(int i = 0;i<buttons.size();i++){
 			g2d.draw(buttons.get(i));
 		}
@@ -61,6 +68,7 @@ public class ShopMenu implements Handleable{
 		}
 		else {
 			System.out.println("YOU PAID £"+inventory.get(i-1).cost+" for a "+inventory.get(i-1).name+" enjoy you gross man.");
+			playerShip.incrementMoney(-inventory.get(i-1).cost);
 		}
 	}
 

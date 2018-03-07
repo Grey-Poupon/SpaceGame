@@ -6,7 +6,7 @@ public class MapShip extends MapObject{
 
 	public boolean isPlayerShip = false;
 	private Ship ship;
-	
+	private int money = 200;
 	
 	public MapShip(MapTile c,boolean b,Ship ship) {
 		super(c);
@@ -39,6 +39,10 @@ public class MapShip extends MapObject{
 		super.moveTile(mt);
 	}
 	
+	public int getMoney() {
+		return money;
+	}
+	
 	public void interact(MapShip ship) {
 		if(!this.isPlayerShip) {
 			tileContained.removeObject(this);
@@ -48,6 +52,13 @@ public class MapShip extends MapObject{
 	
 	public Ship getShip() {
 		return ship;
+	}
+
+
+
+	public void incrementMoney(int i) {
+		money+=i;
+		
 	}
 	
 }

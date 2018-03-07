@@ -18,10 +18,10 @@ public class CrewAction implements Comparable {
 	private boolean isBroken;
 	private List<CrewAction> actionsNeeded = new ArrayList<CrewAction>();
 	private List<CrewAction> actionsNeededAfterUse = new ArrayList<CrewAction>();
-
+	private ActionCooldown cooldown;
 
 	/** Constructor for non-dummy crewAction**/
-	public CrewAction(String name,CrewActionID actionType,StatID statType,List<CrewAction> actionsNeededToUse, int levelRequirement, int xpReward,int powerCost) {
+	public CrewAction(String name,CrewActionID actionType,StatID statType,List<CrewAction> actionsNeededToUse, int levelRequirement, int xpReward,int powerCost,ActionCooldown cooldown) {
 		this.name             = name;
 		this.actionType       = actionType;
 		this.levelRequirement = levelRequirement;
@@ -32,6 +32,7 @@ public class CrewAction implements Comparable {
 		this.isBroken         = false;
 		this.actionsNeeded.addAll(actionsNeededToUse);
 		this.actionsNeededAfterUse = actionsNeededToUse;
+		this.cooldown = cooldown;
 	}
 	
 	/** Constructor for dummy crew action**/
@@ -41,7 +42,11 @@ public class CrewAction implements Comparable {
 		this.actionType = CrewActionID.Dummy;
 		
 	}
-
+	/** Manages reseting and lowering cooldowns so don't worry */
+	public boolean isOffCooldown(){
+		return cooldown.isOffCooldown();
+	}
+	
 	public Crew getActor() {
 		return actor;
 	}
@@ -125,7 +130,7 @@ public class CrewAction implements Comparable {
 	}
 
 	public CrewAction copy() {
-		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement);
+		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement,cooldown);
 		
 		// set extra variables
 		action.actionBox = this.actionBox;

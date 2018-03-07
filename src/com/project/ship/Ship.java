@@ -36,6 +36,7 @@ import com.project.thrusters.Thruster;
 import com.project.weapons.Buffer;
 import com.project.weapons.Destructive;
 import com.project.weapons.Weapon;
+import com.project.weapons.WeaponEffect;
 
 public class Ship implements Handleable{
 	private BattleScreen bs;
@@ -134,7 +135,7 @@ public class Ship implements Handleable{
 		}	
 		randomlyFillRooms();
 	}
-	public void doDamage(Object[] effects, Object[][] damageInfo,boolean targetSelf,Point click){
+	public void doDamage(List<WeaponEffect> effects, Object[] damageInfo,boolean targetSelf,Point click){
 		/**get targeted ship**/
 		Ship ship;
 		if(targetSelf){
@@ -144,18 +145,16 @@ public class Ship implements Handleable{
 			ship = isPlayer? bs.getEnemyShip():bs.getPlayerShip();	
 		}
 		
-		int rateOfFire         = (int)     damageInfo[effects.length-1][0];
-		float[] accuracy       = (float[]) damageInfo[effects.length-1][1];
-		int damagePerShot      = (int)     damageInfo[effects.length-1][2];
-		boolean isPhysical     = (boolean) damageInfo[effects.length-1][3];
-		int areaOfEffectRadius = (int)     damageInfo[effects.length-1][4];
+		int damagePerShot      = (int)     damageInfo[0];
+		boolean isPhysical     = (boolean) damageInfo[1];
+		int areaOfEffectRadius = (int)     damageInfo[2];
 		
 					
 		/**loop through the different effects**/
-		for(int i = 0;i<effects.length;i++){
+		for(int i = 0;i<effects.size();i++){
 			
 			/**Do destructive effects**/
-			if(effects[i] instanceof Destructive){
+			if(effects.get(i) instanceof Destructive){
 					List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
 					System.out.println("Number of hit rooms: "+rooms.size());
 					
@@ -182,7 +181,7 @@ public class Ship implements Handleable{
 					}
 				}
 			/**Do buffer effects**/
-			if(effects[i] instanceof Buffer){
+			if(effects.get(i) instanceof Buffer){
 				// do buffer effect
 			}
 		}

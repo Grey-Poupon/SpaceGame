@@ -43,30 +43,10 @@ public class Buffer implements WeaponEffect{
 
 
 	@Override
-	public Object[] fire() {
+	public Object[] getInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	@Override
-	public double getAccuracy() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public int getDamagePerShot() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public int getRateOfFire() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 }

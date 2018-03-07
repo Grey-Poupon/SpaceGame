@@ -79,6 +79,7 @@ public class DraggableIcon {
 				
 				// remove the crew from the current actionbox
 				if(actionBox != null && actionBox !=  box) {
+					System.out.println("DROP");
 					actionBox.removeCrew();
 				}
 				

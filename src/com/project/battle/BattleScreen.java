@@ -39,7 +39,7 @@ import com.project.ship.Ship;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
 import com.project.slider.SliderID;
-import com.project.slider.VerticalSlider;
+import com.project.slider.VerticalSliderHandle;
 import com.project.thrusters.Thruster;
 import com.project.weapons.Weapon;
 
@@ -355,7 +355,8 @@ public class BattleScreen implements Phase, Observer {
 
 	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,List<Point> shot){
 		for(int i=0;i<weapons.size();i++) {
-			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot.get(i),weapons.get(i).getSlot());
+			int[] accuracy = weapons.get(i).fire(); 
+			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot.get(i),weapons.get(i).getSlot(),accuracy);
 			weapons.get(i).setProjAnim(a);
 		}
 		
@@ -663,8 +664,8 @@ public class BattleScreen implements Phase, Observer {
 			SliderID id = (SliderID) arg1;
 			if (id == SliderID.speed){
 				// set speed choice
-				if(playerIsChaser){chaserSpeedChoice = ((VerticalSlider)arg0 ).getStep();}
-				else{chasedSpeedChoice = ((VerticalSlider)arg0 ).getStep();}
+				if(playerIsChaser){chaserSpeedChoice = ((VerticalSliderHandle)arg0 ).getStep();}
+				else{chasedSpeedChoice = ((VerticalSliderHandle)arg0 ).getStep();}
 			}
 		}
 		

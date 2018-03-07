@@ -17,9 +17,8 @@ public class Portal extends MapObject{
 	}
 	
 	public void interact(MapShip ship) {
+		System.out.println("CHANGE PLACES");
+		tileContained.removeObject(this);
 		changeMap(ship);
 	}
-	
-	
-	
 }

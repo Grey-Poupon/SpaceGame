@@ -21,7 +21,10 @@ import com.project.battle.BattleScreen;
 import com.project.ship.Generator;
 import com.project.ship.Ship;
 import com.project.thrusters.Thruster;
+import com.project.weapons.Destructive;
+import com.project.weapons.Target;
 import com.project.weapons.Weapon;
+import com.project.weapons.WeaponEffect;
 
 public class ResourceLoader {
 	
@@ -64,19 +67,22 @@ public class ResourceLoader {
 	private void loadCrewActions(){
 		List<CrewAction> empty = new ArrayList<CrewAction>();
 		List<CrewAction> fireActions = new ArrayList<CrewAction>();
-		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,100,10,10000));
-		crewActions.put("basicOverclock",new CrewAction("Overclock" ,CrewActionID.Overclock,StatID.engineering,empty ,1  ,10,10000));
-		crewActions.put("basicFix"      ,new CrewAction("Fix"       ,CrewActionID.Fix      ,StatID.engineering,empty ,1  ,10,10000));
-		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,1  ,10,10000));
-		crewActions.put("basicManoeuvre",new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty ,1  ,10,10000));
-		crewActions.put("basicReload"   ,new CrewAction("Reload"    ,CrewActionID.Reload   ,StatID.gunner     ,empty ,1  ,10,10));
+		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,100,10,10000,new ActionCooldown(0)));
+		crewActions.put("basicOverclock",new CrewAction("Overclock" ,CrewActionID.Overclock,StatID.engineering,empty ,1  ,10,10000,new ActionCooldown(0)));
+		crewActions.put("basicFix"      ,new CrewAction("Fix"       ,CrewActionID.Fix      ,StatID.engineering,empty ,1  ,10,10000,new ActionCooldown(0)));
+		crewActions.put("basicGenerate" ,new CrewAction("Generate"  ,CrewActionID.Generate ,StatID.engineering,empty ,1  ,10,10000,new ActionCooldown(0)));
+		crewActions.put("basicManoeuvre",new CrewAction("Manoeuvre" ,CrewActionID.Manoeuvre,StatID.engineering,empty ,1  ,10,10000,new ActionCooldown(0)));
+		crewActions.put("basicReload"   ,new CrewAction("Reload"    ,CrewActionID.Reload   ,StatID.gunner     ,empty ,1  ,10,10   ,new ActionCooldown(0)));
 		crewActions.get("basicReload").setActionImg(images.get("res/ui/reload.png"));
 		fireActions.add(crewActions.get("basicReload"));
-		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10));
+		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10,new ActionCooldown(0)));
 		crewActions.get("basicFire").setActionImg(images.get("res/ui/fire.png"));
-		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0));
-		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0));
-		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0));
+
+		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0  ,new ActionCooldown(0)));
+		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
+		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
+
+
 	}
 	private void loadThrusters() {
 		List<CrewAction> actions2 = new ArrayList<CrewAction>();
@@ -126,7 +132,9 @@ public class ResourceLoader {
 		actions.add(crewActions.get("basicFire"));
 		ImageHandler background = new ImageHandler(0, 0, "res/ui/physicalCard.png", true, null);
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/missileArt.png", true, null);
-		shipWeapons.put("default",new Weapon(10,1, 1, 30, 1f, "Octoid Missile",true, ResourceLoader.animations.get("missileWithExplosion"),false,null,150,animations.get("octoidMissileLauncher"),actions,null,background,portrait));
+		List<WeaponEffect> effects = new ArrayList<WeaponEffect>();
+		effects.add(new Destructive(15, true, 50));
+		shipWeapons.put("default",new Weapon(effects,1, 1f, "Octoid Missile",ResourceLoader.animations.get("missileWithExplosion"),150,animations.get("octoidMissileLauncher"),actions,background,portrait,Target.Enemy));
 	}
 
 
@@ -145,7 +153,8 @@ public class ResourceLoader {
 		animations.put("missileWithExplosion",new Animation(BattleScreen.handler,animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
 	}
 
-	public void loadImages() {
+	public void loadImages(){
+		put(images,"res/mapStar.png");
 		put(images,"res/shopFront.png");
 		put(images,"res/shop.png");
 		put(images,"res/star_field.png");
