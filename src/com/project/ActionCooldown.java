@@ -8,14 +8,18 @@ public class ActionCooldown {
 		this.maxCooldown = cooldown;
 		this.cooldown = cooldown;
 	}
-	/*Manages reseting and lowering cooldowns so don't worry **/
+	
 	public boolean isOffCooldown(){
-		if(cooldown<=0){
+		return cooldown<=0;
+	}
+	
+	public void updateCooldown(){
+		if(isOffCooldown()){
 			resetCooldown();
-			return true;
 		}
-		lowerCooldown();
-		return false;
+		else{
+			lowerCooldown();
+		}
 	}
 	private void lowerCooldown(){
 		cooldown--;

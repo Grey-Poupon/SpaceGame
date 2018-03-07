@@ -23,6 +23,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	protected int cooldownTurnsLeft; 
 	protected String name;
 	protected int projectileGap; //  this is in pixels for ProjAnim but for Ship-Weapon It will be used as if it were a Distance
+								 //  as ProjAnim will be removed
 	protected Target target;
 	protected List<WeaponEffect> effects;	
 	protected Animation firingAnimation;
@@ -37,13 +38,13 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	protected ProjectileAnimation projAnim = null;
 	protected float accuracy;
 	protected int rateOfFire;
-	
+	protected int projSpeed;
 	
 	public Animation getSlotItemBody() {
 		return weaponBody;
 	}
 
-	public Weapon(List<WeaponEffect> effects, int rateOfFire,float accuracy, String name,Animation firingAnimation,int projectileGap,Animation weaponBody,List<CrewAction>actions, ImageHandler backgroundImg, ImageHandler weaponImg, Target target){
+	public Weapon(List<WeaponEffect> effects, int rateOfFire,float accuracy, String name,Animation firingAnimation,int projectileGap,Animation weaponBody,List<CrewAction>actions, ImageHandler backgroundImg, ImageHandler weaponImg, Target target, int projSpeed){
 		
 		this.roundsTilHit = 0;
 		this.backgroundImg = backgroundImg;
@@ -58,6 +59,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		this.accuracy = accuracy;
 		this.rateOfFire = rateOfFire;
 		this.effects = effects;
+		this.projSpeed = projSpeed;
 	}
 	
 	public Animation getWeaponBody() {
@@ -161,7 +163,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 			newActions.add(actions.get(i).copy());
 		}
 		
-		Weapon w = new Weapon(effects, rateOfFire, accuracy, name, firingAnimation, projectileGap, weaponBody, newActions, backgroundImg, weaponImg, target);
+		Weapon w = new Weapon(effects, rateOfFire, accuracy, name, firingAnimation, projectileGap, weaponBody, newActions, backgroundImg, weaponImg, target,projSpeed);
 		w.setSlot(slot);
 		return w;
 		}
@@ -178,9 +180,8 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 				//bs.chasedShip.updatePowerConsumption(action);
 			}
 		}
+		action.updateCooldown();
 	}
-	
-
 
 	public String getFlavorText() {
 		return null;
@@ -227,6 +228,14 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 			else{accuracies[i] = 0;}
 		}
 		return accuracies;
+	}
+	
+	public int getSpeed(){
+		return projSpeed;
+	}
+
+	public int getRateOfFire() {
+		return rateOfFire;
 	}
 
 }

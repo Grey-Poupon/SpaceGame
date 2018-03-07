@@ -102,9 +102,7 @@ public class Generator implements Actionable {
 	if(action.getActionType()==CrewActionID.Cooling && action.isOffCooldown()) {
 		
 	}
-
-		
-		
+	action.updateCooldown();
 	}
 
 	public Generator copy() {

@@ -30,6 +30,7 @@ import com.project.ScrollableList;
 import com.project.Star;
 import com.project.Text;
 import com.project.TooltipSelectionID;
+import com.project.WeaponShipInterface;
 import com.project.button.Button;
 import com.project.button.ButtonID;
 import com.project.ship.Ship;
@@ -80,6 +81,7 @@ public class BattleScreen implements Phase, Observer {
 	private ImageHandler enginesTab;
 	private ImageHandler movementTab;
 	public static BattleHandler handler; 
+	private WeaponShipInterface inter;
 	
 	public BattleScreen(Main main) {
 		this.main = main;
@@ -126,6 +128,9 @@ public class BattleScreen implements Phase, Observer {
 		chasedShip.setY(-50);
 		phase 				 = new Text          (handler,"Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
 		ds 					 = new DistanceSystem(handler,500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
+		
+		// set WeaponShipInterface
+		this.inter = new WeaponShipInterface(chaserShip, chasedShip);
 		
 		//Set Captain
 		chaserShip.setCaptain(player.getPlayerCrew());
@@ -295,7 +300,7 @@ public class BattleScreen implements Phase, Observer {
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
 				
-				/**Fire Weapons**/
+				/**Fire Weapons Animation**/
 				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocations);
 				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, chaserShotLocations);
 				chasedWeaponChoice.clear();
@@ -303,6 +308,8 @@ public class BattleScreen implements Phase, Observer {
 				chaserShotLocations.clear();
 				chasedShotLocations.clear();
 				numWeaponClicks =0;
+				
+				/**Projectile hit/miss animation **/
 
 				/**Reset Generators**/
 				getPlayerShip().getGenerator().setCanGenerate(false);

@@ -25,7 +25,7 @@ public class Buffer implements WeaponEffect{
 
 
 	public Buffer(String toBuff,StatID key, float modifier){
-		this.toBuff =toBuff; 
+		this.toBuff = toBuff; 
 		this.modifier = modifier;
 		this.dictKey= key;
 	}
@@ -38,7 +38,6 @@ public class Buffer implements WeaponEffect{
 		else if(toBuff == "room") {
 			ship.getClosestRoom(x,y).setStatModifiers(dictKey,modifier);
 		}
-		
 	}
 
 
