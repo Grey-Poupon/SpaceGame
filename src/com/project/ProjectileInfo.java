@@ -11,17 +11,33 @@ public class ProjectileInfo {
 	private int radiusOfHit;
 	private Target target;
 	private List<WeaponEffect> effects;
-	private int distance;
+	private int distanceToEnd;
+	private int startSpeed;
+	private int velocity;
 	
-	
-	public ProjectileInfo(Weapon weapon,int distance) {
+	public ProjectileInfo(Weapon weapon,int distance,int shipVel) {
 		this.waitGap = weapon.getProjectileGap();
 		this.effects = weapon.getEffects();
 		this.target = weapon.getTarget();
 		this.radiusOfHit = weapon.getRadiusOfHit();
-		this.distance = distance;
+		this.startSpeed = weapon.getSpeed();
+		this.distanceToEnd = distance;
+		this.velocity = startSpeed + shipVel;
 	}
 	public int getWaitGap() {
 		return waitGap;
 	}
+	public int getStartSpeed(){
+		return startSpeed;
+	}
+	public int getVelocity(){
+		return velocity;
+	}
+	public int getDistanceToEnd() {
+		return distanceToEnd;
+	}
+	public void updateDistance(){
+		distanceToEnd-=velocity;
+	}
+
 }

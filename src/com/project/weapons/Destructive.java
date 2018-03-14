@@ -14,21 +14,14 @@ public class Destructive implements WeaponEffect {
 		return damagePerShot;
 	}
 
-
-
-
 	public void setDamagePerShot(int damagePerShot) {
 		this.damagePerShot = damagePerShot;
 	}
-
-
-
 	
 	public Destructive(int damagePerShot, boolean isPhysical, int radiusOfHit){
 		this.damagePerShot =damagePerShot;
 		this.isPhysical = isPhysical;
 		this.radiusOfHit = radiusOfHit;
-		
 	}
 	
 	@Override
@@ -36,6 +29,4 @@ public class Destructive implements WeaponEffect {
 		Object[] damageDealt = {getDamagePerShot(),isPhysical,radiusOfHit}; // to return, holds the shots hit and dmg per shot
 		return damageDealt;
 	}
-
-
 }

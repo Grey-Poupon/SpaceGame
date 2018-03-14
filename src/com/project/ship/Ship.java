@@ -45,11 +45,11 @@ public class Ship implements Handleable{
 	private int maxHealth;
 	private int currHealth;
 	private Rectangle clip;
-	private int speed         = 200;
+	private int velocity         = 200;
 	private int tempSpeed     = 0;
 	private int distanceToEnd = 250;//for distance system
 	private int power         = 0;
-	private int speedChange;
+	private int velChange;
 	private Engine engine;
 	private ArrayList<String> flavourTexts = new ArrayList<String>();
 	private List<Room> shipRooms 		   = new ArrayList<Room>();
@@ -72,6 +72,7 @@ public class Ship implements Handleable{
 		return isChased;
 	}
 
+	
 	public void generate() {
 		if(getGenerator().canGenerate()) {
 			updatePowerConsumption();
@@ -323,8 +324,6 @@ public class Ship implements Handleable{
 	}
 
 
-
-
 	private void generateFlavourText() {
 		flavourTexts.add("THIS IS A TEST, To see whether or not text wrapping works it would sure be lovely if it did, though i wouldn't feel too bad as this is the first time ive tried it and you can't be too hard on yourself yanno, it reminds me of the time i was out fishing with my uncle and he accidentally fell into the lake and couldn't swim and i stared as he body turned from manic thrashing to stillness");
 		
@@ -333,7 +332,7 @@ public class Ship implements Handleable{
 	public void useEngine(int amountOfFuel) {
 		double thrust = engine.getThrust(amountOfFuel);
 		if(thrust<0) {System.out.println("your engine exploded, gg boyo");}//engine exploded
-		speed = (int) thrust;
+		velocity = (int) thrust;
 	}
 	
 	public void generatePower(int amountOfFuel) {
@@ -484,11 +483,11 @@ public class Ship implements Handleable{
 		lImage.tick();
 	}
 	public int getSpeed() {
-		return speed;
+		return velocity;
 	}
 	public void setSpeed(int speed) {
-		this.speedChange = this.speed - speed;
-		this.speed = speed;
+		this.velChange = this.velocity - speed;
+		this.velocity = speed;
 	}
 	public int getDistanceToEnd() {
 		return distanceToEnd;
@@ -497,7 +496,7 @@ public class Ship implements Handleable{
 		this.distanceToEnd += distanceToEnd;
 	}
 	public int getSpeedChange() {
-		return speedChange;
+		return velChange;
 	}
 	public Slot getBackSlot(int position) {
 		return lImage.getBackSlots().get(position);
@@ -722,6 +721,9 @@ public class Ship implements Handleable{
 		}
 		return null;
 	}
+	public void updateDistance(){
+		distanceToEnd-=velocity;
+	}
 
 	public void accelerate() {
 		incSpeed(endSpeed);
@@ -778,17 +780,7 @@ public class Ship implements Handleable{
 		return leaders;
 	}
 	
-	public void setCaptain(Crew captain) {
-		this.captain = captain;
-	}
 
-	public boolean isPlayer() {
-		return isPlayer;
-	}
-
-	public void setPlayer(boolean isPlayer) {
-		this.isPlayer = isPlayer;
-	}
 
 	
 	public void setRoomPositions() {
@@ -876,5 +868,16 @@ public class Ship implements Handleable{
 	public void removeFuel(int i) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setCaptain(Crew captain) {
+		this.captain = captain;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
 	}
 }

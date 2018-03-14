@@ -134,7 +134,7 @@ public class ResourceLoader {
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/missileArt.png", true, null);
 		List<WeaponEffect> effects = new ArrayList<WeaponEffect>();
 		effects.add(new Destructive(15, true, 50));
-		shipWeapons.put("default",new Weapon(effects,1, 1f, "Octoid Missile",ResourceLoader.animations.get("missileWithExplosion"),150,animations.get("octoidMissileLauncher"),actions,background,portrait,Target.Enemy));
+		shipWeapons.put("default",new Weapon(effects,1, 1f, "Octoid Missile",ResourceLoader.animations.get("missileWithExplosion"),150,animations.get("octoidMissileLauncher"),actions,background,portrait,Target.Enemy, 300));
 	}
 
 

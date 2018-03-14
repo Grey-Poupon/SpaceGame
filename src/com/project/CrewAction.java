@@ -39,68 +39,56 @@ public class CrewAction implements Comparable {
 	public CrewAction(){
 		this.name = "Dummy Action";
 		this.setActionImg(ResourceLoader.getImage("res/actionBox.png"));
-		this.actionType = CrewActionID.Dummy;
-		
+		this.actionType = CrewActionID.Dummy;	
 	}
 	/** Manages reseting and lowering cooldowns so don't worry */
 	public boolean isOffCooldown(){
 		return cooldown.isOffCooldown();
 	}
-	
+	public void updateCooldown(){
+		cooldown.updateCooldown();
+	}
 	public Crew getActor() {
 		return actor;
 	}
-
 	public void setActor(Crew actor) {
 		actor.getShip().tempUpdatePowerConsumption(powerCost);
 		this.actor = actor;
 	}
-
 	public void removeActor() {
 		actor.getShip().tempUpdatePowerConsumption(-powerCost);
 		this.actor = null;
 	}
-	
 	public String getName() {
 		return name;
 	}
-
 	public int getLevelRequirement() {
 		return levelRequirement;
 	}
-
 	public int getXpReward() {
 		return xpReward;
 	}
-
 	public StatID getStatType() {
 		return statType;
 	}
-
 	public CrewActionID getActionType() {
 		return actionType;
 	}
-	
 	public int getPowerCost() {
 		return powerCost;
 	}
-
 	public void setPowerCost(int powerCost) {
 		this.powerCost = powerCost;
 	}
-
 	public List<CrewAction> getActionsNeeded() {
 		return actionsNeeded;
 	}
-
 	public boolean addActionsNeeded(List<CrewAction> c) {
 		return actionsNeeded.addAll(c);
 	}
-
 	public List<CrewAction> getActionsNeededAfterUse() {
 		return actionsNeededAfterUse;
 	}
-	
 	public void removeActionNeeded(CrewAction action) {
 		for(int i = 0;i<actionsNeeded.size();i++) {
 			if(actionsNeeded.get(i).getActionType() == action.getActionType()) {
@@ -128,7 +116,6 @@ public class CrewAction implements Comparable {
 		actionsNeeded.clear();
 		actionsNeeded.addAll(actionsNeededAfterUse);
 	}
-
 	public CrewAction copy() {
 		CrewAction action = new CrewAction(name, actionType, statType, actionsNeededAfterUse, levelRequirement, levelRequirement, levelRequirement,cooldown);
 		

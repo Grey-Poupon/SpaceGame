@@ -20,5 +20,6 @@ public class Portal extends MapObject{
 		System.out.println("CHANGE PLACES");
 		tileContained.removeObject(this);
 		changeMap(ship);
+		Map.playerTurn = true;
 	}
 }

@@ -265,7 +265,7 @@ public class BattleUI extends UI {
 			}
 
 			// setup room title
-			Text title = new Text(BattleScreen.handler,room.getRoomName(), true, x, y, bs);
+			Text title = new Text(BattleScreen.handler,room.getRoomName(), true, x, y);
 			tableTitleText.add(title);
 
 		}

@@ -18,9 +18,8 @@ import com.project.ResourceLoader;
 
 public class Map implements Handleable {
 	
-	public Map() {
-		
-	}
+	
+	public static boolean playerTurn;
 	public ImageHandler bg = new ImageHandler(0,0,"res/star_field.png",true, null);
 	public int height = 12;
 	public int width  = 10;
@@ -34,6 +33,10 @@ public class Map implements Handleable {
 	public MapTile highLightedTile=null;
 	public ArrayList<Integer> shortestPathX = null;
 	public ArrayList<Integer> shortestPathY = null;
+	
+	public Map() {
+		playerTurn = true;
+	}
 	
 	public void generateHexMap() {
 		//getDimensions for polygon used
@@ -71,6 +74,14 @@ public class Map implements Handleable {
 		ship.moveTile(this.hexes.get(0).get(0));
 	}
 	
+	public void movePlayerShip(MapShip ship, MapTile mt) {
+		playerTurn =false;
+		for(int i =0;i<mt.objects.size();i++) {
+			if(!mt.objects.get(i).tileContained.containsPlayer())mt.objects.get(i).interact(ship);	
+		}
+		
+	}
+	
 	//generates a hexagon at position x, y
 	public Polygon hexagon(float x,float y) {
 		Polygon h = new Polygon();
@@ -81,7 +92,6 @@ public class Map implements Handleable {
 		}
 		return h;
 	}
-	
 	
 	public void addOrbits() {
 		Rectangle r= mapComposite.getBounds();
@@ -159,8 +169,28 @@ public class Map implements Handleable {
 	
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
+		if(!playerTurn) {
+			updateMap();
+			playerTurn = true;
+		}
 	}
+	
+	public void updateMap() {
+		ArrayList<MapObject> temp = new ArrayList<MapObject>();
+		System.out.println("Swap");
+		for(int i = 0; i<hexes.size();i++) {
+			for(int j = 0; j<hexes.get(i).size();j++) {
+				ArrayList<MapObject> objs =hexes.get(i).get(j).objects; 
+				for(int k = 0;k<objs.size();k++) {
+					temp.add(objs.get(k));
+				}
+			}
+		}
+		for(int i= 0;i<temp.size();i++) {
+			temp.get(i).takeTurn();
+		}
+	}
+	
 	@Override
 	public float getZ() {
 		// TODO Auto-generated method stub
@@ -318,6 +348,78 @@ public class Map implements Handleable {
 					return true;
 				}
 		return false;
+	}
+	
+	public MapTile getTile(int x,int y) {
+		return hexes.get(y).get(x);
+	}
+	
+	public void moveToRandomAdjacentTile(MapObject obj) {
+		Random r = new Random();
+		int rInt = r.nextInt(6);
+		int x = obj.tileContained.mapPos.x;
+		int y = obj.tileContained.mapPos.y;
+		
+		if(y%2==0) {
+			switch(rInt) {
+			case 0:
+				if(x<hexes.get(y).size()-1)
+				obj.moveTile(hexes.get(y).get(x+1));
+				break;
+			case 1:
+				if(x>0)
+				obj.moveTile(hexes.get(y).get(x-1));
+				break;
+			case 2:
+				if(y<hexes.size()-1)
+				obj.moveTile(hexes.get(y+1).get(x));
+				break;
+			case 3:
+				if(y>0)
+				obj.moveTile(hexes.get(y-1).get(x));
+				break;
+			case 4:
+				if(y<hexes.size()-1&&x>0)
+				obj.moveTile(hexes.get(y+1).get(x-1));
+				break;
+			case 5:
+				if(x>0&&y>0)
+				obj.moveTile(hexes.get(y-1).get(x-1));
+				break;
+			}
+		}
+		else {
+			switch(rInt) {
+			case 0: 
+				if(x<hexes.get(y).size()-1)
+				obj.moveTile(getTile(x+1,y));
+				break;
+			case 1:
+				if(x>0)
+				obj.moveTile(getTile(x-1,y));
+				break;
+			case 2:
+				if(x<hexes.get(y-1).size()-1&&y>0)
+				obj.moveTile(getTile(x+1,y-1));
+				break;
+			case 3: 
+				if(y<hexes.size()-1&&x<hexes.get(y+1).size()-1)
+				obj.moveTile(getTile(x+1,y+1));
+				break;
+			case 4: 
+				if(y<hexes.size()-1)
+				obj.moveTile(getTile(x,y+1));
+				break;
+			case 5: 
+				if(y>0)
+				obj.moveTile(getTile(x,y-1));
+				break;
+				
+			}
+			
+		}
+		
+		
 	}
 	
 	public static Map generateRandomMap1() {

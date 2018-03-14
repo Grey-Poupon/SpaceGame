@@ -79,7 +79,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(BattleScreen.handler,text, true, x, y, fontName, style, size, colour,bs);
+		this.text = new Text(BattleScreen.handler,text, true, x, y, fontName, style, size, colour);
 		BattleScreen.handler.addButton(this);
 	}
 	
@@ -95,7 +95,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(BattleScreen.handler,text, true, x, y,bs);
+		this.text = new Text(BattleScreen.handler,text, true, x, y);
 		this.text.changeMask(x, y, width, height);
 		BattleScreen.handler.addButton(this);
 	}
@@ -111,7 +111,7 @@ public class Button extends Observable  implements Handleable{
 		this.index = index;
 		this.clickable = clickable;
 		this.bs = bs;
-		this.text = new Text(BattleScreen.handler,text, clickable, x, y, fontName, style, size, colour,bs);
+		this.text = new Text(BattleScreen.handler,text, clickable, x, y, fontName, style, size, colour);
 		img.setxCoordinate(x);
 		img.setyCoordinate(y);
 		this.img = img;

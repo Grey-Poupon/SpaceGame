@@ -105,7 +105,7 @@ public class Thruster implements Slottable,Actionable{
 		if(action.getName()=="Generate" && action.isOffCooldown()) {
 			ship.incResource(ResourcesID.Power, action.getPowerCost());
 		}
-		
+		action.updateCooldown();		
 	}
 
 

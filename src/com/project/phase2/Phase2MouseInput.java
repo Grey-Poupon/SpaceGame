@@ -1,6 +1,9 @@
 package com.project.phase2;
 
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import com.project.Handler;
 import com.project.MouseInput;
 
@@ -51,8 +54,16 @@ public class Phase2MouseInput extends MouseInput{
 	}
 
 	public void mouseShopClick(MouseEvent arg0) {
-		for(int i = 0; i<p2.shop.buttons.size();i++) {
-			if(p2.shop.buttons.get(i).contains(mousePosition)) {
+		ArrayList<Rectangle> buttons;
+		if(p2.shop.talking) {
+			buttons = p2.shop.TalkButtons;
+		}
+		else {
+			buttons = p2.shop.ShopButtons;
+		}
+		
+		for(int i = 0; i<buttons.size();i++) {
+			if(buttons.get(i).contains(mousePosition)) {
 				p2.shop.mouseInteract(p2,i);
 				
 			}

@@ -29,7 +29,9 @@ public class Main  extends Canvas implements Runnable{
 	private boolean paused=false;
 	
 	public Main(){
+		Text.main = this;
 		new ResourceLoader();
+		
 		player = new Player(100);
 		currentPhase = new Phase2(this);
 		r = new Random();

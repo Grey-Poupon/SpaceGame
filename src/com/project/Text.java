@@ -26,9 +26,9 @@ public class Text implements Handleable{
 	private int onScreenHeight =0;
 	private int onScreenWidth = 0;
 	public Handler handler;
+	public static Main main;
 	
-	
-	public Text(Handler handler,String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour,BattleScreen bs){
+	public Text(Handler handler,String text,boolean visible,int x, int y,String fontName, int style, int size, Color colour){
 		this.handler = handler;
 		this.xCoordinate = x;
 		this.yCoordinate = y+(int)(size*textRatio);
@@ -36,15 +36,28 @@ public class Text implements Handleable{
 		this.visible     = visible;
 		this.font        = new Font(fontName, style, size);
 		this.colour      = colour;
-		if(bs!=null) {
-			onScreenWidth = bs.main.getGraphics().getFontMetrics(font).stringWidth(text);
-			onScreenHeight = bs.main.getGraphics().getFontMetrics(font).getHeight();
-		}
+
+//		onScreenWidth = main.getGraphics().getFontMetrics(font).stringWidth(text);
+//		onScreenHeight = main.getGraphics().getFontMetrics(font).getHeight();
+
 		handler.texts.add(this);
 	}
 	
+	public Text(String text,boolean visible, int x,int y) {
+		this.xCoordinate = x;
+		this.yCoordinate = y+32;
+		this.visible     = visible;
+		this.text        = text;	
+		this.font        = new Font("Sevensegies", Font.PLAIN, 36);
+		this.colour      = Color.WHITE;
+		
+//		onScreenWidth = main.getGraphics().getFontMetrics(font).stringWidth(text);
+//		onScreenHeight = main.getGraphics().getFontMetrics(font).getHeight();
+//		
+	}
+	
 
-	public Text(Handler handler,String text,boolean visible,int x, int y,BattleScreen bs){
+	public Text(Handler handler,String text,boolean visible,int x, int y){
 		this.handler = handler;
 		this.xCoordinate = x;
 		this.yCoordinate = y+32;
@@ -52,10 +65,10 @@ public class Text implements Handleable{
 		this.text        = text;	
 		this.font        = new Font("Sevensegies", Font.PLAIN, 36);
 		this.colour      = Color.WHITE;
-		if(bs!=null) {
-			onScreenWidth = bs.main.getGraphics().getFontMetrics(font).stringWidth(text);
-			onScreenHeight = bs.main.getGraphics().getFontMetrics(font).getHeight();
-		}
+//		
+//		onScreenWidth = main.getGraphics().getFontMetrics(font).stringWidth(text);
+//		onScreenHeight = main.getGraphics().getFontMetrics(font).getHeight();
+		
 		handler.texts.add(this);
 	}
 	

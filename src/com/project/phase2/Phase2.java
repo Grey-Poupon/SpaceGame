@@ -24,13 +24,13 @@ public class Phase2 implements Phase{
 	public MapShip ship;
 	public boolean inShop = false;
 	public ShopMenu shop;
+	public Map map;
 	
 	public Phase2(Main main) {
 		Phase2.main = main;
 		setP(this);
 		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
-//		Map map = new Map();
-		Map map = Map.generateRandomMap();
+		map = Map.generateRandomMap();
 		
 		map.randomlyPlaceShip(ship);
 		

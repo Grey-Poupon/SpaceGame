@@ -38,6 +38,7 @@ public class RecreationalItem implements Actionable{
 		if(action.isOffCooldown()){
 			crew.setStat(StatID.stress, (byte) 0);
 		}
+		action.updateCooldown();
 	}
 
 	@Override

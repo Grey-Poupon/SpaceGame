@@ -56,7 +56,6 @@ public class ProjectileAnimation implements Handleable{
 
 				this.damageInfo = ((Destructive) effect).getInfo();
 				// DPS , IsPhysical , Radius
-				
 			}
 		}
 		this.animations    = new Animation[noOfProjectiles];
@@ -79,7 +78,6 @@ public class ProjectileAnimation implements Handleable{
 		
 		for(int i = 0;i<noOfProjectiles;i++) {
 			Animation temp = weapon.getFiringAnimation();
-
 
 			temp.setMonitored(true);
 			Point start = new Point ();

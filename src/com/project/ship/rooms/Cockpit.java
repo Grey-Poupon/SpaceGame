@@ -85,7 +85,7 @@ public class Cockpit extends Room implements Actionable{
 		if(action.isOffCooldown()){
 			
 		}
-		
+		action.updateCooldown();		
 	}
 
 	@Override

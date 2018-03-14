@@ -21,7 +21,11 @@ public class MapShip extends MapObject{
 		
 	}
 	
-	
+	public void takeTurn() {
+		if(!isPlayerShip) {
+			tileContained.map.moveToRandomAdjacentTile(this);
+		}
+	}
 	
 	public boolean isPlayerShip() {
 	 return isPlayerShip;
@@ -30,11 +34,8 @@ public class MapShip extends MapObject{
 		isPlayerShip = b;
 	}
 	public void moveTile(MapTile mt) {
-		if(this.isPlayerShip()){
-
-			for(int i =0;i<mt.objects.size();i++) {
-				if(!mt.objects.get(i).tileContained.containsPlayer())mt.objects.get(i).interact(this);
-			}
+		if(this.isPlayerShip()&&mt!=this.tileContained){
+			mt.map.movePlayerShip(this, mt);
 		}
 		super.moveTile(mt);
 	}
