@@ -26,10 +26,14 @@ public class VerticalSlider {
 		this.y = y;
 		this.handle = new VerticalSliderHandle(x, y, stepLen, maxStep, curStep, handleImg, obs, id);
 		this.panelImg = new ImageHandler(x, y, panelImg, true, EntityID.UI);
-		hans.addLowPriorityEntity(this.panelImg);
+		
+	}
+	public void start(BattleHandler hans) {
+		//hans.addLowPriorityEntity(this.panelImg);
 		hans.addLowPriorityEntity(handle.getImg());
 		hans.handles.add(handle);
 	}
+	
 	public void moveSliderTo(int step){
 		if(step>0 && step<maxStep+1 && step!=handle.getStep()){
 			handle.moveTo(step);

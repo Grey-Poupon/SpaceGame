@@ -21,7 +21,9 @@ import com.project.CrewActionID;
 import com.project.DistanceSystem;
 import com.project.EntityID;
 import com.project.ImageHandler;
+import com.project.KeyInput;
 import com.project.Main;
+import com.project.MouseInput;
 import com.project.Phase;
 import com.project.Player;
 import com.project.ProjectileAnimation;
@@ -34,6 +36,7 @@ import com.project.TooltipSelectionID;
 import com.project.WeaponShipInterface;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.phase2.Phase2;
 import com.project.ship.Ship;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.WeaponsRoom;
@@ -67,7 +70,7 @@ public class BattleScreen implements Phase, Observer {
 	private int chasedSpeedChoice;
 	private int chaserSpeedChoice;
 	private Random rand;
-	private boolean playerIsChaser = true;
+	private boolean playerIsChaser;
 	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
 	private Text phase;
 	private Button graphButton;
@@ -82,28 +85,33 @@ public class BattleScreen implements Phase, Observer {
 	private ImageHandler enginesTab;
 	private ImageHandler movementTab;
 	public static BattleHandler handler; 
+
+	private BattleMouseInput mouseIn;
+	private BattleKeyInput keyIn;
 	private WeaponShipInterface inter;
+
 	
-	public BattleScreen(Main main) {
+	public BattleScreen(Main main,Ship chaser, Ship chasee,boolean playerIsChaser) {
 		this.main = main;
+		player = main.player;
 		this.handler.setBs(this);
 		main.setPaused(true);
-		player = new Player(100);
+		this.playerIsChaser = playerIsChaser;
 
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
 		handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
 		// grab ships
 		if (playerIsChaser) {
-			chaserShip = ResourceLoader.getShip("defaultPlayer");
+			chaserShip = chaser;
 			playerShip = chaserShip;
-			chasedShip = ResourceLoader.getShip("defaultEnemy");
+			chasedShip = chasee;
 			enemyShip = chasedShip;
 			chaserShip.setPlayer(true);
 		}else {
-			chasedShip = ResourceLoader.getShip("defaultPlayer");
+			chasedShip = chasee;
 			chasedShip.setPlayer(true);
-			chaserShip = ResourceLoader.getShip("defaultEnemy");
+			chaserShip = chaser;
 			playerShip = chasedShip;
 			enemyShip = chaserShip;
 		}
@@ -127,7 +135,7 @@ public class BattleScreen implements Phase, Observer {
 		chaserShip.setY(-50);
 		chasedShip.setX(main.WIDTH/2-50);
 		chasedShip.setY(-50);
-		phase 				 = new Text          (handler,"Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100,this);
+		phase 				 = new Text          (handler,"Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100);
 		ds 					 = new DistanceSystem(handler,500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		
 		// set WeaponShipInterface
@@ -138,8 +146,8 @@ public class BattleScreen implements Phase, Observer {
 		
 		//Set Room Leader Tabs
 		main.ui      = new BattleUI(this, chaserShip, chasedShip);
-		main.keyIn   = new BattleKeyInput(this);
-		main.mouseIn = new BattleMouseInput(handler);
+		keyIn   = new BattleKeyInput(this);
+		mouseIn = new BattleMouseInput(handler);
 		
 		//Health bars
 		chaserHealthbar = new ImageHandler(2, 2, "res/healthseg.png", true, 1, 1, EntityID.UI);
@@ -182,10 +190,7 @@ public class BattleScreen implements Phase, Observer {
 		//Handler.addLowPriorityEntity(overlay);
 		handler.addLowPriorityEntity(chaserHealthbar);
 		handler.addLowPriorityEntity(chasedHealthbar);
-		main.addKeyListener(main.keyIn);
-		main.addMouseListener(main.mouseIn);
-		main.addMouseMotionListener(main.mouseIn);
-		main.addMouseWheelListener(main.mouseIn);
+
 		BattleUI.generateRoomButtons(playerShip.getPhaseLeaders().get(0), TooltipSelectionID.Room);
 		main.setPaused(false);
 	}
@@ -291,6 +296,10 @@ public class BattleScreen implements Phase, Observer {
 				BattleUI.refreshRoomUI();
 				
 				/**Set Speed -- empty functions**/
+				/**Check if either ship is Destroyed**/
+				checkEnd();
+				
+				/**Set Speed**/
 				chaserShip.generate();
 				chasedShip.generate();
 				chaserShip.accelerate();
@@ -375,6 +384,18 @@ public class BattleScreen implements Phase, Observer {
 			new ProjectileAnimation(primary,weaponsProj.get(i),true);
 		}
 	}
+	
+	public void checkEnd() {
+		if(enemyShip.getCurrHealth()<=0) {
+			endCombat();
+		}
+	}
+	
+	public void endCombat() {
+		System.out.println("You won!");
+		main.setPhase(Phase2.getP());
+	}
+	
 
 	public void emptyTurnWarning(){
 		System.out.println("You've not selected any actions this turn, thats inadvisable");
@@ -574,7 +595,6 @@ public class BattleScreen implements Phase, Observer {
 			main.handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
 		}
 		
-		
 	}
 
 	public int getLayerClicked(int x, int y) {
@@ -654,7 +674,15 @@ public class BattleScreen implements Phase, Observer {
 		handler.render(g);
 	}
 
-	@Override
+	public MouseInput getMouseInput() {
+		// TODO Auto-generated method stub
+		return mouseIn;
+	}
+
+	public KeyInput getKeyInput() {
+		// TODO Auto-generated method stub
+		return keyIn;
+	}
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 instanceof SliderID){
 			SliderID id = (SliderID) arg1;
@@ -664,6 +692,16 @@ public class BattleScreen implements Phase, Observer {
 				else{chasedSpeedChoice = ((VerticalSliderHandle)arg0 ).getStep();}
 			}
 		}
+		
+
+	}
+
+	@Override
+	public void addListeners(Main main) {
+		main.addKeyListener(keyIn);
+		main.addMouseListener(mouseIn);
+		main.addMouseMotionListener(mouseIn);
+		main.addMouseWheelListener(mouseIn);
 		
 	}
 }

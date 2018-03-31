@@ -27,7 +27,9 @@ public class BattleKeyInput extends KeyInput {
 		if (key == KeyEvent.VK_I){BattleUI.generateRoomButtons(bs.chaserShip.getAllCrew().get(7),TooltipSelectionID.Room);}
 		if (key == KeyEvent.VK_O){BattleUI.generateRoomButtons(bs.chaserShip.getAllCrew().get(8),TooltipSelectionID.Room);}
 		if (key == KeyEvent.VK_P){BattleUI.generateRoomButtons(bs.chaserShip.getAllCrew().get(9),TooltipSelectionID.Room);}
-
+		
+		if (key == KeyEvent.VK_M) {bs.endCombat();}
+		
 		//if (key == KeyEvent.VK_P){bs.setPaused(!bs.isPaused());}
 		
 		if(key==KeyEvent.VK_UP){LayeredImage.setCameraY(LayeredImage.getCameraY()    + 1f);}

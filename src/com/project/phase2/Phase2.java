@@ -12,8 +12,8 @@ import com.project.battle.BattleScreen;
 
 public class Phase2 implements Phase{
 	/**
-	 * 
-	 */
+	 ** 
+	 **/
 	private static Phase2 p;
 	public static Main main;
 	private static final long serialVersionUID = 1L;
@@ -22,18 +22,15 @@ public class Phase2 implements Phase{
 	private MouseInput mouseIn;
 	private Map currentMap;
 	public MapShip ship;
-	
+	public boolean inShop = false;
+	public ShopMenu shop;
+	public Map map;
 	
 	public Phase2(Main main) {
-		this.main = main;
-		
-		
+		Phase2.main = main;
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon()),true);
-		
-//		Map map = new Map();
-		Map map = Map.generateRandomMap();
-		
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
+		map = Map.generateRandomMap();
 		
 		map.randomlyPlaceShip(ship);
 		
@@ -42,25 +39,23 @@ public class Phase2 implements Phase{
 		currentMap = map;
 		keyIn   = new Phase2KeyInput();
 		mouseIn = new Phase2MouseInput(handler,this);
-		
-		main.addKeyListener(keyIn);
-		main.addMouseListener(mouseIn);
-		main.addMouseMotionListener(mouseIn);
-		main.addMouseWheelListener(mouseIn);
+		addListeners(main);
+
 	}
 	
 	public void tick() {
 		handler.tick(null);
-		
 	}
-	public static void battle() {
-		main.setPhase(new BattleScreen(main));
-		
+	public static void battle(MapShip chaser,MapShip chasee) {
+		main.setPhase(new BattleScreen(main,chaser.getShip(),chasee.getShip(),chaser.isPlayerShip));
 	}
+	
 	public void render(Graphics g) {
 		handler.render(g);
 		
 	}
+	
+	
 
 	public Map getCurrentMap() {
 		return currentMap;
@@ -69,20 +64,50 @@ public class Phase2 implements Phase{
 	public void setCurrentMap(Map currentMap) {
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon()),true);
+		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
 		this.currentMap.randomlyPlaceShip(ship);
-		
 		handler.addLowPriorityEntity(this.currentMap);
 	}
 
 	public static Phase2 getP() {
 		return p;
 	}
+	
+	public static void setShop(ShopMenu shop) {
+		Phase2.p.shop= shop;
+		Phase2.p.handler.addLowPriorityEntity(shop);
+		Phase2.p.inShop = true;
+	}
+	
+	public void leaveShop() {
+		inShop = false;
+		handler.entitiesLowPriority.remove(Phase2.p.shop);
+	}
+	
 
 	public static void setP(Phase2 p) {
 		Phase2.p = p;
 	}
-	
-	
+
+	@Override
+	public MouseInput getMouseInput() {
+		// TODO Auto-generated method stub
+		return mouseIn;
+	}
+
+	@Override
+	public KeyInput getKeyInput() {
+		// TODO Auto-generated method stub
+		return keyIn;
+	}
+
+	@Override
+	public void addListeners(Main main) {
+		main.addKeyListener(keyIn);
+		main.addMouseListener(mouseIn);
+		main.addMouseMotionListener(mouseIn);
+		main.addMouseWheelListener(mouseIn);
+		
+	}
 	
 }

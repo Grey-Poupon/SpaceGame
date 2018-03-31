@@ -1,6 +1,5 @@
 package com.project.ship.rooms;
 
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import com.project.ImageHandler;
 import com.project.ResourceLoader;
 import com.project.RoomSize;
 import com.project.battle.BattleScreen;
-import com.project.button.Button;
 import com.project.ship.Room;
 import com.project.ship.Ship;
 
@@ -23,7 +21,7 @@ public class Cockpit extends Room implements Actionable{
 		super(name,actionHealth,manoeuvres.size(),size,ship);
 		this.manoeuvres = manoeuvres;
 		this.setDamageableRadius(damageableRadius);
-		this.background = new ImageHandler(0, 0, "res/sliderPanel.png", true, null);
+		this.background = new ImageHandler(0, 0, "res/ui/piloting.png", true, null);
 	}
 	
 	public BufferedImage getIcon() {

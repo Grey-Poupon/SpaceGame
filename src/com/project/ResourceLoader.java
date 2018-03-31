@@ -77,9 +77,11 @@ public class ResourceLoader {
 		fireActions.add(crewActions.get("basicReload"));
 		crewActions.put("basicFire"     ,new CrewAction("Fire"      ,CrewActionID.Fire     ,StatID.gunner,fireActions,1  ,10,10,new ActionCooldown(0)));
 		crewActions.get("basicFire").setActionImg(images.get("res/ui/fire.png"));
+
 		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0  ,new ActionCooldown(0)));
 		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
 		crewActions.put("move"          ,new CrewAction("move"      ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
+
 
 	}
 	private void loadThrusters() {
@@ -151,6 +153,10 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {		
+		put(images,"res/mapStar.png");
+		put(images,"res/shopFront.png");
+		put(images,"res/shop.png");
+		put(images,"res/star_field.png");
 		put(images,"res/sliderHandle.png");
 		put(images,"res/sliderPanel.png");
 		put(images,"res/portalGate.png");

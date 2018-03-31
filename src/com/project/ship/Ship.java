@@ -72,6 +72,7 @@ public class Ship implements Handleable{
 		return isChased;
 	}
 
+	
 	public void generate() {
 		if(getGenerator().canGenerate()) {
 			updatePowerConsumption();
@@ -270,8 +271,6 @@ public class Ship implements Handleable{
 		}
 		sprites = temp;
 	}
-
-
 
 
 	private void generateFlavourText() {

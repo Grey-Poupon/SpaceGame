@@ -27,6 +27,10 @@ public class MapObject {
 	public void setTileContained(MapTile tile) {
 		tileContained = tile;
 	}
+	
+	public void takeTurn() {
+		
+	}
 
 	public static MapObject generateRandomObject(MapTile mapTile) {
 		MapObject m = new MapObject(mapTile);

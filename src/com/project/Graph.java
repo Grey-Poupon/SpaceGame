@@ -48,7 +48,7 @@ public class Graph implements Handleable {
 			dataY[i]= function.apply((double) i);
 			//System.out.println(Integer.toString(dataX[i])+","+Integer.toString(dataY[i]));
 		}
-		this.text = new Text(BattleScreen.handler,"",false,x+width,y+20,null);
+		this.text = new Text(BattleScreen.handler,"",false,x+width,y+20);
 		//this.text.setText("Power: "+Integer.toString(0)+" Fuel: "+Integer.toString(0));
 		//text.changeMask(x, y, width, height);
 		this.x = x;

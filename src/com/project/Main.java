@@ -29,11 +29,14 @@ public class Main  extends Canvas implements Runnable{
 	private boolean paused=false;
 	
 	public Main(){
+		Text.main = this;
 		new ResourceLoader();
+		
+		player = new Player(100);
 		currentPhase = new Phase2(this);
 		r = new Random();
 		handler = new Handler();
-		player = new Player(100);
+		
 		window = new Window(WIDTH,HEIGHT,"Space Game",this);
 //		currentPhase = new BattleScreen(this);
 		}
@@ -113,9 +116,14 @@ public class Main  extends Canvas implements Runnable{
 	}
 	
 	public void setPhase(Phase phase) {
-		
-			currentPhase = phase;
-		
+			if(currentPhase != phase) {
+				this.removeKeyListener(currentPhase.getKeyInput());
+				this.removeMouseListener(currentPhase.getMouseInput());
+				this.removeMouseMotionListener(currentPhase.getMouseInput());
+				this.removeMouseWheelListener(currentPhase.getMouseInput());
+				currentPhase = phase;
+				phase.addListeners(this);
+			}
 	}	
 
 	

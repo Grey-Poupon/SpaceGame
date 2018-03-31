@@ -27,7 +27,7 @@ public class ActionBox {
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
-		actionText      = new Text(handler,getName(), true, x+getWidth(), y,bs);
+		actionText      = new Text(handler,getName(), true, x+getWidth(), y);
 		this.action.setActionBox(this);
 
 	}
@@ -41,7 +41,7 @@ public class ActionBox {
 		this.x 			= x;
 		this.y 		    = y;
 		this.action     = action;
-		actionText      = new Text(handler,getName(), true, x+getWidth(), y,bs);
+		actionText      = new Text(handler,getName(), true, x+getWidth(), y);
 		this.action.setActionBox(this);
 
 	}
