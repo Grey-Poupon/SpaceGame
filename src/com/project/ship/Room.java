@@ -33,7 +33,7 @@ public abstract class Room {
 	private RoomSize size = RoomSize.Medium;
 	protected Ship ship;
 	
-	ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
+	private ArrayList<Crew> crewInRoom = new ArrayList<Crew>();
 	List<CrewAction> allActions = new ArrayList<CrewAction>();
 	ArrayList<Ellipse2D> sensorSpheres = new ArrayList<>();
 	private int sensorSphereRadius = 50;
@@ -211,7 +211,7 @@ public abstract class Room {
 		this.roomName = roomName;
 	}
 	/**Deals damage returns roll table roll**/
-	protected int takeDamage(int damage) {
+	public int takeDamage(int damage) {
 		damageStack+=damage;
 		/*While damage is greater than damage needed to break a room*/
 		while(damageStack>=actionHealth){

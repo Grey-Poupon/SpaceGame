@@ -29,4 +29,12 @@ public class Destructive implements WeaponEffect {
 		Object[] damageDealt = {getDamagePerShot(),isPhysical,radiusOfHit}; // to return, holds the shots hit and dmg per shot
 		return damageDealt;
 	}
+
+	public boolean isPhysical() {
+		return isPhysical;
+	}
+
+	public int getRadiusOfHit() {
+		return radiusOfHit;
+	}
 }

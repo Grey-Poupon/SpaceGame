@@ -79,7 +79,7 @@ public class ResourceLoader {
 		crewActions.get("basicFire").setActionImg(images.get("res/ui/fire.png"));
 		crewActions.put("basicSwitch"   ,new CrewAction("Switch"    ,CrewActionID.Manoeuvre,StatID.pilot ,empty      ,0  ,0,0  ,new ActionCooldown(0)));
 		crewActions.put("basicDodge"    ,new CrewAction("Dodge"     ,CrewActionID.Manoeuvre,StatID.pilot ,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
-		crewActions.put("move"          ,new CrewAction(""          ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
+		crewActions.put("move"          ,new CrewAction("move"      ,CrewActionID.Move     ,StatID.social,empty		 ,0  ,0,0  ,new ActionCooldown(0)));
 
 	}
 	private void loadThrusters() {
@@ -132,9 +132,8 @@ public class ResourceLoader {
 		ImageHandler portrait   = new ImageHandler(0, 0, "res/ui/missileArt.png", true, null);
 		List<WeaponEffect> effects = new ArrayList<WeaponEffect>();
 		effects.add(new Destructive(15, true, 50));
-		shipWeapons.put("default",new Weapon(effects,1, 1f, "Octoid Missile",ResourceLoader.animations.get("missileWithExplosion"),150,animations.get("octoidMissileLauncher"),actions,background,portrait,Target.Enemy, 300));
+		shipWeapons.put("default",new Weapon(effects,1, 1f, "Octoid Missile",animations.get("missileWithExplosion"),animations.get("missileWithExplosion"),150,animations.get("octoidMissileLauncher"),actions,background,portrait,Target.Enemy, 300));
 	}
-
 
 	private void loadAnimations() {
 		//moving
@@ -151,8 +150,7 @@ public class ResourceLoader {
 		animations.put("missileWithExplosion",new Animation(BattleScreen.handler,animations.get("octoidMissileProjectile"), new Animation[] {animations.get("missileExplosion")},false));	
 	}
 
-	public void loadImages() {
-		
+	public void loadImages() {		
 		put(images,"res/sliderHandle.png");
 		put(images,"res/sliderPanel.png");
 		put(images,"res/portalGate.png");

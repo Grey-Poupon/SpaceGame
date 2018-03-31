@@ -25,6 +25,7 @@ import com.project.Main;
 import com.project.Phase;
 import com.project.Player;
 import com.project.ProjectileAnimation;
+import com.project.ProjectileInfo;
 import com.project.ResourceLoader;
 import com.project.ScrollableList;
 import com.project.Star;
@@ -277,8 +278,6 @@ public class BattleScreen implements Phase, Observer {
 				}
 				nextTurn();
 			}
-		
-			
 			
 			// Final phase aka do stuff
 			if (currentPhase == BattlePhases.Final) {
@@ -291,26 +290,32 @@ public class BattleScreen implements Phase, Observer {
 				/**Refresh room UI**/
 				BattleUI.refreshRoomUI();
 				
-				
-				/**Set Speed**/
+				/**Set Speed -- empty functions**/
 				chaserShip.generate();
 				chasedShip.generate();
 				chaserShip.accelerate();
 				chasedShip.accelerate();
+				
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
 				ds.calculateDistances(chaserShip, chasedShip);
+								
+				/**add fired weapons to simulation **/
+				List<List<ProjectileInfo>> chasedWeaponProj = inter.addCreateProj(chasedShip, chaserShip, chaserWeaponChoice, chaserShotLocations);
+				List<List<ProjectileInfo>> chaserWeaponProj = inter.addCreateProj(chaserShip, chasedShip, chasedWeaponChoice, chasedShotLocations);
+
+				/**outbound projectiles Animation**/
+				useWeapon(chasedShip, chasedWeaponProj);
+				useWeapon(chaserShip, chaserWeaponProj);
 				
-				/**Fire Weapons Animation**/
-				UseWeapon(chasedShip, chaserShip, chasedWeaponChoice, chasedShotLocations);
-				UseWeapon(chaserShip, chasedShip, chaserWeaponChoice, chaserShotLocations);
+				/**inbound projectiles Animation**/
+				nearbyProjectileAnimation(chasedShip, chaserShip,inter.simulate());
+				
 				chasedWeaponChoice.clear();
 				chaserWeaponChoice.clear();
 				chaserShotLocations.clear();
 				chasedShotLocations.clear();
-				numWeaponClicks =0;
+				numWeaponClicks =0;				
 				
-				/**Projectile hit/miss animation **/
-
 				/**Reset Generators**/
 				getPlayerShip().getGenerator().setCanGenerate(false);
 				getEnemyShip() .getGenerator().setCanGenerate(false);
@@ -355,13 +360,20 @@ public class BattleScreen implements Phase, Observer {
 		}
 	}
 
-	public void UseWeapon(Ship primary, Ship secondary,List<Weapon> weapons,List<Point> shot){
-		for(int i=0;i<weapons.size();i++) {
-			int[] accuracy = weapons.get(i).fire(); 
-			ProjectileAnimation a = new ProjectileAnimation(primary, secondary, 200, true, shot.get(i),weapons.get(i).getSlot(),accuracy);
-			weapons.get(i).setProjAnim(a);
+	private void nearbyProjectileAnimation(Ship chased, Ship chaser, List<List<ProjectileInfo>> projectiles) {
+		if(projectiles.get(0).size()>0){
+			new ProjectileAnimation(chaser, projectiles.get(0),false);
 		}
+		if(projectiles.get(1).size()>0){
+			new ProjectileAnimation(chased, projectiles.get(1),false);
+		}
+	}
+
+	public void useWeapon(Ship primary,List<List<ProjectileInfo>> weaponsProj){
 		
+		for(int i = 0;i<weaponsProj.size();i++){
+			new ProjectileAnimation(primary,weaponsProj.get(i),true);
+		}
 	}
 
 	public void emptyTurnWarning(){
@@ -624,6 +636,7 @@ public class BattleScreen implements Phase, Observer {
 		if(playerIsChaser){return chasedShip;}
 		return chaserShip;
 	}	
+	
 	public void moveCrew(){
 		List<Crew> crewList = playerShip.getAllCrew();
 
