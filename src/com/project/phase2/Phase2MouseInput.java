@@ -31,10 +31,13 @@ public class Phase2MouseInput extends MouseInput{
 	}
 	
 	public void mouseClicked(MouseEvent arg0){
-		if(!p2.inShop) {
+		if(!(p2.inShop||p2.menuOpen)) {
 			movePlayerShip();
-		}else {
+		}else if(p2.inShop&&!p2.menuOpen){
 			mouseShopClick(arg0);
+		}
+		else if(p2.menuOpen) {
+			
 		}
 		
 	}

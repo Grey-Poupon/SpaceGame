@@ -9,6 +9,7 @@ import com.project.Crew;
 import com.project.Handleable;
 import com.project.ImageHandler;
 import com.project.Text;
+import com.project.ship.ResourcesID;
 
 public class ShopMenu implements Handleable{
 	int x = 200;
@@ -91,10 +92,22 @@ public class ShopMenu implements Handleable{
 		else if(talking) {
 			talking=false;
 		}
-		else {
+		else  if(canAfford(playerShip,inventory.get(i-1))){
 			System.out.println("YOU PAID £"+inventory.get(i-1).cost+" for a "+inventory.get(i-1).name+" enjoy you gross man.");
 			playerShip.incrementMoney(-inventory.get(i-1).cost);
+			playerShip.getShip().getInventory().add(inventory.get(i-1));
 		}
+		else {
+			System.out.println("Soz m8 you can't afford this");
+		}
+	}
+	
+	
+	public boolean canAfford(MapShip playerShip,ShopItem item) {
+		if(playerShip.getShip().getResource(ResourcesID.Money)>item.getCost()) {		
+			return true;
+		}
+		return false;
 	}
 
 }

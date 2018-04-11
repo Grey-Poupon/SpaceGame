@@ -1,5 +1,6 @@
 package com.project.phase2;
 
+import com.project.ship.ResourcesID;
 import com.project.ship.Ship;
 
 public class MapShip extends MapObject{
@@ -41,7 +42,7 @@ public class MapShip extends MapObject{
 	}
 	
 	public int getMoney() {
-		return money;
+		return ship.getResource(ResourcesID.Money);
 	}
 	
 	public void interact(MapShip ship) {
@@ -58,8 +59,7 @@ public class MapShip extends MapObject{
 
 
 	public void incrementMoney(int i) {
-		money+=i;
-		
+		ship.incResource(ResourcesID.Money, i);
 	}
 	
 }
