@@ -138,67 +138,17 @@ public class Ship implements Handleable{
 		}	
 		randomlyFillRooms();
 	}
-	public void doDamage(List<WeaponEffect> effects, Object[] damageInfo,boolean targetSelf,Point click){
-		/**get targeted ship**/
-		Ship ship;
-		if(targetSelf){
-			ship = this;
-		}
-		else{
-			ship = isPlayer? bs.getEnemyShip():bs.getPlayerShip();	
-		}
-		
-		int damagePerShot      = (int)     damageInfo[0];
-		boolean isPhysical     = (boolean) damageInfo[1];
-		int areaOfEffectRadius = (int)     damageInfo[2];
-		
-					
-		/**loop through the different effects**/
-		for(int i = 0;i<effects.size();i++){
-			
-			/**Do destructive effects**/
-			if(effects.get(i) instanceof Destructive){
-					List<Room> rooms = ship.getRoomsHit(click,areaOfEffectRadius);
-					System.out.println("Number of hit rooms: "+rooms.size());
-					
-					/**loop through rooms that get hit**/
-					for(int k = 0;k < rooms.size();k++){
-						
-						/**Room takes damage**/
-						int roomTableRoll = rooms.get(k).takeDamage(damagePerShot);
-						
-						/**Rooms Roll Table**/
-						doRollTableEffect(roomTableRoll,rooms.get(k));//Unimplemented
 
-						/**If its physical, damage crew in room**/
-						if(isPhysical){
-							for(Crew crew: rooms.get(k).crewInRoom){
-								
-								/**Crew takes damage**/
-								int crewTableRoll = crew.takeDamage(damagePerShot);
-								
-								/**Crews Roll Table**/
-								doRollTableEffect(crewTableRoll, crew);//Unimplemented
-							}
-						}
-					}
-				}
-			/**Do buffer effects**/
-			if(effects.get(i) instanceof Buffer){
-				// do buffer effect
-			}
-		}
-	}
 	
-	private void doRollTableEffect(int rollTableRoll, Crew crew) {
+	public void doRollTableEffect(int rollTableRoll, Crew crew) {
 	
 	}
 
-	private void doRollTableEffect(int rollTableroll, Room room) {
+	public void doRollTableEffect(int rollTableroll, Room room) {
 	
 	}
 
-	private List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
+	public List<Room> getRoomsHit(Point click, int areaOfEffectRadius) {
 		List<Room> returnableRooms = new ArrayList<Room>();
 		/**Make coordinates relative to ship**/
 		float xRelToShip = (float) (click.getX() - lImage.getLargestLayer().getxCoordinate());
@@ -239,8 +189,7 @@ public class Ship implements Handleable{
 		resources.put(ResourcesID.Power, 0);
 	}
 
-	public void apply(Weapon w) {	
-	}
+	
 	
 	private void randomlyFillRooms() {
 		Random rand = new Random();
@@ -463,9 +412,7 @@ public class Ship implements Handleable{
 		}
 		return currHealth;
 	}
-	public void takeDamage(int damage, boolean isPhysical){
-		this.currHealth-=damage*damageTakenModifier.get(isPhysical);
-	}
+	
 	public Double getDamageTakenModifier(boolean dt) {
 		return damageTakenModifier.get(dt);
 	}
@@ -613,16 +560,13 @@ public class Ship implements Handleable{
 		this.power = power;
 	}
 
-
 	public List<Slot> getShipBackSlots() {
 		return shipBackSlots;
 	}
 
-
 	public void setShipBackSlots(List<Slot> shipBackSlots) {
 		this.shipBackSlots = shipBackSlots;
 	}
-
 
 	public List<Slot> getShipFrontSlots() {
 		return shipFrontSlots;
@@ -671,35 +615,27 @@ public class Ship implements Handleable{
 		return thrusters;
 	}
 	
-
-
 	public Slot getFrontSlot(int position) {
 		return shipFrontSlots.get(position);
 		
 	}
 
-
 	public List<Handleable> getSprites() {
 		return sprites;
 	}
-
 
 	public void setSprites(List<Handleable> sprites) {
 		this.sprites = sprites;
 	}
 
-
-	
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-
 	public HashMap<ResourcesID,Integer> getResources() {
 		return resources;
 	}
-
 
 	public void setResources(HashMap<ResourcesID,Integer> resources) {
 		this.resources = resources;
@@ -708,13 +644,14 @@ public class Ship implements Handleable{
 	public int  getResource(ResourcesID key) {
 		return resources.get(key);
 	}
+	
 	public void setResource(ResourcesID key,int val) {
 		resources.replace(key, val);
 	}
+	
 	public void incResource(ResourcesID key,int inc) {
 		resources.replace(key, resources.get(key)+inc);
 	}
-
 
 	public Room getWeaponRoom() {
 		for(Room room: shipRooms) {
@@ -724,6 +661,7 @@ public class Ship implements Handleable{
 		}
 		return null;
 	}
+	
 	public void updateDistance(){
 		distanceToEnd-=velocity;
 	}
@@ -733,11 +671,11 @@ public class Ship implements Handleable{
 		endSpeed =0;
 		//formula to decide how much power turns into how speed 
 	}
+	
 	public void setEndSpeed(int speed) {
 		endSpeed = speed;
 		//formula to decide how much power turns into how speed 
 	}
-
 
 	private void incSpeed(int speed) {
 		setSpeed(speed+getSpeed());
@@ -774,7 +712,6 @@ public class Ship implements Handleable{
 		return buttons;
 	}
 
-	
 	public List<Crew> getPhaseLeaders(){
 		List<Crew> leaders = new ArrayList<>();
 		leaders.add(getGeneratorRoom().getRoomLeader());
@@ -782,9 +719,6 @@ public class Ship implements Handleable{
 		leaders.add(captain);
 		return leaders;
 	}
-	
-
-
 	
 	public void setRoomPositions() {
 		boolean complete = false;
@@ -864,6 +798,7 @@ public class Ship implements Handleable{
 	public Shape getClip() {
 		return lImage.getClip();
 	}
+	
 	public void setBs(BattleScreen bs) {
 		this.bs = bs;
 	}
@@ -872,6 +807,7 @@ public class Ship implements Handleable{
 		// TODO Auto-generated method stub
 		
 	}
+	
 	public void setCaptain(Crew captain) {
 		this.captain = captain;
 	}

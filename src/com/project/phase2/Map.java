@@ -31,8 +31,8 @@ public class Map implements Handleable {
 	public ArrayList<ArrayList<MapTile>> hexes = new ArrayList<ArrayList<MapTile>>();
 	public ArrayList<Ellipse2D> rings = new ArrayList<Ellipse2D>();
 	public MapTile highLightedTile=null;
-	public ArrayList<Integer> shortestPathX = null;
-	public ArrayList<Integer> shortestPathY = null;
+	public ArrayList<Integer> shortestPathX = new ArrayList<Integer>();
+	public ArrayList<Integer> shortestPathY = new ArrayList<Integer>();
 	
 	public Map() {
 		playerTurn = true;

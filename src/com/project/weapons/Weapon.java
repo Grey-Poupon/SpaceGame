@@ -25,8 +25,9 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	protected int projectileGap; //  this is in pixels for ProjAnim but for Ship-Weapon It will be used as if it were a Distance
 								 //  as ProjAnim will be removed
 	protected Target target;
-	protected List<WeaponEffect> effects;	
-	protected Animation firingAnimation;
+	protected List<WeaponEffect> effects;
+	protected Animation outboundAnimation;
+	protected Animation inboundAnimation;
 	protected Animation weaponBody;
 	protected Slot slot;
 	protected ImageHandler backgroundImg;
@@ -44,12 +45,13 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return weaponBody;
 	}
 
-	public Weapon(List<WeaponEffect> effects, int rateOfFire,float accuracy, String name,Animation firingAnimation,int projectileGap,Animation weaponBody,List<CrewAction>actions, ImageHandler backgroundImg, ImageHandler weaponImg, Target target, int projSpeed){
+	public Weapon(List<WeaponEffect> effects, int rateOfFire,float accuracy, String name,Animation outboundAnimation,Animation inboundAnimation,int projectileGap,Animation weaponBody,List<CrewAction>actions, ImageHandler backgroundImg, ImageHandler weaponImg, Target target, int projSpeed){
 		
 		this.roundsTilHit = 0;
 		this.backgroundImg = backgroundImg;
 		this.weaponImg = weaponImg;
-		this.firingAnimation = firingAnimation;
+		this.outboundAnimation = outboundAnimation;
+		this.inboundAnimation = inboundAnimation;
 		this.actions = actions;
 		this.name = name;
 		this.target = target;
@@ -71,11 +73,14 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	public void setEffects(List<WeaponEffect> effects) {
 		this.effects = effects;
 	}
-	public Animation getFiringAnimation() {
-		return firingAnimation.copy();
+	public Animation getInboundAnimation() {
+		return inboundAnimation.copy();
 	}
-	public void setFiringAnimations(Animation firingAnimation) {
-		this.firingAnimation = firingAnimation;
+	public Animation getOutboundAnimation() {
+		return outboundAnimation.copy();
+	}
+	public void InboundAnimation(Animation firingAnimation) {
+		this.inboundAnimation = firingAnimation;
 	}
 	public boolean isPhysical() {
 		return isPhysical;
@@ -135,8 +140,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		this.cooldownTurnsLeft = getCooldownDuration();
 	}
 	
-	
-
 	public double getAccuracy() {
 		return accuracy;
 	}
@@ -157,13 +160,14 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	}
 
 	public Weapon copy() {
+		// ToDo
 		//WHEN NEW TYPES OF WEAPON BESIDES FIREABLE NEED TO ADD CHECK
 		List<CrewAction> newActions = new ArrayList<CrewAction>();
 		for(int i = 0 ; i < actions.size();i++) {
 			newActions.add(actions.get(i).copy());
 		}
 		
-		Weapon w = new Weapon(effects, rateOfFire, accuracy, name, firingAnimation, projectileGap, weaponBody, newActions, backgroundImg, weaponImg, target,projSpeed);
+		Weapon w = new Weapon(effects, rateOfFire, accuracy, name, inboundAnimation,outboundAnimation, projectileGap, weaponBody, newActions, backgroundImg, weaponImg, target,projSpeed);
 		w.setSlot(slot);
 		return w;
 		}

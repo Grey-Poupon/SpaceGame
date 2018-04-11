@@ -17,83 +17,85 @@ import com.project.weapons.WeaponEffect;
 public class ProjectileAnimation implements Handleable{
 	private static int animationsRunning;
 	private Ship primary;
-	private Ship secondary;
 	private Weapon weapon;
 	private Point click;
-	private Random rand = new Random();
 	private int noOfProjectiles;
 	private int projectileGap;
-	private int pushBack;
 	private int projectilesStarted = 0;
 	private boolean isLeftToRight;
 	private boolean isCrossScreen;
-	private Slot fromSlot;
+	private Slot slot;
 	private Object[] damageInfo;
-	private List<WeaponEffect> effects;
+	private List<ProjectileInfo> projs;
 	private Animation animations[];
-	public ProjectileAnimation( Ship primary, Ship secondary, int pushBack, boolean isCrossScreen ,Point click,Slot slot, int[] accuracy) {
+	private Random rand = new Random();
+	private boolean outbound;
+	
+	public ProjectileAnimation( Ship primary,List<ProjectileInfo> projectiles,boolean outbound) {
 
 		this.primary       = primary;
-		this.secondary     = secondary;
-		this.isCrossScreen = isCrossScreen;
-		this.pushBack	   = pushBack;
-		this.click         = click;
-		this.fromSlot      = slot;
+		this.click         = projectiles.get(0).getDest();
+		this.slot          = projectiles.get(0).getSlot();
+		this.projectileGap = projectiles.get(0).getWaitGap();// in pixels
+
 		this.isLeftToRight = click.x > slot.getX();
-		this.weapon        = (Weapon)  slot.getSlotItem();
-		this.projectileGap = weapon.getProjectileGap();// in pixels
-		this.effects       = weapon.getEffects(); 
-
-	
-		for(int i:accuracy){noOfProjectiles+=i;}
-		
-		//effect handler; 
-		for(int i = 0;i<effects.size();i++) {
-			WeaponEffect effect = effects.get(i);
-			
-			/**Process Weapon Damage Info**/
-			if(effect instanceof Destructive) {
-
-				this.damageInfo = ((Destructive) effect).getInfo();
-				// DPS , IsPhysical , Radius
-			}
-		}
+		this.isCrossScreen = isLeftToRight ? click.x > Main.WIDTH/2: click.x < Main.WIDTH;
+		this.outbound      = outbound;
+		this.noOfProjectiles = projectiles.size();
 		this.animations    = new Animation[noOfProjectiles];
+		this.projs = projectiles;
+		
+		
 		
 		animationsRunning++;
 		
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
 		AdjustmentID align = AdjustmentID.None;
-		
-		// set mask and alignment based off of direction
+		Point mid = new Point();
+
+		// set mask , end point and alignment based off of direction
 		if(isCrossScreen) {
 			if(isLeftToRight) {
-				mask = new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT); 
+				mask = new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH,Main.HEIGHT);
 				align = AdjustmentID.MidUp_Left;
+				mid.setLocation(Main.WIDTH/2 + slot.getSlotItem().getSlotItemBody().getOnScreenWidth(),Main.HEIGHT/2);
 			}
 			else {
-				mask = new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH/2,Main.HEIGHT);
+				mask = new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT); 
 				align = AdjustmentID.MidUp_MidLeft;
+				mid.setLocation(Main.WIDTH/2,Main.HEIGHT/2);
 			}
 		
 		for(int i = 0;i<noOfProjectiles;i++) {
-			Animation temp = weapon.getFiringAnimation();
-
-			temp.setMonitored(true);
+			
 			Point start = new Point ();
-			if(slot.isFront()) {
-				start.setLocation(slot.getSlotItem().getSlotItemBody().getxCoordinate()+slot.getSlotItem().getSlotItemBody().getOnScreenWidth(),
-						slot.getSlotItem().getSlotItemBody().getyCoordinate()+slot.getSlotItem().getSlotItemBody().getOnScreenHeight()/2);
-			}else {
-				start.setLocation(slot.getX(),slot.getY());
+			// set animation and start & end points
+			Animation temp;
+			if(outbound){
+				temp = projs.get(i).getOutboundAnimation();
+				temp.setMonitored(true);
+				if(slot.isFront()) {
+					start.setLocation(slot.getSlotItem().getSlotItemBody().getxCoordinate()
+							+slot.getSlotItem().getSlotItemBody().getOnScreenWidth(),
+							slot.getSlotItem().getSlotItemBody().getyCoordinate()
+							+slot.getSlotItem().getSlotItemBody().getOnScreenHeight()/2);
+				}else {
+					start.setLocation(slot.getX(),slot.getY());
+				}
+				temp.setStartAndEnd(start,mid) ;
+			}
+			else{
+				temp = projs.get(i).getInboundAnimation();
+				temp.setMonitored(true);
+				temp.setStartAndEnd(mid,click) ;
 			}
 			
-			temp.setStartAndEnd(start, click);
 			temp.setMask(mask);
 			temp.setAlign(align);
 			animations[i] =  temp;
 			}
 		}
+		start();
 	}
 	
 	public static boolean areAnimationsRunning() {
@@ -111,30 +113,30 @@ public class ProjectileAnimation implements Handleable{
 			
 			if(projectilesStarted<noOfProjectiles) {
 				// staggered starting
-				if(i!=0 && animations[i-1].getxCoordinate()-fromSlot.getX() > projectileGap){
+				if(i!=0 && animations[i-1].getxCoordinate()-slot.getX() > projectileGap){
 					animations[i].start();
 				}
-					
 			}
-			// pushback after the mid point
+			// kill after the mid point
 			if(animations[i].isRunning()) {
 				stillRunning = true;
-				if(isLeftToRight) {
-					if(!animations[i].isPushed() && animations[i].getxCoordinate()>Main.WIDTH/2) {
-						animations[i].pushBack(pushBack);
-						//System.out.println("PushBack");
-						animations[i].setMask(new Rectangle2D.Double(Main.WIDTH/2,0,Main.WIDTH/2,Main.HEIGHT));
+				if(outbound){
+					if(isLeftToRight) {
+						if(animations[i].getxCoordinate()>Main.WIDTH/2) {
+							Animation.delete(animations[i]);
+						}
+					}
+					else if((animations[i].getxCoordinate()+animations[i].getTileWidth())<Main.WIDTH/2) {
+						Animation.delete(animations[i]);
 					}
 				}
-				else if(!animations[i].isPushed() && (animations[i].getxCoordinate()+animations[i].getTileWidth())<Main.WIDTH/2) {
-					animations[i].pushBack(pushBack);
-					//System.out.println("PushBack");
-					animations[i].setMask(new Rectangle2D.Double(0,0,Main.WIDTH/2,Main.HEIGHT));
-				}
 			}
+			
 			else {
-				// if the animation has finished do dmg
-				doDamage();
+				// if the animation has finished & is an inbound projectile, do effects
+				if(!outbound){
+					projs.get(i).doEffects();
+				}
 				// delete self
 				 Animation.delete(animations[i]);
 			}		
@@ -143,17 +145,13 @@ public class ProjectileAnimation implements Handleable{
 			animationsRunning--;
 			BattleScreen.handler.entitiesHighPriority.remove(this);
 		}
-		
 	}
 	// start function for the group of animation
 	public void start() {
 		BattleScreen.handler.addHighPriorityEntity(this);
 		animations[0].start();
 	}
-	private void doDamage() {
-			primary.doDamage(effects,damageInfo,weapon.isTargetSelf(),click);
-	}
-
+	
 	@Override
 	public float getZ() {
 		// TODO Auto-generated method stub

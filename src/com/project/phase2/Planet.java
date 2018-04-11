@@ -1,9 +1,13 @@
 package com.project.phase2;
 
+import java.util.ArrayList;
+
+import com.project.Crew;
+
 public class Planet extends MapObject{
 
 	private ShopMenu shop;
-	
+	private ArrayList<Crew> crew = new ArrayList<Crew>();
 	
 	public Planet(MapTile tile) {
 		super(tile);
