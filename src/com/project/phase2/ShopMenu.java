@@ -20,10 +20,12 @@ public class ShopMenu implements Handleable{
 	ImageHandler shopKeepImg;
 	ArrayList<Rectangle> ShopButtons ;
 	ArrayList<Rectangle> TalkButtons;
-	MapShip playerShip;
+	MapPlayerShip playerShip;
 	boolean talking;
 	Text text;
+	Quest quest =null;
 	public ShopMenu() {
+		
 		text = new Text("Eww, what kind of space hybrid are you? You look like a Borquad and a Sinbusdroll had a hideous love child",true,0,0);
 		text.changeMask(x, y, shopBack.getWidth(), shopBack.getHeight());
 		talking = true;
@@ -44,7 +46,7 @@ public class ShopMenu implements Handleable{
 		text.move(x+100, y+100);
 		
 	}
-	public void setShip(MapShip playerShip) {
+	public void setShip(MapPlayerShip playerShip) {
 		this.playerShip = playerShip;
 	}
 	
@@ -91,6 +93,10 @@ public class ShopMenu implements Handleable{
 		}
 		else if(talking) {
 			talking=false;
+			if(quest!=null) {
+				playerShip.addQuest(quest);
+			}
+			
 		}
 		else  if(canAfford(playerShip,inventory.get(i-1))){
 			System.out.println("YOU PAID £"+inventory.get(i-1).cost+" for a "+inventory.get(i-1).name+" enjoy you gross man.");
@@ -108,6 +114,10 @@ public class ShopMenu implements Handleable{
 			return true;
 		}
 		return false;
+	}
+	public void setQuest(Quest quest) {
+		this.quest =quest;
+		
 	}
 
 }

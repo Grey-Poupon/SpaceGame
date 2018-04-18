@@ -25,7 +25,7 @@ public class Phase2 implements Phase{
 	private KeyInput keyIn;
 	private MouseInput mouseIn;
 	private Map currentMap;
-	public MapShip ship;
+	public MapPlayerShip ship;
 	public boolean inShop = false;
 	public ShopMenu shop;
 	public Map map;
@@ -34,7 +34,7 @@ public class Phase2 implements Phase{
 	public Phase2(Main main) {
 		Phase2.main = main;
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
+		ship = new MapPlayerShip(new MapTile(new Polygon(),-80,-70,null),main.player.getShip());
 		map = Map.generateRandomMap();
 		
 		map.randomlyPlaceShip(ship);
@@ -44,7 +44,6 @@ public class Phase2 implements Phase{
 		currentMap = map;
 		keyIn   = new Phase2KeyInput();
 		mouseIn = new Phase2MouseInput(handler,this);
-		addListeners(main);
 
 	}
 	
@@ -67,11 +66,16 @@ public class Phase2 implements Phase{
 			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			g2d.setFont(new Font("Sevensegies",Font.PLAIN,36));
 			g2d.setColor(Color.WHITE);
+			g2d.drawString("ITEMS: ",70,60);
 			for(int i = 0; i<ship.getShip().getInventory().size();i++) {
 				ShopItem t = ship.getShip().getInventory().get(i);
-				g2d.drawString(t.getName(),70,60+i*(40));
+				g2d.drawString(t.getName(),70,60+(1+i)*(40));
 			}
-			
+			g2d.drawString("Quests",250,60);
+			for(int i= 0; i<ship.getQuests().size();i++) {
+				Quest t = ship.getQuests().get(i);
+				g2d.drawString(t.getName(),250,60+(1+i)*(40));
+			}
 		}
 		
 	}
@@ -81,9 +85,10 @@ public class Phase2 implements Phase{
 	}
 
 	public void setCurrentMap(Map currentMap) {
+		System.out.println("MMEEPLE STREEET");
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
+		ship = new MapPlayerShip(new MapTile(new Polygon(),-80,-70,null),main.player.getShip());
 		this.currentMap.randomlyPlaceShip(ship);
 		handler.addLowPriorityEntity(this.currentMap);
 	}

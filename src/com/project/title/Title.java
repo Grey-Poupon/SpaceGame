@@ -68,13 +68,13 @@ public class Title implements Phase {
 	@Override
 	public MouseInput getMouseInput() {
 		// TODO Auto-generated method stub
-		return null;
+		return mouseIn;
 	}
 
 	@Override
 	public KeyInput getKeyInput() {
 		// TODO Auto-generated method stub
-		return null;
+		return keyIn;
 	}
 
 	public void addListeners(Main main) {
