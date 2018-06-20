@@ -175,14 +175,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	@Override
 	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
 		if(action.getActionType() == CrewActionID.Fire && action.isOffCooldown()) {
-			if(bs.playerIsChaser()) {
-				bs.addChaserWeaponChoice(this);
-				//bs.chaserShip.updatePowerConsumption(action);
-			}
-			else if(action.isOffCooldown()){
-				bs.addChasedWeaponChoice(this);
-				//bs.chasedShip.updatePowerConsumption(action);
-			}
+			bs.addPlayerChoice(this);
 		}
 		action.updateCooldown();
 	}

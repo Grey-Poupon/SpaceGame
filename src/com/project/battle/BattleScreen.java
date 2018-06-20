@@ -20,6 +20,7 @@ import com.project.CrewAction;
 import com.project.CrewActionID;
 import com.project.DistanceSystem;
 import com.project.EntityID;
+import com.project.Handler;
 import com.project.ImageHandler;
 import com.project.KeyInput;
 import com.project.Main;
@@ -62,7 +63,6 @@ public class BattleScreen implements Phase, Observer {
 	private ArrayList<Point> chaserShotLocations = new ArrayList<Point>();
 	private ArrayList<Point> chasedShotLocations = new ArrayList<Point>();
 	private int currentPhasePointer = 0;
-	private BattlePhases currentPhase = BattlePhases.phases[currentPhasePointer];
 	private List<Weapon> chaserWeaponChoice = new ArrayList<Weapon>();
 	private List<Weapon> chasedWeaponChoice = new ArrayList<Weapon>();
 	private Thruster chaserThrusterChoice;
@@ -71,11 +71,11 @@ public class BattleScreen implements Phase, Observer {
 	private int chaserSpeedChoice;
 	private Random rand;
 	private boolean playerIsChaser;
-	private boolean isPlayersTurn = playerIsChaser;// chaser goes first
-	private Text phase;
+	private BattleTurns turn = BattleTurns.PlayerTurn;
+	
 	private Button graphButton;
 	private Player player;
-	private int numWeaponClicks=0;
+	private int weaponClicksNeeded=0;
 	private int currentWeaponClick = 1;
 	private Ship playerShip;
 	private Ship enemyShip;
@@ -135,7 +135,6 @@ public class BattleScreen implements Phase, Observer {
 		chaserShip.setY(-50);
 		chasedShip.setX(main.WIDTH/2-50);
 		chasedShip.setY(-50);
-		phase 				 = new Text          (handler,"Current Phase: "+currentPhase.toString(),true,Main.WIDTH/2-150,100);
 		ds 					 = new DistanceSystem(handler,500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
 		
 		// set WeaponShipInterface
@@ -200,61 +199,36 @@ public class BattleScreen implements Phase, Observer {
 	}
 
 	private void nextTurn() {
-		// if its the chased's turn, next phase
-		if (isPlayersTurn != playerIsChaser || currentPhase == BattlePhases.Final) {
-			currentPhasePointer++;
+		if(turn == BattleTurns.PlayerTurn){
+			turn = BattleTurns.EnemyTurn;
 		}
-		// loop phases if necessary
-		if (currentPhasePointer >= BattlePhases.phases.length) {
-			currentPhasePointer = 0;
-			// turn = chaser, which gets flipped l8r
-			isPlayersTurn = playerIsChaser;
+		else if(turn == BattleTurns.EnemyTurn){
+			turn = BattleTurns.Aim;
 		}
-		// set phase ,next turn
-		currentPhase = BattlePhases.phases[currentPhasePointer];
-		isPlayersTurn = !isPlayersTurn;
-		
-		// Turn Textual output
-		String phase = "";
-		if (currentPhase == BattlePhases.WeaponActions) {
-			phase = "Weapons Action";
+		else if(turn == BattleTurns.Aim){
+			turn = BattleTurns.Reveal;
 		}
-		if (currentPhase == BattlePhases.WeaponsClick) {
-			phase = "Weapons Click";
-			loadAimingMouseIcon();
+		else if(turn == BattleTurns.Reveal){
+			turn = BattleTurns.PlayerTurn;
 		}
-		if (currentPhase == BattlePhases.GeneratorActions) {
-			phase = "Generator Actions";
-		}
-		if (currentPhase == BattlePhases.Final) {
-			phase = "final";
-		}
-		String turn = isPlayersTurn ? "Players" : "Enemys";
-		System.out.println("\nIts the " + phase + " phase and the " + turn + " turn");
-	
+
 	}
 
 	public void tick() {
 		handler.tick(main.ui);
 		if (!main.isPaused()) {
 			
-			
-			if (currentPhase == BattlePhases.WeaponsClick && numWeaponClicks==0 && isPlayersTurn ) {
-				loadAimingMouseIcon();
-				nextTurn();
-				
-			}
-			
 			// AI turns
-			if(!isPlayersTurn) {
-				if(currentPhase == BattlePhases.WeaponActions) {
+			if(turn == BattleTurns.EnemyTurn) {
+				// weapon selection
+				System.out.println("Enemy Weapon Choice");
 					if(playerIsChaser) {
 						List<Weapon> weapons = chasedShip.getBackWeapons();
 						if(weapons.size() > 0){
 							chasedWeaponChoice.add(weapons.get(0));
 						}
 						else{
-							System.out.println("Enemy Weapon Choice Error - 001");
+							System.out.println("Error - 001");
 						}
 					}
 					else {
@@ -263,43 +237,40 @@ public class BattleScreen implements Phase, Observer {
 							chaserWeaponChoice.add(weapons.get(0));
 						}	
 						else{
-							System.out.println("Enemy Weapon Choice Error - 002");
+							System.out.println("Error - 002");
 						}
 					}
-					System.out.println("Enemy Weapon Reveal");
-				} else if (currentPhase == BattlePhases.WeaponsClick) {
+					
+					// weapon aiming
 					//Need to add some method to make the enemy fire more than once... 
 					if (playerIsChaser) {
 						chasedShotLocations.add(new Point(350, 250)) ;
 					} else {
 						chaserShotLocations.add(new Point(1000, 450));
 					}
-					System.out.println("Enemy Click (not revealed)");
-				} else if (currentPhase == BattlePhases.GeneratorActions) {
+					System.out.println("Enemy Click");
 					if (playerIsChaser) {
 						chasedSpeedChoice = 100;
 						enemyShip.setEndSpeed(chasedSpeedChoice);
 					}
-				}
+				
 				nextTurn();
 			}
-			
-			// Final phase aka do stuff
-			if (currentPhase == BattlePhases.Final) {
-				System.out.println("Weapons Firing");
-				// apply speed setting parameters for end of turn based on remain power or
-				// assigned power	
-				
-				/**Move Crew**/
+			if(turn == BattleTurns.Aim){
+				if(weaponClicksNeeded==0){
+					turn = BattleTurns.Reveal;
+				}
+				else{
+					loadAimingMouseIcon();
+				}
+
+			}
+			if (turn == BattleTurns.Reveal){	
 				moveCrew();
-				/**Refresh room UI**/
 				BattleUI.refreshRoomUI();
 				
-				/**Set Speed -- empty functions**/
-				/**Check if either ship is Destroyed**/
 				checkEnd();
 				
-				/**Set Speed**/
 				chaserShip.generate();
 				chasedShip.generate();
 				chaserShip.accelerate();
@@ -309,11 +280,11 @@ public class BattleScreen implements Phase, Observer {
 				ds.calculateDistances(chaserShip, chasedShip);
 								
 				/**add fired weapons to simulation **/
-				List<List<ProjectileInfo>> chasedWeaponProj = inter.addCreateProj(chasedShip, chaserShip, chaserWeaponChoice, chaserShotLocations);
-				List<List<ProjectileInfo>> chaserWeaponProj = inter.addCreateProj(chaserShip, chasedShip, chasedWeaponChoice, chasedShotLocations);
+				List<List<ProjectileInfo>> chaserWeaponProj = inter.addCreateProj(chasedShip, chaserShip, chaserWeaponChoice, chaserShotLocations);
+			//	List<List<ProjectileInfo>> chasedWeaponProj = inter.addCreateProj(chaserShip, chasedShip, chasedWeaponChoice, chasedShotLocations);
 
 				/**outbound projectiles Animation**/
-				useWeapon(chasedShip, chasedWeaponProj);
+			//	useWeapon(chasedShip, chasedWeaponProj);
 				useWeapon(chaserShip, chaserWeaponProj);
 				
 				/**inbound projectiles Animation**/
@@ -323,51 +294,48 @@ public class BattleScreen implements Phase, Observer {
 				chaserWeaponChoice.clear();
 				chaserShotLocations.clear();
 				chasedShotLocations.clear();
-				numWeaponClicks =0;				
+				weaponClicksNeeded = 0;				
 				
 				/**Reset Generators**/
 				getPlayerShip().getGenerator().setCanGenerate(false);
 				getEnemyShip() .getGenerator().setCanGenerate(false);
 				
-				/**Next Phase**/
-				currentPhase = BattlePhases.Wait;
-			}
-			
-			/*Do Animations*/
-			if (currentPhase == BattlePhases.Wait) {
+				/*Do Animations*/
 				if (!ProjectileAnimation.areAnimationsRunning()) {
-					currentPhase = BattlePhases.Final;
 					chaserShip.getGenerator().getEfficiencyGraph().setGraphPoint(0);
 					chasedShip.getGenerator().getEfficiencyGraph().setGraphPoint(0);
-					currentPhase = BattlePhases.phases[0];
 				}
-			}
-			
-			if (chaserShip != null && chasedShip != null) {
-				if (currentPhase != null && phase != null) {
-					phase.setText("Current Phase: " + currentPhase.toString());
-				}
-				loadingScreen.setVisible(false);
-				chaserShip.tickLayers();
-				chasedShip.tickLayers();
-			}
-			/**Update Healthbars**/
-			if (chaserHealthbar != null && chasedHealthbar != null) {
-				float scale = ((float) chaserShip.getCurrHealth() / (float) chaserShip.getMaxHealth()) * 1.2f;
-				if (scale < 0) {
-					scale = 0;
-				}
-				chaserHealthbar.setXScale(scale);
 				
-				scale = ((float) chasedShip.getCurrHealth() / (float) chasedShip.getMaxHealth()) * 1.2f;
-				if (scale < 0) {
-					scale = 0;
-					chasedShip.destruct();
-				}
-				chasedHealthbar.setXScale(scale);
-			}
+				nextTurn();
+
+		
 		}
+			
+		/*kill loading screen*/
+		if (chaserShip != null && chasedShip != null) {
+			loadingScreen.setVisible(false);
+			chaserShip.tickLayers();
+			chasedShip.tickLayers();
+		}
+		/**Update Healthbars**/
+		if (chaserHealthbar != null && chasedHealthbar != null) {
+			
+			float scale = ((float) chaserShip.getCurrHealth() / (float) chaserShip.getMaxHealth()) * 1.2f;
+			if (scale < 0) {
+				scale = 0;
+			}
+			chaserHealthbar.setXScale(scale);
+			
+			scale = ((float) chasedShip.getCurrHealth() / (float) chasedShip.getMaxHealth()) * 1.2f;
+			if (scale < 0) {
+				scale = 0;
+				chasedShip.destruct();
+			}
+			chasedHealthbar.setXScale(scale);
+		}
+		
 	}
+}
 
 	private void nearbyProjectileAnimation(Ship chased, Ship chaser, List<List<ProjectileInfo>> projectiles) {
 		if(projectiles.get(0).size()>0){
@@ -402,15 +370,6 @@ public class BattleScreen implements Phase, Observer {
 	}
 
 	public void update(ButtonID ID,int index,int button) {// this gets notified by the click function inside button		
-		if(button ==70) {
-			if(currentPhase == BattlePhases.GeneratorActions) {
-				if(BattleUI.speedInput!=null) {
-					playerShip.setTempSpeed(BattleUI.speedInput.getGraph().getSpeed());
-				}
-			}
-		}
-		
-		
 		
 		if(button == MouseEvent.BUTTON1) {
 
@@ -434,37 +393,37 @@ public class BattleScreen implements Phase, Observer {
 				
 			}
 			if(ID == ButtonID.EndPhase) {
-					// fire weapons
-					if(isPlayersTurn && currentPhase==BattlePhases.WeaponActions ) {
-						// intalise variables
-						List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
-						for(int i = 0;i<weapons.size();i++) {
-							doActions(playerShip,weapons.get(i));
-						}
-					}
+								
 					
-					//Do actions for generator phase
-					if(isPlayersTurn && currentPhase==BattlePhases.GeneratorActions ) {
-						//start sensor
-						if(playerShip.getSensor()!=null) {
-							enemyShip.generateSensorSpheres(playerShip.getSensor());
-							enemyShip.setBeingSensed(true);
-						}
-
-						if(playerIsChaser) {
-
-							if(BattleUI.speedInput!=null) {
-								chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();playerShip.setEndSpeed(chaserSpeedChoice);
-							}else {chaserSpeedChoice=0;}
-						}else {chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
-						
-						doActions(playerShip,playerShip.getGenerator());
-
-					}		
-				// next turn
-				if(isPlayersTurn && currentPhase != BattlePhases.WeaponsClick){
-					nextTurn();
+				//Do actions for generator phase
+				//start sensor
+				if(playerShip.getSensor()!=null) {
+					enemyShip.generateSensorSpheres(playerShip.getSensor());
+					enemyShip.setBeingSensed(true);
 				}
+
+				if(playerIsChaser) {
+
+					if(BattleUI.speedInput!=null) {
+						chaserSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();playerShip.setEndSpeed(chaserSpeedChoice);
+					}else {
+						chaserSpeedChoice=0;}
+					
+				}else{
+					chasedSpeedChoice = BattleUI.speedInput.getGraph().getSpeed();}
+				
+				doActions(playerShip,playerShip.getGenerator());
+
+				// fire weapons
+				// intalise variables
+				List<Weapon> weapons = playerIsChaser ? playerShip.getFrontWeapons():playerShip.getBackWeapons();
+				for(int i = 0;i<weapons.size();i++) {
+					doActions(playerShip,weapons.get(i));
+				}
+							
+				// next turn
+				nextTurn();
+				
 			
 			}	
 		}
@@ -478,7 +437,6 @@ public class BattleScreen implements Phase, Observer {
 		CrewAction action;
 		List<CrewAction> actionsNeeded;
 		HashMap<CrewActionID,List<CrewAction>> actionMap;
-		boolean complete;
 		// check which actions have been completed
 		
 			// initalise variables
@@ -531,7 +489,6 @@ public class BattleScreen implements Phase, Observer {
 						else if(playerShip.getGenerator().canGenerate() || action.getName()=="Generate"){
 							
 							actionable.doAction(action.getActor(),action, this);
-							if(actionable instanceof Weapon && action.getActionType()== CrewActionID.Fire) {numWeaponClicks++;}
 							action.resetActions();
 							//action.removeActor();
 						}
@@ -543,6 +500,16 @@ public class BattleScreen implements Phase, Observer {
 			}	
 	}
 	
+	public void addPlayerChoice(Weapon weapon) {
+		weaponClicksNeeded++;
+		if(playerIsChaser){
+			addChaserWeaponChoice(weapon);
+		}
+		else{
+			addChasedWeaponChoice(weapon);
+		}
+	}
+
 	public boolean checkShipClick(int x, int y) {
 		if (playerIsChaser) {
 			return chasedShip.isShipClicked(x, y);
@@ -551,19 +518,21 @@ public class BattleScreen implements Phase, Observer {
 		}
 	}
 
-	public boolean clickShip(int x, int y) {   
-		if (currentPhase == BattlePhases.WeaponsClick) {
-			
+	public boolean clickShip(int x, int y) {
+		if (turn == BattleTurns.Aim) {
+			ArrayList<Point> shotLocations; 
 			if (playerIsChaser) {
 				chaserShotLocations.add(new Point(x, y)) ;
+				shotLocations = chaserShotLocations;
 			} else {
 				chasedShotLocations.add(new Point(x,y));
+				shotLocations = chasedShotLocations;
 			}
 			
-			if(chasedShotLocations.size()==numWeaponClicks || chaserShotLocations.size()==numWeaponClicks) {
+			if(shotLocations.size()== weaponClicksNeeded) {
 				nextTurn();
 				currentWeaponClick = 0;
-				/**Should reset mouse icon if currentWeaponClick is 0**/
+				/**Should reset mouse icon**/
 				loadAimingMouseIcon();
 			}
 			else{
@@ -581,8 +550,8 @@ public class BattleScreen implements Phase, Observer {
 	/**Uses the global variable currentWeaponClick**/
 	private void loadAimingMouseIcon() {		
 		/**Reset mouse icon**/
-		if (currentWeaponClick<1 || numWeaponClicks ==0){
-			main.handler.changeMouseIcon("res/mousePointer.png");   
+		if (currentWeaponClick == 0){
+			Handler.changeMouseIcon("res/mousePointer.png");   
 			
 			/**reset the current mouse click to 1**/
 			currentWeaponClick = 1;
@@ -592,11 +561,11 @@ public class BattleScreen implements Phase, Observer {
 		else{
 			int i = currentWeaponClick;
 			if(i>3){i=i%3+1;}
-			main.handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
+			Handler.changeMouseIcon("res/mouseAimingIcon"+i+".png");
 		}
 		
 	}
-
+	
 	public int getLayerClicked(int x, int y) {
 		if (playerIsChaser) {
 			return chasedShip.getLayerClicked(x, y);
@@ -622,11 +591,11 @@ public class BattleScreen implements Phase, Observer {
 	}
 
 	public boolean isPlayersTurn() {
-		return isPlayersTurn;
+		return turn == BattleTurns.PlayerTurn;
 	}
 
-	public void setPlayersTurn(boolean isPlayersTurn) {
-		this.isPlayersTurn = isPlayersTurn;
+	public void setPlayersTurn(BattleTurns turn) {
+		this.turn = turn;
 	}
 
 	public boolean playerIsChaser() {

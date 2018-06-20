@@ -45,8 +45,6 @@ public class ProjectileAnimation implements Handleable{
 		this.animations    = new Animation[noOfProjectiles];
 		this.projs = projectiles;
 		
-		
-		
 		animationsRunning++;
 		
 		Rectangle2D mask = new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT);
@@ -71,9 +69,10 @@ public class ProjectileAnimation implements Handleable{
 			Point start = new Point ();
 			// set animation and start & end points
 			Animation temp;
+			
 			if(outbound){
 				temp = projs.get(i).getOutboundAnimation();
-				temp.setMonitored(true);
+				temp.setMonitored(false);
 				if(slot.isFront()) {
 					start.setLocation(slot.getSlotItem().getSlotItemBody().getxCoordinate()
 							+slot.getSlotItem().getSlotItemBody().getOnScreenWidth(),
@@ -90,7 +89,7 @@ public class ProjectileAnimation implements Handleable{
 				temp.setStartAndEnd(mid,click) ;
 			}
 			
-			temp.setMask(mask);
+			temp.setMask(new Rectangle2D.Double(0,0,Main.WIDTH,Main.HEIGHT));//temp.setMask(mask);
 			temp.setAlign(align);
 			animations[i] =  temp;
 			}
@@ -124,10 +123,12 @@ public class ProjectileAnimation implements Handleable{
 					if(isLeftToRight) {
 						if(animations[i].getxCoordinate()>Main.WIDTH/2) {
 							Animation.delete(animations[i]);
+							stillRunning = false;
 						}
 					}
 					else if((animations[i].getxCoordinate()+animations[i].getTileWidth())<Main.WIDTH/2) {
 						Animation.delete(animations[i]);
+						stillRunning = false;
 					}
 				}
 			}
