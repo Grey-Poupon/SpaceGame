@@ -27,6 +27,7 @@ import com.project.battle.BattleScreen;
 import com.project.battle.BattleUI;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.phase2.ShopItem;
 import com.project.ship.rooms.Cockpit;
 import com.project.ship.rooms.GeneratorRoom;
 import com.project.ship.rooms.SensorRoom;
@@ -60,6 +61,7 @@ public class Ship implements Handleable{
 	private List<Handleable> sprites 	   = new ArrayList<Handleable>();
 	private boolean isChased;
 	private HashMap<ResourcesID,Integer> resources = new HashMap<>();
+	private ArrayList<ShopItem> inventory = new ArrayList<ShopItem>();
 	private int mass=200;
 	private int endSpeed;
 	private boolean visible;
@@ -181,6 +183,7 @@ public class Ship implements Handleable{
 	}
 
 	private void generateResources() {
+		resources.put(ResourcesID.Money,200);
 		resources.put(ResourcesID.Fuel, 500);
 		resources.put(ResourcesID.Missiles, 500);
 		resources.put(ResourcesID.Power, 0);
@@ -815,5 +818,15 @@ public class Ship implements Handleable{
 
 	public void setPlayer(boolean isPlayer) {
 		this.isPlayer = isPlayer;
+	}
+
+
+	public ArrayList<ShopItem> getInventory() {
+		return inventory;
+	}
+
+
+	public void setInventory(ArrayList<ShopItem> inventory) {
+		this.inventory = inventory;
 	}
 }

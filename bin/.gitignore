@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /.classpath
 /.project
 /.settings/
@@ -5,4 +6,7 @@
 /UML/
 /com/
 /not-Desktop.lnk
+=======
+/com/
+>>>>>>> 4c7c145a2daf87d0afe2eb34d8bb786ce0cf009a
 /res/

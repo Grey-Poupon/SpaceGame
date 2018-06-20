@@ -31,8 +31,8 @@ public class Map implements Handleable {
 	public ArrayList<ArrayList<MapTile>> hexes = new ArrayList<ArrayList<MapTile>>();
 	public ArrayList<Ellipse2D> rings = new ArrayList<Ellipse2D>();
 	public MapTile highLightedTile=null;
-	public ArrayList<Integer> shortestPathX = null;
-	public ArrayList<Integer> shortestPathY = null;
+	public ArrayList<Integer> shortestPathX = new ArrayList<Integer>();
+	public ArrayList<Integer> shortestPathY = new ArrayList<Integer>();
 	
 	public Map() {
 		playerTurn = true;
@@ -157,14 +157,15 @@ public class Map implements Handleable {
 	}
 	
 	public void renderShortestPath(Graphics g) {
-		if(shortestPathX == null || shortestPathY == null||shortestPathX.size()==0||shortestPathY.size()==0|| highLightedTile.containsPlayer()) {
-			return;
-		}
-		else if(shortestPathX!=null) {
-			for(int i = 1; i<shortestPathX.size();i++) {
-				g.drawLine(shortestPathX.get(i-1), shortestPathY.get(i-1), shortestPathX.get(i), shortestPathY.get(i));
-			}
-		}
+		return;
+//		if(shortestPathX == null || shortestPathY == null||shortestPathX.size()==0||shortestPathY.size()==0|| highLightedTile.containsPlayer()) {
+//			return;
+//		}
+//		else if(shortestPathX!=null) {
+//			for(int i = 1; i<shortestPathX.size();i++) {
+//				g.drawLine(shortestPathX.get(i-1), shortestPathY.get(i-1), shortestPathX.get(i), shortestPathY.get(i));
+//			}
+//		}
 	}
 	
 	@Override
@@ -177,7 +178,7 @@ public class Map implements Handleable {
 	
 	public void updateMap() {
 		ArrayList<MapObject> temp = new ArrayList<MapObject>();
-		System.out.println("Swap");
+		System.out.println("Turn");
 		for(int i = 0; i<hexes.size();i++) {
 			for(int j = 0; j<hexes.get(i).size();j++) {
 				ArrayList<MapObject> objs =hexes.get(i).get(j).objects; 
@@ -293,6 +294,7 @@ public class Map implements Handleable {
 	
 	
 	public static Map generateRandomMap() {
+		System.out.println("Brand new!");
 		Map m = new Map();
 		m.generateHexMap();
 		Random rand = new Random();
@@ -320,7 +322,7 @@ public class Map implements Handleable {
 				
 			}
 			if(i==1){
-				m.hexes.get(randY).get(randX).addObject(new MapShip(m.hexes.get(randY).get(randX),false,ResourceLoader.getShip("defaultEnemy")));
+				m.hexes.get(randY).get(randX).addObject(new MapShip(m.hexes.get(randY).get(randX),ResourceLoader.getShip("defaultEnemy")));
 			}
 			else if(i==2) {
 				m.hexes.get(randY).get(randX).addObject(new Planet(m.hexes.get(randY).get(randX)));

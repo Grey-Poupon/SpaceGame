@@ -1,5 +1,6 @@
 package com.project.phase2;
 
+import com.project.ship.ResourcesID;
 import com.project.ship.Ship;
 
 public class MapShip extends MapObject{
@@ -8,16 +9,10 @@ public class MapShip extends MapObject{
 	private Ship ship;
 	private int money = 200;
 	
-	public MapShip(MapTile c,boolean b,Ship ship) {
+	public MapShip(MapTile c,Ship ship) {
 		super(c);
 		this.ship = ship;
-		isPlayerShip = b;
-		if(b) {
-			objImg.setImg("res/matron3/mergedimage.png");
-		}
-		else {
-			objImg.setImg("res/ships/insectoid.png");
-		}
+		objImg.setImg("res/ships/insectoid.png");
 		
 	}
 	
@@ -34,21 +29,20 @@ public class MapShip extends MapObject{
 		isPlayerShip = b;
 	}
 	public void moveTile(MapTile mt) {
-		if(this.isPlayerShip()&&mt!=this.tileContained){
-			mt.map.movePlayerShip(this, mt);
-		}
-		super.moveTile(mt);
+		
+			super.moveTile(mt);
+		
 	}
 	
 	public int getMoney() {
-		return money;
+		return ship.getResource(ResourcesID.Money);
 	}
 	
 	public void interact(MapShip ship) {
-		if(!this.isPlayerShip) {
+		
 			tileContained.removeObject(this);
 			Phase2.battle(ship,this);
-		}
+		
 	}
 	
 	public Ship getShip() {
@@ -58,8 +52,7 @@ public class MapShip extends MapObject{
 
 
 	public void incrementMoney(int i) {
-		money+=i;
-		
+		ship.incResource(ResourcesID.Money, i);
 	}
 	
 }

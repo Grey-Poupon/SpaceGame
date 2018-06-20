@@ -58,7 +58,7 @@ public class MapTile {
 	public void renderObjects(Graphics g) {
 		for(int i =0;i<objects.size();i++) {
 			if(objects.get(i) instanceof MapShip &&!containsPlayer()) g.setColor(Color.red);
-			objects.get(i).objImg.render(g);
+			objects.get(i).render(g);
 		}
 	}
 

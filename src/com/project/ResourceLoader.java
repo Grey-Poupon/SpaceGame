@@ -149,6 +149,8 @@ public class ResourceLoader {
 	}
 
 	public void loadImages() {		
+		put(images,"res/questIcon.png");
+		put(images,"res/questIconAccepted.png");
 		put(images,"res/mapStar.png");
 		put(images,"res/shopFront.png");
 		put(images,"res/shop.png");

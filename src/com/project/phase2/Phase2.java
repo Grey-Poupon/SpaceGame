@@ -1,7 +1,11 @@
 package com.project.phase2;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 
 import com.project.Handler;
 import com.project.KeyInput;
@@ -12,7 +16,7 @@ import com.project.battle.BattleScreen;
 
 public class Phase2 implements Phase{
 	/**
-	 ** 
+	 **
 	 **/
 	private static Phase2 p;
 	public static Main main;
@@ -21,15 +25,16 @@ public class Phase2 implements Phase{
 	private KeyInput keyIn;
 	private MouseInput mouseIn;
 	private Map currentMap;
-	public MapShip ship;
+	public MapPlayerShip ship;
 	public boolean inShop = false;
 	public ShopMenu shop;
 	public Map map;
+	public static boolean menuOpen = false;
 	
 	public Phase2(Main main) {
 		Phase2.main = main;
 		setP(this);
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
+		ship = new MapPlayerShip(new MapTile(new Polygon(),-80,-70,null),main.player.getShip());
 		map = Map.generateRandomMap();
 		
 		map.randomlyPlaceShip(ship);
@@ -39,7 +44,6 @@ public class Phase2 implements Phase{
 		currentMap = map;
 		keyIn   = new Phase2KeyInput();
 		mouseIn = new Phase2MouseInput(handler,this);
-		addListeners(main);
 
 	}
 	
@@ -52,19 +56,39 @@ public class Phase2 implements Phase{
 	
 	public void render(Graphics g) {
 		handler.render(g);
+		if(menuOpen) {
+			Graphics2D g2d = (Graphics2D)g.create();
+			g.setColor(Color.BLACK);
+			
+			g.fillRect(50, 50, 500, 500);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			g2d.setFont(new Font("Sevensegies",Font.PLAIN,36));
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("ITEMS: ",70,60);
+			for(int i = 0; i<ship.getShip().getInventory().size();i++) {
+				ShopItem t = ship.getShip().getInventory().get(i);
+				g2d.drawString(t.getName(),70,60+(1+i)*(40));
+			}
+			g2d.drawString("Quests",250,60);
+			for(int i= 0; i<ship.getQuests().size();i++) {
+				Quest t = ship.getQuests().get(i);
+				g2d.drawString(t.getName(),250,60+(1+i)*(40));
+			}
+		}
 		
 	}
-	
-	
 
 	public Map getCurrentMap() {
 		return currentMap;
 	}
 
 	public void setCurrentMap(Map currentMap) {
+		System.out.println("MMEEPLE STREEET");
 		handler.entitiesLowPriority.remove(this.currentMap);
 		this.currentMap = currentMap;
-		ship = new MapShip(new MapTile(new Polygon(),-80,-70,null),true,main.player.getShip());
+		ship = new MapPlayerShip(new MapTile(new Polygon(),-80,-70,null),main.player.getShip());
 		this.currentMap.randomlyPlaceShip(ship);
 		handler.addLowPriorityEntity(this.currentMap);
 	}
@@ -83,7 +107,6 @@ public class Phase2 implements Phase{
 		inShop = false;
 		handler.entitiesLowPriority.remove(Phase2.p.shop);
 	}
-	
 
 	public static void setP(Phase2 p) {
 		Phase2.p = p;
@@ -93,6 +116,10 @@ public class Phase2 implements Phase{
 	public MouseInput getMouseInput() {
 		// TODO Auto-generated method stub
 		return mouseIn;
+	}
+	
+	public static void toggleMenu() {
+		menuOpen = !menuOpen;
 	}
 
 	@Override

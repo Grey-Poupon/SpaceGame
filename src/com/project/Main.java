@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Random;
 import com.project.button.ButtonID;
 import com.project.phase2.Phase2;
+import com.project.title.Title;
 
 
 
@@ -33,7 +34,7 @@ public class Main  extends Canvas implements Runnable{
 		new ResourceLoader();
 		
 		player = new Player(100);
-		currentPhase = new Phase2(this);
+		currentPhase = new Title(this);
 		r = new Random();
 		handler = new Handler();
 		
