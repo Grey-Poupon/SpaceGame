@@ -135,7 +135,8 @@ public class BattleScreen implements Phase, Observer {
 		chaserShip.setY(-50);
 		chasedShip.setX(main.WIDTH/2-50);
 		chasedShip.setY(-50);
-		ds 					 = new DistanceSystem(handler,500, chaserShip.getDistanceToEnd(), chasedShip.getDistanceToEnd());
+		ds = new DistanceSystem(3, 9, 2, 1);
+		handler.addHighPriorityEntity(ds);
 		
 		// set WeaponShipInterface
 		this.inter = new WeaponShipInterface(chaserShip, chasedShip);
@@ -277,7 +278,8 @@ public class BattleScreen implements Phase, Observer {
 				chasedShip.accelerate();
 				
 				System.out.println("Chaser Speed: "+chaserSpeedChoice+"\nChased Speed: "+chasedSpeedChoice);
-				ds.calculateDistances(chaserShip, chasedShip);
+				ds.changeSpeed(1, 0);
+				ds.moveShips();
 								
 				/**add fired weapons to simulation **/
 				List<List<ProjectileInfo>> chaserWeaponProj = inter.addCreateProj(chasedShip, chaserShip, chaserWeaponChoice, chaserShotLocations);

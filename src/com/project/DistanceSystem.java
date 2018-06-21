@@ -7,14 +7,17 @@ import com.project.ship.Ship;
 
 public class DistanceSystem implements Handleable {
 	private static final int xLocation      = 490;
-	private static final int yLocation      = 26;
+	private static final int yLocation      = 40;
+	private static final int segmentLength = 25;
+	private static final int segmentGap    = 10;
+	private static final int numOfSegments  = 12; 
+	
 	private static final int lineLength	    = 300;
 	private static final int dotSize        = 10;
 	private static final int escapeDistance = 1000;
 	private static final double pixelRatio  = (double)lineLength/(double)escapeDistance;
 	private int distanceIncrement=1;
-	private int chaserSpeed=0;
-	private int chasedSpeed=0;
+
 	private int shipDistanceCurrent = 500;
 	private int shipDistanceDest = 500;
 	private int	chaserXCurrent   = 75;
@@ -23,104 +26,110 @@ public class DistanceSystem implements Handleable {
 	private int	chasedXDest;
 	private static Handler handler;
 	
-	public DistanceSystem(Handler handler,int shipDistance, int chaserDist, int chasedDist) {
-		this.shipDistanceDest = shipDistance;
-		this.shipDistanceCurrent = shipDistance;
-		this.chaserXCurrent = (int) (chaserDist*pixelRatio);
-		this.chasedXCurrent = (int) (chasedDist*pixelRatio);
-		this.chasedXDest    =  this.chasedXCurrent;
-		this.chaserXDest    =  this.chaserXCurrent;
-		handler.addHighPriorityEntity(this);
-	}
-	public void calculateDistances(Ship chaser, Ship chased) {
-		Ship movingShip  = null;
-		Ship stationaryShip = null;
-		if(chaser.getSpeedChange()>0 ^ chased.getSpeedChange()>0) {
-			if(chaser.getSpeedChange()>0) {
-				movingShip  = chaser; 
-				stationaryShip = chased;
-			}
-			else {
-				movingShip = chased;
-				stationaryShip= chaser;
-			}
-		}
-		else {
-			movingShip  = chaser;
-			stationaryShip = chased;
-		}
-		
-		if(movingShip.getDistanceToEnd()==0 && movingShip.getSpeedChange()>0) {
-			int netSpeed = -(movingShip.getSpeed()-stationaryShip.getSpeed());
-			stationaryShip.increaseDistanceToEnd(netSpeed);
-			this.shipDistanceDest-=netSpeed;
-		}
-		else {
-			int netSpeed = movingShip.getSpeed()-stationaryShip.getSpeed();
-			movingShip.increaseDistanceToEnd(netSpeed);
-			this.shipDistanceDest-=netSpeed;
-		}
-		if(movingShip.getDistanceToEnd() < 0) {
-			stationaryShip.increaseDistanceToEnd(movingShip.getDistanceToEnd());
-			movingShip.increaseDistanceToEnd(-movingShip.getDistanceToEnd());
-		}
-		if(stationaryShip.getDistanceToEnd() < 0) {
-			movingShip.increaseDistanceToEnd(stationaryShip.getDistanceToEnd());
-			stationaryShip.increaseDistanceToEnd(-stationaryShip.getDistanceToEnd());
-		}
-		chaserXDest = (int)(chaser.getDistanceToEnd()*pixelRatio);
-		chasedXDest = (int)(chased.getDistanceToEnd()*pixelRatio);
-		chaserSpeed = chaser.getSpeed();
-		chasedSpeed = chased.getSpeed();
-		int totalTicks;
-		if(Math.abs(chasedXDest-chasedXCurrent)>Math.abs(chaserXDest-chaserXCurrent)) {
-			  totalTicks = Math.abs(chasedXDest - chasedXCurrent);
-		}
-		else {
-			  totalTicks = Math.abs(chaserXDest - chaserXCurrent);
-		}
-		if(totalTicks!=0) {
-		distanceIncrement = Math.abs(shipDistanceDest-shipDistanceCurrent)/totalTicks;
-		}
-		else{
-			distanceIncrement = 0;
-		}
-	}
 	public void render(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.drawLine(xLocation, yLocation, xLocation+lineLength, yLocation);
-		g.setColor(Color.WHITE);
-		g.drawString(String.valueOf(chaserSpeed),xLocation+chaserXCurrent, yLocation-dotSize);
-		g.drawString(String.valueOf(chasedSpeed),xLocation+lineLength-chasedXCurrent, yLocation-dotSize);
-		g.drawString(String.valueOf(shipDistanceCurrent),xLocation+chaserXCurrent+(int)(shipDistanceDest*pixelRatio)/2, yLocation+dotSize+3);
-		g.fillOval(xLocation+chaserXCurrent, yLocation-(dotSize/2), dotSize, dotSize);
-		g.fillOval(xLocation+lineLength-chasedXCurrent, yLocation-(dotSize/2), dotSize, dotSize);
-
-	}
-	public void tick() {
-		if(chasedXCurrent!=chasedXDest) {
-			int sign = chasedXDest>chasedXCurrent ? 1:-1; 
-			chasedXCurrent += sign;
-		}
-		if(chaserXCurrent!=chaserXDest) {
-			int sign = chaserXDest>chaserXCurrent ? 1:-1; 
-			chaserXCurrent += sign;
-		}
-		if(shipDistanceCurrent!=shipDistanceDest) {
-			int sign = shipDistanceDest>shipDistanceCurrent ? 1:-1; 
-			shipDistanceCurrent += distanceIncrement*sign;
-			if(shipDistanceCurrent>shipDistanceDest) {
-				shipDistanceCurrent=shipDistanceDest;
+		for(int i = 0;i<numOfSegments;i++){
+			g.setColor(Color.WHITE);
+			if(i==chaserPos){
+				g.setColor(Color.RED);
 			}
+			if(i==chasedPos){
+				g.setColor(Color.GREEN);
+			}
+			g.drawLine(xLocation+i*(segmentLength+segmentGap), yLocation, xLocation+segmentLength+i*(segmentLength+segmentGap), yLocation);
+			
+		}
+		g.setColor(Color.YELLOW);
+		
+		//neg Speed
+		if(chaserSpeed < 0){
+			for(int i = chaserPos + chaserSpeed;i<chaserPos;i++){
+				g.drawRect(xLocation+i*(segmentLength+segmentGap), yLocation+5, 20, 3);
+			}
+		}
+		// pos speed
+		else{
+			for(int i = chaserPos+1;i<chaserPos+chaserSpeed+1;i++){
+				g.drawRect(xLocation+i*(segmentLength+segmentGap), yLocation+5, 20, 3);
+			}
+		}
+		//neg Speed
 
+		if(chasedSpeed < 0){
+			for(int i = chasedPos + chasedSpeed;i<chasedPos;i++){
+				g.drawRect(xLocation+i*(segmentLength+segmentGap), yLocation+5, 20, 3);
+			}
+		}
+		// pos speed
+		else{
+			for(int i = chasedPos+1;i<chasedPos+chasedSpeed+1;i++){
+				g.drawRect(xLocation+i*(segmentLength+segmentGap), yLocation+5, 20, 3);
+			}
 		}
 	}
-	public int getShipDistanceCurrent() {
-		return shipDistanceCurrent;
-	}
+
 	@Override
 	public float getZ() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	private int chaserPos;
+	private int chasedPos;
+	private int chaserSpeed=0;
+	private int chasedSpeed=0;
+	
+	public DistanceSystem(int chaserPos, int chasedPos, int chaserSpeed, int chasedSpeed){
+		this.chaserPos = chaserPos;
+		this.chasedPos = chasedPos;
+		this.chaserSpeed = chaserSpeed;
+		this.chasedSpeed = chasedSpeed;
+	}
+	public void changeSpeed(int chaserSpeed, int chasedSpeed){
+		this.chaserSpeed = chaserSpeed;
+		this.chasedSpeed = chasedSpeed;
+	}
+	public void moveShips(){
+		int newChaserPos = chaserPos + chaserSpeed;
+		int newChasedPos = chasedPos + chasedSpeed;
+
+		if(newChaserPos<0){
+			// out of bounds
+			newChasedPos -= newChaserPos;
+			
+		}
+		if(newChasedPos>(numOfSegments - 1)){
+			// out of bounds
+			newChaserPos -= newChasedPos - (numOfSegments - 1);
+			
+			if(newChaserPos<0){
+				// Escape
+			}
+		}
+		
+		if(newChaserPos>newChasedPos){
+			//collision
+			float halfGap = (chasedPos - chaserPos)/2f;
+			if(chaserSpeed > halfGap){
+				newChasedPos = newChaserPos; 
+			}
+			else if(chasedSpeed > -halfGap){
+				newChaserPos = newChasedPos;
+			}
+			else{
+				newChaserPos = chaserPos + Math.round(halfGap);
+				newChasedPos = newChaserPos;
+			}
+		}
+		
+		this.chaserPos = newChaserPos;
+		this.chasedPos = newChasedPos;
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
 }
