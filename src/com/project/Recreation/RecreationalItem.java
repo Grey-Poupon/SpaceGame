@@ -14,6 +14,7 @@ import com.project.StatID;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Ship;
 
 public class RecreationalItem implements Actionable{
 
@@ -34,7 +35,7 @@ public class RecreationalItem implements Actionable{
 	}
 
 	@Override
-	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew,CrewAction action, Ship ship, BattleScreen bs) {
 		if(action.isOffCooldown()){
 			crew.setStat(StatID.stress, (byte) 0);
 		}

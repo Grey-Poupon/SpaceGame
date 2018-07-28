@@ -107,10 +107,8 @@ public class BattleUI extends UI {
 		bs = battleScreen;
 		
 		flavourTexts = new ArrayList<Button>();
-		String resources = "Resources:";
-		for (ResourcesID key : pShip.getResources().keySet()) {
-			resources += " " + key.toString() + ":" + pShip.getResource(key);
-		}
+		String resources = "Energy:"+":" + pShip.getEnergy();
+
 
 		resourcesButton = new Button(secondMonitorXOffset - 2 * rightListWidth, secondMonitorYOffset - 50,
 				2 * rightListWidth, bs.main.getGraphics().getFontMetrics().getHeight() * 3, ButtonID.UI, 0, false, resources,
@@ -181,97 +179,9 @@ public class BattleUI extends UI {
 	public static void generateCrewMovementList(Ship ship) {
 		// clear
 		clearAllBoxes();
-
-		// setup variables
-		List<Room> rooms = ship.getRooms();
-		lastRoom = ship.getStaffRoom();
-		int x;
-		int y;
-		float row;
-		float column = -1.2f;
-		int portraitWidth = 0;
-		int portraitHeight = 0;
-		int titleOffset = 5;
-		int titleToBoxGap = 35;
-		String roomName;
-
-		// loop through rooms
-		for (int i = 0; i < rooms.size(); i++) {
-
-			// setup variables
-			Room room = rooms.get(i);
-			List<Crew> crew = room.getCrewInRoom();
-			row = -1;
-			column += 1.3;
-			x = (int) (mainMonitorXOffset + (column * (portraitWidth + 5)));
-			y = mainMonitorYOffset + titleOffset;
-
-			// set crew
-			for (int j = 0; j < crew.size(); j++) {
-
-				// update variables
-				ImageHandler portrait = crew.get(j).getPortrait();
-				portrait.setVisible(true);
-				portrait.start(BattleScreen.handler,true);
-				portrait.setxCoordinate(500);
-				portrait.setyCoordinate(500);
-
-				if (portraitHeight == 0) {
-					portraitHeight = portrait.getHeight();
-					portraitWidth = portrait.getWidth();
-				}
-				row++;
-				if (row > 2) {
-					row = 0;
-					column++;
-				}
-
-				// set crew icons
-
-				DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, crew.get(j), portrait.getxCoordinate(),
-						portrait.getyCoordinate());
-				ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBox.png"),
-						(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
-						(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
-						ResourceLoader.getCrewAction("move"), room, bs);
-				
-				icon.moveTo(box.getX(), box.getY());
-				icon.setStartBox(box);
-				icon.setActionBox(box);
-				box.setCrew(icon);
-				box.setMoveCrew(true);
-				actionIcons.add(icon);
-				actionBoxes.add(box);
-			}
-			// set empty positions
-			if (room.getSize().getMaxPopulation() > crew.size()) {
-				for (int j = 0; j < room.getSize().getMaxPopulation() - crew.size(); j++) {
-
-					// update variables
-					row++;
-					if (row > 2) {
-						row = 0;
-						column++;
-					}
-
-					// set action box
-					ActionBox box = new ActionBox(BattleScreen.handler,ResourceLoader.getImage("res/actionBoxEmpty.png"),
-							(int) (mainMonitorXOffset + (column * (5 + portraitWidth))),
-							(int) (mainMonitorYOffset + titleToBoxGap + (row * (portraitHeight + 5))),
-							ResourceLoader.getCrewAction("move"), room, bs, true);
-
-					actionBoxes.add(box);
-				}
-			}
-
-			// setup room title
-			Text title = new Text(BattleScreen.handler,room.getRoomName(), true, x, y);
-			tableTitleText.add(title);
-
-		}
 	}
 
-	public static void generateRoomCards(List<? extends Actionable> actionables, Room room) {
+	private static void generateRoomCards(List<? extends Actionable> actionables, Room room) {
 
 		// wipe tooltip
 		if(room == lastRoom) {
@@ -330,66 +240,21 @@ public class BattleUI extends UI {
 	
 
 	
-	public static void generateSpeedInput() {
-		// clear
-		clearRightBox();
-		Graph speed = new Graph(MathFunctions.speedInput, 300, 50, 300f);
-		speed.setDraggable(true);
-		Button speedbtn = new Button(secondMonitorXOffset + 20, secondMonitorYOffset + 50, 300, 50, ButtonID.Graph,true, speed, bs);
-		speedbtn.setDraggable(true);
-		speedbtn.addSpeedImg(ResourceLoader.getImage("res/speedometer.png"), 300f);
-		speedInput = (speedbtn);
-	}
 
-	public static void generateManoeuvreActionList(Cockpit room) {
-		// clear
-		clearRightBox();
-		// setup variables
-		List<CrewAction> manoeuvres = room.getManoeuvres();
-		Crew pilot = room.getRoomLeader();
-		int row = -1;
-		int column = 0;
-
-		// setup pilot pic
-		ImageHandler portrait = pilot.getPortrait();
-		portrait.start(BattleScreen.handler,true);
-		portrait.setVisible(true);
-		portrait.setxCoordinate(secondMonitorXOffset);
-		portrait.setyCoordinate(secondMonitorYOffset);
-		DraggableIcon icon = new DraggableIcon(portrait,BattleScreen.handler, pilot, portrait.getxCoordinate(), portrait.getyCoordinate());
-		manoeuvreActionIcons.add(icon);
-
-		// setup manoeuvre actions
-		for (int i = 0; i < manoeuvres.size(); i++) {
-			if (row == 2) {
-				column++;
-				row = -1;
-			}
-			row++;
-
-			BufferedImage img = ResourceLoader.getImage("res/actionBox.png");
-
-
-			ActionBox box = new ActionBox(BattleScreen.handler,img, secondMonitorXOffset + (column * tableColumnWidth),
-					secondMonitorYOffset + ((img.getHeight() + boxGap) * (row)), manoeuvres.get(i), room, bs);
-
-			manoeuvreActionBoxes.add(box);
-		}
-	}
-
+	
 	public static void back() {
 		generateRoomCards(lastActionables, lastRoom);
 	}
 
 
 
-	public static void clearAllBoxes() {
+	private static void clearAllBoxes() {
 		clearLeftBox();
 		clearRightBox();
 
 	}
 
-	public static void clearLeftBox() {
+	private static void clearLeftBox() {
 		if (tooltipList != null) {
 			tooltipList.clear();
 		}
@@ -439,12 +304,10 @@ public class BattleUI extends UI {
 	}
 
 	public static void updateResources(Ship pShip) {
-		String resources = "Resources:";
-		for (ResourcesID key : pShip.getResources().keySet()) {
-			resources = resources + " " + key.toString() + ":" + pShip.getResource(key);
-		}
+		String resources = "Energy:"+ ":" + pShip.getEnergy();
 		resourcesButton.getText().setText(resources);
 	}
+	
 	public static void refreshRoomUI(){
 		Crew crew;
 		if(lastRoom instanceof WeaponsRoom){

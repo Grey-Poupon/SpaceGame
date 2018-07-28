@@ -124,7 +124,7 @@ public class WeaponShipInterface implements Observer{
 									for(Crew crew: rooms.get(k).getCrewInRoom()){
 										
 										/**Crew takes damage**/
-										int crewTableRoll = crew.takeDamage(damagePerShot);
+										int crewTableRoll = crew.takeDamage();
 										
 										/**Crews Roll Table**/
 										chased.doRollTableEffect(crewTableRoll, crew);//Unimplemented

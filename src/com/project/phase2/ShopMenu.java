@@ -110,7 +110,7 @@ public class ShopMenu implements Handleable{
 	
 	
 	public boolean canAfford(MapShip playerShip,ShopItem item) {
-		if(playerShip.getShip().getResource(ResourcesID.Money)>item.getCost()) {		
+		if(playerShip.getShip().getEnergy()>item.getCost()) {		
 			return true;
 		}
 		return false;

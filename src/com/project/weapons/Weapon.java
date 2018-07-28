@@ -16,6 +16,7 @@ import com.project.Slottable;
 import com.project.battle.BattleScreen;
 import com.project.button.Button;
 import com.project.button.ButtonID;
+import com.project.ship.Ship;
 import com.project.ship.Slot;
 
 public class Weapon implements Slottable, Actionable{ // Holds the shared functionality between all weapons
@@ -79,9 +80,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 	public Animation getOutboundAnimation() {
 		return outboundAnimation.copy();
 	}
-	public void InboundAnimation(Animation firingAnimation) {
-		this.inboundAnimation = firingAnimation;
-	}
+
 	public boolean isPhysical() {
 		return isPhysical;
 	}
@@ -112,9 +111,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return "res/missileSpritesheet.png";
 	}
 
-	public void render(Graphics g) {
-		weaponBody.render(g);
-	}
 
 	public int getProjectileGap() {
 		return projectileGap;
@@ -173,9 +169,12 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		}
 
 	@Override
-	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew, CrewAction action, Ship ship, BattleScreen bs) {
 		if(action.getActionType() == CrewActionID.Fire && action.isOffCooldown()) {
-			bs.addPlayerChoice(this);
+			if(ship == bs.getPlayerShip()) {
+				bs.addPlayerChoice(this);
+			}
+			ship.incEnergy(-75);
 		}
 		action.updateCooldown();
 	}
@@ -193,9 +192,7 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return weaponImg.copy();
 	}
 	
-	public void giveXP() {
-		
-	}
+
 	
 	public void setProjAnim(ProjectileAnimation pro) {
 		projAnim = pro;
@@ -215,17 +212,6 @@ public class Weapon implements Slottable, Actionable{ // Holds the shared functi
 		return radiusOfHit;
 	}
 
-	public int[] fire() {
-		int[] accuracies = new int[rateOfFire];
-		Random rand = new Random();
-		for(int i = 0;i<rateOfFire;i++){
-			if(rand.nextFloat() < accuracy){
-				accuracies[i] = 1;
-			}
-			else{accuracies[i] = 0;}
-		}
-		return accuracies;
-	}
 	
 	public int getSpeed(){
 		return projSpeed;

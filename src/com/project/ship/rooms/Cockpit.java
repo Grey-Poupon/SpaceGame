@@ -81,10 +81,7 @@ public class Cockpit extends Room implements Actionable{
 	}
 
 	@Override
-	public void doAction(Crew crew, CrewAction action, BattleScreen bs) {
-		if(action.isOffCooldown()){
-			
-		}
+	public void doAction(Crew crew, CrewAction action, Ship ship, BattleScreen bs) {
 		action.updateCooldown();		
 	}
 

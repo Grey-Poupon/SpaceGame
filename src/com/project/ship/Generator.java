@@ -69,8 +69,7 @@ public class Generator implements Actionable {
 
 	public void generate() {
 		setCanGenerate(true);
-		this.room.ship.incResource(ResourcesID.Fuel, -50);
-		this.room.ship.incResource(ResourcesID.Power, (int)getPower(50));
+		this.room.ship.incEnergy(50);
 	}
 
 	private void dangerRollTable() {
@@ -92,7 +91,7 @@ public class Generator implements Actionable {
 	}
 
 	@Override
-	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
+	public void doAction(Crew crew,CrewAction action, Ship ship, BattleScreen bs) {
 	if(action.getActionType() == CrewActionID.Generate && action.isOffCooldown()) {
 		generate();
 	}

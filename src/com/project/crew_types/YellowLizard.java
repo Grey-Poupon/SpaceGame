@@ -12,18 +12,18 @@ public class YellowLizard extends Crew {
 	private static float raceRelationVariance = 0.2f;
 	
 	public YellowLizard(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender,boolean visible,int health) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.yellowLizard, visible,health);
+			char gender,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.yellowLizard, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public YellowLizard(boolean random,boolean visible,int health) {
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, 'm', RaceID.yellowLizard, visible,health);
+	public YellowLizard(boolean random,boolean visible) {
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), 0, 0, 'm', RaceID.yellowLizard, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public YellowLizard(boolean visible,int health) {
-		super(getRandomWeightedStat(statVariance,(byte)20),getRandomWeightedStat(statVariance,(byte)50), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)25), 0, 0,getRandomGender(), RaceID.yellowLizard, visible,health);
+	public YellowLizard(boolean visible) {
+		super(getRandomWeightedStat(statVariance,(byte)20),getRandomWeightedStat(statVariance,(byte)50), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)25), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)25), 0, 0,getRandomGender(), RaceID.yellowLizard, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}

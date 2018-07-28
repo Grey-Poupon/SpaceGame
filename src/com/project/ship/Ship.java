@@ -183,13 +183,9 @@ public class Ship implements Handleable{
 	}
 
 	private void generateResources() {
-		resources.put(ResourcesID.Money,200);
-		resources.put(ResourcesID.Fuel, 500);
-		resources.put(ResourcesID.Missiles, 500);
-		resources.put(ResourcesID.Power, 0);
+		resources.put(ResourcesID.Energy, 500);
 	}
 
-	
 	
 	private void randomlyFillRooms() {
 		Random rand = new Random();
@@ -228,7 +224,10 @@ public class Ship implements Handleable{
 		setRoomPositions();
 	}
 	
-	
+	public void updatePowerConsumption() {
+		getGenerator().getEfficiencyGraph().setGraphPoint(0);
+		if(isPlayer) {BattleUI.updateResources(this);}	
+}
 	
 	public Room getCockpit() {
 		for(int i = 0; i<shipRooms.size();i++) {
@@ -281,37 +280,8 @@ public class Ship implements Handleable{
 		
 	}
 	
-	public void useEngine(int amountOfFuel) {
-		double thrust = engine.getThrust(amountOfFuel);
-		if(thrust<0) {System.out.println("your engine exploded, gg boyo");}//engine exploded
-		velocity = (int) thrust;
-	}
 	
-	public void generatePower(int amountOfFuel) {
-		double power = getGenerator().getPower(amountOfFuel);
-		if(power<0) {System.out.println("your generator exploded, gg boyo");}//engine exploded
-		power = (int) power;
-	}
-	public List<Button> getCrewButtons(BattleScreen bs){
-		List<Button> buttons = new ArrayList<Button>();
-		for(int i = 0;i<allCrew.size();i++) {
-			buttons.add(new Button(0, 0, 120, 120, ButtonID.Crew, i,true,allCrew.get(i).getName(),"sevensegies",Font.PLAIN,30,Color.WHITE,allCrew.get(i).getPortrait(), bs));
-		}
-		return buttons;
-	}
 	
-	public int roomDamage(int x, int y) {
-		int dmg =0;
-		if(isShipClicked(x, y)) {
-			Room room = getClosestRoom(x, y);
-			if(room==null) {return 0;}
-			int distanceToRoom = (int) (Math.pow(room.getLocation().getX(),2) + Math.pow(room.getLocation().getY(),2));
-			if (distanceToRoom < room.getDamageableRadius()) {
-				dmg  = (1/distanceToRoom) * room.getDamageMod();
-			}
-		}
-		return dmg;
-	}
 	public Room getClosestRoom(int x, int y) {
 		if(shipRooms.size()<1) {return null;}
 		Room closestRoom = shipRooms.get(0);
@@ -334,18 +304,6 @@ public class Ship implements Handleable{
 			leaders.add(room.getRoomLeader());
 		}
 		return leaders;
-	}
-	public List<Button> getLeaderButtons(Handler handler,BattleScreen bs){
-		List<Crew> leaders = getRoomLeaders();
-		List<Button> buttons = new ArrayList<Button>();
-		for(int i = 0;i<leaders.size();i++) {
-			Crew crew = leaders.get(i);
-			ImageHandler leaderPortrait = Crew.getLeaderPortrait(crew);
-			leaderPortrait.setVisible(true);
-			leaderPortrait.start(handler,false);
-			buttons.add(new Button(0, 0, 50, 50, ButtonID.Crew, i, true,leaderPortrait , bs));
-		}
-		return buttons;
 	}
 
 	public void setRooms(List<Room> rooms) {
@@ -395,13 +353,6 @@ public class Ship implements Handleable{
 		return allCrew;
 	}
 
-	public void setMaxHealth(){
-		int maxHealth = 0;
-		for(Room room:shipRooms){
-			maxHealth+= room.getMaxHealth();
-		}
-		this.maxHealth = maxHealth;
-	}
 	public int getMaxHealth(){
 		return maxHealth;
 	}
@@ -413,19 +364,14 @@ public class Ship implements Handleable{
 		return currHealth;
 	}
 	
-	public Double getDamageTakenModifier(boolean dt) {
-		return damageTakenModifier.get(dt);
+	public void setMaxHealth(){
+		int maxHealth = 0;
+		for(Room room:shipRooms){
+			maxHealth+= room.getMaxHealth();
+		}
+		this.maxHealth = maxHealth;
 	}
-	public void setDamageTakenModifier(boolean dt, Double double1) {
-		damageDealtModifier.put(dt, Double.valueOf(double1));
-	}
-	public Double getDamageDealtModifier(boolean dt) {
-		return damageDealtModifier.get(dt);
-	}
-	public void setDamageDealtModifier(boolean dt, int mod) {
-		damageDealtModifier.put(dt, Double.valueOf(mod));
-	}
-	
+
 	public LayeredImage getLayeredImage() {
 		return lImage;
 	}
@@ -442,16 +388,10 @@ public class Ship implements Handleable{
 	public int getDistanceToEnd() {
 		return distanceToEnd;
 	}
-	public void increaseDistanceToEnd(int distanceToEnd) {
-		this.distanceToEnd += distanceToEnd;
-	}
 	public int getSpeedChange() {
 		return velChange;
 	}
-	public Slot getBackSlot(int position) {
-		return lImage.getBackSlots().get(position);
-	}
-	
+
 	public ArrayList<String> getFlavourTexts(){
 		return flavourTexts;
 	}
@@ -532,12 +472,7 @@ public class Ship implements Handleable{
 	
 	
 	
-	public void updatePowerConsumption() {
-		incResource(ResourcesID.Fuel, -(int)getGenerator().getEfficiencyGraph().getxInput());
-		getGenerator().getEfficiencyGraph().setGraphPoint(0);
-		if(isPlayer) {BattleUI.updateResources(this);}	
-	}
-	
+
 	public void tempUpdatePowerConsumption(int cost) {
 		float temp = (float) (getGenerator().getEfficiencyGraph().getyInput()+cost);
 		getGenerator().getEfficiencyGraph().setGraphPoint((int)temp);
@@ -615,10 +550,6 @@ public class Ship implements Handleable{
 		return thrusters;
 	}
 	
-	public Slot getFrontSlot(int position) {
-		return shipFrontSlots.get(position);
-		
-	}
 
 	public List<Handleable> getSprites() {
 		return sprites;
@@ -633,24 +564,13 @@ public class Ship implements Handleable{
 		return 0;
 	}
 
-	public HashMap<ResourcesID,Integer> getResources() {
-		return resources;
+	public int  getEnergy() {
+		return resources.get(ResourcesID.Energy);
 	}
+	
 
-	public void setResources(HashMap<ResourcesID,Integer> resources) {
-		this.resources = resources;
-	}
-	
-	public int  getResource(ResourcesID key) {
-		return resources.get(key);
-	}
-	
-	public void setResource(ResourcesID key,int val) {
-		resources.replace(key, val);
-	}
-	
-	public void incResource(ResourcesID key,int inc) {
-		resources.replace(key, resources.get(key)+inc);
+	public void incEnergy(int inc) {
+		resources.replace(ResourcesID.Energy, resources.get(ResourcesID.Energy)+inc);
 	}
 
 	public Room getWeaponRoom() {
@@ -803,11 +723,6 @@ public class Ship implements Handleable{
 		this.bs = bs;
 	}
 
-	public void removeFuel(int i) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public void setCaptain(Crew captain) {
 		this.captain = captain;
 	}
@@ -820,10 +735,10 @@ public class Ship implements Handleable{
 		this.isPlayer = isPlayer;
 	}
 
-
 	public ArrayList<ShopItem> getInventory() {
 		return inventory;
 	}
+
 
 
 	public void setInventory(ArrayList<ShopItem> inventory) {

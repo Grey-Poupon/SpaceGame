@@ -25,7 +25,7 @@ import com.project.ship.Room;
 import com.project.ship.Ship;
 
 public class Crew implements Observer{
-	private int health;
+	private int health; // 1 to 3
 	protected char gender;
 	protected static Random rand = new Random();
 	private ArrayList<Disease> diseases;
@@ -51,9 +51,9 @@ public class Crew implements Observer{
 	private boolean isCaptain=false;
 	
 	public Crew(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender, RaceID race,boolean visible,int health) {
+			char gender, RaceID race,boolean visible) {
 		
-		this.health = health;
+		this.health = 3;
 		this.gender = gender;
 		this.race = race;
 		stats = new HashMap<>();
@@ -90,8 +90,8 @@ public class Crew implements Observer{
 		loadPortrait();
 	}	
 	
-	public Crew(RaceID race,boolean visible, int health) {
-		this.health = health;
+	public Crew(RaceID race,boolean visible) {
+		this.health = 3;
 		this.race = race;
 		stats = new HashMap<>();
 		statModifier = new HashMap<>();
@@ -184,11 +184,6 @@ public class Crew implements Observer{
 		
 	}
 	
-	public void attemptLevelUp(StatID key) {
-		if(rand.nextInt(stats.get(key))/lvlBoost==1 &&stats.get(key)<255) {
-			stats.replace(key, (byte) (stats.get(key)+1));
-		}
-	}
 	
 	
 	protected static byte getRandomStat(float statVariance) {
@@ -255,21 +250,21 @@ public class Crew implements Observer{
 		Crew crew;
 		int t = rand.nextInt(7);
 		switch (t) {
-		   case 0:  crew = new BlueLizard(visible,100);
+		   case 0:  crew = new BlueLizard(visible);
 					break;
-           case 1:  crew = new BugBitch(visible,100);
+           case 1:  crew = new BugBitch(visible);
                     break;
-           case 2:  crew = new Ent(visible,100);
+           case 2:  crew = new Ent(visible);
                     break;
-           case 3:  crew = new MoleBitch(visible,100);
+           case 3:  crew = new MoleBitch(visible);
                     break;
-           case 4:  crew = new OctoBitch(visible,100);
+           case 4:  crew = new OctoBitch(visible);
                     break;
-           case 5:  crew = new Robot(visible,100);
+           case 5:  crew = new Robot(visible);
                     break;
-           case 6:  crew = new YellowLizard(visible,100);
+           case 6:  crew = new YellowLizard(visible);
                     break;
-           default: crew = new BlueLizard(visible,100);
+           default: crew = new BlueLizard(visible);
                     break;
        }
 		return crew;
@@ -382,7 +377,7 @@ public class Crew implements Observer{
 	
 
 	public Crew copy() {
-		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible,health);
+		return new Crew(stats.get(StatID.social), stats.get(StatID.combat), stats.get(StatID.pilot), stats.get(StatID.engineering), stats.get(StatID.gunner), stats.get(StatID.science), stats.get(StatID.stress), stats.get(StatID.hunger), gender, race, visible);
 	}
 
 	public boolean isCaptain() {
@@ -456,8 +451,8 @@ public class Crew implements Observer{
 		
 	}
 
-	public int takeDamage(int damage) {
-		this.health-=damage;
+	public int takeDamage() {
+		this.health--;
 		//
 		// Do Roll Table stuff
 		//

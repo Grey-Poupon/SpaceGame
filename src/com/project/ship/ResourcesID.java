@@ -1,5 +1,5 @@
 package com.project.ship;
 
 public enum ResourcesID {
-Missiles,Power,Fuel,Money;
+Missiles,Power,Fuel,Money,Energy;
 }

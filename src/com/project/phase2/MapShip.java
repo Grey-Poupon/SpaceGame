@@ -35,7 +35,7 @@ public class MapShip extends MapObject{
 	}
 	
 	public int getMoney() {
-		return ship.getResource(ResourcesID.Money);
+		return ship.getEnergy();
 	}
 	
 	public void interact(MapShip ship) {
@@ -52,7 +52,7 @@ public class MapShip extends MapObject{
 
 
 	public void incrementMoney(int i) {
-		ship.incResource(ResourcesID.Money, i);
+		ship.incEnergy(i);
 	}
 	
 }

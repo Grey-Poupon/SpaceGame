@@ -11,17 +11,17 @@ public class Ent extends Crew {
 	public static String[] names = {"Sandy","Sam","Jesse","Ste","Frank","Charlie"};
 	private static float raceRelationVariance = 0.2f;
 	public Ent(int social, int combat, int pilot, int engineering,int gunner,int science, int stress, int hunger,
-			char gender,boolean visible,int health) {
-		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.ent,visible,health);
+			char gender,boolean visible) {
+		super(social, combat, pilot, engineering, gunner, science, stress,hunger, gender, RaceID.ent,visible);
 		generateRaceTable();
 	}
-	public Ent(boolean random,boolean visible,int health){
-		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance) ,0, 0 , '?', RaceID.ent, visible,health);
+	public Ent(boolean random,boolean visible){
+		super(getRandomStat(statVariance),getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance), getRandomStat(statVariance),getRandomStat(statVariance) ,0, 0 , '?', RaceID.ent, visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}
-	public Ent(boolean visible,int health) {
-		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomGender(), RaceID.ent,visible,health);
+	public Ent(boolean visible) {
+		super(getRandomWeightedStat(statVariance,(byte)30),getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), getRandomWeightedStat(statVariance,(byte)30), 0, 0, getRandomGender(), RaceID.ent,visible);
 		generateRaceTable();
 		this.setName(names[rand.nextInt(names.length)]);
 	}

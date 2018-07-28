@@ -97,19 +97,6 @@ public class Thruster implements Slottable,Actionable{
 		return speeds;
 	}
 
-
-
-	public void doAction(int index,Ship ship) {
-		CrewAction action = actions.get(index);
-		//ship.updatePowerConsumption(action);
-		if(action.getName()=="Generate" && action.isOffCooldown()) {
-			ship.incResource(ResourcesID.Power, action.getPowerCost());
-		}
-		action.updateCooldown();		
-	}
-
-
-
 	public Slot getSlot() {
 		return slot;
 	}
@@ -123,16 +110,12 @@ public class Thruster implements Slottable,Actionable{
 
 
 	@Override
-	public void doAction(Crew crew,CrewAction action, BattleScreen bs) {
-		// TODO Auto-generated method stub
+	public void doAction(Crew crew,CrewAction action, Ship ship, BattleScreen bs) {
+		if(action.getName()=="Generate" && action.isOffCooldown()) {
+			ship.incEnergy(-action.getPowerCost());
+		}
+		action.updateCooldown();	
 		
-	}
-
-
-
-	public List<Button> getInfoButtons(int width, int height, BattleScreen bs) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

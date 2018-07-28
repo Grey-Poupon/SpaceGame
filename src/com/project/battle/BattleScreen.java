@@ -92,15 +92,18 @@ public class BattleScreen implements Phase, Observer {
 
 	
 	public BattleScreen(Main main,Ship chaser, Ship chasee,boolean playerIsChaser) {
+		
 		this.main = main;
-		player = main.player;
 		this.handler.setBs(this);
-		main.setPaused(true);
 		this.playerIsChaser = playerIsChaser;
+
+		player = main.player;
+		main.setPaused(true);
 
 		loadingScreen = new ImageHandler(0, 0, "res/loadingScreen.png", true, 1, 1, EntityID.UI);
 		handler.addHighPriorityEntity(loadingScreen);
 		rand = new Random();
+		
 		// grab ships
 		if (playerIsChaser) {
 			chaserShip = chaser;
@@ -120,6 +123,8 @@ public class BattleScreen implements Phase, Observer {
 		chaserShip.setBs(this);
 		chasedShip.setBs(this);
 
+		
+		// generate start
 		for (int i = 0; i < 40; i++) {
 			Star starp = new Star(rand.nextInt(main.WIDTH), rand.nextInt(main.HEIGHT/2), "res/star.png", true, 50, Main.WIDTH / 2-50, 50,
 					446, chaserShip);
@@ -130,6 +135,7 @@ public class BattleScreen implements Phase, Observer {
 		}
 		handler.addLowPriorityEntity(chaserShip);
 		handler.addLowPriorityEntity(chasedShip);
+		
 		//Place ships
 		chaserShip.setX(-150);
 		chaserShip.setY(-50);
@@ -169,18 +175,23 @@ public class BattleScreen implements Phase, Observer {
 		movementTab.setVisible(false);
 		
 		Button graph = new Button(0, 0, playerShip.getGenerator().getEfficiencyGraph().getWidth(),playerShip.getGenerator().getEfficiencyGraph().getHeight(), ButtonID.BattleThrusterGraph, true,
+				
 		playerShip.getGenerator().getEfficiencyGraph(), this);
 		graph.setDraggable(true);
 		List<Button> graphEnd = new ArrayList<Button>();
 		graphEnd.add(graph);
+		
 		// GO BUTTON
 		Button go = new Button(1165, 605, 100,100, ButtonID.EndPhase, graphEnd.size(), true, "GO",
 				"sevensegies", Font.PLAIN, 30, Color.WHITE,
 				new ImageHandler(0, 0, "res/appIcon.png", true, EntityID.UI), this);
+		
 		handler.addLowPriorityEntity(go);
+		
 		BattleUI.graphList = new ScrollableList(graphEnd, BattleUI.graphMonitorXOffset, BattleUI.graphMonitorYOffset,
 				playerShip.getGenerator().getEfficiencyGraph().getWidth(),
 				2 * playerShip.getGenerator().getEfficiencyGraph().getHeight());
+		
 		//Graph Box Element
 		uiGraphBox = new ImageHandler(1064,370,"res/ui/graphBox.png",true,1,1,EntityID.UI);
 		handler.addHighPriorityEntity(uiGraphBox);
@@ -195,9 +206,6 @@ public class BattleScreen implements Phase, Observer {
 		main.setPaused(false);
 	}
 
-	public void selectRoom(String room) {
-		selectedRoom = room;
-	}
 
 	private void nextTurn() {
 		if(turn == BattleTurns.PlayerTurn){
@@ -356,13 +364,13 @@ public class BattleScreen implements Phase, Observer {
 	}
 	
 	public void checkEnd() {
-		if(enemyShip.getCurrHealth()<=0) {
+		if(enemyShip.getGeneratorRoom().getHealth() <= 0 || playerShip.getGeneratorRoom().getHealth() <= 0) {
 			endCombat();
 		}
 	}
 	
 	public void endCombat() {
-		System.out.println("You won!");
+		System.out.println("Someone won!");
 		main.setPhase(Phase2.getP());
 	}
 	
@@ -431,7 +439,7 @@ public class BattleScreen implements Phase, Observer {
 		}
 	}
 	
-	public void doActions(Ship playerShip,Actionable actionable) {
+	public void doActions(Ship ship,Actionable actionable) {
 		
 		// intalise variables
 		List<CrewAction> actions  = new ArrayList<CrewAction>();;
@@ -487,13 +495,10 @@ public class BattleScreen implements Phase, Observer {
 						// do action
 						if(action.isBroken()){
 							action.setBroken(false);
-						}
-						else if(playerShip.getGenerator().canGenerate() || action.getName()=="Generate"){
-							
-							actionable.doAction(action.getActor(),action, this);
-							action.resetActions();
-							//action.removeActor();
-						}
+						}							
+						actionable.doAction(action.getActor(),action,ship, this);
+						action.resetActions();
+						//action.removeActor();
 					}
 				}
 			}
